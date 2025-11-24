@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property integer $id_categorie
@@ -13,38 +15,17 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Categorie extends Model
 {
-    /**
-     * The table associated with the model.
-     * 
-     * @var string
-     */
     protected $table = 'categorie';
-
-    /**
-     * The primary key for the model.
-     * 
-     * @var string
-     */
     protected $primaryKey = 'id_categorie';
-
-    /**
-     * @var array
-     */
     protected $fillable = ['id_categorie_parent', 'nom_categorie'];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function articles()
+    public function articles(): HasMany
     {
-        return $this->hasMany('App\Models\Article', 'id_categorie', 'id_categorie');
+        return $this->hasMany(Article::class, 'id_categorie', 'id_categorie');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function categorie()
+    public function parent(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Categorie', 'id_categorie_parent', 'id_categorie');
+        return $this->belongsTo(Categorie::class, 'id_categorie_parent', 'id_categorie');
     }
 }

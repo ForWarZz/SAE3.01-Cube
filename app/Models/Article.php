@@ -2,79 +2,36 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @property integer $id_article
- * @property integer $id_categorie
- * @property float $prix_article
- * @property string $nom_article
- * @property string $description_article
- * @property string $resumer_article
- * @property Accessoire[] $accessoires
- * @property Velo $velo
- * @property Article[] $articles
- * @property Categorie $categorie
- * @property Caracterise[] $caracterises
- */
 class Article extends Model
 {
-    /**
-     * The table associated with the model.
-     * 
-     * @var string
-     */
     protected $table = 'article';
-
-    /**
-     * The primary key for the model.
-     * 
-     * @var string
-     */
     protected $primaryKey = 'id_article';
-
-    /**
-     * @var array
-     */
     protected $fillable = ['id_categorie', 'prix_article', 'nom_article', 'description_article', 'resumer_article'];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function accessoires()
+    public function accessoires(): HasMany
     {
         return $this->hasMany('App\Models\Accessoire', 'id_article', 'id_article');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function velo()
+    public function velo(): HasOne
     {
-        return $this->hasOne('App\Models\Velo', 'id_article', 'id_article');
+        return $this->hasOne(Velo::class, 'id_article', 'id_article');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function articles()
+    public function similaires(): BelongsToMany
     {
-        return $this->belongsToMany('App\Models\Article', 'similaire', 'id_article_simil', 'id_article');
+        return $this->belongsToMany(Article::class, 'similaire', 'id_article_simil', 'id_article');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function categorie()
+    public function categorie(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Categorie', 'id_categorie', 'id_categorie');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function caracterises()
-    {
-        return $this->hasMany('App\Models\Caracterise', 'id_article', 'id_article');
+        return $this->belongsTo(Categorie::class, 'id_categorie', 'id_categorie');
     }
 }

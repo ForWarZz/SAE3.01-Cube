@@ -3,47 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @property integer $id_modele_velo
- * @property string $nom_modele_velo
- * @property Velo[] $velos
- * @property DeGeometrie[] $deGeometries
- */
 class ModeleVelo extends Model
 {
-    /**
-     * The table associated with the model.
-     * 
-     * @var string
-     */
     protected $table = 'modele_velo';
-
-    /**
-     * The primary key for the model.
-     * 
-     * @var string
-     */
     protected $primaryKey = 'id_modele_velo';
-
-    /**
-     * @var array
-     */
     protected $fillable = ['nom_modele_velo'];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function velos()
+    public function velos(): HasMany
     {
-        return $this->hasMany('App\Models\Velo', 'id_modele_velo', 'id_modele_velo');
+        return $this->hasMany(Velo::class, 'id_modele_velo', 'id_modele_velo');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function deGeometries()
+    public function geometries(): HasMany
     {
-        return $this->hasMany('App\Models\DeGeometrie', 'id_modele_velo', 'id_modele_velo');
+        return $this->hasMany(Geometrie::class, 'id_modele_velo', 'id_modele_velo');
     }
 }
