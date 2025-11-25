@@ -12,6 +12,6 @@ class TailleVelo extends Model
 
     protected $fillable = [
         "id_taille",
-        "label_taille",
+        "nom_taille",
     ];
 }
