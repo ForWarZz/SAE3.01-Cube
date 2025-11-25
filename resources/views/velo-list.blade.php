@@ -5,10 +5,12 @@
     <title>Document</title>
 </head>
 <body>
+    <h1>Liste des vélos</h1>
     <ul>
         @foreach ($velos as $velo)
             <li>{{ $velo->id_article }} : {{ $velo->nom_article }}</li>
         @endforeach
     </ul>
+    {{ $velos->links() }}
 </body>
 </html>

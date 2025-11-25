@@ -8,6 +8,6 @@ use Illuminate\Http\Request;
 class VeloController extends Controller
 {
     public function index(){
-        return view("velo-list", ['velos'=>Velo::query()->orderBy('id_article', 'asc')->get()]);
+        return view("velo-list", ['velos'=>Velo::query()->orderBy('id_article', 'asc')->paginate(15)]);
     }
 }
