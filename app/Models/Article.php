@@ -9,6 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property integer $id_categorie
+ * @property float $prix_article
+ * @property string $nom_article
+ * @property string $description_article
+ * @property string $resumer_article
+ */
 class Article extends Model
 {
     protected $table = 'article';

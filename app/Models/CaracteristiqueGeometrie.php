@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id_carac_geo
+ * @property string $label_carac_geo
+ */
 class CaracteristiqueGeometrie extends Model
 {
     protected $table = 'caracteristique_geometrie';

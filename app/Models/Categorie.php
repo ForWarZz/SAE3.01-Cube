@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property integer $id_categorie
  * @property integer $id_categorie_parent
  * @property string $nom_categorie
- * @property Article[] $article
- * @property Categorie $categorie
  */
 class Categorie extends Model
 {

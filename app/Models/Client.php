@@ -5,6 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id_client
+ * @property string $nom_client
+ * @property string $prenom_client
+ * @property string $email_client
+ * @property string $naissance_client
+ * @property string $civilite
+ * @property string $hash_mdp_client
+ * @property string $date_der_connexion
+ */
 class Client extends Model
 {
     protected $table = 'client';

@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id_modele_velo
+ * @property string $nom_modele_velo
+ */
 class ModeleVelo extends Model
 {
     protected $table = 'modele_velo';

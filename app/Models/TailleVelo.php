@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id_taille
+ * @property string $nom_taille
+ */
 class TailleVelo extends Model
 {
     protected $table = 'taille_velo';

@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @property int $id_reference
+ * @property int $id_cadre_velo
+ * @property int $id_couleur
+ * @property int $id_article
+ */
 class ReferenceVelo extends Model
 {
     public $timestamps = false;
