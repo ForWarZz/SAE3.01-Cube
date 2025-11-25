@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\VeloController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Velo;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +18,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::prefix('/velos')->group(function () {
+    Route::get('/{reference}', [VeloController::class, 'show'])->name('velo.show');
+    Route::get('/velo/{velo}', [VeloController::class, 'redirectToDefaultVariant'])->name('velo.redirectToFirstRef');
 });
 
 Route::get('/dashboard', function () {
