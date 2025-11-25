@@ -5,6 +5,13 @@
     <title>Cube France</title>
 </head>
 <body>
-    Cube France
+    <nav>
+        <ul>
+            @foreach ($categories as $categorie)
+                <x-category-item :categorie="$categorie" />
+            @endforeach
+        </ul>
+    </nav>
+    <h1>Cube France</h1>
 </body>
 </html>

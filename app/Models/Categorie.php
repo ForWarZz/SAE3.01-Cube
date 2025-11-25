@@ -47,4 +47,8 @@ class Categorie extends Model
     {
         return $this->belongsTo('App\Models\Categorie', 'id_categorie_parent', 'id_categorie');
     }
+
+    public function catEnfants(){
+        return $this->hasMany('App\Models\Categorie', 'id_categorie_parent', 'id_categorie');
+    }
 }
