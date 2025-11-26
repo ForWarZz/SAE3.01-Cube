@@ -7,10 +7,10 @@
 <body>
     <h1>Liste des vélos</h1>
     <ul>
-        @foreach ($velos as $velo)
-            <li>{{ $velo->id_article }} : {{ $velo->nom_article }} // {{ $velo->article->categorie->nom_categorie }}</li>
+        @foreach ($articles as $article)
+            <li>{{ $article->id_article }} : {{ $article->nom_article }} // {{ $article->categorie->nom_categorie }}</li>
         @endforeach
     </ul>
-    {{ $velos->links() }}
+    {{ $articles->links() }}
 </body>
 </html>

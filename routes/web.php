@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VeloController;
 use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\ModelController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/velos', [VeloController::class, "index"]);
+Route::get('/categorie/{categorie}', [ArticleController::class, "viewByCat"])->name('viewByCat');
+Route::get('/modele/{model}', [ArticleController::class, "viewByModel"])->name('viewByModel');
 
 require __DIR__.'/auth.php';
