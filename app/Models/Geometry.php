@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id_taille
  * @property int $id_carac_geo
  */
-class Geometrie extends Model
+class Geometry extends Model
 {
     protected $table = 'de_geometrie';
     public $incrementing = false;
@@ -22,13 +22,13 @@ class Geometrie extends Model
         'id_carac_geo',
     ];
 
-    public function taille(): BelongsTo
+    public function size(): BelongsTo
     {
-        return $this->belongsTo(TailleVelo::class, 'id_taille');
+        return $this->belongsTo(BikeSize::class, 'id_taille');
     }
 
-    public function caracteristique(): BelongsTo
+    public function characteristic(): BelongsTo
     {
-        return $this->belongsTo(CaracteristiqueGeometrie::class, 'id_carac_geo');
+        return $this->belongsTo(GeometryCharacteristic::class, 'id_carac_geo');
     }
 }

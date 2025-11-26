@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id_type_carac
  * @property string $nom_type_carac
  */
-class TypeCaracteristique extends Model
+class CharacteristicType extends Model
 {
     public $timestamps = false;
     protected $primaryKey = 'id_type_carac';
@@ -19,9 +19,4 @@ class TypeCaracteristique extends Model
         'id_type_carac',
         'nom_type_carac'
     ];
-
-//    public function caracteristiques(): HasMany
-//    {
-//        return $this->hasMany();
-//    }
 }

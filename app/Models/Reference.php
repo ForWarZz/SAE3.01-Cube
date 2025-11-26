@@ -18,8 +18,8 @@ class Reference extends Model
         'id_reference',
     ];
 
-    public function referenceVelo(): HasOne
+    public function bikeReference(): HasOne
     {
-        return $this->hasOne(ReferenceVelo::class, 'id_reference', 'id_reference');
+        return $this->hasOne(BikeReference::class, 'id_reference', 'id_reference');
     }
 }

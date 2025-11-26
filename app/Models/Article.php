@@ -28,30 +28,30 @@ class Article extends Model
         'resumer_article'
     ];
 
-    public function accessoires(): HasMany
+    public function accessories(): HasMany
     {
-        return $this->hasMany('App\Models\Accessoire', 'id_article', 'id_article');
+        return $this->hasMany('App\Models\Accessory', 'id_article', 'id_article');
     }
 
-    public function velo(): HasOne
+    public function bike(): HasOne
     {
-        return $this->hasOne(Velo::class, 'id_article', 'id_article');
+        return $this->hasOne(Bike::class, 'id_article', 'id_article');
     }
 
-    public function similaires(): BelongsToMany
+    public function similar(): BelongsToMany
     {
         return $this->belongsToMany(Article::class, 'similaire', 'id_article_simil', 'id_article');
     }
 
-    public function categorie(): BelongsTo
+    public function category(): BelongsTo
     {
-        return $this->belongsTo(Categorie::class, 'id_categorie', 'id_categorie');
+        return $this->belongsTo(Category::class, 'id_categorie', 'id_categorie');
     }
 
-    public function caracteristiques(): BelongsToMany
+    public function characteristics(): BelongsToMany
     {
         return $this->belongsToMany(
-            Caracteristique::class,
+            Characteristic::class,
             'caracterise',
             'id_article',
             'id_caracteristique'

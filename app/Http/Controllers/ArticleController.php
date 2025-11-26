@@ -3,54 +3,55 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Models\Categorie;
-use App\Models\Velo;
-use App\Models\ModeleVelo;
+use App\Models\Category;
+use App\Models\Bike;
+use App\Models\BikeModel;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
-    public function viewByCat(Categorie $categorie)
+    public function viewByCategory(Category $category)
     {
-        $articles = Article::whereIn('id_categorie', $categorie->allChildren())->paginate(15);
+        $articles = Article::whereIn('id_categorie', $category->getAllChildrenIds())->paginate(15);
 
-        // TODO: Refaire le breadcrumb recursivement
         return view("article.index", [
             'articles' => $articles,
-            'pageTitle' => $categorie->nom_categorie,
+            'pageTitle' => $category->nom_categorie,
             'breadcrumbs' => [
-                ['label' => 'Accueil', 'url' => route('home')],
-                ['label' => $categorie->nom_categorie, 'url' => null],
+                ['label' => 'Home', 'url' => route('home')],
+                ['label' => $category->nom_categorie, 'url' => null],
             ]
         ]);
     }
 
-    public function viewByModel(ModeleVelo $model)
+    public function viewByModel(BikeModel $bikeModel)
     {
-        $articles = Article::query()->whereHas('velo', function($query) use ($model) {
-            $query->where('id_modele_velo', '=', $model->id_modele_velo);
+        $articles = Article::query()->whereHas('bike', function($query) use ($bikeModel) {
+            $query->where('id_modele_velo', '=', $bikeModel->id_modele_velo);
         })->paginate(15);
 
-        // TODO: Refaire le breadcrumb recursivement
         return view("article.index", [
             'articles' => $articles,
-            'pageTitle' => $model->nom_modele_velo,
+            'pageTitle' => $bikeModel->nom_modele_velo,
             'breadcrumbs' => [
-                ['label' => 'Accueil', 'url' => route('home')],
-                ['label' => $model->nom_modele_velo, 'url' => null],
+                ['label' => 'Home', 'url' => route('home')],
+                ['label' => $bikeModel->nom_modele_velo, 'url' => null],
             ]
         ]);
     }
 
     public function show(Article $article)
     {
-        $article->load(['velo', 'accessoires']);
+        $article->load(['bike', 'accessories']);
 
-        if ($article->velo()->exists()) {
+        if ($article->bike()->exists()) {
             return redirect()->route(
                 'articles.bikes.redirect-to-default',
-                ['bike' => $article->velo]
+                ['bike' => $article->bike]
             );
         }
+
+        // Default: show article (if not a bike)
+        abort(404);
     }
 }

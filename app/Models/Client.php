@@ -21,22 +21,22 @@ class Client extends Model
     protected $primaryKey = 'id_client';
     protected $fillable = ['nom_client', 'prenom_client', 'email_client', 'naissance_client', 'civilite', 'hash_mdp_client', 'date_der_connexion'];
 
-    public function adresses(): HasMany
+    public function addresses(): HasMany
     {
         return $this->hasMany('App\Models\Adresse', 'id_client', 'id_client');
     }
 
-    public function demandeServiceClients(): HasMany
+    public function serviceRequests(): HasMany
     {
         return $this->hasMany('App\Models\DemandeServiceClient', 'id_client', 'id_client');
     }
 
-    public function commandes(): HasMany
+    public function orders(): HasMany
     {
         return $this->hasMany('App\Models\Commande', 'id_client', 'id_client');
     }
 
-    public function veloEnregistres(): HasMany
+    public function registeredBikes(): HasMany
     {
         return $this->hasMany('App\Models\VeloEnregistre', 'id_client', 'id_client');
     }

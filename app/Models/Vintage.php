@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id_millesime
  * @property string $label_millesime
  */
-class Millesime extends Model
+class Vintage extends Model
 {
     public $timestamps = false;
     protected $table = 'millesime';

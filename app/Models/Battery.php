@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id_batterie
  * @property string $capacite_batterie
  */
-class Batterie extends Model
+class Battery extends Model
 {
     public $timestamps = false;
 
@@ -20,8 +20,8 @@ class Batterie extends Model
         'capacite_batterie',
     ];
 
-    public function referencesVae(): HasMany
+    public function ebikeReferences(): HasMany
     {
-        return $this->hasMany(ReferenceVae::class, 'id_reference', 'id_reference');
+        return $this->hasMany(EBikeReference::class, 'id_reference', 'id_reference');
     }
 }

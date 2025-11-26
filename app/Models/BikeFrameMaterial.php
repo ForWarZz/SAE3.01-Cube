@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id_materiau_cadre
  * @property string label_materiau_cadre
  */
-class MateriauCadreVelo extends Model
+class BikeFrameMaterial extends Model
 {
     public $timestamps = false;
 

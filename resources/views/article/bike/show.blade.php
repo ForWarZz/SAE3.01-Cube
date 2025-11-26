@@ -5,37 +5,37 @@
 
             <div class="flex flex-col">
                 <div class="mb-8">
-                    <h1 class="text-3xl font-bold text-gray-900 mb-3">{{ $article->nom_article }}</h1>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-3">{{ $bike->nom_article }}</h1>
                     <div class="flex items-center gap-3 text-gray-600 mb-4">
-                        <span>{{ $article->modeleVelo->nom_modele_velo }}</span>
-                        @if($isVae)
-                            <span class="text-blue-600 font-medium">Électrique</span>
+                        <span>{{ $bike->bikeModel->nom_modele_velo }}</span>
+                        @if($isEbike)
+                            <span class="text-blue-600 font-medium">Electric</span>
                         @endif
                     </div>
                     <div class="flex flex-col">
                         <div class="flex gap-2 mb-2">
                             <span class="p-1 bg-gray-100 text-black text-sm">
-                                Poids: {{ $poids }}
+                                Weight: {{ $weight }}
                             </span>
                             <span class="p-1 bg-gray-100 text-black text-sm">
-                                Millesime: {{ $article->millesime->millesime_velo }}
+                                Year: {{ $bike->vintage->millesime_velo }}
                             </span>
                             <span class="p-1 bg-gray-100 text-black text-sm">
-                                Materiau du cadre: {{ $article->materiauCadre->label_materiau_cadre }}
+                                Frame Material: {{ $bike->frameMaterial->label_materiau_cadre }}
                             </span>
                         </div>
 
                         <div class="text-3xl font-bold text-blue-600">
-                            {{ number_format($article->prix_article, 2, ',', ' ') }} €
+                            {{ number_format($bike->prix_article, 2, ',', ' ') }} €
                         </div>
                     </div>
                 </div>
 
                 <div class="flex flex-col gap-8">
                     <div>
-                        <label class="block text-sm font-medium text-gray-900 mb-3">Type de cadre</label>
+                        <label class="block text-sm font-medium text-gray-900 mb-3">Frame Type</label>
                         <div class="flex gap-2">
-                            @foreach($optionsCadres as $opt)
+                            @foreach($frameOptions as $opt)
                                 <a href="{{ $opt['url'] }}"
                                    class="px-5 py-2.5 border rounded-lg text-sm font-medium {{ $opt['active'] ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400' }}">
                                     {{ $opt['label'] }}
@@ -44,11 +44,11 @@
                         </div>
                     </div>
 
-                    @if($isVae && $optionsBatteries->count() > 0)
+                    @if($isEbike && $batteryOptions->count() > 0)
                         <div>
-                            <label class="block text-sm font-medium text-gray-900 mb-3">Capacité batterie</label>
+                            <label class="block text-sm font-medium text-gray-900 mb-3">Battery Capacity</label>
                             <div class="flex gap-2">
-                                @foreach($optionsBatteries as $opt)
+                                @foreach($batteryOptions as $opt)
                                     <a href="{{ $opt['url'] }}"
                                        class="px-5 py-2.5 border rounded-lg text-sm font-medium {{ $opt['active'] ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400' }}">
                                         {{ $opt['label'] }}
@@ -60,11 +60,11 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-900 mb-3">
-                            Couleur : <span
-                                class="font-normal text-gray-600">{{ $currentRef->couleur->label_couleur }}</span>
+                            Color: <span
+                                class="font-normal text-gray-600">{{ $currentReference->color->label_couleur }}</span>
                         </label>
                         <div class="flex gap-3">
-                            @foreach($optionsCouleurs as $opt)
+                            @foreach($colorOptions as $opt)
                                 <a href="{{ $opt['url'] }}"
                                    title="{{ $opt['label'] }}"
                                    class="size-10 rounded-full bg-gray-200 {{ $opt['active'] ? 'ring-2 ring-offset-2 ring-gray-900' : 'opacity-70 hover:opacity-100' }}">
@@ -74,18 +74,18 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-900 mb-3">Tailles</label>
+                        <label class="block text-sm font-medium text-gray-900 mb-3">Sizes</label>
                         <div class="flex flex-wrap gap-3 min-w-md max-w-md">
-                            @foreach($optionsTailles as $opt)
+                            @foreach($sizeOptions as $opt)
                                 <div class="relative">
                                     <input type="radio"
-                                           name="taille"
-                                           id="taille_{{ $opt['id'] }}"
+                                           name="size"
+                                           id="size_{{ $opt['id'] }}"
                                            value="{{ $opt['id'] }}"
                                            class="peer sr-only"
                                         {{ $opt['disabled'] ? 'disabled' : '' }}>
 
-                                    <label for="taille_{{ $opt['id'] }}"
+                                    <label for="size_{{ $opt['id'] }}"
                                            class="flex items-center justify-center px-4 py-2 border rounded-md text-sm font-medium cursor-pointer transition-all
                                           bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300
                                           peer-checked:bg-black peer-checked:text-white peer-checked:border-black
@@ -114,8 +114,8 @@
         @if($geometries)
             <div class="mt-16 pt-12 border-t border-gray-200">
                 @include('article.bike.partials.geometrie', [
-                    'nomModele' => $article->modeleVelo->nom_modele_velo,
-                    'tailles' => $taillesGeo,
+                    'modelName' => $bike->bikeModel->nom_modele_velo,
+                    'sizes' => $geometrySizes,
                     'geometries' => $geometries
                 ])
             </div>

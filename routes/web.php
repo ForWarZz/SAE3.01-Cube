@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\CategorieController;
-use App\Http\Controllers\VeloController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BikeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Models\Velo;
+use App\Models\Bike;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,17 +18,17 @@ use App\Models\Velo;
 |
 */
 
-Route::get('/', [CategorieController::class, 'index'])->name('home');
+Route::get('/', [CategoryController::class, 'index'])->name('home');
 
 Route::prefix('articles')->name('articles.')->group(function () {
     Route::get('/{article}', [ArticleController::class, 'show'])->name('show');
 
-    Route::get('/categories/{categorie}', [ArticleController::class, 'viewByCat'])->name('by-category');
-    Route::get('/modeles/{model}', [ArticleController::class, 'viewByModel'])->name('by-model');
+    Route::get('/categories/{category}', [ArticleController::class, 'viewByCategory'])->name('by-category');
+    Route::get('/modeles/{bikeModel}', [ArticleController::class, 'viewByModel'])->name('by-model');
 
     Route::prefix('/velos')->name('bikes.')->group(function () {
-        Route::get('/reference/{reference}', [VeloController::class, 'show'])->name('show');
-        Route::get('/{bike}', [VeloController::class, 'redirectToDefaultVariant'])->name('redirect-to-default');
+        Route::get('/reference/{reference}', [BikeController::class, 'show'])->name('show');
+        Route::get('/{bike}', [BikeController::class, 'redirectToDefaultVariant'])->name('redirect-to-default');
     });
 });
 

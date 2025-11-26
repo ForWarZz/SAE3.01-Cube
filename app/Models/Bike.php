@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $description_article
  * @property string $resumer_article
  */
-class Velo extends Model
+class Bike extends Model
 {
     protected $table = 'velo';
     protected $primaryKey = 'id_article';
@@ -34,19 +34,19 @@ class Velo extends Model
         'resumer_article'
     ];
 
-    public function materiauCadre(): BelongsTo
+    public function frameMaterial(): BelongsTo
     {
-        return $this->belongsTo(MateriauCadreVelo::class, 'id_materiau_cadre', 'id_materiau_cadre');
+        return $this->belongsTo(BikeFrameMaterial::class, 'id_materiau_cadre', 'id_materiau_cadre');
     }
 
-    public function millesime(): BelongsTo
+    public function vintage(): BelongsTo
     {
-        return $this->belongsTo(Millesime::class, 'id_millesime', 'id_millesime');
+        return $this->belongsTo(Vintage::class, 'id_millesime', 'id_millesime');
     }
 
-    public function modeleVelo(): BelongsTo
+    public function bikeModel(): BelongsTo
     {
-        return $this->belongsTo(ModeleVelo::class, 'id_modele_velo', 'id_modele_velo');
+        return $this->belongsTo(BikeModel::class, 'id_modele_velo', 'id_modele_velo');
     }
 
     public function article(): BelongsTo
@@ -56,6 +56,6 @@ class Velo extends Model
 
     public function references(): HasMany
     {
-        return $this->hasMany(ReferenceVelo::class, 'id_article', 'id_article');
+        return $this->hasMany(BikeReference::class, 'id_article', 'id_article');
     }
 }

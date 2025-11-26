@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id_couleur
  * @property string $label_couleur
  */
-class Couleur extends Model
+class Color extends Model
 {
     public $timestamps = false;
 

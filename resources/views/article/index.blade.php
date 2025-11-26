@@ -46,9 +46,9 @@
                                 {{ $article->nom_article }}
                             </h3>
 
-                            @if($article->modeleVelo)
+                            @if($article->bike)
                                 <p class="text-sm text-gray-500 mb-3">
-                                    {{ $article->modeleVelo->nom_modele_velo }}
+                                    {{ $article->bike->bikeModel->nom_modele_velo }}
                                 </p>
                             @endif
 

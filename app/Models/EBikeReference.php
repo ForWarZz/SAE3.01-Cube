@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id_cadre_velo
  * @property int $id_couleur
  */
-class ReferenceVae extends Model
+class EBikeReference extends Model
 {
     public $timestamps = false;
 
@@ -26,8 +26,8 @@ class ReferenceVae extends Model
         'id_couleur',
     ];
 
-    public function batterie(): BelongsTo
+    public function battery(): BelongsTo
     {
-        return $this->belongsTo(Batterie::class, 'id_batterie', 'id_batterie');
+        return $this->belongsTo(Battery::class, 'id_batterie', 'id_batterie');
     }
 }

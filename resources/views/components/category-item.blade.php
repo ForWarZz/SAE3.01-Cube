@@ -2,30 +2,30 @@
 
 <li class="categorie{{ $n }}">
     <a href="{{ route('articles.by-category', $categorie) }}">{{ $categorie->nom_categorie }}</a>
-    @if ($categorie->catEnfants->isNotEmpty())
+    @if ($categorie->children->isNotEmpty())
         <ul>
-            @foreach ($categorie->catEnfants as $enfant)
-                <x-category-item :categorie="$enfant" :n="$n+1" />
+            @foreach ($categorie->children as $child)
+                <x-category-item :categorie="$child" :n="$n+1" />
             @endforeach
         </ul>
     @elseif ($categorie->articles->isNotEmpty())
         @php
-            $lmodele = collect([])
+            $modelList = collect([])
         @endphp
         @foreach ($categorie->articles as $article)
-            @if (!is_null($article->velo))
+            @if (!is_null($article->bike))
                 @php
-                    $modele = $article->velo->modelevelo;
-                    if (!$lmodele->contains($modele)){
-                        $lmodele->push($modele);
+                    $model = $article->bike->bikeModel;
+                    if (!$modelList->contains($model)){
+                        $modelList->push($model);
                     }
                 @endphp
             @endif
         @endforeach
-        @if ($lmodele->isNotEmpty())
+        @if ($modelList->isNotEmpty())
             <ul>
-                @foreach ($lmodele as $modele)
-                    <li class="modele"><a href="{{ route('articles.by-model', $modele) }}">{{ $modele->nom_modele_velo }}</a></li>
+                @foreach ($modelList as $model)
+                    <li class="modele"><a href="{{ route('articles.by-model', $model) }}">{{ $model->nom_modele_velo }}</a></li>
                 @endforeach
             </ul>
         @endif

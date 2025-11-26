@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property integer $id_categorie_parent
  * @property string $nom_categorie
  */
-class Categorie extends Model
+class Category extends Model
 {
     protected $table = 'categorie';
     protected $primaryKey = 'id_categorie';
@@ -27,19 +27,24 @@ class Categorie extends Model
 
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(Categorie::class, 'id_categorie_parent', 'id_categorie');
+        return $this->belongsTo(Category::class, 'id_categorie_parent', 'id_categorie');
     }
 
-    public function catEnfants()
+    public function children(): HasMany
     {
-        return $this->hasMany('App\Models\Categorie', 'id_categorie_parent', 'id_categorie');
+        return $this->hasMany('App\Models\Category', 'id_categorie_parent', 'id_categorie');
     }
 
-    public function allChildren(){
+    /**
+     * Get all children categories recursively including this one
+     */
+    public function getAllChildrenIds(){
         $ids = collect([$this->id_categorie]);
-        foreach($this->catEnfants as $child){
-            $ids = $ids->merge($child->allChildren());
+
+        foreach($this->children as $child){
+            $ids = $ids->merge($child->getAllChildrenIds());
         }
+
         return $ids;
     }
 }

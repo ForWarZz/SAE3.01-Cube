@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id_taille
  * @property string $nom_taille
  */
-class TailleVelo extends Model
+class BikeSize extends Model
 {
     protected $table = 'taille_velo';
     protected $primaryKey = 'id_taille';

@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $id_couleur
  * @property int $id_article
  */
-class ReferenceVelo extends Model
+class BikeReference extends Model
 {
     public $timestamps = false;
 
@@ -32,30 +32,30 @@ class ReferenceVelo extends Model
         return $this->belongsTo(Article::class, 'id_article', 'id_article');
     }
 
-    public function velo(): BelongsTo
+    public function bike(): BelongsTo
     {
-        return $this->belongsTo(Velo::class, 'id_article', 'id_article');
+        return $this->belongsTo(Bike::class, 'id_article', 'id_article');
     }
 
-    public function referenceVae(): BelongsTo
+    public function ebike(): BelongsTo
     {
-        return $this->belongsTo(ReferenceVae::class, 'id_reference', 'id_reference');
+        return $this->belongsTo(EBikeReference::class, 'id_reference', 'id_reference');
     }
 
-    public function couleur(): BelongsTo
+    public function color(): BelongsTo
     {
-        return $this->belongsTo(Couleur::class, 'id_couleur', 'id_couleur');
+        return $this->belongsTo(Color::class, 'id_couleur', 'id_couleur');
     }
 
-    public function cadre(): BelongsTo
+    public function frame(): BelongsTo
     {
-        return $this->belongsTo(CadreVelo::class, 'id_cadre_velo', 'id_cadre_velo');
+        return $this->belongsTo(BikeFrame::class, 'id_cadre_velo', 'id_cadre_velo');
     }
 
-    public function taillesDispo(): BelongsToMany
+    public function availableSizes(): BelongsToMany
     {
         return $this->belongsToMany(
-            TailleVelo::class,
+            BikeSize::class,
             'taille_dispo',
             'id_reference',
             'id_taille'

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $nom_caracteristique
  * @property string $pivot
  */
-class Caracteristique extends Model
+class Characteristic extends Model
 {
     public $timestamps = false;
 
@@ -24,8 +24,8 @@ class Caracteristique extends Model
         'nom_caracteristique'
     ];
 
-    public function type(): BelongsTo
+    public function characteristicType(): BelongsTo
     {
-        return $this->belongsTo(TypeCaracteristique::class, 'id_type_carac', 'id_type_carac');
+        return $this->belongsTo(CharacteristicType::class, 'id_type_carac', 'id_type_carac');
     }
 }
