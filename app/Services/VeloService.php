@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\Caracteristique;
 use App\Models\ModeleVelo;
 use App\Models\ReferenceVelo;
 use App\Models\Velo;
 use Illuminate\Support\Collection;
+use function PHPUnit\Framework\isNull;
 
 class VeloService
 {
@@ -44,12 +44,11 @@ class VeloService
             ->with(['couleur', 'cadre', 'referenceVae.batterie'])
             ->get();
 
-        $optionsCadres = $this
-            ->buildOptions($variantes, $currentRef, 'cadre', 'id_cadre_velo', 'label_cadre_velo');
-        $optionsCouleurs = $this
-            ->buildOptions($variantes, $currentRef, 'couleur', 'id_couleur', 'label_couleur');
+        $optionsCadres = $this->buildFramesOptions($variantes, $currentRef);
+        $optionsCouleurs = $this->buildColorsOptions($variantes, $currentRef);
 
         $optionsBatteries = collect();
+
         if ($isVae) {
             $optionsBatteries = $this->buildBatteryOptions($variantes, $currentRef);
         }
@@ -114,40 +113,62 @@ class VeloService
     /**
      * @param Collection $siblings
      * @param ReferenceVelo $currentRef
-     * @param string $relation
-     * @param string $fk
-     * @param string $labelField
      * @return Collection{
      *     label: string,
      *     url: string,
      *     active: bool
      * }
      */
-    private function buildOptions(Collection $siblings, ReferenceVelo $currentRef, string $relation, string $fk, string $labelField): Collection
+    private function buildFramesOptions(Collection $siblings, ReferenceVelo $currentRef): Collection
     {
         return $siblings
-            ->pluck($relation)
-            ->unique($fk)
-            ->sortBy($labelField)
-            ->map(function ($item) use ($siblings, $currentRef, $fk, $labelField) {
-                $target = $siblings->first(function ($ref) use ($item, $currentRef, $fk) {
-                    if ($ref->$fk != $item->$fk) return false;
-                    if ($fk === 'id_cadre_velo' && $ref->id_couleur != $currentRef->id_couleur) return false;
-                    if ($fk === 'id_couleur' && $ref->id_cadre_velo != $currentRef->id_cadre_velo) return false;
+            ->pluck('cadre')
+            ->unique('id_cadre_velo')
+            ->sortBy('label_cadre_velo')
+            ->map(function ($item) use ($siblings, $currentRef) {
+                $target = $siblings->first(function ($ref) use ($item, $currentRef) {
+                    if ($ref->id_cadre_velo != $item->id_cadre_velo) return false;
+                    if ($ref->id_couleur != $currentRef->id_couleur) return false;
 
                     return true;
                 });
 
-            if (!$target) {
-                $target = $siblings->firstWhere($fk, $item->$fk);
-            }
+                if (isnull($target)) {
+                    $target = $siblings->firstWhere('id_cadre_velo', '=', $item->id_cadre_velo);
+                }
 
-            return [
-                'label' => $item->$labelField,
-                'url' => route('velo.show', $target->id_reference),
-                'active' => $currentRef->$fk == $item->$fk,
-            ];
-        });
+                return [
+                    'label' => $item->label_cadre_velo,
+                    'url' => route('velo.show', $target->id_reference),
+                    'active' => $currentRef->id_cadre_velo == $item->id_cadre_velo,
+                ];
+            });
+    }
+
+    private function buildColorsOptions(Collection $siblings, ReferenceVelo $currentRef): Collection
+    {
+        return $siblings
+            ->pluck('couleur')
+            ->unique('id_couleur')
+            ->sortBy('label_couleur')
+            ->map(function ($item) use ($siblings, $currentRef) {
+                $target = $siblings->first(function ($ref) use ($item, $currentRef) {
+                    if ($ref->id_couleur != $item->id_couleur) return false;
+                    if ($ref->id_cadre_velo != $currentRef->id_cadre_velo) return false;
+
+                    return true;
+                });
+
+                if (isnull($target)) {
+                    $target = $siblings->firstWhere('id_couleur', '=', $item->id_couleur);
+                }
+
+                return [
+                    'label' => $item->label_couleur,
+                    'url' => route('velo.show', $target->id_reference),
+                    'active' => $currentRef->id_couleur == $item->id_couleur,
+                ];
+            });
     }
 
     /**
@@ -168,9 +189,11 @@ class VeloService
 
         return $batteries->map(function ($batterie) use ($siblings, $currentRef) {
             $target = $siblings->first(function ($ref) use ($batterie, $currentRef) {
-                return $ref->referenceVae?->id_batterie == $batterie->id_batterie
-                    && $ref->id_cadre_velo == $currentRef->id_cadre_velo
-                    && $ref->id_couleur == $currentRef->id_couleur;
+                if ($ref->referenceVae?->id_batterie != $batterie->id_batterie) return false;
+                if ($ref->id_couleur != $currentRef->id_couleur) return false;
+                if ($ref->id_cadre_velo != $currentRef->id_cadre_velo) return false;
+
+                return true;
             });
 
             if (!$target) {
