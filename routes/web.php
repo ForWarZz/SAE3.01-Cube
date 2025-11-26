@@ -21,26 +21,25 @@ use App\Models\Velo;
 Route::get('/', [CategorieController::class, 'index'])->name('home');
 
 Route::prefix('articles')->name('articles.')->group(function () {
+    Route::get('/{article}', [ArticleController::class, 'show'])->name('show');
+
     Route::get('/categories/{categorie}', [ArticleController::class, 'viewByCat'])->name('by-category');
     Route::get('/modeles/{model}', [ArticleController::class, 'viewByModel'])->name('by-model');
 
-    // Vélos
     Route::prefix('/velos')->name('bikes.')->group(function () {
         Route::get('/reference/{reference}', [VeloController::class, 'show'])->name('show');
         Route::get('/{bike}', [VeloController::class, 'redirectToDefaultVariant'])->name('redirect-to-default');
     });
 });
 
-// Tableau de bord
-Route::get('/tableau-de-bord', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-// Profil utilisateur
-Route::middleware('auth')->prefix('profil')->name('profile.')->group(function () {
-    Route::get('/', [ProfileController::class, 'edit'])->name('edit');
-    Route::patch('/', [ProfileController::class, 'update'])->name('update');
-    Route::delete('/', [ProfileController::class, 'destroy'])->name('delete');
-});
+//Route::get('/tableau-de-bord', function () {
+//    return view('dashboard');
+//})->middleware(['auth', 'verified'])->name('dashboard');
+//
+//Route::middleware('auth')->prefix('profil')->name('profile.')->group(function () {
+//    Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+//    Route::patch('/', [ProfileController::class, 'update'])->name('update');
+//    Route::delete('/', [ProfileController::class, 'destroy'])->name('delete');
+//});
 
 require __DIR__.'/auth.php';

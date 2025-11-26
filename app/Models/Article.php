@@ -20,7 +20,13 @@ class Article extends Model
 {
     protected $table = 'article';
     protected $primaryKey = 'id_article';
-    protected $fillable = ['id_categorie', 'prix_article', 'nom_article', 'description_article', 'resumer_article'];
+    protected $fillable = [
+        'id_categorie',
+        'prix_article',
+        'nom_article',
+        'description_article',
+        'resumer_article'
+    ];
 
     public function accessoires(): HasMany
     {

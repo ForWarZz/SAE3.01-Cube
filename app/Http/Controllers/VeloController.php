@@ -20,9 +20,9 @@ class VeloController extends Controller
 
     }
 
-    public function redirectToDefaultVariant($id_article)
+    public function redirectToDefaultVariant(Velo $bike)
     {
-        $premiereRef = ReferenceVelo::where('id_article', $id_article)
+        $premiereRef = ReferenceVelo::where('id_article', $bike->id_article)
             ->orderBy('id_reference')
             ->firstOrFail();
 
