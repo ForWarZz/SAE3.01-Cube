@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\VeloController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -16,14 +18,15 @@ use App\Models\Velo;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [CategorieController::class, 'index']);
 
 Route::prefix('/velos')->group(function () {
     Route::get('/{reference}', [VeloController::class, 'show'])->name('velo.show');
     Route::get('/velo/{velo}', [VeloController::class, 'redirectToDefaultVariant'])->name('velo.redirectToFirstRef');
 });
+
+Route::get('/categorie/{categorie}', [ArticleController::class, "viewByCat"])->name('viewByCat');
+Route::get('/modele/{model}', [ArticleController::class, "viewByModel"])->name('viewByModel');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
