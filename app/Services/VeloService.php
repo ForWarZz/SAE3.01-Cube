@@ -139,7 +139,7 @@ class VeloService
 
                 return [
                     'label' => $item->label_cadre_velo,
-                    'url' => route('velo.show', $target->id_reference),
+                    'url' => route('articles.bikes.show', $target->id_reference),
                     'active' => $currentRef->id_cadre_velo == $item->id_cadre_velo,
                 ];
             });
@@ -165,7 +165,7 @@ class VeloService
 
                 return [
                     'label' => $item->label_couleur,
-                    'url' => route('velo.show', $target->id_reference),
+                    'url' => route('articles.bikes.show', $target->id_reference),
                     'active' => $currentRef->id_couleur == $item->id_couleur,
                 ];
             });
@@ -202,7 +202,7 @@ class VeloService
 
             return [
                 'label' => $batterie->capacite_batterie . ' Wh',
-                'url' => route('velo.show', $target->id_reference),
+                'url' => route('articles.bikes.show', $target->id_reference),
                 'active' => $currentRef->referenceVae->id_batterie == $batterie->id_batterie
             ];
         });

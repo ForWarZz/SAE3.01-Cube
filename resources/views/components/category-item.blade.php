@@ -1,7 +1,7 @@
 @props(['categorie', 'n'])
 
 <li class="categorie{{ $n }}">
-    <a href="/categorie/{{ $categorie->id_categorie }}">{{ $categorie->nom_categorie }}</a>
+    <a href="{{ route('articles.by-category', $categorie) }}">{{ $categorie->nom_categorie }}</a>
     @if ($categorie->catEnfants->isNotEmpty())
         <ul>
             @foreach ($categorie->catEnfants as $enfant)
@@ -25,7 +25,7 @@
         @if ($lmodele->isNotEmpty())
             <ul>
                 @foreach ($lmodele as $modele)
-                    <li class="modele"><a href="/modele/{{ $modele->id_modele_velo }}">{{ $modele->nom_modele_velo }}</a></li>
+                    <li class="modele"><a href="{{ route('articles.by-model', $modele) }}">{{ $modele->nom_modele_velo }}</a></li>
                 @endforeach
             </ul>
         @endif

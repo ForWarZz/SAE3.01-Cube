@@ -60,7 +60,8 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-900 mb-3">
-                            Couleur : <span class="font-normal text-gray-600">{{ $currentRef->couleur->label_couleur }}</span>
+                            Couleur : <span
+                                class="font-normal text-gray-600">{{ $currentRef->couleur->label_couleur }}</span>
                         </label>
                         <div class="flex gap-3">
                             @foreach($optionsCouleurs as $opt)
@@ -112,7 +113,7 @@
 
         @if($geometries)
             <div class="mt-16 pt-12 border-t border-gray-200">
-                @include('article.velo.partials.geometrie', [
+                @include('article.bike.partials.geometrie', [
                     'nomModele' => $article->modeleVelo->nom_modele_velo,
                     'tailles' => $taillesGeo,
                     'geometries' => $geometries

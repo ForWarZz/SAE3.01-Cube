@@ -26,13 +26,13 @@ class VeloController extends Controller
             ->orderBy('id_reference')
             ->firstOrFail();
 
-        return redirect()->route('velo.show', ['reference' => $premiereRef->id_reference]);
+        return redirect()->route('articles.bikes.show', ['reference' => $premiereRef->id_reference]);
     }
 
     public function show(ReferenceVelo $reference)
     {
         $data = $this->veloService->prepareViewData($reference);
 
-        return view('article.velo.show', $data);
+        return view('article.bike.show', $data);
     }
 }

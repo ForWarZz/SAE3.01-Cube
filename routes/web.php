@@ -18,24 +18,29 @@ use App\Models\Velo;
 |
 */
 
-Route::get('/', [CategorieController::class, 'index']);
+Route::get('/', [CategorieController::class, 'index'])->name('home');
 
-Route::prefix('/velos')->group(function () {
-    Route::get('/{reference}', [VeloController::class, 'show'])->name('velo.show');
-    Route::get('/velo/{velo}', [VeloController::class, 'redirectToDefaultVariant'])->name('velo.redirectToFirstRef');
+Route::prefix('articles')->name('articles.')->group(function () {
+    Route::get('/categories/{categorie}', [ArticleController::class, 'viewByCat'])->name('by-category');
+    Route::get('/modeles/{model}', [ArticleController::class, 'viewByModel'])->name('by-model');
+
+    // Vélos
+    Route::prefix('/velos')->name('bikes.')->group(function () {
+        Route::get('/reference/{reference}', [VeloController::class, 'show'])->name('show');
+        Route::get('/{bike}', [VeloController::class, 'redirectToDefaultVariant'])->name('redirect-to-default');
+    });
 });
 
-Route::get('/categorie/{categorie}', [ArticleController::class, "viewByCat"])->name('viewByCat');
-Route::get('/modele/{model}', [ArticleController::class, "viewByModel"])->name('viewByModel');
-
-Route::get('/dashboard', function () {
+// Tableau de bord
+Route::get('/tableau-de-bord', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// Profil utilisateur
+Route::middleware('auth')->prefix('profil')->name('profile.')->group(function () {
+    Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+    Route::patch('/', [ProfileController::class, 'update'])->name('update');
+    Route::delete('/', [ProfileController::class, 'destroy'])->name('delete');
 });
 
 require __DIR__.'/auth.php';
