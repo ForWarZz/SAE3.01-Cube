@@ -18,7 +18,9 @@ use App\Models\Bike;
 |
 */
 
-Route::get('/', [CategoryController::class, 'index'])->name('home');
+Route::get('/', function () {
+    return view('index');
+})->name('home');
 
 Route::prefix('articles')->name('articles.')->group(function () {
     Route::get('/{article}', [ArticleController::class, 'show'])->name('show');

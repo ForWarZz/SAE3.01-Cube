@@ -1,16 +1,20 @@
-const menuItems = document.querySelectorAll('.ul-navbar li');
+/**
+ * Gestion du menu de navigation avec hover
+ */
+
+const menuItems = document.querySelectorAll('.menu-item');
 
 menuItems.forEach(item => {
-    item.addEventListener('mouseenter', function() {
-        const subMenu = this.querySelector('ul');
-        if (subMenu) {
-            subMenu.style.display = 'block';
-        }
-    });
-    item.addEventListener('mouseleave', function() {
-        const subMenu = this.querySelector('ul');
-        if (subMenu) {
-            subMenu.style.display = 'none';
-        }
-    });
+    const submenu = item.closest('li').querySelector('.submenu');
+
+    if (submenu) {
+        item.addEventListener('mouseenter', function() {
+            submenu.classList.remove('hidden');
+        });
+
+        item.closest('li').addEventListener('mouseleave', function() {
+            submenu.classList.add('hidden');
+        });
+    }
 });
+
