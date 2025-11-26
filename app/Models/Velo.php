@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Velo extends Model
 {
-    protected $table = 'bike';
+    protected $table = 'velo';
     protected $primaryKey = 'id_article';
 
     protected $fillable = [
