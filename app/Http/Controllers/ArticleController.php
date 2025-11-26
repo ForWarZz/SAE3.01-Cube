@@ -3,13 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Models\Category;
-use App\Models\Bike;
 use App\Models\BikeModel;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
+    public function __construct(
+        protected ArticleService $articleService,
+    )
+    { }
+
+    public function search(Request $request)
+    {
+        $search = $request->input('search', '');
+        $articles = $this->articleService->searchArticles($search);
+
+        return response()->json($articles);
+    }
+
     public function viewByCategory(Category $category)
     {
         $articles = Article::whereIn('id_categorie', $category->getAllChildrenIds())->paginate(15);
@@ -50,8 +62,5 @@ class ArticleController extends Controller
                 ['bike' => $article->bike]
             );
         }
-
-        // Default: show article (if not a bike)
-        abort(404);
     }
 }
