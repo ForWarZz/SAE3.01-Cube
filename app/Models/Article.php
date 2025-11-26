@@ -41,4 +41,14 @@ class Article extends Model
     {
         return $this->belongsTo(Categorie::class, 'id_categorie', 'id_categorie');
     }
+
+    public function caracteristiques(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Caracteristique::class,
+            'caracterise',
+            'id_article',
+            'id_caracteristique'
+        )->withPivot('valeur_caracteristique');
+    }
 }

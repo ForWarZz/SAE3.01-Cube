@@ -2,27 +2,45 @@
 
 namespace App\Services;
 
+use App\Models\Caracteristique;
 use App\Models\ModeleVelo;
 use App\Models\ReferenceVelo;
+use App\Models\Velo;
 use Illuminate\Support\Collection;
 
 class VeloService
 {
+    /**
+     * @param ReferenceVelo $currentRef
+     * @return array{
+     *     currentRef: ReferenceVelo,
+     *     article: Velo,
+     *     isVae: bool,
+     *     optionsCadres: Collection,
+     *     optionsCouleurs: Collection,
+     *     optionsBatteries: Collection,
+     *     optionsTailles: Collection,
+     *     geometries: Collection,
+     *     taillesGeo: Collection,
+     *     caracteristiques: Collection
+     * }
+     */
     public function prepareViewData(ReferenceVelo $currentRef): array
     {
         $currentRef->load([
             'velo.modeleVelo.geometries.caracteristique',
             'velo.modeleVelo.geometries.taille',
+            'article.caracteristiques.type',
             'referenceVae.batterie',
             'couleur',
             'cadre',
             'taillesDispo'
         ]);
 
-        $article = $currentRef->velo;
+        $velo = $currentRef->velo;
         $isVae = $currentRef->referenceVae !== null;
 
-        $variantes = ReferenceVelo::where('id_article', $article->id_article)
+        $variantes = ReferenceVelo::where('id_article', $velo->id_article)
             ->with(['couleur', 'cadre', 'referenceVae.batterie'])
             ->get();
 
@@ -36,12 +54,17 @@ class VeloService
             $optionsBatteries = $this->buildBatteryOptions($variantes, $currentRef);
         }
 
-        $geoData = $this->buildGeometryData($article->modeleVelo);
+        $geoData = $this->buildGeometryData($velo->modeleVelo);
         $optionsTailles = $this->buildSizeOptions($currentRef, $geoData['headers']);
+
+        $caracteristiquesGroupees = $velo->article->caracteristiques->groupBy('type.nom_type_carac');
+        $poids = $velo->article->caracteristiques
+            ->firstWhere('type.nom_type_carac', '=', 'Poids')
+            ->pivot->valeur_caracteristique;
 
         return [
             'currentRef' => $currentRef,
-            'article' => $article,
+            'article' => $velo,
             'isVae' => $isVae,
             'optionsCadres' => $optionsCadres,
             'optionsCouleurs' => $optionsCouleurs,
@@ -50,6 +73,9 @@ class VeloService
 
             'geometries' => $geoData['rows'],
             'taillesGeo' => $geoData['headers'],
+
+            'caracteristiques' => $caracteristiquesGroupees,
+            'poids' => $poids
         ];
     }
 

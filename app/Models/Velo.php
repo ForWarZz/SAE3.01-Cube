@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -33,15 +34,15 @@ class Velo extends Model
         'resumer_article'
     ];
 
-//    public function materiauCadreVelo(): BelongsTo
-//    {
-//        return $this->belongsTo('App\Models\MateriauCadreVelo', 'id_materiau_cadre', 'id_materiau_cadre');
-//    }
+    public function materiauCadre(): BelongsTo
+    {
+        return $this->belongsTo(MateriauCadreVelo::class, 'id_materiau_cadre', 'id_materiau_cadre');
+    }
 
-//    public function millesime(): BelongsTo
-//    {
-//        return $this->belongsTo('App\Models\Millesime', 'id_millesime', 'id_millesime');
-//    }
+    public function millesime(): BelongsTo
+    {
+        return $this->belongsTo(Millesime::class, 'id_millesime', 'id_millesime');
+    }
 
     public function modeleVelo(): BelongsTo
     {

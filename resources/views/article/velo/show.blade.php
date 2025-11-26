@@ -7,13 +7,27 @@
                 <div class="mb-8">
                     <h1 class="text-3xl font-bold text-gray-900 mb-3">{{ $article->nom_article }}</h1>
                     <div class="flex items-center gap-3 text-gray-600 mb-4">
-                        <span>{{ $article->modeleVelo?->nom_modele_velo }}</span>
+                        <span>{{ $article->modeleVelo->nom_modele_velo }}</span>
                         @if($isVae)
                             <span class="text-blue-600 font-medium">Électrique</span>
                         @endif
                     </div>
-                    <div class="text-3xl font-bold text-blue-600">
-                        {{ number_format($article->prix_article, 2, ',', ' ') }} €
+                    <div class="flex flex-col">
+                        <div class="flex gap-2 mb-2">
+                            <span class="p-1 bg-gray-100 text-black text-sm">
+                                Poids: {{ $poids }}
+                            </span>
+                            <span class="p-1 bg-gray-100 text-black text-sm">
+                                Millesime: {{ $article->millesime->millesime_velo }}
+                            </span>
+                            <span class="p-1 bg-gray-100 text-black text-sm">
+                                Materiau du cadre: {{ $article->materiauCadre->label_materiau_cadre }}
+                            </span>
+                        </div>
+
+                        <div class="text-3xl font-bold text-blue-600">
+                            {{ number_format($article->prix_article, 2, ',', ' ') }} €
+                        </div>
                     </div>
                 </div>
 
