@@ -9,19 +9,19 @@
                     <div class="flex items-center gap-3 text-gray-600 mb-4">
                         <span>{{ $bike->bikeModel->nom_modele_velo }}</span>
                         @if($isEbike)
-                            <span class="text-blue-600 font-medium">Electric</span>
+                            <span class="text-blue-600 font-medium">Électrique</span>
                         @endif
                     </div>
                     <div class="flex flex-col">
                         <div class="flex gap-2 mb-2">
                             <span class="p-1 bg-gray-100 text-black text-sm">
-                                Weight: {{ $weight }}
+                                Poids : {{ $weight }}
                             </span>
                             <span class="p-1 bg-gray-100 text-black text-sm">
-                                Year: {{ $bike->vintage->millesime_velo }}
+                                Millesime : {{ $bike->vintage->millesime_velo }}
                             </span>
                             <span class="p-1 bg-gray-100 text-black text-sm">
-                                Frame Material: {{ $bike->frameMaterial->label_materiau_cadre }}
+                                Materiau du cadre : {{ $bike->frameMaterial->label_materiau_cadre }}
                             </span>
                         </div>
 
@@ -33,7 +33,7 @@
 
                 <div class="flex flex-col gap-8">
                     <div>
-                        <label class="block text-sm font-medium text-gray-900 mb-3">Frame Type</label>
+                        <label class="block text-sm font-medium text-gray-900 mb-3">Type de cadre</label>
                         <div class="flex gap-2">
                             @foreach($frameOptions as $opt)
                                 <a href="{{ $opt['url'] }}"
@@ -46,7 +46,7 @@
 
                     @if($isEbike && $batteryOptions->count() > 0)
                         <div>
-                            <label class="block text-sm font-medium text-gray-900 mb-3">Battery Capacity</label>
+                            <label class="block text-sm font-medium text-gray-900 mb-3">Batterie</label>
                             <div class="flex gap-2">
                                 @foreach($batteryOptions as $opt)
                                     <a href="{{ $opt['url'] }}"
@@ -60,8 +60,7 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-900 mb-3">
-                            Color: <span
-                                class="font-normal text-gray-600">{{ $currentReference->color->label_couleur }}</span>
+                            Couleur : <span class="font-normal text-gray-600">{{ $currentReference->color->label_couleur }}</span>
                         </label>
                         <div class="flex gap-3">
                             @foreach($colorOptions as $opt)
@@ -74,7 +73,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-900 mb-3">Sizes</label>
+                        <label class="block text-sm font-medium text-gray-900 mb-3">Tailles</label>
                         <div class="flex flex-wrap gap-3 min-w-md max-w-md">
                             @foreach($sizeOptions as $opt)
                                 <div class="relative">

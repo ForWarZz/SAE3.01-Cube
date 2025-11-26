@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BikeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +22,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::prefix('articles')->name('articles.')->group(function () {
+    Route::get('/search', [ArticleController::class, 'search'])->name('search');
     Route::get('/{article}', [ArticleController::class, 'show'])->name('show');
 
     Route::get('/categories/{category}', [ArticleController::class, 'viewByCategory'])->name('by-category');
@@ -32,6 +32,7 @@ Route::prefix('articles')->name('articles.')->group(function () {
         Route::get('/reference/{reference}', [BikeController::class, 'show'])->name('show');
         Route::get('/{bike}', [BikeController::class, 'redirectToDefaultVariant'])->name('redirect-to-default');
     });
+
 });
 
 //Route::get('/tableau-de-bord', function () {

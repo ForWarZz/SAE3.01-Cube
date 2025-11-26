@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\BikeModel;
 use App\Models\Category;
+use App\Services\ArticleService;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -19,7 +20,15 @@ class ArticleController extends Controller
         $search = $request->input('search', '');
         $articles = $this->articleService->searchArticles($search);
 
-        return response()->json($articles);
+        return view('article.search', [
+            'articles' => $articles,
+            'search' => $search,
+            'pageTitle' => 'Résultats de recherche : ' . $search,
+            'breadcrumbs' => [
+                ['label' => 'Accueil', 'url' => route('home')],
+                ['label' => 'Recherche', 'url' => null],
+            ]
+        ]);
     }
 
     public function viewByCategory(Category $category)
