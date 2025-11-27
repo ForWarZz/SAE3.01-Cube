@@ -43,7 +43,7 @@ class ArticleService
     }
 
 
-    protected function applySorting($query, $sortBy)
+    public function applySorting($query, $sortBy)
     {
         switch ($sortBy) {
             case 'price_asc':
@@ -66,7 +66,7 @@ class ArticleService
                 $query->orderBy('nom_article', 'asc');
                 break;
         }
-        
+
         return $query;
     }
 }

@@ -37,8 +37,8 @@ class ArticleController extends Controller
     {
         $sortBy = request()->input('sort_by', 'name_asc');
         $query = Article::whereIn('id_categorie', $category->getAllChildrenIds());
-        
-        $query = $this->applySorting($query, $sortBy);
+
+        $query = $this->articleService->applySorting($query, $sortBy);
         $articles = $query->paginate(15)->appends(['sort_by' => $sortBy]);
 
         return view("article.index", [
@@ -58,8 +58,8 @@ class ArticleController extends Controller
         $query = Article::query()->whereHas('bike', function($query) use ($bikeModel) {
             $query->where('id_modele_velo', '=', $bikeModel->id_modele_velo);
         });
-        
-        $query = $this->applySorting($query, $sortBy);
+
+        $query = $this->articleService->applySorting($query, $sortBy);
         $articles = $query->paginate(15)->appends(['sort_by' => $sortBy]);
 
         return view("article.index", [
@@ -83,33 +83,5 @@ class ArticleController extends Controller
                 ['bike' => $article->bike]
             );
         }
-    }
-
-
-    protected function applySorting($query, $sortBy)
-    {
-        switch ($sortBy) {
-            case 'price_asc':
-                $query->orderBy('prix_article', 'asc');
-                break;
-            case 'price_desc':
-                $query->orderBy('prix_article', 'desc');
-                break;
-            case 'reference_asc':
-                $query->orderBy('id_article', 'asc');
-                break;
-            case 'reference_desc':
-                $query->orderBy('id_article', 'desc');
-                break;
-            case 'name_desc':
-                $query->orderBy('nom_article', 'desc');
-                break;
-            case 'name_asc':
-            default:
-                $query->orderBy('nom_article', 'asc');
-                break;
-        }
-        
-        return $query;
     }
 }
