@@ -31,7 +31,8 @@ class Bike extends Model
         'id_categorie',
         'nom_article',
         'description_article',
-        'resumer_article'
+        'resumer_article',
+        'nombre_vente_article',
     ];
 
     public function frameMaterial(): BelongsTo

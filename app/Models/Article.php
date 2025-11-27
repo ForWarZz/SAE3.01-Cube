@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $nom_article
  * @property string $description_article
  * @property string $resumer_article
+ * @property integer $nombre_vente_article
  */
 class Article extends Model
 {
@@ -25,7 +26,8 @@ class Article extends Model
         'prix_article',
         'nom_article',
         'description_article',
-        'resumer_article'
+        'resumer_article',
+        'nombre_vente_article'
     ];
 
     public function accessories(): HasMany
