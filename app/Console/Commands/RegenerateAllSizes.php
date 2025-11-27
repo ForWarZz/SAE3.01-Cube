@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Bike;
 use App\Models\BikeModel;
 use App\Models\BikeReference;
 use App\Models\BikeSize;
@@ -36,13 +37,19 @@ class RegenerateAllSizes extends Command
             foreach ($models as $model) {
                 $modelSizes = $allSizes->random(rand(2, 5));
 
-                $allRefIds = BikeReference::all()->pluck('id_reference')->toArray();
+                $bikeIds = Bike::where('id_modele_velo', $model->id_modele_velo)->pluck('id_article');
+
+                if ($bikeIds->isEmpty()) {
+                    $bar->advance();
+                    continue;
+                }
+
+                $allRefIds = BikeReference::whereIn('id_article', $bikeIds)
+                    ->pluck('id_reference')
+                    ->toArray();
 
                 $sizeAvailabilityData = [];
                 $storeStockData = [];
-
-                DB::table('dispo_magasin')->truncate();
-                DB::table('taille_dispo')->truncate();
 
                 foreach ($allRefIds as $refId) {
                     foreach ($modelSizes as $size) {
