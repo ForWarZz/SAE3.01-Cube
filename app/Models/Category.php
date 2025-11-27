@@ -36,13 +36,20 @@ class Category extends Model
     }
 
     /**
-     * Get all children categories recursively including this one
+     * @param Category[] $allCategories
+     * @return int[]
      */
-    public function getAllChildrenIds(){
-        $ids = collect([$this->id_categorie]);
+    public function getAllChildrenIds(array $allCategories = null): array
+    {
+        if (is_null($allCategories)) {
+            $allCategories = Category::all();
+        }
 
-        foreach($this->children as $child){
-            $ids = $ids->merge($child->getAllChildrenIds());
+        $ids = [$this->id_categorie];
+        $children = $allCategories->where('id_categorie_parent', $this->id_categorie);
+
+        foreach ($children as $child) {
+            $ids = array_merge($ids, $child->getAllChildrenIds($allCategories));
         }
 
         return $ids;
