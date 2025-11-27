@@ -15,7 +15,7 @@ class GenerateArticleImages extends Command
      *
      * @var string
      */
-    protected $signature = 'app:generate-article-images';
+    protected $signature = 'generate:article-images';
 
     /**
      * The console command description.
