@@ -8,11 +8,12 @@ use Illuminate\Support\Collection;
 
 class ArticleService
 {
-    public function searchArticles(string $search): Collection
+    public function searchArticles(string $search, string $sortBy = 'name_asc'): Collection
     {
         $query = Article::query()->select('id_article', 'nom_article', 'prix_article', 'id_categorie');
 
         if (empty($search)) {
+            $this->applySorting($query, $sortBy);
             return $query->with(['category', 'bike.bikeModel'])->get();
         }
 
@@ -37,6 +38,35 @@ class ArticleService
                 }
             });
 
+        $this->applySorting($query, $sortBy);
         return $query->get();
+    }
+
+
+    protected function applySorting($query, $sortBy)
+    {
+        switch ($sortBy) {
+            case 'price_asc':
+                $query->orderBy('prix_article', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('prix_article', 'desc');
+                break;
+            case 'reference_asc':
+                $query->orderBy('id_article', 'asc');
+                break;
+            case 'reference_desc':
+                $query->orderBy('id_article', 'desc');
+                break;
+            case 'name_desc':
+                $query->orderBy('nom_article', 'desc');
+                break;
+            case 'name_asc':
+            default:
+                $query->orderBy('nom_article', 'asc');
+                break;
+        }
+        
+        return $query;
     }
 }
