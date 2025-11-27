@@ -47,7 +47,7 @@ class GenerateArticleImages extends Command
         }
 
         foreach ($accessoires as $acc) {
-            $folder = "articles/{$acc->id_article}/default";
+            $folder = "articles/$acc->id_article/default";
 
             $this->generateFolderAndImages($disk, $folder, "Accessoire $acc->id_article");
             $bar->advance();
