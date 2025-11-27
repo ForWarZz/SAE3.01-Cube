@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\BikeModel;
 use App\Models\BikeReference;
 use App\Models\BikeSize;
 use Illuminate\Console\Command;
@@ -10,62 +11,69 @@ use Illuminate\Support\Facades\DB;
 class RegenerateAllSizes extends Command
 {
     protected $signature = 'generate:bike-sizes';
-    protected $description = 'Regenerates sizes and stock for all bikes';
+    protected $description = 'Assign sizes per bike model and generate stock for all associated references.';
 
-    public function handle(): void
+    public function handle()
     {
+        $models = BikeModel::all();
         $allSizes = BikeSize::all();
-        $allStores = DB::table('magasin')->get();
+        $stores = DB::table('magasin')->get();
 
-        if ($allSizes->isEmpty() || $allStores->isEmpty()) {
-            $this->error("Error: sizes and stores must exist in database.");
+        if ($models->isEmpty() || $allSizes->isEmpty()) {
+            $this->error("Missing data: models or sizes.");
             return;
         }
 
-        $references = BikeReference::all();
-        $groupedReferences = $references->groupBy('id_article');
+        $this->info("Starting: {$models->count()} bike models to process.");
 
-        $this->info("Starting: " . $groupedReferences->count() . " bike models found.");
-        $bar = $this->output->createProgressBar($groupedReferences->count());
+        DB::table('dispo_magasin')->truncate();
+        DB::table('taille_dispo')->truncate();
+
+        $bar = $this->output->createProgressBar($models->count());
         $bar->start();
 
-        DB::transaction(function () use ($groupedReferences, $allSizes, $allStores, $bar) {
+        DB::transaction(function () use ($models, $allSizes, $stores, $bar) {
+            foreach ($models as $model) {
+                $modelSizes = $allSizes->random(rand(2, 5));
 
-            foreach ($groupedReferences as $refs) {
+                $allRefIds = BikeReference::all()->pluck('id_reference')->toArray();
 
-                $refIds = $refs->pluck('id_reference');
+                $sizeAvailabilityData = [];
+                $storeStockData = [];
 
-                DB::table('taille_dispo')->whereIn('id_reference', $refIds)->delete();
-                DB::table('dispo_magasin')->whereIn('id_reference', $refIds)->delete();
+                DB::table('dispo_magasin')->truncate();
+                DB::table('taille_dispo')->truncate();
 
-                $modelSizes = $allSizes->random(rand(2, 4));
-
-                foreach ($refs as $ref) {
-
+                foreach ($allRefIds as $refId) {
                     foreach ($modelSizes as $size) {
-
-                        DB::table('taille_dispo')->insert([
-                            'id_reference' => $ref->id_reference,
+                        $sizeAvailabilityData[] = [
+                            'id_reference' => $refId,
                             'id_taille' => $size->id_taille,
-                            'dispo_en_ligne' => (rand(1, 100) <= 80)
-                        ]);
+                            'dispo_en_ligne' => rand(1, 100) <= 80
+                        ];
 
-                        foreach ($allStores as $store) {
-
+                        foreach ($stores as $store) {
                             $rand = rand(1, 100);
+                            if ($rand <= 25) $status = 'En Stock';
+                            elseif ($rand <= 60) $status = 'Commandable';
+                            else $status = 'Indisponible';
 
-                            $status =
-                                $rand <= 30 ? 'En Stock' :
-                                    ($rand <= 60 ? 'Commandable' : 'Indisponible');
-
-                            DB::table('dispo_magasin')->insert([
-                                'id_reference' => $ref->id_reference,
+                            $storeStockData[] = [
+                                'id_reference' => $refId,
                                 'id_taille' => $size->id_taille,
                                 'id_magasin' => $store->id_magasin,
                                 'statut' => $status
-                            ]);
+                            ];
                         }
                     }
+                }
+
+                foreach (array_chunk($sizeAvailabilityData, 500) as $chunk) {
+                    DB::table('taille_dispo')->insert($chunk);
+                }
+
+                foreach (array_chunk($storeStockData, 500) as $chunk) {
+                    DB::table('dispo_magasin')->insert($chunk);
                 }
 
                 $bar->advance();
@@ -74,6 +82,6 @@ class RegenerateAllSizes extends Command
 
         $bar->finish();
         $this->newLine(2);
-        $this->info("Done! All catalog data regenerated.");
+        $this->info("✅ Done! Model -> size consistency has been applied.");
     }
 }
