@@ -2,6 +2,7 @@
     <a href="{{ route('articles.show', $article->id_article) }}" class="block">
         <div class="relative bg-gray-50 h-56 overflow-hidden">
             <img
+                src="{{ $article->getCoverUrl() }}"
                 alt="{{ $article->nom_article }}"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 loading="lazy"

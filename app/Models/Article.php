@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property integer $id_categorie
@@ -58,5 +59,29 @@ class Article extends Model
             'id_article',
             'id_caracteristique'
         )->withPivot('valeur_caracteristique');
+    }
+
+    public function getCoverUrl($colorId = null): string
+    {
+        if ($colorId) {
+            return Storage::url("articles/$this->id_article/$colorId/1.jpg");
+        }
+
+        $firstRef = BikeReference::where('id_article', $this->id_article)->first();
+        if ($firstRef) {
+            return Storage::url("articles/$this->id_article/$firstRef->id_couleur/1.jpg");
+        }
+
+        return Storage::url("articles/$this->id_article/default/1.jpg");
+    }
+
+    public function getAllImagesUrls($colorId = null): array
+    {
+        $folder = $colorId ?: 'default';
+        $directory = "articles/$this->id_article/$folder";
+
+        $files = Storage::disk('public')->files($directory);
+
+        return array_map(fn($f) => Storage::url($f), $files);
     }
 }

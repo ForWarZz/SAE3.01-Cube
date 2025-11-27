@@ -1,7 +1,12 @@
 <x-app-layout>
     <div class="max-w-7xl mx-auto px-6 py-12">
         <div class="flex gap-6 justify-between">
-            <div class="size-48"></div>
+            <div class="flex-shrink-0 w-1/2">
+                <img src="{{ $bike->article->getCoverUrl($currentReference->color->id_couleur) }}"
+                     alt="{{ $bike->nom_article }} - {{ $currentReference->color->label_couleur }}"
+                     class="w-full h-auto object-cover rounded-lg shadow"
+                     loading="lazy">
+            </div>
 
             <div class="flex flex-col">
                 <div class="mb-8">
