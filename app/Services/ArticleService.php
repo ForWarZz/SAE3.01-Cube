@@ -3,19 +3,41 @@
 namespace App\Services;
 
 use App\Models\Article;
+use App\Models\BikeModel;
+use App\Models\Category;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class ArticleService
 {
-    public function searchArticles(string $search, string $sortBy = 'name_asc'): Collection
-    {
-        $query = Article::query()->select('id_article', 'nom_article', 'prix_article', 'id_categorie');
+    public function __construct(
+        protected FilterEngineService $filterEngineService,
+    )
+    { }
 
-        if (empty($search)) {
-            $this->applySorting($query, $sortBy);
-            return $query->with(['category', 'bike.bikeModel'])->get();
-        }
+    /**
+     * @return array{
+     *     results: Collection<Article>,
+     *     search: string,
+     *     sortBy: string,
+     *     filterOptions: array,
+     *     activeFilters: array,
+     *     sortBy: string,
+     *     sortOptions: array
+     * }
+     */
+    public function searchArticles(Request $request): array
+    {
+        $search = $request->input('search', '');
+
+        $query = Article::query()->select([
+            'id_article',
+            'nom_article',
+            'prix_article',
+            'id_categorie'
+        ]);
 
         $keywords = explode(' ', trim($search));
         $keywords = array_filter($keywords);
@@ -38,98 +60,86 @@ class ArticleService
                 }
             });
 
-        $this->applySorting($query, $sortBy);
-        return $query->get();
+        $data = $this->finalizeQuery($query, $request);
+
+        return [
+            'search' => $search,
+            ...$data
+        ];
     }
 
-    public function applyFilters($query, array $filters)
+    /**
+     * @param BikeModel $model
+     * @param Request $request
+     * @return array{
+     *     articles: LengthAwarePaginator,
+     *     activeFilters: array,
+     *     filterOptions: array,
+     *     sortBy: string,
+     *     sortOptions: array
+     * }
+     */
+    public function listByModel(BikeModel $model, Request $request): array
     {
-        // Only apply bike-related filters if at least one bike filter is set
-        $hasBikeFilters = !empty($filters['millesime']) || !empty($filters['materiau']) || !empty($filters['usage']);
-        $hasReferenceFilters = !empty($filters['cadre']) || !empty($filters['couleur']);
+        $articles = Article::whereHas('bikes', function ($query) use ($model) {
+            $query->where('id_modele_velo', '=', $model->id_modele_velo);
+        });
 
-        // Filter by millesime (vintage) - supports multiple values
-        if (!empty($filters['millesime'])) {
-            $millesimes = is_array($filters['millesime']) ? $filters['millesime'] : [$filters['millesime']];
-            $query->where(function($q) use ($millesimes) {
-                $q->whereHas('bike', function ($subq) use ($millesimes) {
-                    $subq->whereIn('id_millesime', $millesimes);
-                });
-            });
-        }
-
-        // Filter by cadre (frame type) - supports multiple values
-        if (!empty($filters['cadre'])) {
-            $cadres = is_array($filters['cadre']) ? $filters['cadre'] : [$filters['cadre']];
-            $query->where(function($q) use ($cadres) {
-                $q->whereHas('bike', function($bikeQuery) use ($cadres) {
-                    $bikeQuery->whereHas('references', function ($refQuery) use ($cadres) {
-                        $refQuery->whereIn('id_cadre_velo', $cadres);
-                    });
-                });
-            });
-        }
-
-        // Filter by max price
-        if (!empty($filters['prix_max'])) {
-            $query->where('prix_article', '<=', $filters['prix_max']);
-        }
-
-        // Filter by material - supports multiple values
-        if (!empty($filters['materiau'])) {
-            $materiaux = is_array($filters['materiau']) ? $filters['materiau'] : [$filters['materiau']];
-            $query->where(function($q) use ($materiaux) {
-                $q->whereHas('bike', function ($subq) use ($materiaux) {
-                    $subq->whereIn('id_materiau_cadre', $materiaux);
-                });
-            });
-        }
-
-        // Filter by color - supports multiple values
-        if (!empty($filters['couleur'])) {
-            $couleurs = is_array($filters['couleur']) ? $filters['couleur'] : [$filters['couleur']];
-            $query->where(function($q) use ($couleurs) {
-                $q->whereHas('bike', function($bikeQuery) use ($couleurs) {
-                    $bikeQuery->whereHas('references', function ($refQuery) use ($couleurs) {
-                        $refQuery->whereIn('id_couleur', $couleurs);
-                    });
-                });
-            });
-        }
-
-        // Filter by usage - supports multiple values
-        if (!empty($filters['usage'])) {
-            $usages = is_array($filters['usage']) ? $filters['usage'] : [$filters['usage']];
-            $query->where(function($q) use ($usages) {
-                $q->whereHas('bike', function ($subq) use ($usages) {
-                    $subq->whereIn('id_usage', $usages);
-                });
-            });
-        }
-
-        // Filter by promotion
-        if (!empty($filters['promotion'])) {
-            $query->where('pourcentage_remise', '>', 0);
-        }
-
-        // Filter by max weight (poids) - specifically "Poids du vélo"
-        if (!empty($filters['poids_max'])) {
-            $poidsCharacteristic = \App\Models\Characteristic::where('nom_caracteristique', 'Poids du vélo')->first();
-            if ($poidsCharacteristic) {
-                $query->whereExists(function ($subquery) use ($filters, $poidsCharacteristic) {
-                    $subquery->select(\Illuminate\Support\Facades\DB::raw(1))
-                        ->from('caracterise')
-                        ->whereColumn('caracterise.id_article', 'article.id_article')
-                        ->where('caracterise.id_caracteristique', $poidsCharacteristic->id_caracteristique)
-                        ->whereRaw("CAST(REPLACE(REGEXP_REPLACE(caracterise.valeur_caracteristique, '[^0-9,.]', '', 'g'), ',', '.') AS DECIMAL) <= ?", [$filters['poids_max']]);
-                });
-            }
-        }
-
-        return $query;
+        return $this->finalizeQuery($articles, $request);
     }
 
-    public function applySorting($query, $sortBy)
+    /**
+     * @param Category $category
+     * @param Request $request
+     * @return array{
+     *     articles: LengthAwarePaginator,
+     *     activeFilters: array,
+     *     filterOptions: array,
+     *     sortBy: string,
+     *     sortOptions: array
+     * }
+     */
+    public function listByCategory(Category $category, Request $request): array
+    {
+        $baseQuery = Article::whereIn('id_categorie', $category->getAllChildrenIds());
+
+        return $this->finalizeQuery($baseQuery, $request);
+    }
+
+    /**
+     * @param $baseQuery
+     * @param Request $request
+     * @return array{
+     *     articles: LengthAwarePaginator,
+     *     activeFilters: array,
+     *     filterOptions: array,
+     *     sortBy: string,
+     *     sortOptions: array
+     * }
+     */
+    private function finalizeQuery($baseQuery, Request $request): array
+    {
+        $sortBy = $request->input('sortBy');
+        $filtersSelected = $this->filterEngineService->retrieveSelectedFilters($request);
+
+        $query = $this->filterEngineService->apply($baseQuery, $filtersSelected);
+        $filterOptions = $this->filterEngineService->getFilterOptions($baseQuery);
+
+        $this->applySorting($query, $sortBy);
+        $articles = $query
+            ->paginate(15)
+            ->appends($request->except('page'));
+
+        return [
+            'articles' => $articles,
+            'activeFilters' => $filtersSelected,
+            'filterOptions' => $filterOptions,
+            'sortBy' => $sortBy,
+            'sortOptions' => $this->getSortOptions(),
+        ];
+    }
+
+    private function applySorting($query, $sortBy): void
     {
         switch ($sortBy) {
             case 'price_asc':
@@ -152,7 +162,17 @@ class ArticleService
                 $query->orderBy('nom_article', 'asc');
                 break;
         }
+    }
 
-        return $query;
+    private function getSortOptions(): array
+    {
+        return [
+            'name_asc' => 'Nom (A-Z)',
+            'name_desc' => 'Nom (Z-A)',
+            'price_asc' => 'Prix (croissant)',
+            'price_desc' => 'Prix (décroissant)',
+            'reference_asc' => 'Référence (croissant)',
+            'reference_desc' => 'Référence (décroissant)',
+        ];
     }
 }
