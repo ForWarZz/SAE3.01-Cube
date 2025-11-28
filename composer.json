@@ -61,8 +61,7 @@
             "php artisan config:clear",
             "php artisan route:clear",
             "php artisan view:clear",
-            "php artisan serve",
-            "npm run dev"
+            "php artisan serve"
         ]
     },
     "extra": {
