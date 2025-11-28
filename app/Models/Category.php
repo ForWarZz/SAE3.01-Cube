@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 /**
  * @property integer $id_categorie
@@ -36,10 +37,10 @@ class Category extends Model
     }
 
     /**
-     * @param Category[] $allCategories
+     * @param Collection|null $allCategories
      * @return int[]
      */
-    public function getAllChildrenIds(array $allCategories = null): array
+    public function getAllChildrenIds(Collection $allCategories = null): array
     {
         if (is_null($allCategories)) {
             $allCategories = Category::all();
