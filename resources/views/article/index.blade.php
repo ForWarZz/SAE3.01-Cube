@@ -84,7 +84,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Usage</label>
                         <div class="space-y-2">
                             @foreach($usages as $index => $usage)
-                                <label class="flex items-center gap-2 cursor-pointer" x-show="{{ $index < 3 }} || expanded">
+                                <label class="flex items-center gap-2 cursor-pointer" x-show="{{ $index < 3 ? 'true' : 'false' }} || expanded">
                                     <input 
                                         type="checkbox" 
                                         name="usage[]" 
@@ -110,7 +110,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Millésime</label>
                         <div class="space-y-2">
                             @foreach($vintages as $index => $vintage)
-                                <label class="flex items-center gap-2 cursor-pointer" x-show="{{ $index < 3 }} || expanded">
+                                <label class="flex items-center gap-2 cursor-pointer" x-show="{{ $index < 3 ? 'true' : 'false' }} || expanded">
                                     <input 
                                         type="checkbox" 
                                         name="millesime[]" 
@@ -136,7 +136,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Type de cadre</label>
                         <div class="space-y-2">
                             @foreach($frames as $index => $frame)
-                                <label class="flex items-center gap-2 cursor-pointer" x-show="{{ $index < 3 }} || expanded">
+                                <label class="flex items-center gap-2 cursor-pointer" x-show="{{ $index < 3 ? 'true' : 'false' }} || expanded">
                                     <input 
                                         type="checkbox" 
                                         name="cadre[]" 
@@ -213,7 +213,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Matériau</label>
                         <div class="space-y-2">
                             @foreach($materials as $index => $material)
-                                <label class="flex items-center gap-2 cursor-pointer" x-show="{{ $index < 3 }} || expanded">
+                                <label class="flex items-center gap-2 cursor-pointer" x-show="{{ $index < 3 ? 'true' : 'false' }} || expanded">
                                     <input 
                                         type="checkbox" 
                                         name="materiau[]" 
@@ -239,7 +239,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Couleur</label>
                         <div class="space-y-2">
                             @foreach($colors as $index => $color)
-                                <label class="flex items-center gap-2 cursor-pointer" x-show="{{ $index < 3 }} || expanded">
+                                <label class="flex items-center gap-2 cursor-pointer" x-show="{{ $index < 3 ? 'true' : 'false' }} || expanded">
                                     <input 
                                         type="checkbox" 
                                         name="couleur[]" 
