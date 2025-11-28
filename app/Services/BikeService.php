@@ -26,6 +26,7 @@ class BikeService
      *     geometrySizes: Collection,
      *     characteristics: Collection,
      *     weight: string
+     *
      * }
      */
     public function prepareViewData(BikeReference $currentReference): array
@@ -64,6 +65,13 @@ class BikeService
             ->firstWhere('characteristicType.nom_type_carac', '=', 'Poids')
             ->pivot->valeur_caracteristique;
 
+
+        $similarBikes = $bike->article->similar()
+            ->whereHas('bike')  
+            ->with('bike')     
+            ->limit(4) //Limiter à 4 vélos similaires
+            ->get();
+
         return [
             'currentReference' => $currentReference,
             'bike' => $bike,
@@ -72,12 +80,11 @@ class BikeService
             'colorOptions' => $colorOptions,
             'batteryOptions' => $batteryOptions,
             'sizeOptions' => $sizeOptions,
-
             'geometries' => $geometryData['rows'],
             'geometrySizes' => $geometryData['headers'],
-
             'characteristics' => $characteristicsGrouped,
-            'weight' => $weight
+            'weight' => $weight,
+            'similarBikes' => $similarBikes  
         ];
     }
 

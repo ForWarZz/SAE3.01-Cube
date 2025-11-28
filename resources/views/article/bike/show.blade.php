@@ -124,6 +124,18 @@
                 ])
             </div>
         @endif
-
+        
     </div>
+    
+    <div class="max-w-7xl mx-auto px-6 py-12">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Produits similaires</h2>
+        <div class="grid grid-cols-4 gap-6">
+            @forelse($similarBikes as $similarArticle)
+                <x-article-card :article="$similarArticle" />
+            @empty
+                <p class="text-gray-600">Aucun produit similaire trouvé.</p>
+            @endforelse
+        </div>
+    </div>
+   
 </x-app-layout>
