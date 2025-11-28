@@ -42,6 +42,92 @@ class ArticleService
         return $query->get();
     }
 
+    public function applyFilters($query, array $filters)
+    {
+        // Only apply bike-related filters if at least one bike filter is set
+        $hasBikeFilters = !empty($filters['millesime']) || !empty($filters['materiau']) || !empty($filters['usage']);
+        $hasReferenceFilters = !empty($filters['cadre']) || !empty($filters['couleur']);
+
+        // Filter by millesime (vintage) - supports multiple values
+        if (!empty($filters['millesime'])) {
+            $millesimes = is_array($filters['millesime']) ? $filters['millesime'] : [$filters['millesime']];
+            $query->where(function($q) use ($millesimes) {
+                $q->whereHas('bike', function ($subq) use ($millesimes) {
+                    $subq->whereIn('id_millesime', $millesimes);
+                });
+            });
+        }
+
+        // Filter by cadre (frame type) - supports multiple values
+        if (!empty($filters['cadre'])) {
+            $cadres = is_array($filters['cadre']) ? $filters['cadre'] : [$filters['cadre']];
+            $query->where(function($q) use ($cadres) {
+                $q->whereHas('bike', function($bikeQuery) use ($cadres) {
+                    $bikeQuery->whereHas('references', function ($refQuery) use ($cadres) {
+                        $refQuery->whereIn('id_cadre_velo', $cadres);
+                    });
+                });
+            });
+        }
+
+        // Filter by max price
+        if (!empty($filters['prix_max'])) {
+            $query->where('prix_article', '<=', $filters['prix_max']);
+        }
+
+        // Filter by material - supports multiple values
+        if (!empty($filters['materiau'])) {
+            $materiaux = is_array($filters['materiau']) ? $filters['materiau'] : [$filters['materiau']];
+            $query->where(function($q) use ($materiaux) {
+                $q->whereHas('bike', function ($subq) use ($materiaux) {
+                    $subq->whereIn('id_materiau_cadre', $materiaux);
+                });
+            });
+        }
+
+        // Filter by color - supports multiple values
+        if (!empty($filters['couleur'])) {
+            $couleurs = is_array($filters['couleur']) ? $filters['couleur'] : [$filters['couleur']];
+            $query->where(function($q) use ($couleurs) {
+                $q->whereHas('bike', function($bikeQuery) use ($couleurs) {
+                    $bikeQuery->whereHas('references', function ($refQuery) use ($couleurs) {
+                        $refQuery->whereIn('id_couleur', $couleurs);
+                    });
+                });
+            });
+        }
+
+        // Filter by usage - supports multiple values
+        if (!empty($filters['usage'])) {
+            $usages = is_array($filters['usage']) ? $filters['usage'] : [$filters['usage']];
+            $query->where(function($q) use ($usages) {
+                $q->whereHas('bike', function ($subq) use ($usages) {
+                    $subq->whereIn('id_usage', $usages);
+                });
+            });
+        }
+
+        // Filter by promotion
+        if (!empty($filters['promotion'])) {
+            $query->where('pourcentage_remise', '>', 0);
+        }
+
+        // Filter by max weight (poids) - specifically "Poids du vélo"
+        if (!empty($filters['poids_max'])) {
+            $poidsCharacteristic = \App\Models\Characteristic::where('nom_caracteristique', 'Poids du vélo')->first();
+            if ($poidsCharacteristic) {
+                $query->whereExists(function ($subquery) use ($filters, $poidsCharacteristic) {
+                    $subquery->select(\Illuminate\Support\Facades\DB::raw(1))
+                        ->from('caracterise')
+                        ->whereColumn('caracterise.id_article', 'article.id_article')
+                        ->where('caracterise.id_caracteristique', $poidsCharacteristic->id_caracteristique)
+                        ->whereRaw("CAST(REPLACE(REGEXP_REPLACE(caracterise.valeur_caracteristique, '[^0-9,.]', '', 'g'), ',', '.') AS DECIMAL) <= ?", [$filters['poids_max']]);
+                });
+            }
+        }
+
+        return $query;
+    }
 
     public function applySorting($query, $sortBy)
     {
