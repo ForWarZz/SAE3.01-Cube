@@ -109,6 +109,36 @@
             </div>
 
         </div>
+        {{-- FICHE TECHNIQUE --}}
+        @if(!empty($characteristics) && $characteristics->isNotEmpty())
+            <div class="bg-white shadow-sm rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Fiche technique</h3>
+
+                <div class="space-y-6">
+                    @foreach($characteristics as $type => $group)
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700 mb-2">{{ $type }}</h4>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <tbody class="bg-white divide-y divide-gray-100">
+                                        @foreach($group as $char)
+                                            <tr>
+                                                <td class="px-4 py-2 text-sm text-gray-700 w-1/2">
+                                                    {{ $char->nom_caracteristique }}
+                                                </td>
+                                                <td class="px-4 py-2 text-sm text-gray-600">
+                                                    {{ $char->pivot->valeur_caracteristique ?? '-' }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
         @if($bike->description_article)
             <div class="mt-16 pt-12 border-t border-gray-200">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6">Description</h2>
