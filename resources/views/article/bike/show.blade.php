@@ -117,6 +117,14 @@
                 </div>
             </div>
         @endif
+        @if($bike->resumer_article)
+            <div class="mt-16 pt-12 border-t border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">En Résumé</h2>
+                <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+                    {!! nl2br(e($bike->resumer_article)) !!}
+                </div>
+            </div>
+        @endif
         @if($geometries)
             <div class="mt-16 pt-12 border-t border-gray-200">
                 @include('article.bike.partials.geometrie', [
