@@ -109,24 +109,26 @@
             </div>
 
         </div>
-        {{-- FICHE TECHNIQUE --}}
-        @if(!empty($characteristics) && $characteristics->isNotEmpty())
-            <div class="bg-white shadow-sm rounded-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Fiche technique</h3>
 
-                <div class="space-y-6">
+        @if(!empty($characteristics) && $characteristics->isNotEmpty())
+            <div class="mt-16 pt-12 border-t border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900 mb-8">Fiche technique</h2>
+
+                <div class="space-y-10">
                     @foreach($characteristics as $type => $group)
                         <div>
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">{{ $type }}</h4>
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <tbody class="bg-white divide-y divide-gray-100">
+                            <h3 class="text-lg font-bold text-gray-900 uppercase tracking-wide mb-4 pb-2 border-b-2 border-gray-900">
+                                {{ $type }}
+                            </h3>
+                            <div class="bg-white">
+                                <table class="w-full">
+                                    <tbody>
                                         @foreach($group as $char)
-                                            <tr>
-                                                <td class="px-4 py-2 text-sm text-gray-700 w-1/2">
+                                            <tr class="border-b border-gray-200 last:border-0">
+                                                <td class="py-3 pr-4 text-sm font-semibold text-gray-900">
                                                     {{ $char->nom_caracteristique }}
                                                 </td>
-                                                <td class="px-4 py-2 text-sm text-gray-600">
+                                                <td class="py-3 text-sm text-gray-700">
                                                     {{ $char->pivot->valeur_caracteristique ?? '-' }}
                                                 </td>
                                             </tr>
@@ -139,6 +141,7 @@
                 </div>
             </div>
         @endif
+
         @if($bike->description_article)
             <div class="mt-16 pt-12 border-t border-gray-200">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6">Description</h2>
