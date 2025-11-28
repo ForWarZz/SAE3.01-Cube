@@ -115,6 +115,54 @@
 
         </div>
 
+        @if(!empty($characteristics) && $characteristics->isNotEmpty())
+            <div class="mt-16 pt-12 border-t border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900 mb-8">Fiche technique</h2>
+
+                <div class="space-y-10">
+                    @foreach($characteristics as $type => $group)
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 uppercase tracking-wide mb-4 pb-2 border-b-2 border-gray-900">
+                                {{ $type }}
+                            </h3>
+                            <div class="bg-white">
+                                <table class="w-full">
+                                    <tbody>
+                                        @foreach($group as $char)
+                                            <tr class="border-b border-gray-200 last:border-0">
+                                                <td class="py-3 pr-4 text-sm font-semibold text-gray-900">
+                                                    {{ $char->nom_caracteristique }}
+                                                </td>
+                                                <td class="py-3 text-sm text-gray-700">
+                                                    {{ $char->pivot->valeur_caracteristique ?? '-' }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        @if($bike->description_article)
+            <div class="mt-16 pt-12 border-t border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Description</h2>
+                <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+                    {!! nl2br(e($bike->description_article)) !!}
+                </div>
+            </div>
+        @endif
+        @if($bike->resumer_article)
+            <div class="mt-16 pt-12 border-t border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">En Résumé</h2>
+                <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+                    {!! nl2br(e($bike->resumer_article)) !!}
+                </div>
+            </div>
+        @endif
         @if($geometries)
             <div class="mt-16 pt-12 border-t border-gray-200">
                 @include('article.bike.partials.geometrie', [
