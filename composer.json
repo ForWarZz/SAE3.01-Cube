@@ -56,6 +56,13 @@
             "php artisan view:cache",
             "npm install && npm run build",
             "php artisan serve --host=0.0.0.0 --port 9090"
+        ],
+        "dev": [
+            "php artisan config:clear",
+            "php artisan route:clear",
+            "php artisan view:clear",
+            "php artisan serve",
+            "npm run dev"
         ]
     },
     "extra": {
