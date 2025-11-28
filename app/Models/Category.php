@@ -37,10 +37,10 @@ class Category extends Model
     }
 
     /**
-     * @param Collection|null $allCategories
+     * @param ?Collection $allCategories
      * @return int[]
      */
-    public function getAllChildrenIds(Collection $allCategories = null): array
+    public function getAllChildrenIds(?Collection $allCategories = null): array
     {
         if (is_null($allCategories)) {
             $allCategories = Category::all();
