@@ -1,0 +1,38 @@
+{
+    "singleQuote": true,
+    "printWidth": 140,
+    "tabWidth": 4,
+    "plugins": [
+        "prettier-plugin-blade",
+        "prettier-plugin-tailwindcss"
+    ],
+    "tailwindStylesheet": "./resources/css/app.css",
+    "overrides": [
+        {
+            "files": "*.blade.php",
+            "options": {
+                "parser": "blade",
+                "singleQuote": false
+            }
+        },
+        {
+            "files": [
+                "**/*.css",
+                "**/*.html"
+            ],
+            "options": {
+                "singleQuote": false
+            }
+        },
+        {
+            "files": [
+                "**/*.yaml",
+                "**/*.yml"
+            ],
+            "options": {
+                "singleQuote": false,
+                "tabWidth": 2
+            }
+        }
+    ]
+}
