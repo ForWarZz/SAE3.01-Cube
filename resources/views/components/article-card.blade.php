@@ -18,6 +18,10 @@
                 <p class="text-sm text-gray-500 mb-3">
                     {{ $article->bike->bikeModel->nom_modele_velo }}
                 </p>
+            @elseif($article->accessories)
+                <p class="text-sm text-gray-500 mb-3">
+                    {{ $article->category->nom_categorie ?? 'Accessoire' }}
+                </p>
             @endif
 
             <div class="flex items-center justify-between mt-4">

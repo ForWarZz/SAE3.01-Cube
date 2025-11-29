@@ -99,14 +99,14 @@ class BikeService
     private function getCompatibleAccessories(Bike $bike): Collection
     {
         
-        $accessories = Article::query()
+        $allAccessories = Article::query()
             ->whereHas('accessories') 
             ->where('id_article', '!=', $bike->id_article) 
-            ->with(['category', 'accessories'])
-            ->limit(8)
+            ->with(['category', 'accessories']) 
+            ->limit(8) 
             ->get();
 
-        return $accessories;
+        return $allAccessories;
     }
     /**
      * Build geometry data for bike model
