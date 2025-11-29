@@ -60,8 +60,9 @@ class BikeService
         $sizeOptions = $this->buildSizeOptions($currentReference, $geometryData['headers']);
 
         $characteristicsGrouped = $bike->article->characteristics->groupBy('characteristicType.nom_type_carac');
-        $weight = $bike->article->characteristics
-            ->firstWhere('characteristicType.nom_type_carac', '=', 'Poids')
+
+        $weightCharacteristicId = config('bike.characteristics.weight');
+        $weight = $bike->article->characteristics->firstWhere('id_caracteristique', $weightCharacteristicId)
             ->pivot->valeur_caracteristique;
 
         return [
@@ -223,11 +224,13 @@ class BikeService
             ? $geometrySizes
             : $currentReference->availableSizes;
 
-        return $sizeList->map(function ($size) use ($currentReference) {
+        $availableInShopStatuses = config('bike.availability.in_shop');
+
+        return $sizeList->map(function ($size) use ($availableInShopStatuses, $currentReference) {
             $availableOnline = $size->pivot->dispo_en_ligne;
             $availableInShop = $currentReference->shopAvailabilities()
                 ->where('id_taille', $size->id_taille)
-                ->whereIn('statut', ['En Stock', 'Commandable'])
+                ->whereIn('statut', $availableInShopStatuses)
                 ->exists();
 
             return [

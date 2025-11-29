@@ -14,8 +14,7 @@ class ArticleService
 {
     public function __construct(
         protected FilterEngineService $filterEngineService,
-    )
-    { }
+    ) {}
 
     /**
      * @return array{
@@ -36,7 +35,7 @@ class ArticleService
             'id_article',
             'nom_article',
             'prix_article',
-            'id_categorie'
+            'id_categorie',
         ]);
 
         $keywords = explode(' ', trim($search));
@@ -64,13 +63,11 @@ class ArticleService
 
         return [
             'search' => $search,
-            ...$data
+            ...$data,
         ];
     }
 
     /**
-     * @param BikeModel $model
-     * @param Request $request
      * @return array{
      *     articles: LengthAwarePaginator,
      *     activeFilters: array,
@@ -89,8 +86,6 @@ class ArticleService
     }
 
     /**
-     * @param Category $category
-     * @param Request $request
      * @return array{
      *     articles: LengthAwarePaginator,
      *     activeFilters: array,
@@ -107,8 +102,6 @@ class ArticleService
     }
 
     /**
-     * @param $baseQuery
-     * @param Request $request
      * @return array{
      *     articles: LengthAwarePaginator,
      *     activeFilters: array,
@@ -119,6 +112,8 @@ class ArticleService
      */
     private function finalizeQuery($baseQuery, Request $request): array
     {
+        $perPage = config('article.per_page');
+
         $sortBy = $request->input('sortBy');
         $filtersSelected = $this->filterEngineService->retrieveSelectedFilters($request);
 
@@ -127,7 +122,7 @@ class ArticleService
 
         $this->applySorting($query, $sortBy);
         $articles = $query
-            ->paginate(15)
+            ->paginate($perPage)
             ->appends($request->except('page'));
 
         return [
