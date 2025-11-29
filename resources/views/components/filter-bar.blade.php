@@ -19,29 +19,22 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('aside input[type="checkbox"]').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const url = new URL(window.location.href);
-                    const params = new URLSearchParams(url.search);
-                    const filterName = this.name.replace('[]', '');
+        const url = new URL(window.location);
+        const params = url.searchParams;
 
-                    const checkedValues = Array.from(
-                        document.querySelectorAll(`input[name="${this.name}"]:checked`)
-                    ).map(cb => cb.value);
+        document.querySelector('aside').addEventListener('change', e => {
+            if (e.target.type !== 'checkbox') return;
 
-                    params.delete(filterName + '[]');
-                    params.delete(filterName);
+            const name = e.target.name.replace('[]', '');
+            const values = [...document.querySelectorAll(`input[name="${e.target.name}"]:checked`)]
+                .map(x => x.value);
 
-                    if (checkedValues.length > 0) {
-                        checkedValues.forEach(value => {
-                            params.append(filterName + '[]', value);
-                        });
-                    }
+            params.delete(name);
+            params.delete(name + '[]');
 
-                    window.location.href = url.pathname + '?' + params.toString();
-                });
-            });
+            values.forEach(v => params.append(name + '[]', v));
+
+            window.location = `${url.pathname}?${params}`;
         });
     </script>
 </aside>
