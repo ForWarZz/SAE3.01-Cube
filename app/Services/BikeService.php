@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\BikeModel;
 use App\Models\BikeReference;
 use App\Models\Bike;
+use App\Models\Article;
 use Illuminate\Support\Collection;
 use function PHPUnit\Framework\isNull;
 
@@ -26,6 +27,8 @@ class BikeService
      *     geometrySizes: Collection,
      *     characteristics: Collection,
      *     weight: string
+     *     similarBikes: Collection,
+     *     compatibleAccessories: Collection
      *
      * }
      */
@@ -72,6 +75,9 @@ class BikeService
             ->limit(4) //Limiter à 4 vélos similaires
             ->get();
 
+        $compatibleAccessories = $this->getCompatibleAccessories($bike);
+
+
         return [
             'currentReference' => $currentReference,
             'bike' => $bike,
@@ -84,10 +90,24 @@ class BikeService
             'geometrySizes' => $geometryData['headers'],
             'characteristics' => $characteristicsGrouped,
             'weight' => $weight,
-            'similarBikes' => $similarBikes  
+            'similarBikes' => $similarBikes,
+            'compatibleAccessories' => $compatibleAccessories
         ];
     }
 
+
+    private function getCompatibleAccessories(Bike $bike): Collection
+    {
+        
+        $accessories = Article::query()
+            ->whereHas('accessories') 
+            ->where('id_article', '!=', $bike->id_article) 
+            ->with(['category', 'accessories'])
+            ->limit(8)
+            ->get();
+
+        return $accessories;
+    }
     /**
      * Build geometry data for bike model
      *

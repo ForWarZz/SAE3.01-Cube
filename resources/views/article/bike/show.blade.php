@@ -127,6 +127,21 @@
         
     </div>
     
+    @if($compatibleAccessories->isNotEmpty())
+        <div class="bg-gray-50 py-12">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Accessoires compatibles</h2>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    @foreach($compatibleAccessories as $accessory)
+                        <x-article-card :article="$accessory" />
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="max-w-7xl mx-auto px-6 py-12">
         <h2 class="text-2xl font-bold text-gray-900 mb-6">Produits similaires</h2>
         <div class="grid grid-cols-4 gap-6">
