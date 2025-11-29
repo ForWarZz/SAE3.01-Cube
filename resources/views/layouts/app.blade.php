@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace("_", "-", app()->getLocale()) }}">
+<html lang="fr">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -34,32 +34,32 @@
     </body>
 
     {{-- <script src="{{ asset("tarteaucitron/tarteaucitron.min.js") }}"></script> --}}
-    <script type="text/javascript">
-        tarteaucitron.init({
-            privacyUrl: '',
-            bodyPosition: 'bottom',
-            hashtag: '#tarteaucitron',
-            cookieName: 'tarteaucitron',
-            orientation: 'middle',
-            groupServices: false,
-            showIcon: true,
-            iconPosition: 'BottomRight',
-            adblocker: false,
-            DenyAllCta: true,
-            AcceptAllCta: true,
-            highPrivacy: true,
-            handleBrowserDNTRequest: false,
-            removeCredit: false,
-            moreInfoLink: true,
-            useExternalCss: false,
-            useExternalJs: false,
-            readmoreLink: '',
-        });
+    {{-- <script type="text/javascript"> --}}
+    {{-- tarteaucitron.init({ --}}
+    {{-- privacyUrl: '', --}}
+    {{-- bodyPosition: 'bottom', --}}
+    {{-- hashtag: '#tarteaucitron', --}}
+    {{-- cookieName: 'tarteaucitron', --}}
+    {{-- orientation: 'middle', --}}
+    {{-- groupServices: false, --}}
+    {{-- showIcon: true, --}}
+    {{-- iconPosition: 'BottomRight', --}}
+    {{-- adblocker: false, --}}
+    {{-- DenyAllCta: true, --}}
+    {{-- AcceptAllCta: true, --}}
+    {{-- highPrivacy: true, --}}
+    {{-- handleBrowserDNTRequest: false, --}}
+    {{-- removeCredit: false, --}}
+    {{-- moreInfoLink: true, --}}
+    {{-- useExternalCss: false, --}}
+    {{-- useExternalJs: false, --}}
+    {{-- readmoreLink: '', --}}
+    {{-- }); --}}
 
-        tarteaucitron.user.matomoId = 1;
-        tarteaucitron.user.matomoHost = '//ton-analytics.com/';
-        (tarteaucitron.job = tarteaucitron.job || []).push('matomo');
-
-        (tarteaucitron.job = tarteaucitron.job || []).push('googlemaps');
-    </script>
+    {{-- tarteaucitron.user.matomoId = 1; --}}
+    {{-- tarteaucitron.user.matomoHost = '//ton-analytics.com/'; --}}
+    {{-- (tarteaucitron.job = tarteaucitron.job || []).push('matomo'); --}}
+    {{-- (tarteaucitron.job = tarteaucitron.job || []).push('googlemaps'); --}}
+    {{-- (tarteaucitron.job = tarteaucitron.job || []).push('paypal'); --}}
+    {{-- </script> --}}
 </html>
