@@ -61,4 +61,14 @@ class BikeReference extends Model
             'id_taille'
         )->withPivot('dispo_en_ligne');
     }
+
+    public function shopAvailabilities(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Shop::class,
+            'dispo_magasin',
+            'id_reference',
+            'id_magasin'
+        )->withPivot(['id_taille', 'statut']);
+    }
 }
