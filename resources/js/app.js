@@ -1,4 +1,6 @@
 import './bootstrap';
+import './navbar/main.js';
+import './search/main.js';
 
 import Alpine from 'alpinejs';
 
