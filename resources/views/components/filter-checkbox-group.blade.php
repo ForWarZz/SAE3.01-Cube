@@ -1,9 +1,16 @@
 @props([
     'label',
     'name',
-    'items',
-    'selected' => [],
+    'activeFilters',
+    'filterOptions',
 ])
+
+@php
+    $key = (string) $name;
+
+    $items = $filterOptions[$key] ?? collect();
+    $selected = $activeFilters[$key] ?? [];
+@endphp
 
 @if($items->isNotEmpty())
     <div x-data="{ expanded: false }">
@@ -11,7 +18,8 @@
 
         <div class="space-y-2">
             @foreach($items as $index => $item)
-                <label class="flex items-center gap-2 cursor-pointer" x-show="{{ $index < 3 ? 'true' : 'false' }} || expanded">
+                <label class="flex items-center gap-2 cursor-pointer"
+                       x-show="{{ $index < 3 ? 'true' : 'false' }} || expanded">
                     <input
                         type="checkbox"
                         name="{{ $name }}[]"
