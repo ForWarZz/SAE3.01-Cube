@@ -149,6 +149,9 @@ class ArticleService
             case 'reference_desc':
                 $query->orderBy('id_article', 'desc');
                 break;
+            case 'selling_desc':
+                $query->orderBy('nombre_vente_article', 'desc');
+                break;
             case 'name_desc':
                 $query->orderBy('nom_article', 'desc');
                 break;
@@ -166,6 +169,7 @@ class ArticleService
             'name_desc' => 'Nom (Z-A)',
             'price_asc' => 'Prix (croissant)',
             'price_desc' => 'Prix (décroissant)',
+            'selling_desc' => 'Meilleures ventes (décroissant)',
             'reference_asc' => 'Référence (croissant)',
             'reference_desc' => 'Référence (décroissant)',
         ];
