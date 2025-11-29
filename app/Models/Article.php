@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string $description_article
  * @property string $resumer_article
  * @property integer $nombre_vente_article
+ * @property integer $pourcentage_promotion
  */
 class Article extends Model
 {
@@ -28,7 +29,8 @@ class Article extends Model
         'nom_article',
         'description_article',
         'resumer_article',
-        'nombre_vente_article'
+        'nombre_vente_article',
+        'pourcentage_promotion'
     ];
 
     public function accessories(): HasMany
