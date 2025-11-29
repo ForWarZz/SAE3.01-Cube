@@ -11,7 +11,10 @@
             <a href="{{ url()->current() }}" class="text-sm text-blue-600 hover:text-blue-800">Réinitialiser</a>
         </div>
 
+        <x-filter-checkbox-group label="Disponibilité(s)" name="disponibilite" :items="$filterOptions['availabilities']" :selected="$activeFilters['disponibilite'] ?? []" />
         <x-filter-checkbox-group label="Usage" name="usage" :items="$filterOptions['usages']" :selected="$activeFilters['usage'] ?? []" />
+        <x-filter-checkbox-group label="Modèle de vélo" name="modele_velo" :items="$filterOptions['bikeModels']" :selected="$activeFilters['modele_velo'] ?? []" />
+        <x-filter-checkbox-group label="En promotion" name="promotion" :items="$filterOptions['promotions']" :selected="$activeFilters['promotion'] ?? []" />
         <x-filter-checkbox-group label="Millésime" name="millesime" :items="$filterOptions['vintages']" :selected="$activeFilters['millesime'] ?? []" />
         <x-filter-checkbox-group label="Type de cadre" name="cadre" :items="$filterOptions['frames']" :selected="$activeFilters['cadre'] ?? []" />
         <x-filter-checkbox-group label="Matériau" name="materiau" :items="$filterOptions['materials']" :selected="$activeFilters['materiau'] ?? []" />
