@@ -29,6 +29,7 @@ class Bike extends Model
         'id_materiau_cadre',
         'prix_article',
         'id_categorie',
+        'id_usage',
         'nom_article',
         'description_article',
         'resumer_article',
@@ -58,5 +59,10 @@ class Bike extends Model
     public function references(): HasMany
     {
         return $this->hasMany(BikeReference::class, 'id_article', 'id_article');
+    }
+
+    public function usage(): BelongsTo
+    {
+        return $this->belongsTo(Usage::class, 'id_usage', 'id_usage');
     }
 }
