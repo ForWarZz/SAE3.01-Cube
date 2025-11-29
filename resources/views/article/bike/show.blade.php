@@ -39,6 +39,10 @@
                                 <span x-text="selectedSize.availableInShop ? 'En stock en magasin' : 'Indisponible en magasin'"></span>
                             </span>
                         </div>
+
+                        <div class="text-3xl font-bold text-blue-600">
+                            {{ number_format($bike->prix_article, 2, ',', ' ') }} €
+                        </div>
                     </div>
                 </div>
 
@@ -90,34 +94,31 @@
                     </div>
 
                     <div>
-                        <label class="mb-3 block text-sm font-medium text-gray-900">Tailles</label>
-                        <div class="flex max-w-md min-w-md flex-wrap gap-3">
-                            @foreach ($sizeOptions as $opt)
+                        <label class="block text-sm font-medium text-gray-900 mb-3">Tailles</label>
+                        <div class="flex flex-wrap gap-3 min-w-md max-w-md">
+                            @foreach($sizeOptions as $opt)
                                 <div class="relative">
-                                    <input
-                                        type="radio"
-                                        name="size"
-                                        id="size_{{ $opt["id"] }}"
-                                        value="{{ $opt["id"] }}"
-                                        class="peer sr-only"
-                                        {{ $opt["disabled"] ? "disabled" : "" }}
-                                        @click="selectedSize = @js($opt)"
-                                        :checked="selectedSize && selectedSize.id === {{ $opt["id"] }}"
-                                    />
+                                    <input type="radio"
+                                           name="size"
+                                           id="size_{{ $opt['id'] }}"
+                                           value="{{ $opt['id'] }}"
+                                           class="peer sr-only"
+                                        {{ $opt['disabled'] ? 'disabled' : '' }}>
 
-                                    <label
-                                        for="size_{{ $opt["id"] }}"
-                                        class="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all peer-checked:border-black peer-checked:bg-black peer-checked:text-white peer-disabled:cursor-not-allowed peer-disabled:bg-gray-100 peer-disabled:text-gray-400 peer-disabled:opacity-50 hover:border-gray-300 hover:bg-gray-50 peer-checked:hover:border-black peer-checked:hover:bg-black"
-                                    >
-                                        {{ $opt["label"] }}
+                                    <label for="size_{{ $opt['id'] }}"
+                                           class="flex items-center justify-center px-4 py-2 border rounded-md text-sm font-medium cursor-pointer transition-all
+                                          bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300
+                                          peer-checked:bg-black peer-checked:text-white peer-checked:border-black
+                                          peer-checked:hover:bg-black peer-checked:hover:border-black
+                                          peer-disabled:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:bg-gray-100 peer-disabled:text-gray-400">
 
-                                        @if ($opt["disabled"])
-                                            <svg
-                                                class="absolute h-full w-full text-gray-400 opacity-50"
-                                                viewBox="0 0 100 100"
-                                                preserveAspectRatio="none"
-                                            >
-                                                <line x1="0" y1="100" x2="100" y2="0" stroke="currentColor" stroke-width="1" />
+                                        {{ $opt['label'] }}
+
+                                        @if($opt['disabled'])
+                                            <svg class="absolute w-full h-full text-gray-400 opacity-50"
+                                                 viewBox="0 0 100 100" preserveAspectRatio="none">
+                                                <line x1="0" y1="100" x2="100" y2="0" stroke="currentColor"
+                                                      stroke-width="1"/>
                                             </svg>
                                         @endif
                                     </label>
@@ -183,4 +184,31 @@
             )
         </div>
     </div>
+
+    @if($compatibleAccessories->isNotEmpty())
+        <div class="bg-gray-50 py-12">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Accessoires compatibles</h2>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    @foreach($compatibleAccessories as $accessory)
+                        <x-article-card :article="$accessory" />
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <div class="max-w-7xl mx-auto px-6 py-12">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Produits similaires</h2>
+        <div class="grid grid-cols-4 gap-6">
+            @forelse($similarBikes as $similarArticle)
+                <x-article-card :article="$similarArticle" />
+            @empty
+                <p class="text-gray-600">Aucun produit similaire trouvé.</p>
+            @endforelse
+        </div>
+    </div>
+
 </x-app-layout>

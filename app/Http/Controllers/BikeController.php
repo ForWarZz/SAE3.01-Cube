@@ -33,6 +33,8 @@ class BikeController extends Controller
     {
         $data = $this->veloService->prepareViewData($reference);
 
+
+        
         return view('article.bike.show', $data);
     }
 }
