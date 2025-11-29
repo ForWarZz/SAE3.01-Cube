@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id_taille
  * @property string $nom_taille
+ * @property string $pivot
  */
 class BikeSize extends Model
 {

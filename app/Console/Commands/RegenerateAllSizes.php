@@ -56,13 +56,13 @@ class RegenerateAllSizes extends Command
                         $sizeAvailabilityData[] = [
                             'id_reference' => $refId,
                             'id_taille' => $size->id_taille,
-                            'dispo_en_ligne' => rand(1, 100) <= 80
+                            'dispo_en_ligne' => rand(1, 100) <= 40
                         ];
 
                         foreach ($stores as $store) {
                             $rand = rand(1, 100);
                             if ($rand <= 25) $status = 'En Stock';
-                            elseif ($rand <= 60) $status = 'Commandable';
+                            elseif ($rand <= 40) $status = 'Commandable';
                             else $status = 'Indisponible';
 
                             $storeStockData[] = [

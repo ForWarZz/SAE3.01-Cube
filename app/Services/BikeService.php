@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\Bike;
 use App\Models\BikeModel;
 use App\Models\BikeReference;
-use App\Models\Bike;
 use Illuminate\Support\Collection;
+
 use function PHPUnit\Framework\isNull;
 
 class BikeService
@@ -13,7 +14,6 @@ class BikeService
     /**
      * Prepare view data for bike detail page
      *
-     * @param BikeReference $currentReference
      * @return array{
      *     currentReference: BikeReference,
      *     bike: Bike,
@@ -37,7 +37,7 @@ class BikeService
             'ebike.battery',
             'color',
             'frame',
-            'availableSizes'
+            'availableSizes',
         ]);
 
         $bike = $currentReference->bike;
@@ -77,14 +77,13 @@ class BikeService
             'geometrySizes' => $geometryData['headers'],
 
             'characteristics' => $characteristicsGrouped,
-            'weight' => $weight
+            'weight' => $weight,
         ];
     }
 
     /**
      * Build geometry data for bike model
      *
-     * @param BikeModel $bikeModel
      * @return array{headers: Collection, rows: Collection}
      */
     private function buildGeometryData(BikeModel $bikeModel): array
@@ -99,12 +98,13 @@ class BikeService
             ->map(function ($group, $label) use ($headers) {
                 $values = $headers->map(function ($size) use ($group) {
                     $geo = $group->firstWhere('id_taille', $size->id_taille);
+
                     return $geo ? $geo->valeur_carac : '-';
                 });
 
                 return [
-                    'label'  => $label,
-                    'values' => $values
+                    'label' => $label,
+                    'values' => $values,
                 ];
             });
 
@@ -113,10 +113,6 @@ class BikeService
 
     /**
      * Build frame options for current reference
-     *
-     * @param Collection $variants
-     * @param BikeReference $currentReference
-     * @return Collection
      */
     private function buildFrameOptions(Collection $variants, BikeReference $currentReference): Collection
     {
@@ -126,8 +122,12 @@ class BikeService
             ->sortBy('label_cadre_velo')
             ->map(function ($item) use ($variants, $currentReference) {
                 $target = $variants->first(function ($ref) use ($item, $currentReference) {
-                    if ($ref->id_cadre_velo != $item->id_cadre_velo) return false;
-                    if ($ref->id_couleur != $currentReference->id_couleur) return false;
+                    if ($ref->id_cadre_velo != $item->id_cadre_velo) {
+                        return false;
+                    }
+                    if ($ref->id_couleur != $currentReference->id_couleur) {
+                        return false;
+                    }
 
                     return true;
                 });
@@ -146,10 +146,6 @@ class BikeService
 
     /**
      * Build color options for current reference
-     *
-     * @param Collection $variants
-     * @param BikeReference $currentReference
-     * @return Collection
      */
     private function buildColorOptions(Collection $variants, BikeReference $currentReference): Collection
     {
@@ -159,8 +155,12 @@ class BikeService
             ->sortBy('label_couleur')
             ->map(function ($item) use ($variants, $currentReference) {
                 $target = $variants->first(function ($ref) use ($item, $currentReference) {
-                    if ($ref->id_couleur != $item->id_couleur) return false;
-                    if ($ref->id_cadre_velo != $currentReference->id_cadre_velo) return false;
+                    if ($ref->id_couleur != $item->id_couleur) {
+                        return false;
+                    }
+                    if ($ref->id_cadre_velo != $currentReference->id_cadre_velo) {
+                        return false;
+                    }
 
                     return true;
                 });
@@ -179,45 +179,43 @@ class BikeService
 
     /**
      * Build battery options for ebikes
-     *
-     * @param Collection $variants
-     * @param BikeReference $currentReference
-     * @return Collection
      */
     private function buildBatteryOptions(Collection $variants, BikeReference $currentReference): Collection
     {
-        $batteries = $variants->map(fn($ref) => $ref->ebike?->battery)
+        $batteries = $variants->map(fn ($ref) => $ref->ebike?->battery)
             ->filter()
             ->unique('id_batterie')
             ->sortBy('capacite_batterie');
 
         return $batteries->map(function ($battery) use ($variants, $currentReference) {
             $target = $variants->first(function ($ref) use ($battery, $currentReference) {
-                if ($ref->ebike?->id_batterie != $battery->id_batterie) return false;
-                if ($ref->id_couleur != $currentReference->id_couleur) return false;
-                if ($ref->id_cadre_velo != $currentReference->id_cadre_velo) return false;
+                if ($ref->ebike?->id_batterie != $battery->id_batterie) {
+                    return false;
+                }
+                if ($ref->id_couleur != $currentReference->id_couleur) {
+                    return false;
+                }
+                if ($ref->id_cadre_velo != $currentReference->id_cadre_velo) {
+                    return false;
+                }
 
                 return true;
             });
 
-            if (!$target) {
-                $target = $variants->first(fn($r) => $r->ebike?->id_batterie == $battery->id_batterie);
+            if (! $target) {
+                $target = $variants->first(fn ($r) => $r->ebike?->id_batterie == $battery->id_batterie);
             }
 
             return [
-                'label' => $battery->capacite_batterie . ' Wh',
+                'label' => $battery->capacite_batterie.' Wh',
                 'url' => route('articles.bikes.show', $target->id_reference),
-                'active' => $currentReference->ebike->id_batterie == $battery->id_batterie
+                'active' => $currentReference->ebike->id_batterie == $battery->id_batterie,
             ];
         });
     }
 
     /**
      * Build size options for current reference
-     *
-     * @param BikeReference $currentReference
-     * @param Collection|null $geometrySizes
-     * @return Collection
      */
     private function buildSizeOptions(BikeReference $currentReference, ?Collection $geometrySizes): Collection
     {
@@ -225,16 +223,19 @@ class BikeService
             ? $geometrySizes
             : $currentReference->availableSizes;
 
-        if (!$sizeList) return collect();
-
         return $sizeList->map(function ($size) use ($currentReference) {
-            $availableRef = $currentReference->availableSizes->firstWhere('id_taille', $size->id_taille);
-            $inStock = $availableRef && $availableRef->pivot->dispo_en_ligne;
+            $availableOnline = $size->pivot->dispo_en_ligne;
+            $availableInShop = $currentReference->shopAvailabilities()
+                ->where('id_taille', $size->id_taille)
+                ->whereIn('statut', ['En Stock', 'Commandable'])
+                ->exists();
 
             return [
                 'id' => $size->id_taille,
                 'label' => $size->nom_taille,
-                'disabled' => !$inStock
+                'availableOnline' => $availableOnline,
+                'availableInShop' => $availableInShop,
+                'disabled' => ! $availableOnline && ! $availableInShop,
             ];
         });
     }

@@ -4,7 +4,7 @@
     'sortBy' => null,
 ])
 
-<aside class="w-64 flex-shrink-0">
+<aside class="w-64">
     <div class="space-y-6 bg-white p-6 rounded-lg shadow-sm border border-gray-200">
         <div class="flex justify-between items-center border-b pb-4">
             <h2 class="text-lg font-semibold text-gray-900">Filtres</h2>
