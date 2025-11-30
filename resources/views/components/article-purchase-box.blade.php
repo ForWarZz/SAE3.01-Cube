@@ -16,9 +16,9 @@
 
         <div class="mb-2 flex gap-2 text-sm text-black">
             <span class="bg-gray-100 p-1">Référence : {{ $currentReference->id_reference }}</span>
+            <span class="bg-gray-100 p-1">Poids : {{ $weight }}</span>
 
             @if ($article->bike)
-                <span class="bg-gray-100 p-1">Poids : {{ $weight }}</span>
                 <span class="bg-gray-100 p-1">Millésime : {{ $article->bike->vintage->millesime_velo }}</span>
                 <span class="bg-gray-100 p-1">Matériau du cadre : {{ $article->bike->frameMaterial->label_materiau_cadre }}</span>
             @endif

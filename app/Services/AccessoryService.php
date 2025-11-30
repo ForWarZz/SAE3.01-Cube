@@ -8,6 +8,10 @@ class AccessoryService
 {
     public function prepareAccessoryData(Accessory $accessory): array
     {
+        $weight = $accessory->article->characteristics
+            ->firstWhere('id_caracteristique', config('accessory.characteristics.weight'))
+            ?->pivot->valeur_caracteristique ?? null;
+
         return [
             'isBike' => false,
             'currentReference' => $accessory,
@@ -21,7 +25,7 @@ class AccessoryService
             'geometrySizes' => collect(),
 
             'compatibleAccessories' => collect(),
-            'weight' => '25',
+            'weight' => $weight ?? 0,
         ];
     }
 }
