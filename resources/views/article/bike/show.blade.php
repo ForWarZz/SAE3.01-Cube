@@ -47,10 +47,20 @@
                             <span :class="selectedSize.availableOnline ? 'text-green-600 font-medium' : 'text-gray-400'">
                                 <span x-text="selectedSize.availableOnline ? 'Disponible en ligne' : 'Non disponible en ligne'"></span>
                             </span>
+
                             <br />
-                            <span :class="selectedSize.availableInShop ? 'text-green-600 font-medium' : 'text-gray-400'">
-                                <span x-text="selectedSize.availableInShop ? 'En stock en magasin' : 'Indisponible en magasin'"></span>
-                            </span>
+
+                            <template x-if="selectedSize.shopStatus === 'in_stock'">
+                                <span class="font-medium text-green-600">En stock en magasin</span>
+                            </template>
+
+                            <template x-if="selectedSize.shopStatus === 'orderable'">
+                                <span class="font-medium text-orange-500">Commandable en magasin</span>
+                            </template>
+
+                            <template x-if="selectedSize.shopStatus === 'unavailable'">
+                                <span class="text-gray-400">Indisponible en magasin</span>
+                            </template>
                         </div>
                     </div>
                 </div>

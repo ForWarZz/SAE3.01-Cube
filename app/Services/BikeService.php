@@ -145,21 +145,29 @@ class BikeService
     private function buildSizeOptions(BikeReference $currentReference): Collection
     {
         $sizeList = $currentReference->availableSizes;
-        $availableInShopStatuses = config('bike.availability.in_shop');
+        $orderableInShopStatus = config('bike.availability.orderable');
+        $inStockInShopStatus = config('bike.availability.in_stock');
 
-        return $sizeList->map(function ($size) use ($availableInShopStatuses, $currentReference) {
+        return $sizeList->map(function ($size) use ($orderableInShopStatus, $inStockInShopStatus, $currentReference) {
             $availableOnline = $size->pivot->dispo_en_ligne;
-            $availableInShop = $currentReference->shopAvailabilities()
+            $storeStatuses = $currentReference->shopAvailabilities()
                 ->where('id_taille', $size->id_taille)
-                ->whereIn('statut', $availableInShopStatuses)
-                ->exists();
+                ->pluck('statut');
+
+            if ($storeStatuses->contains($inStockInShopStatus)) {
+                $shopStatus = 'in_stock';
+            } elseif ($storeStatuses->contains($orderableInShopStatus)) {
+                $shopStatus = 'orderable';
+            } else {
+                $shopStatus = 'unavailable';
+            }
 
             return [
                 'id' => $size->id_taille,
                 'label' => $size->nom_taille,
                 'availableOnline' => $availableOnline,
-                'availableInShop' => $availableInShop,
-                'disabled' => ! $availableOnline && ! $availableInShop,
+                'shopStatus' => $shopStatus,
+                'disabled' => ! $availableOnline && $shopStatus === 'unavailable',
             ];
         });
     }
