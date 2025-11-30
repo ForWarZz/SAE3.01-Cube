@@ -8,8 +8,6 @@ use App\Models\BikeModel;
 use App\Models\BikeReference;
 use Illuminate\Support\Collection;
 
-use function PHPUnit\Framework\isNull;
-
 class BikeService
 {
     /**
@@ -60,7 +58,7 @@ class BikeService
         }
 
         $geometryData = $this->buildGeometryData($bike->bikeModel);
-        $sizeOptions = $this->buildSizeOptions($currentReference, $geometryData['headers']);
+        $sizeOptions = $this->buildSizeOptions($currentReference);
 
         $characteristicsGrouped = $bike->article->characteristics->groupBy('characteristicType.nom_type_carac');
 
@@ -157,7 +155,7 @@ class BikeService
                     return true;
                 });
 
-                if (isNull($target)) {
+                if (is_null($target)) {
                     $target = $variants->firstWhere('id_cadre_velo', '=', $item->id_cadre_velo);
                 }
 
@@ -190,7 +188,7 @@ class BikeService
                     return true;
                 });
 
-                if (isNull($target)) {
+                if (is_null($target)) {
                     $target = $variants->firstWhere('id_couleur', '=', $item->id_couleur);
                 }
 
@@ -242,7 +240,7 @@ class BikeService
     /**
      * Build size options for current reference
      */
-    private function buildSizeOptions(BikeReference $currentReference, ?Collection $geometrySizes): Collection
+    private function buildSizeOptions(BikeReference $currentReference): Collection
     {
         $sizeList = $currentReference->availableSizes;
         $availableInShopStatuses = config('bike.availability.in_shop');
