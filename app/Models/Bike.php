@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -17,10 +16,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $nom_article
  * @property string $description_article
  * @property string $resumer_article
+ * @property int $nombre_vente_article
  */
 class Bike extends Model
 {
     protected $table = 'velo';
+
     protected $primaryKey = 'id_article';
 
     protected $fillable = [
