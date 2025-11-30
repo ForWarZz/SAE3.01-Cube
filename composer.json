@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.1",
@@ -48,20 +51,14 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ],
-        "production": [
-            "composer install",
+        "deploy": [
+            "composer install --no-dev --optimize-autoloader",
+            "npm ci",
+            "npm run build",
+            "php artisan optimize:clear",
             "php artisan optimize",
-            "php artisan config:cache",
-            "php artisan route:cache",
-            "php artisan view:cache",
-            "npm install && npm run build",
-            "php artisan serve --host=0.0.0.0 --port 9090"
-        ],
-        "dev": [
-            "php artisan config:clear",
-            "php artisan route:clear",
-            "php artisan view:clear",
-            "php artisan serve"
+            "php artisan up",
+            "php artisan serve --host=0.0.0.0 --port=9090"
         ]
     },
     "extra": {
