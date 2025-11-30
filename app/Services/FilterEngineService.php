@@ -6,9 +6,9 @@ use App\Filters\ArticleFilter;
 use App\Filters\AvailabilityFilter;
 use App\Filters\BikeModelFilter;
 use App\Filters\ColorFilter;
+use App\Filters\DiscountFilter;
 use App\Filters\FrameFilter;
 use App\Filters\MaterialFilter;
-use App\Filters\PromotionFilter;
 use App\Filters\UsageFilter;
 use App\Filters\VintageFilter;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,7 +28,7 @@ class FilterEngineService
         UsageFilter::class,
         MaterialFilter::class,
         BikeModelFilter::class,
-        PromotionFilter::class,
+        DiscountFilter::class,
         AvailabilityFilter::class,
     ];
 
@@ -39,7 +39,7 @@ class FilterEngineService
 
     public function __construct()
     {
-        $this->filters = array_map(fn($class) => new $class, $this->filterClasses);
+        $this->filters = array_map(fn ($class) => new $class, $this->filterClasses);
     }
 
     public function retrieveSelectedFilters(Request $request): array

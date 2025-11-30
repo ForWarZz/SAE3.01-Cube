@@ -2,27 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * @property integer $id_categorie
+ * @property int $id_categorie
  * @property float $prix_article
  * @property string $nom_article
  * @property string $description_article
  * @property string $resumer_article
- * @property integer $nombre_vente_article
- * @property integer $pourcentage_promotion
+ * @property int $nombre_vente_article
+ * @property int pourcentage_remise
  */
 class Article extends Model
 {
     protected $table = 'article';
+
     protected $primaryKey = 'id_article';
+
     protected $fillable = [
         'id_categorie',
         'prix_article',
@@ -30,8 +31,22 @@ class Article extends Model
         'description_article',
         'resumer_article',
         'nombre_vente_article',
-        'pourcentage_promotion'
+        'pourcentage_remise',
     ];
+
+    public function hasDiscount(): bool
+    {
+        return $this->pourcentage_remise > 0;
+    }
+
+    public function getDiscountedPrice(): float
+    {
+        if ($this->hasDiscount() > 0) {
+            return round($this->prix_article * (1 - $this->pourcentage_remise / 100), 2);
+        }
+
+        return $this->prix_article;
+    }
 
     public function accessories(): HasMany
     {
@@ -84,6 +99,6 @@ class Article extends Model
 
         $files = Storage::disk('public')->files($directory);
 
-        return array_map(fn($f) => Storage::url($f), $files);
+        return array_map(fn ($f) => Storage::url($f), $files);
     }
 }

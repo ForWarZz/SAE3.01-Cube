@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id_reference
@@ -18,13 +17,14 @@ class BikeReference extends Model
     public $timestamps = false;
 
     protected $table = 'reference_velo';
+
     protected $primaryKey = 'id_reference';
 
     protected $fillable = [
         'id_reference',
         'id_cadre_velo',
         'id_couleur',
-        'id_article'
+        'id_article',
     ];
 
     public function article(): BelongsTo

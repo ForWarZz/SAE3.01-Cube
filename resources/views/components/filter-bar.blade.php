@@ -24,7 +24,7 @@
             :filterOptions="$filterOptions"
             :activeFilters="$activeFilters"
         />
-        <x-filter-checkbox-group label="En promotion" name="promotion" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />
+        <x-filter-checkbox-group label="En promotion" name="discount" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />
         <x-filter-checkbox-group label="Millésime" name="vintage" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />
         <x-filter-checkbox-group label="Type de cadre" name="frame" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />
         <x-filter-checkbox-group label="Matériau" name="material" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />

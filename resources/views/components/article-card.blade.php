@@ -1,37 +1,45 @@
-<article class="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-    <a href="{{ route('articles.show', $article->id_article) }}" class="block">
-        <div class="relative bg-gray-50 h-56 overflow-hidden">
+<article class="group overflow-hidden rounded-lg border border-gray-200 bg-white transition-shadow hover:shadow-lg">
+    <a href="{{ route("articles.show", $article->id_article) }}" class="block">
+        <div class="relative h-56 overflow-hidden bg-gray-50">
+            @if ($article->hasDiscount())
+                <span class="absolute top-2 left-2 z-10 rounded bg-red-600 px-2 py-1 text-xs font-bold text-white">
+                    -{{ $article->pourcentage_remise }}%
+                </span>
+            @endif
+
             <img
                 src="{{ $article->getCoverUrl() }}"
                 alt="{{ $article->nom_article }}"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"
-            >
+            />
         </div>
 
         <div class="p-5">
-            <h3 class="text-base font-semibold text-gray-900 mb-1 line-clamp-2">
+            <h3 class="mb-1 line-clamp-2 text-base font-semibold text-gray-900">
                 {{ $article->nom_article }}
             </h3>
 
-            @if($article->bike)
-                <p class="text-sm text-gray-500 mb-3">
+            @if ($article->bike)
+                <p class="mb-3 text-sm text-gray-500">
                     {{ $article->bike->bikeModel->nom_modele_velo }}
                 </p>
-            @elseif($article->accessories)
-                <p class="text-sm text-gray-500 mb-3">
-                    {{ $article->category->nom_categorie ?? 'Accessoire' }}
+            @elseif ($article->accessories)
+                <p class="mb-3 text-sm text-gray-500">
+                    {{ $article->category->nom_categorie ?? "Accessoire" }}
                 </p>
             @endif
 
-            <div class="flex items-center justify-between mt-4">
-                <span class="text-xl font-bold text-gray-900">
-                    {{ number_format($article->prix_article, 0, ',', ' ') }} €
-                </span>
+            <div class="mt-4 flex items-center justify-between">
+                <div class="flex flex-col">
+                    <span class="text-xl font-bold text-blue-600">{{ number_format($article->getDiscountedPrice(), 0, ",", " ") }} €</span>
 
-                <span class="text-sm text-blue-600 font-medium group-hover:underline">
-                    Voir →
-                </span>
+                    @if ($article->hasDiscount())
+                        <span class="text-sm text-gray-400 line-through">{{ number_format($article->prix_article, 0, ",", " ") }} €</span>
+                    @endif
+                </div>
+
+                <span class="text-sm font-medium text-blue-600 group-hover:underline">Voir →</span>
             </div>
         </div>
     </a>

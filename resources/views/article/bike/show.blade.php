@@ -27,9 +27,23 @@
                             <span class="bg-gray-100 p-1">Matériau du cadre : {{ $bike->frameMaterial->label_materiau_cadre }}</span>
                         </div>
 
-                        <div class="text-3xl font-bold text-blue-600">{{ number_format($bike->prix_article, 2, ",", " ") }} €</div>
+                        <div class="flex flex-col">
+                            <span class="text-3xl font-bold text-blue-600">{{ number_format($discountedPrice, 2, ",", " ") }} €</span>
 
-                        <div class="mt-2 text-sm text-gray-700" x-show="selectedSize">
+                            @if ($hasDiscount)
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-md font-semibold text-gray-400 line-through">
+                                        {{ number_format($realPrice, 2, ",", " ") }} €
+                                    </span>
+
+                                    <span class="rounded bg-red-600 px-2 py-0.5 text-xs font-bold text-white">
+                                        -{{ $discountPercent }}%
+                                    </span>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="mt-3 text-sm text-gray-700" x-show="selectedSize">
                             <span :class="selectedSize.availableOnline ? 'text-green-600 font-medium' : 'text-gray-400'">
                                 <span x-text="selectedSize.availableOnline ? 'Disponible en ligne' : 'Non disponible en ligne'"></span>
                             </span>

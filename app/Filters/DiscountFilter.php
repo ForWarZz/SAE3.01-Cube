@@ -2,22 +2,17 @@
 
 namespace App\Filters;
 
-use App\Filters\AbstractFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
-class PromotionFilter extends AbstractFilter
+class DiscountFilter extends AbstractFilter
 {
-    protected string $key = 'promotion';
+    protected string $key = 'discount';
 
     public function apply(Builder $query, array $values): void
     {
-        if (in_array('on_promotion', $values)) {
+        if (in_array('in_discount', $values)) {
             $query->where('pourcentage_remise', '>', 0);
-        }
-
-        if (in_array('no_promotion', $values)) {
-            $query->where('pourcentage_remise', '=', 0);
         }
     }
 
@@ -26,10 +21,12 @@ class PromotionFilter extends AbstractFilter
         $hasPromo = (clone $baseQuery)->where('pourcentage_remise', '>', 0)->exists();
         $options = collect();
 
-        if (!$hasPromo) return $options;
+        if (! $hasPromo) {
+            return $options;
+        }
 
         $options->push([
-            'id' => 'on_promotion',
+            'id' => 'in_discount',
             'label' => 'En promotion',
         ]);
 

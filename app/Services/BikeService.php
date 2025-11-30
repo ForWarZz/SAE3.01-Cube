@@ -30,7 +30,11 @@ class BikeService
      *     characteristics: Collection,
      *     weight: string,
      *     similarBikes: Collection,
-     *     compatibleAccessories: Collection
+     *     compatibleAccessories: Collection,
+     *     realPrice: float,
+     *     discountedPrice: float,
+     *     hasDiscount: bool,
+     *     discountPercent: int,
      * }
      */
     public function prepareViewData(BikeReference $currentReference): array
@@ -72,6 +76,12 @@ class BikeService
 
         return [
             'currentReference' => $currentReference,
+
+            'realPrice' => $currentReference->article->prix_article,
+            'discountedPrice' => $currentReference->article->getDiscountedPrice(),
+            'hasDiscount' => $currentReference->article->hasDiscount(),
+            'discountPercent' => $currentReference->article->pourcentage_remise,
+
             'bike' => $bike,
             'isEbike' => $isEbike,
             'frameOptions' => $frameOptions,
