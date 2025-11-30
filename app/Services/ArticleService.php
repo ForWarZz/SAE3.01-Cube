@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Models\Article;
+use App\Models\Bike;
 use App\Models\BikeModel;
 use App\Models\Category;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -31,7 +31,7 @@ class ArticleService
     {
         $search = $request->input('search', '');
 
-        $query = Article::query()->select([
+        $query = Bike::query()->select([
             'id_article',
             'nom_article',
             'prix_article',
@@ -41,23 +41,21 @@ class ArticleService
         $keywords = explode(' ', trim($search));
         $keywords = array_filter($keywords);
 
-        $query
-            ->with(['category', 'bike.bikeModel'])
-            ->where(function (Builder $mainQuery) use ($keywords) {
-                foreach ($keywords as $word) {
-                    $term = "%{$word}%";
+        foreach ($keywords as $word) {
+            $term = "%$word%";
 
-                    $mainQuery->orWhere('nom_article', 'ILIKE', $term)
-                        ->orWhere('description_article', 'ILIKE', $term)
-                        ->orWhere('resumer_article', 'ILIKE', $term)
-                        ->orWhereHas('category', function ($q) use ($term) {
-                            $q->where('nom_categorie', 'ILIKE', $term);
-                        })
-                        ->orWhereHas('bike.bikeModel', function ($q) use ($term) {
-                            $q->where('nom_modele_velo', 'ILIKE', $term);
-                        });
-                }
+            $query->where(function ($q) use ($term) {
+                $q->orWhere('nom_article', 'ILIKE', $term)
+                    ->orWhere('resumer_article', 'ILIKE', $term)
+                    ->orWhere('description_article', 'ILIKE', $term)
+                    ->orWhereHas('category', function ($q2) use ($term) {
+                        $q2->where('nom_categorie', 'ILIKE', $term);
+                    })
+                    ->orWhereHas('bikeModel', function ($q2) use ($term) {
+                        $q2->where('nom_modele_velo', 'ILIKE', $term);
+                    });
             });
+        }
 
         $data = $this->finalizeQuery($query, $request);
 
