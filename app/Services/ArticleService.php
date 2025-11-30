@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Article;
-use App\Models\Bike;
 use App\Models\BikeModel;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -31,12 +30,12 @@ class ArticleService
     {
         $search = $request->input('search', '');
 
-        $query = Bike::query()->select([
+        $query = Article::query()->select([
             'id_article',
             'nom_article',
             'prix_article',
             'id_categorie',
-        ]);
+        ])->whereHas('bike');
 
         $keywords = explode(' ', trim($search));
         $keywords = array_filter($keywords);
@@ -51,7 +50,7 @@ class ArticleService
                     ->orWhereHas('category', function ($q2) use ($term) {
                         $q2->where('nom_categorie', 'ILIKE', $term);
                     })
-                    ->orWhereHas('bikeModel', function ($q2) use ($term) {
+                    ->orWhereHas('bike.bikeModel', function ($q2) use ($term) {
                         $q2->where('nom_modele_velo', 'ILIKE', $term);
                     });
             });
