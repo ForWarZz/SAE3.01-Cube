@@ -51,7 +51,10 @@ class BikeVariantService
 
                 return [
                     'label' => $frame->label_cadre_velo,
-                    'url' => route('articles.bikes.show', $target->id_reference),
+                    'url' => route('articles.show-reference', [
+                        'article' => $currentReference->id_article,
+                        'reference' => $target->id_reference,
+                    ]),
                     'active' => $currentReference->id_cadre_velo == $frame->id_cadre_velo,
                 ];
             });
@@ -78,7 +81,10 @@ class BikeVariantService
 
                 return [
                     'label' => $color->label_couleur,
-                    'url' => route('articles.bikes.show', $target->id_reference),
+                    'url' => route('articles.show-reference', [
+                        'article' => $currentReference->id_article,
+                        'reference' => $target->id_reference,
+                    ]),
                     'active' => $currentReference->id_couleur == $color->id_couleur,
                     'hex' => $color->hex,
                 ];
@@ -88,19 +94,19 @@ class BikeVariantService
     /**
      * Build battery options for ebikes
      */
-    public function buildBatteryOptions(Collection $variants, BikeReference $current): Collection
+    public function buildBatteryOptions(Collection $variants, BikeReference $currentReference): Collection
     {
         return $variants
             ->map(fn ($r) => $r->ebike?->battery)
             ->filter()
             ->unique('id_batterie')
             ->values()
-            ->map(function ($battery) use ($variants, $current) {
+            ->map(function ($battery) use ($variants, $currentReference) {
 
                 $criteria = [
                     'id_batterie' => $battery->id_batterie,
-                    'id_couleur' => $current->id_couleur,
-                    'id_cadre_velo' => $current->id_cadre_velo,
+                    'id_couleur' => $currentReference->id_couleur,
+                    'id_cadre_velo' => $currentReference->id_cadre_velo,
                 ];
 
                 $target = $this->findVariant($variants, $criteria)
@@ -108,8 +114,11 @@ class BikeVariantService
 
                 return [
                     'label' => $battery->capacite_batterie.' Wh',
-                    'url' => route('articles.bikes.show', $target->id_reference),
-                    'active' => $current->ebike->id_batterie === $battery->id_batterie,
+                    'url' => route('articles.show-reference', [
+                        'article' => $currentReference->id_article,
+                        'reference' => $target->id_reference,
+                    ]),
+                    'active' => $currentReference->ebike->id_batterie === $battery->id_batterie,
                 ];
             });
     }
