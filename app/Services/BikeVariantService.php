@@ -80,6 +80,7 @@ class BikeVariantService
                     'label' => $color->label_couleur,
                     'url' => route('articles.bikes.show', $target->id_reference),
                     'active' => $currentReference->id_couleur == $color->id_couleur,
+                    'hex' => $color->hex,
                 ];
             });
     }

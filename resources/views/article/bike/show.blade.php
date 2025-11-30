@@ -81,9 +81,10 @@
                         <div class="flex gap-3">
                             @foreach ($colorOptions as $opt)
                                 <a
+                                    style="background-color: {{ $opt["hex"] }}"
                                     href="{{ $opt["url"] }}"
                                     title="{{ $opt["label"] }}"
-                                    class="{{ $opt["active"] ? "ring-2 ring-gray-900 ring-offset-2" : "opacity-70 hover:opacity-100" }} size-10 rounded-full bg-gray-200"
+                                    class="{{ $opt["active"] ? "ring-2 ring-gray-900 ring-offset-2" : "opacity-70 hover:opacity-100" }} size-10 rounded-full"
                                 ></a>
                             @endforeach
                         </div>
