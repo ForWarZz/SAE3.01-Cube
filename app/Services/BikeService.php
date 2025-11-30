@@ -10,6 +10,10 @@ use Illuminate\Support\Collection;
 
 class BikeService
 {
+    public function __construct(
+        protected BikeVariantService $bikeVariantService,
+    ) {}
+
     /**
      * Prepare view data for bike detail page
      *
@@ -44,18 +48,10 @@ class BikeService
         $bike = $currentReference->bike;
         $isEbike = $currentReference->ebike !== null;
 
-        $variants = BikeReference::where('id_article', $bike->id_article)
-            ->with(['color', 'frame', 'ebike.battery'])
-            ->get();
-
-        $frameOptions = $this->buildFrameOptions($variants, $currentReference);
-        $colorOptions = $this->buildColorOptions($variants, $currentReference);
-
-        $batteryOptions = collect();
-
-        if ($isEbike) {
-            $batteryOptions = $this->buildBatteryOptions($variants, $currentReference);
-        }
+        $variants = $this->bikeVariantService->getVariants($currentReference);
+        $frameOptions = $this->bikeVariantService->buildFrameOptions($variants, $currentReference);
+        $colorOptions = $this->bikeVariantService->buildColorOptions($variants, $currentReference);
+        $batteryOptions = $this->bikeVariantService->buildBatteryOptions($variants, $currentReference) ?? collect();
 
         $geometryData = $this->buildGeometryData($bike->bikeModel);
         $sizeOptions = $this->buildSizeOptions($currentReference);
@@ -95,7 +91,6 @@ class BikeService
 
     private function getCompatibleAccessories(Bike $bike): Collection
     {
-
         return Article::query()
             ->whereHas('accessories')
             ->where('id_article', '!=', $bike->id_article)
@@ -132,109 +127,6 @@ class BikeService
             });
 
         return ['headers' => $headers, 'rows' => $rows];
-    }
-
-    /**
-     * Build frame options for current reference
-     */
-    private function buildFrameOptions(Collection $variants, BikeReference $currentReference): Collection
-    {
-        return $variants
-            ->pluck('frame')
-            ->unique('id_cadre_velo')
-            ->sortBy('label_cadre_velo')
-            ->map(function ($item) use ($variants, $currentReference) {
-                $target = $variants->first(function ($ref) use ($item, $currentReference) {
-                    if ($ref->id_cadre_velo != $item->id_cadre_velo) {
-                        return false;
-                    }
-                    if ($ref->id_couleur != $currentReference->id_couleur) {
-                        return false;
-                    }
-
-                    return true;
-                });
-
-                if (is_null($target)) {
-                    $target = $variants->firstWhere('id_cadre_velo', '=', $item->id_cadre_velo);
-                }
-
-                return [
-                    'label' => $item->label_cadre_velo,
-                    'url' => route('articles.bikes.show', $target->id_reference),
-                    'active' => $currentReference->id_cadre_velo == $item->id_cadre_velo,
-                ];
-            });
-    }
-
-    /**
-     * Build color options for current reference
-     */
-    private function buildColorOptions(Collection $variants, BikeReference $currentReference): Collection
-    {
-        return $variants
-            ->pluck('color')
-            ->unique('id_couleur')
-            ->sortBy('label_couleur')
-            ->map(function ($item) use ($variants, $currentReference) {
-                $target = $variants->first(function ($ref) use ($item, $currentReference) {
-                    if ($ref->id_couleur != $item->id_couleur) {
-                        return false;
-                    }
-                    if ($ref->id_cadre_velo != $currentReference->id_cadre_velo) {
-                        return false;
-                    }
-
-                    return true;
-                });
-
-                if (is_null($target)) {
-                    $target = $variants->firstWhere('id_couleur', '=', $item->id_couleur);
-                }
-
-                return [
-                    'label' => $item->label_couleur,
-                    'url' => route('articles.bikes.show', $target->id_reference),
-                    'active' => $currentReference->id_couleur == $item->id_couleur,
-                ];
-            });
-    }
-
-    /**
-     * Build battery options for ebikes
-     */
-    private function buildBatteryOptions(Collection $variants, BikeReference $currentReference): Collection
-    {
-        $batteries = $variants->map(fn ($ref) => $ref->ebike?->battery)
-            ->filter()
-            ->unique('id_batterie')
-            ->sortBy('capacite_batterie');
-
-        return $batteries->map(function ($battery) use ($variants, $currentReference) {
-            $target = $variants->first(function ($ref) use ($battery, $currentReference) {
-                if ($ref->ebike?->id_batterie != $battery->id_batterie) {
-                    return false;
-                }
-                if ($ref->id_couleur != $currentReference->id_couleur) {
-                    return false;
-                }
-                if ($ref->id_cadre_velo != $currentReference->id_cadre_velo) {
-                    return false;
-                }
-
-                return true;
-            });
-
-            if (! $target) {
-                $target = $variants->first(fn ($r) => $r->ebike?->id_batterie == $battery->id_batterie);
-            }
-
-            return [
-                'label' => $battery->capacite_batterie.' Wh',
-                'url' => route('articles.bikes.show', $target->id_reference),
-                'active' => $currentReference->ebike->id_batterie == $battery->id_batterie,
-            ];
-        });
     }
 
     /**
