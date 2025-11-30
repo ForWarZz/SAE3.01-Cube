@@ -5,21 +5,26 @@ namespace App\View\Components;
 use App\Models\Category;
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 
 class NavBar extends Component
 {
     /**
-     * @var Category[] $categories
+     * @var Collection<Category>
      */
-    public array $categories;
+    public Collection $categories;
 
     /**
      * Create a new component instance.
      */
     public function __construct()
     {
-        $this->categories = Category::all()->whereNull('id_categorie_parent')->reverse()->all();
+        $this->categories = Category::query()
+            ->orderBy('nom_categorie', 'ASC')
+            ->where('nom_categorie', '!=', 'Accessoires')
+            ->whereNull('id_categorie_parent')
+            ->get();
     }
 
     /**
@@ -28,7 +33,7 @@ class NavBar extends Component
     public function render(): View|Closure|string
     {
         return view('components.nav-bar', [
-            'categories' => $this->categories
+            'categories' => $this->categories,
         ]);
     }
 }
