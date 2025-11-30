@@ -20,12 +20,11 @@
                         @endif
                     </div>
                     <div class="flex flex-col">
-                        <div class="mb-2 flex gap-2">
-                            <span class="bg-gray-100 p-1 text-sm text-black">Poids : {{ $weight }}</span>
-                            <span class="bg-gray-100 p-1 text-sm text-black">Millésime : {{ $bike->vintage->millesime_velo }}</span>
-                            <span class="bg-gray-100 p-1 text-sm text-black">
-                                Matériau du cadre : {{ $bike->frameMaterial->label_materiau_cadre }}
-                            </span>
+                        <div class="mb-2 flex gap-2 text-sm text-black">
+                            <span class="bg-gray-100 p-1">Référence : {{ $currentReference->id_reference }}</span>
+                            <span class="bg-gray-100 p-1">Poids : {{ $weight }}</span>
+                            <span class="bg-gray-100 p-1">Millésime : {{ $bike->vintage->millesime_velo }}</span>
+                            <span class="bg-gray-100 p-1">Matériau du cadre : {{ $bike->frameMaterial->label_materiau_cadre }}</span>
                         </div>
 
                         <div class="text-3xl font-bold text-blue-600">{{ number_format($bike->prix_article, 2, ",", " ") }} €</div>
