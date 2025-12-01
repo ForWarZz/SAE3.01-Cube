@@ -21,7 +21,7 @@ class NavBar extends Component
     public function __construct()
     {
         $this->categories = Category::query()
-            ->orderBy('nom_categorie', 'ASC')
+            ->orderBy('id_categorie', 'desc')
             ->whereNull('id_categorie_parent')
             ->get();
     }
