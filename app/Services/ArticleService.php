@@ -45,7 +45,7 @@ class ArticleService
         $keywords = array_filter($keywords);
 
         foreach ($keywords as $word) {
-            $term = "%$word%";
+            $term = "% $word %";
 
             $query->where(function ($q) use ($term) {
                 $q->orWhere('nom_article', 'ILIKE', $term)
