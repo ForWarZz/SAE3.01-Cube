@@ -145,6 +145,12 @@
                     @endforeach
                 </div>
             </div>
+
+            <button
+                class="mt-6 cursor-pointer rounded-lg bg-black px-4 py-4 text-xl font-bold text-white transition-colors hover:bg-gray-900"
+            >
+                Ajouter au panier
+            </button>
         </div>
     @endif
 </div>
