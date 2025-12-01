@@ -27,10 +27,12 @@ Route::prefix('articles')->name('articles.')->group(function () {
     Route::get('/categories/{category}', [ArticleController::class, 'viewByCategory'])->name('by-category');
     Route::get('/modeles/{model}', [ArticleController::class, 'viewByModel'])->name('by-model');
 
-    Route::prefix('/velos')->name('bikes.')->group(function () {
-        Route::get('/reference/{reference}', [BikeController::class, 'show'])->name('show');
-        Route::get('/{bike}', [BikeController::class, 'redirectToDefaultVariant'])->name('redirect-to-default');
-    });
+    Route::get('/{article}/{reference}', [ArticleController::class, 'showByRef'])->name('show-reference');
+
+    //    Route::prefix('/velos')->name('bikes.')->group(function () {
+    //        //        Route::get('/reference/{reference}', [BikeController::class, 'show'])->name('show');
+    //        Route::get('/{bike}', [BikeController::class, 'redirectToDefaultVariant'])->name('redirect-to-default');
+    //    });
 
 });
 

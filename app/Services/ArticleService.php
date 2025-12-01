@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Article;
+use App\Models\ArticleReference;
+use App\Models\Bike;
 use App\Models\BikeModel;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -13,6 +15,8 @@ class ArticleService
 {
     public function __construct(
         protected FilterEngineService $filterEngineService,
+        protected BikeService $bikeService,
+        protected AccessoryService $accessoryService,
     ) {}
 
     /**
@@ -96,6 +100,105 @@ class ArticleService
         $baseQuery = Article::whereIn('id_categorie', $category->getAllChildrenIds());
 
         return $this->finalizeQuery($baseQuery, $request);
+    }
+
+    //    public function prepareViewData(ArticleReference $articleReference): array
+    //    {
+    //        if ($articleReference->article->isBike()) {
+    //            return $this->bikeService->prepareBikeData($articleReference->bikeReference);
+    //        }
+    //
+    //        //        $currentReference->load([
+    //        //            'bike.bikeModel.geometries.characteristic',
+    //        //            'bike.bikeModel.geometries.size',
+    //        //            'article.characteristics.characteristicType',
+    //        //            'ebike.battery',
+    //        //            'color',
+    //        //            'frame',
+    //        //            'availableSizes',
+    //        //        ]);
+    //        //
+    //        //        $bike = $currentReference->bike;
+    //        //        $isEbike = $currentReference->ebike !== null;
+    //        //
+    //        //        $variants = $this->bikeVariantService->getVariants($currentReference);
+    //        //        $frameOptions = $this->bikeVariantService->buildFrameOptions($variants, $currentReference);
+    //        //        $colorOptions = $this->bikeVariantService->buildColorOptions($variants, $currentReference);
+    //        //        $batteryOptions = $this->bikeVariantService->buildBatteryOptions($variants, $currentReference) ?? collect();
+    //        //
+    //        //        $geometryData = $this->buildGeometryData($bike->bikeModel);
+    //        //        $sizeOptions = $this->buildSizeOptions($currentReference);
+    //        //
+    //        //        $characteristicsGrouped = $bike->characteristics->groupBy('characteristicType.nom_type_carac');
+    //        //
+    //        //        $weightCharacteristicId = config('bike.characteristics.weight');
+    //        //        $weight = $bike->characteristics->firstWhere('id_caracteristique', $weightCharacteristicId)
+    //        //            ->pivot->valeur_caracteristique;
+    //        //
+    //        //        $similarBikes = $bike->similar()
+    //        //            ->whereHas('bike')
+    //        //            ->with('bike')
+    //        //            ->limit(4)
+    //        //            ->get();
+    //        //
+    //        //        $compatibleAccessories = $this->getCompatibleAccessories($bike);
+    //
+    //        //        return [
+    //        //            'currentReference' => $currentReference,
+    //        //
+    //        //            'realPrice' => $currentReference->article->prix_article,
+    //        //            'discountedPrice' => $currentReference->article->getDiscountedPrice(),
+    //        //            'hasDiscount' => $currentReference->article->hasDiscount(),
+    //        //            'discountPercent' => $currentReference->article->pourcentage_remise,
+    //        //
+    //        //            'bike' => $bike,
+    //        //            'isEbike' => $isEbike,
+    //        //            'frameOptions' => $frameOptions,
+    //        //            'colorOptions' => $colorOptions,
+    //        //            'batteryOptions' => $batteryOptions,
+    //        //            'sizeOptions' => $sizeOptions,
+    //        //
+    //        //            'geometries' => $geometryData['rows'],
+    //        //            'geometrySizes' => $geometryData['headers'],
+    //        //
+    //        //            'characteristics' => $characteristicsGrouped,
+    //        //            'weight' => $weight,
+    //        //            'similarBikes' => $similarBikes,
+    //        //            'compatibleAccessories' => $compatibleAccessories,
+    //        //        ];
+    //    }
+
+    public function prepareViewData(Article $article, ArticleReference $reference): array
+    {
+        $base = [
+            'article' => $article,
+
+            'realPrice' => $article->prix_article,
+            'discountedPrice' => $article->getDiscountedPrice(),
+            'hasDiscount' => $article->hasDiscount(),
+            'discountPercent' => $article->pourcentage_remise,
+
+            'images' => $article->getAllImagesUrls(),
+            'characteristics' => $article->characteristics
+                ->groupBy('characteristicType.nom_type_carac'),
+
+            'description' => $article->description_article,
+            'resume' => $article->resumer_article,
+
+            'similarArticles' => $article->similar()->limit(4)->get(),
+
+            'isBike' => false,
+        ];
+
+        if ($article->isBike()) {
+            $bikeData = $this->bikeService->prepareBikeData($reference->bikeReference);
+
+            return array_merge($base, $bikeData);
+        }
+
+        $accessoryData = $this->accessoryService->prepareAccessoryData($article->accessory);
+
+        return array_merge($base, $accessoryData);
     }
 
     /**

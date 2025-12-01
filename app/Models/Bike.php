@@ -22,8 +22,6 @@ class Bike extends Model
 {
     protected $table = 'velo';
 
-    protected $primaryKey = 'id_article';
-
     protected $fillable = [
         'id_millesime',
         'id_modele_velo',

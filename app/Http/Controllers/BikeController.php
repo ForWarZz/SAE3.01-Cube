@@ -2,23 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Article;
-use App\Models\Reference;
-use App\Models\BikeReference;
 use App\Models\Bike;
+use App\Models\BikeReference;
 use App\Services\BikeService;
 
 class BikeController extends Controller
 {
     public function __construct(
         protected BikeService $veloService,
-    )
-    {}
+    ) {}
 
-    public function index()
-    {
-
-    }
+    public function index() {}
 
     public function redirectToDefaultVariant(Bike $bike)
     {
@@ -26,15 +20,13 @@ class BikeController extends Controller
             ->orderBy('id_reference')
             ->firstOrFail();
 
-        return redirect()->route('articles.bikes.show', ['reference' => $firstReference->id_reference]);
+        return redirect()->route('articles.show', ['reference' => $firstReference->id_reference]);
     }
 
-    public function show(BikeReference $reference)
-    {
-        $data = $this->veloService->prepareViewData($reference);
-
-
-        
-        return view('article.bike.show', $data);
-    }
+    //    public function show(BikeReference $reference)
+    //    {
+    //        $data = $this->veloService->prepareViewData($reference);
+    //
+    //        return view('article.bike.show', $data);
+    //    }
 }

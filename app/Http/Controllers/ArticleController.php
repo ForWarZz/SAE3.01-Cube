@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\ArticleReference;
 use App\Models\BikeModel;
 use App\Models\Category;
 use App\Services\ArticleService;
@@ -60,13 +61,27 @@ class ArticleController extends Controller
 
     public function show(Article $article)
     {
-        $article->load(['bike', 'accessories']);
+        $article->load(['bike', 'accessory']);
 
-        if ($article->bike()->exists()) {
-            return redirect()->route(
-                'articles.bikes.redirect-to-default',
-                ['bike' => $article->bike]
-            );
+        if ($article->bike) {
+            $defaultReference = $article->bike->references()->orderBy('id_reference')->firstOrFail();
+
+            return redirect()->route('articles.show-reference', [
+                'article' => $article->id_article,
+                'reference' => $defaultReference->id_reference,
+            ]);
         }
+
+        return redirect()->route('articles.show-reference', [
+            'article' => $article->id_article,
+            'reference' => $article->accessory->id_reference,
+        ]);
+    }
+
+    public function showByRef(Article $article, ArticleReference $reference)
+    {
+        $data = $this->articleService->prepareViewData($article, $reference);
+
+        return view('article.show', $data);
     }
 }

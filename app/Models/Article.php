@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 
 /**
+ * @property int $id_article
  * @property int $id_categorie
  * @property float $prix_article
  * @property string $nom_article
@@ -25,6 +26,7 @@ class Article extends Model
     protected $primaryKey = 'id_article';
 
     protected $fillable = [
+        'id_article',
         'id_categorie',
         'prix_article',
         'nom_article',
@@ -51,6 +53,11 @@ class Article extends Model
     public function accessories(): HasMany
     {
         return $this->hasMany('App\Models\Accessory', 'id_article', 'id_article');
+    }
+
+    public function accessory(): BelongsTo
+    {
+        return $this->belongsTo(Accessory::class, 'id_article', 'id_article');
     }
 
     public function bike(): HasOne
@@ -100,5 +107,10 @@ class Article extends Model
         $files = Storage::disk('public')->files($directory);
 
         return array_map(fn ($f) => Storage::url($f), $files);
+    }
+
+    public function isBike(): bool
+    {
+        return $this->bike()->exists();
     }
 }
