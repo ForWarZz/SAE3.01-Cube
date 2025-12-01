@@ -79,6 +79,8 @@
         function updateQueryString(key, value) {
             const url = new URL(window.location.href);
             url.searchParams.set(key, value);
+            url.searchParams.delete('page');
+
             return url.toString();
         }
     </script>
