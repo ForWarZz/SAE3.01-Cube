@@ -49,10 +49,10 @@
 
 <script>
     (function () {
-        const minSlider = document.getElementById('price-min');
-        const maxSlider = document.getElementById('price-max');
-        const minDisplay = document.getElementById('price-display-min');
-        const maxDisplay = document.getElementById('price-display-max');
+        const minSlider = document.querySelector('#price-min');
+        const maxSlider = document.querySelector('#price-max');
+        const minDisplay = document.querySelector('#price-display-min');
+        const maxDisplay = document.querySelector('#price-display-max');
 
         let timeout;
 
