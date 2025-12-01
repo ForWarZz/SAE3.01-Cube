@@ -32,7 +32,6 @@
         />
 
         <div
-            x-transition.opacity.duration.200ms
             class="pointer-events-none absolute inset-0 overflow-hidden"
             style="background-repeat: no-repeat"
             :style="`background-image: url(${images[currentImageIndex]}); background-size: 200%; background-position: ${zoomX}% ${zoomY}%; display: ${zoomed ? 'block' : 'none'}`"
