@@ -122,13 +122,12 @@
                                 id="size_{{ $opt["id"] }}"
                                 value="{{ $opt["id"] }}"
                                 class="peer sr-only"
-                                {{ $opt["disabled"] ? "disabled" : "" }}
                                 @click="selectedSize = @js($opt)"
                                 :checked="selectedSize && selectedSize.id === {{ $opt["id"] }}"
                             />
                             <label
                                 for="size_{{ $opt["id"] }}"
-                                class="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all peer-checked:border-black peer-checked:bg-black peer-checked:text-white peer-disabled:cursor-not-allowed peer-disabled:bg-gray-100 peer-disabled:text-gray-400 peer-disabled:opacity-50 hover:border-gray-300 hover:bg-gray-50 peer-checked:hover:border-black peer-checked:hover:bg-black"
+                                class="{{ $opt["disabled"] ? "bg-gray-100 text-gray-400 opacity-50" : "" }} flex cursor-pointer items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all peer-checked:border-black peer-checked:bg-black peer-checked:text-white hover:border-gray-300 hover:bg-gray-50 peer-checked:hover:border-black peer-checked:hover:bg-black"
                             >
                                 {{ $opt["label"] }}
                                 @if ($opt["disabled"])
@@ -147,6 +146,7 @@
             </div>
 
             <button
+                x-show="selectedSize && !selectedSize.disabled"
                 class="mt-6 cursor-pointer rounded-lg bg-black px-4 py-4 text-xl font-bold text-white transition-colors hover:bg-gray-900"
             >
                 Ajouter au panier
