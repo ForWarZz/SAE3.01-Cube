@@ -34,6 +34,8 @@
         <x-filter-checkbox-group label="Type de cadre" name="frame" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />
         <x-filter-checkbox-group label="Matériau" name="material" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />
         <x-filter-checkbox-group label="Couleur" name="color" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />
+
+        <x-filter-price :options="$filterOptions" :active="$activeFilters" />
     </div>
 
     <script>

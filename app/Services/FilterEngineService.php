@@ -9,6 +9,7 @@ use App\Filters\ColorFilter;
 use App\Filters\DiscountFilter;
 use App\Filters\FrameFilter;
 use App\Filters\MaterialFilter;
+use App\Filters\PriceFilter;
 use App\Filters\UsageFilter;
 use App\Filters\VintageFilter;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,6 +31,7 @@ class FilterEngineService
         BikeModelFilter::class,
         DiscountFilter::class,
         AvailabilityFilter::class,
+        PriceFilter::class,
     ];
 
     /**
