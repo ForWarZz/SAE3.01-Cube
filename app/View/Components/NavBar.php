@@ -22,7 +22,6 @@ class NavBar extends Component
     {
         $this->categories = Category::query()
             ->orderBy('nom_categorie', 'ASC')
-            ->where('nom_categorie', '!=', 'Accessoires')
             ->whereNull('id_categorie_parent')
             ->get();
     }
