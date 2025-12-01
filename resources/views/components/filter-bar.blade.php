@@ -45,6 +45,7 @@
             params.delete(name + '[]');
 
             values.forEach((v) => params.append(name + '[]', v));
+            params.delete('page');
 
             window.location = `${url.pathname}?${params}`;
         });
