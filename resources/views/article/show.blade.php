@@ -10,6 +10,7 @@
                 :battery-options="$batteryOptions"
                 :color-options="$colorOptions"
                 :weight="$weight"
+                :real-price="$realPrice"
                 :discounted-price="$discountedPrice"
                 :discount-percent="$discountPercent"
                 :has-discount="$hasDiscount"
