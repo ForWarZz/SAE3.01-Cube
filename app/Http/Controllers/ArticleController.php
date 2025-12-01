@@ -3,27 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Models\Bike;
-use App\Models\BikeFrame;
-use App\Models\BikeFrameMaterial;
 use App\Models\BikeModel;
-use App\Models\BikeReference;
 use App\Models\Category;
-use App\Models\Characteristic;
-use App\Models\CharacteristicType;
-use App\Models\Color;
-use App\Models\Usage;
-use App\Models\Vintage;
 use App\Services\ArticleService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
     public function __construct(
         protected ArticleService $articleService,
-    )
-    { }
+    ) {}
 
     public function search(Request $request)
     {
@@ -32,12 +21,12 @@ class ArticleController extends Controller
 
         return view('article.index', [
             'search' => $search,
-            'pageTitle' => 'Résultats de recherche : ' . $search,
+            'pageTitle' => 'Résultats de recherche : '.$search,
             'breadcrumbs' => [
                 ['label' => 'Accueil', 'url' => route('home')],
                 ['label' => 'Recherche', 'url' => null],
             ],
-            ...$data
+            ...$data,
         ]);
     }
 
@@ -51,7 +40,7 @@ class ArticleController extends Controller
                 ['label' => 'Home', 'url' => route('home')],
                 ['label' => $model->nom_modele_velo, 'url' => null],
             ],
-            ...$data
+            ...$data,
         ]);
     }
 
@@ -65,7 +54,7 @@ class ArticleController extends Controller
                 ['label' => 'Home', 'url' => route('home')],
                 ['label' => $category->nom_categorie, 'url' => null],
             ],
-            ...$data
+            ...$data,
         ]);
     }
 

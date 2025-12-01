@@ -4,7 +4,6 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BikeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Models\Bike;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +25,7 @@ Route::prefix('articles')->name('articles.')->group(function () {
     Route::get('/{article}', [ArticleController::class, 'show'])->name('show');
 
     Route::get('/categories/{category}', [ArticleController::class, 'viewByCategory'])->name('by-category');
-    Route::get('/modeles/{bikeModel}', [ArticleController::class, 'viewByModel'])->name('by-model');
+    Route::get('/modeles/{model}', [ArticleController::class, 'viewByModel'])->name('by-model');
 
     Route::prefix('/velos')->name('bikes.')->group(function () {
         Route::get('/reference/{reference}', [BikeController::class, 'show'])->name('show');
@@ -35,14 +34,14 @@ Route::prefix('articles')->name('articles.')->group(function () {
 
 });
 
-//Route::get('/tableau-de-bord', function () {
+// Route::get('/tableau-de-bord', function () {
 //    return view('dashboard');
-//})->middleware(['auth', 'verified'])->name('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 //
-//Route::middleware('auth')->prefix('profil')->name('profile.')->group(function () {
+// Route::middleware('auth')->prefix('profil')->name('profile.')->group(function () {
 //    Route::get('/', [ProfileController::class, 'edit'])->name('edit');
 //    Route::patch('/', [ProfileController::class, 'update'])->name('update');
 //    Route::delete('/', [ProfileController::class, 'destroy'])->name('delete');
-//});
+// });
 
 require __DIR__.'/auth.php';

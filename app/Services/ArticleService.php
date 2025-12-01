@@ -75,11 +75,11 @@ class ArticleService
      */
     public function listByModel(BikeModel $model, Request $request): array
     {
-        $articles = Article::whereHas('bikes', function ($query) use ($model) {
-            $query->where('id_modele_velo', '=', $model->id_modele_velo);
+        $baseQuery = Article::whereHas('bike', function ($q) use ($model) {
+            $q->where('id_modele_velo', $model->id_modele_velo);
         });
 
-        return $this->finalizeQuery($articles, $request);
+        return $this->finalizeQuery($baseQuery, $request);
     }
 
     /**
