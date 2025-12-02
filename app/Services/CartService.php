@@ -6,12 +6,15 @@ use App\Models\Accessory;
 use App\Models\Article;
 use App\Models\ArticleReference;
 use App\Models\BikeReference;
+use App\Models\DiscountCode;
 use App\Models\Size;
 use Illuminate\Support\Facades\Session;
 
 class CartService
 {
     private string $cart = 'cart';
+
+    private string $discount = 'discount_code';
 
     public function __construct() {}
 
@@ -33,7 +36,8 @@ class CartService
      *        subtotal: float,
      *        tax: float,
      *        total: float,
-     *    }
+     *     },
+     *     count: int,
      * }
      */
     public function getCartData(): array
@@ -43,11 +47,13 @@ class CartService
         $cartData = [];
         $summaryData = [
             'subtotal' => 0,
-            'tax' => 0,
             'total' => 0,
+            'discount' => 0,
         ];
 
-        foreach ($cartItems as &$item) {
+        $discountData = $this->getAppliedDiscountCode();
+
+        foreach ($cartItems as $item) {
             $reference = ArticleReference::with(['article', 'bikeReference', 'bikeReference.color'])->find($item['reference_id']);
             $size = Size::find($item['size_id']);
             $article = $reference->bikeReference->article ?? $reference->accessory->article;
@@ -66,13 +72,22 @@ class CartService
             ];
 
             $summaryData['subtotal'] += $article->prix_article * $item['quantity'];
-            $summaryData['tax'] += ($article->prix_article * 0.2) * $item['quantity'];
-            $summaryData['total'] += ($article->prix_article * 1.2) * $item['quantity'];
+            $summaryData['total'] += ($article->prix_article) * $item['quantity'];
         }
+
+        if ($discountData) {
+            $summaryData['discount'] = $summaryData['subtotal'] * ($discountData->pourcentage_remise / 100);
+        }
+
+        $totalHT = $summaryData['subtotal'] - $summaryData['discount'];
+
+        $summaryData['tax'] = $totalHT * 0.20;
+        $summaryData['total'] = $totalHT + $summaryData['tax'];
 
         return [
             'cartData' => $cartData,
             'summaryData' => $summaryData,
+            'discountData' => $discountData,
             'count' => count($cartData),
         ];
     }
@@ -117,5 +132,30 @@ class CartService
 
             Session::put($this->cart, $cart);
         }
+    }
+
+    public function applyDiscountCode(string $code): void
+    {
+        $discountCode = DiscountCode::where('label_code_promo', $code)
+            ->where('est_actif', true)
+            ->first();
+
+        Session::put($this->discount, $discountCode->id_code_promo);
+    }
+
+    public function getAppliedDiscountCode(): ?DiscountCode
+    {
+        $discountId = Session::get($this->discount);
+
+        if (! $discountId) {
+            return null;
+        }
+
+        return DiscountCode::find($discountId);
+    }
+
+    public function removeDiscountCode(): void
+    {
+        Session::forget($this->discount);
     }
 }

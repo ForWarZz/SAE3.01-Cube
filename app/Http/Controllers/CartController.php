@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CartAddRequest;
+use App\Http\Requests\CartApplyDiscountRequest;
 use App\Http\Requests\CartDeleteRequest;
 use App\Http\Requests\CartUpdateQuantityRequest;
 use App\Models\ArticleReference;
@@ -58,5 +59,20 @@ class CartController extends Controller
         );
 
         return redirect()->back()->with('success', 'L\'article a été supprimé du panier.');
+    }
+
+    public function clearDiscount()
+    {
+        $this->cartService->removeDiscountCode();
+
+        return redirect()->back()->with('success', 'Le code de réduction a été supprimé.');
+    }
+
+    public function applyDiscount(CartApplyDiscountRequest $request)
+    {
+        $validated = $request->validated();
+        $this->cartService->applyDiscountCode($validated['discount_code']);
+
+        return redirect()->back();
     }
 }

@@ -9,19 +9,20 @@
 
         <div class="flex justify-between text-sm text-gray-700">
             <span>Frais de livraison</span>
-            <span class="font-medium text-green-600">
-                {{-- @if ($summaryData["shipping"] <= 0) --}}
-                {{-- Gratuit --}}
-                {{-- @else --}}
-                {{-- {{ number_format($summaryData["shipping"], 2, ",", " ") }} € --}}
-                {{-- @endif --}}
-            </span>
+            <span class="font-medium text-green-600"></span>
         </div>
 
         <div class="flex justify-between text-sm text-gray-700">
             <span>Taxes</span>
             <span>{{ number_format($summaryData["tax"], 2, ",", " ") }} €</span>
         </div>
+
+        @if ($discountData)
+            <div class="flex justify-between text-sm font-medium text-green-700">
+                <span>Remise ({{ $discountData->pourcentage_remise }}%)</span>
+                <span>-{{ number_format($summaryData["discount"], 2, ",", " ") }} €</span>
+            </div>
+        @endif
 
         <div class="border-t pt-4"></div>
 
@@ -32,7 +33,7 @@
 
         @if ($count > 0)
             <button
-                class="mt-4 cursor-pointer rounded-md bg-red-500 px-5 py-3 text-lg font-medium text-white shadow-sm transition hover:bg-gray-900 hover:shadow-md"
+                class="mt-4 cursor-pointer rounded-md bg-red-500 px-5 py-3 text-lg font-medium text-white shadow-sm transition hover:bg-red-700 hover:shadow-md"
             >
                 Valider mon panier
             </button>
