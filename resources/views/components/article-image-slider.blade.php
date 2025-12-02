@@ -1,5 +1,5 @@
 <div
-    class="w-1/2 flex-shrink-0"
+    class="flex-1/2 flex-shrink-0"
     x-data="{
         currentImageIndex: 0,
         zoomed: false,
