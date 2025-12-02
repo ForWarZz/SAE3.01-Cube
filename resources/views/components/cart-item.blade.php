@@ -15,13 +15,21 @@
     <div class="flex flex-col items-end gap-2">
         <span class="text-lg font-semibold text-gray-900">{{ number_format($cartItem["article"]->prix_article, 0, ",", " ") }} €</span>
 
-        <input
-            type="number"
-            name="quantity"
-            value="1"
-            min="1"
-            class="w-16 rounded-md border border-gray-300 px-2 py-1 text-center text-gray-900 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 focus:outline-none"
-        />
+        <form action="{{ route("cart.update-quantity") }}" method="POST" class="flex items-center gap-2">
+            @csrf
+            @method("PATCH")
+
+            <input type="hidden" name="reference_id" value="{{ $cartItem["reference"]->id_reference }}" />
+            <input type="hidden" name="size_id" value="{{ $cartItem["size"]->id_taille }}" />
+
+            <input
+                type="number"
+                name="quantity"
+                value="{{ $cartItem["quantity"] }}"
+                min="1"
+                class="w-16 rounded-md border border-gray-300 px-2 py-1 text-center text-gray-900 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 focus:outline-none"
+            />
+        </form>
 
         <form action="{{ route("cart.delete") }}" method="POST">
             @csrf

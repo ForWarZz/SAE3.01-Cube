@@ -1,11 +1,15 @@
 <x-app-layout>
-    <div class="flex-1 flex-col bg-gray-100 px-24 py-12">
+    <div id="cart" class="flex-1 flex-col bg-gray-100 px-24 py-12">
         <div class="flex gap-10">
             <section class="flex-2">
-                <h2 class="mb-6 text-2xl font-semibold text-gray-900">Panier ({{ count($cartItems) }})</h2>
+                <h2 class="mb-6 text-2xl font-semibold text-gray-900">Panier ({{ $count }})</h2>
+
+                @if ($count <= 0)
+                    <p class="mb-6 text-gray-700">Votre panier ne contient actuellement aucun article.</p>
+                @endif
 
                 <div class="flex flex-col gap-4">
-                    @foreach ($cartItems as $item)
+                    @foreach ($cartData as $item)
                         <x-cart-item :cartItem="$item" />
                     @endforeach
                 </div>
@@ -16,16 +20,22 @@
                         Continuer mes achats
                     </a>
 
-                    <button
-                        class="text-md cursor-pointer rounded-md bg-black px-6 py-3 font-medium text-white shadow-sm transition hover:bg-gray-900"
-                    >
-                        Valider mon panier
-                    </button>
+                    @if ($count > 0)
+                        <button
+                            class="text-md cursor-pointer rounded-md bg-black px-6 py-3 font-medium text-white shadow-sm transition hover:bg-gray-900"
+                        >
+                            Valider mon panier
+                        </button>
+                    @else
+                        <button disabled class="cursor-not-allowed rounded-md bg-gray-300 px-6 py-3 font-medium text-white shadow-sm">
+                            Valider mon panier
+                        </button>
+                    @endif
                 </div>
             </section>
 
             <aside class="flex flex-1 flex-col gap-6">
-                <x-cart-summary :summary-data="$summaryData" />
+                <x-cart-summary :summary-data="$summaryData" :count="$count" />
 
                 <section class="flex flex-col gap-6">
                     <h2 class="text-2xl font-semibold text-gray-900">Code promo</h2>
@@ -37,12 +47,21 @@
                             class="flex-1 rounded-md border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
                         />
 
-                        <button
-                            type="submit"
-                            class="cursor-pointer rounded-md bg-black px-5 py-2 text-lg font-medium text-white shadow-sm transition hover:bg-gray-900 hover:shadow-md"
-                        >
-                            Appliquer
-                        </button>
+                        @if ($count > 0)
+                            <button
+                                type="button"
+                                class="cursor-pointer rounded-md bg-black px-5 py-2 text-lg font-medium text-white shadow-sm transition hover:bg-gray-900 hover:shadow-md"
+                            >
+                                Appliquer
+                            </button>
+                        @else
+                            <button
+                                disabled
+                                class="cursor-not-allowed rounded-md bg-gray-300 px-5 py-2 text-lg font-medium text-white shadow-sm"
+                            >
+                                Appliquer
+                            </button>
+                        @endif
                     </form>
                 </section>
             </aside>

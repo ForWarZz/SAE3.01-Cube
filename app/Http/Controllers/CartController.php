@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CartAddRequest;
 use App\Http\Requests\CartDeleteRequest;
+use App\Http\Requests\CartUpdateQuantityRequest;
 use App\Models\ArticleReference;
 use App\Models\Size;
 use App\Services\CartService;
@@ -33,43 +34,19 @@ class CartController extends Controller
 
     public function index()
     {
-        $cartItems = $this->cartService->getCartFromSession();
+        return view('cart.index', $this->cartService->getCartData());
+    }
 
-        $cartData = [];
+    public function updateQuantity(CartUpdateQuantityRequest $request)
+    {
+        $validated = $request->validated();
+        $this->cartService->updateItemQuantity(
+            reference_id: $validated['reference_id'],
+            size_id: $validated['size_id'],
+            quantity: $validated['quantity']
+        );
 
-        $summaryData = [
-            'subtotal' => 0,
-            'tax' => 0,
-            'total' => 0,
-        ];
-
-        foreach ($cartItems as &$item) {
-            $reference = ArticleReference::with(['article', 'bikeReference', 'bikeReference.color'])->find($item['reference_id']);
-            $size = Size::find($item['size_id']);
-            $article = $reference->bikeReference->article ?? $reference->accessory->article;
-
-            $cartData[] = [
-                'reference' => $reference->bikeReference ?? $reference->accessory,
-                'img_url' => $article->getCoverUrl($reference->bikeReference?->color->id_couleur ?? null),
-                'size' => $size,
-                'quantity' => $item['quantity'],
-                'article' => $article,
-                'color' => $reference->bikeReference?->color->label_couleur,
-                'article_url' => route('articles.show', [
-                    'reference' => $reference->id_reference,
-                    'article' => $article->id_article,
-                ]),
-            ];
-
-            $summaryData['subtotal'] += $article->prix_article * $item['quantity'];
-            $summaryData['tax'] += ($article->prix_article * 0.2) * $item['quantity'];
-            $summaryData['total'] += ($article->prix_article * 1.2) * $item['quantity'];
-        }
-
-        return view('cart.index', [
-            'cartItems' => $cartData,
-            'summaryData' => $summaryData,
-        ]);
+        return redirect()->back()->with('success', 'La quantité de l\'article a été mise à jour.');
     }
 
     public function delete(CartDeleteRequest $request)

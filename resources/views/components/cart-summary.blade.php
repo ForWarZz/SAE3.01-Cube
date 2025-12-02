@@ -30,10 +30,16 @@
             <span>{{ number_format($summaryData["total"], 2, ",", " ") }} €</span>
         </div>
 
-        <button
-            class="mt-4 cursor-pointer rounded-md bg-red-500 px-5 py-3 text-lg font-medium text-white shadow-sm transition hover:bg-gray-900 hover:shadow-md"
-        >
-            Valider mon panier
-        </button>
+        @if ($count > 0)
+            <button
+                class="mt-4 cursor-pointer rounded-md bg-red-500 px-5 py-3 text-lg font-medium text-white shadow-sm transition hover:bg-gray-900 hover:shadow-md"
+            >
+                Valider mon panier
+            </button>
+        @else
+            <button disabled class="mt-4 cursor-not-allowed rounded-md bg-gray-300 px-5 py-3 text-lg font-medium text-white shadow-sm">
+                Valider mon panier
+            </button>
+        @endif
     </div>
 </section>

@@ -2,6 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\Accessory;
+use App\Models\Article;
+use App\Models\ArticleReference;
+use App\Models\BikeReference;
+use App\Models\Size;
 use Illuminate\Support\Facades\Session;
 
 class CartService
@@ -13,6 +18,63 @@ class CartService
     public function getCartFromSession(): array
     {
         return Session::get($this->cart, []);
+    }
+
+    /**
+     * @return array{
+     *     cartData: array{
+     *         reference: BikeReference|Accessory,
+     *         img_url: string,
+     *         size: Size,
+     *         quantity: int,
+     *         article: Article,
+     *     },
+     *     summaryData: array{
+     *        subtotal: float,
+     *        tax: float,
+     *        total: float,
+     *    }
+     * }
+     */
+    public function getCartData(): array
+    {
+        $cartItems = $this->getCartFromSession();
+
+        $cartData = [];
+        $summaryData = [
+            'subtotal' => 0,
+            'tax' => 0,
+            'total' => 0,
+        ];
+
+        foreach ($cartItems as &$item) {
+            $reference = ArticleReference::with(['article', 'bikeReference', 'bikeReference.color'])->find($item['reference_id']);
+            $size = Size::find($item['size_id']);
+            $article = $reference->bikeReference->article ?? $reference->accessory->article;
+
+            $cartData[] = [
+                'reference' => $reference->bikeReference ?? $reference->accessory,
+                'img_url' => $article->getCoverUrl($reference->bikeReference?->color->id_couleur ?? null),
+                'size' => $size,
+                'quantity' => $item['quantity'],
+                'article' => $article,
+                'color' => $reference->bikeReference?->color->label_couleur,
+                'article_url' => route('articles.show', [
+                    'reference' => $reference->id_reference,
+                    'article' => $article->id_article,
+                ]),
+            ];
+
+            $summaryData['subtotal'] += $article->prix_article * $item['quantity'];
+            $summaryData['tax'] += ($article->prix_article * 0.2) * $item['quantity'];
+            $summaryData['total'] += ($article->prix_article * 1.2) * $item['quantity'];
+        }
+
+        return [
+            'cartData' => $cartData,
+            'summaryData' => $summaryData,
+            'count' => count($cartData),
+        ];
     }
 
     public function addItem(int $reference_id, int $size_id): void
@@ -40,6 +102,18 @@ class CartService
 
         if (isset($cart[$key])) {
             unset($cart[$key]);
+
+            Session::put($this->cart, $cart);
+        }
+    }
+
+    public function updateItemQuantity(mixed $reference_id, mixed $size_id, mixed $quantity): void
+    {
+        $cart = $this->getCartFromSession();
+        $key = $reference_id.'_'.$size_id;
+
+        if (isset($cart[$key])) {
+            $cart[$key]['quantity'] = $quantity;
 
             Session::put($this->cart, $cart);
         }
