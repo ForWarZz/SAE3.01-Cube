@@ -22,11 +22,4 @@ class BikeController extends Controller
 
         return redirect()->route('articles.show', ['reference' => $firstReference->id_reference]);
     }
-
-    //    public function show(BikeReference $reference)
-    //    {
-    //        $data = $this->veloService->prepareViewData($reference);
-    //
-    //        return view('article.bike.show', $data);
-    //    }
 }
