@@ -3,17 +3,19 @@
 
     <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <div class="flex justify-between text-sm text-gray-700">
-            <span>Sous-total</span>
+            <span>Panier</span>
             <span>{{ number_format($summaryData["subtotal"], 2, ",", " ") }} €</span>
         </div>
 
         <div class="flex justify-between text-sm text-gray-700">
             <span>Frais de livraison</span>
-            <span class="font-medium text-green-600"></span>
+            <span class="{{ $summaryData["shipping"] > 0 ? "text-red-500" : "" }} font-medium">
+                {{ number_format($summaryData["shipping"], 2, ",", " ") }} €
+            </span>
         </div>
 
         <div class="flex justify-between text-sm text-gray-700">
-            <span>Taxes</span>
+            <span>Taxes incluses</span>
             <span>{{ number_format($summaryData["tax"], 2, ",", " ") }} €</span>
         </div>
 
@@ -31,16 +33,11 @@
             <span>{{ number_format($summaryData["total"], 2, ",", " ") }} €</span>
         </div>
 
-        @if ($count > 0)
-            <button
-                class="mt-4 cursor-pointer rounded-md bg-red-500 px-5 py-3 text-lg font-medium text-white shadow-sm transition hover:bg-red-700 hover:shadow-md"
-            >
-                Valider mon panier
-            </button>
-        @else
-            <button disabled class="mt-4 cursor-not-allowed rounded-md bg-gray-300 px-5 py-3 text-lg font-medium text-white shadow-sm">
-                Valider mon panier
-            </button>
-        @endif
+        <button
+            class="{{ $count == 0 ? "cursor-not-allowed bg-gray-300 hover:bg-gray-300 hover:shadow-none" : "bg-red-500 hover:bg-red-700" }} mt-4 cursor-pointer rounded-md px-5 py-3 text-lg font-medium text-white shadow-sm transition hover:shadow-md"
+            {{ $count == 0 ? "disabled" : "" }}
+        >
+            Valider mon panier
+        </button>
     </div>
 </section>

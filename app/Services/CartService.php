@@ -47,7 +47,6 @@ class CartService
         $cartData = [];
         $summaryData = [
             'subtotal' => 0,
-            'total' => 0,
             'discount' => 0,
         ];
 
@@ -72,17 +71,17 @@ class CartService
             ];
 
             $summaryData['subtotal'] += $article->prix_article * $item['quantity'];
-            $summaryData['total'] += ($article->prix_article) * $item['quantity'];
         }
 
         if ($discountData) {
             $summaryData['discount'] = $summaryData['subtotal'] * ($discountData->pourcentage_remise / 100);
         }
 
-        $totalHT = $summaryData['subtotal'] - $summaryData['discount'];
+        $summaryData['shipping'] = $summaryData['subtotal'] > 50 ? 0 : ($summaryData['subtotal'] == 0 ? 0 : 6);
+        $totalTTC = $summaryData['subtotal'] - $summaryData['discount'] + $summaryData['shipping'];
 
-        $summaryData['tax'] = $totalHT * 0.20;
-        $summaryData['total'] = $totalHT + $summaryData['tax'];
+        $summaryData['tax'] = $totalTTC * 0.20;
+        $summaryData['total'] = $totalTTC;
 
         return [
             'cartData' => $cartData,
