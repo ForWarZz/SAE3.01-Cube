@@ -29,8 +29,6 @@ class BikeService
         $bike = $currentReference->bike;
 
         $variants = $this->bikeVariantService->getVariants($currentReference);
-
-        $sizeOptions = $this->buildSizeOptions($currentReference);
         $geometryData = $this->buildGeometryData($bike->bikeModel);
 
         $weight = $bike->article->characteristics
@@ -45,8 +43,6 @@ class BikeService
             'frameOptions' => $this->bikeVariantService->buildFrameOptions($variants, $currentReference),
             'colorOptions' => $this->bikeVariantService->buildColorOptions($variants, $currentReference),
             'batteryOptions' => $this->bikeVariantService->buildBatteryOptions($variants, $currentReference),
-
-            'sizeOptions' => $sizeOptions,
 
             'geometries' => $geometryData['rows'],
             'geometrySizes' => $geometryData['headers'],
@@ -181,38 +177,5 @@ class BikeService
             });
 
         return ['headers' => $headers, 'rows' => $rows];
-    }
-
-    /**
-     * Build size options for current reference
-     */
-    private function buildSizeOptions(BikeReference $currentReference): Collection
-    {
-        $sizeList = $currentReference->baseReference->availableSizes;
-        $orderableInShopStatus = config('bike.availability.orderable');
-        $inStockInShopStatus = config('bike.availability.in_stock');
-
-        return $sizeList->map(function ($size) use ($orderableInShopStatus, $inStockInShopStatus, $currentReference) {
-            $availableOnline = $size->pivot->dispo_en_ligne;
-            $storeStatuses = $currentReference->baseReference->shopAvailabilities()
-                ->where('id_taille', $size->id_taille)
-                ->pluck('statut');
-
-            if ($storeStatuses->contains($inStockInShopStatus)) {
-                $shopStatus = 'in_stock';
-            } elseif ($storeStatuses->contains($orderableInShopStatus)) {
-                $shopStatus = 'orderable';
-            } else {
-                $shopStatus = 'unavailable';
-            }
-
-            return [
-                'id' => $size->id_taille,
-                'label' => $size->nom_taille,
-                'availableOnline' => $availableOnline,
-                'shopStatus' => $shopStatus,
-                'disabled' => ! $availableOnline && $shopStatus === 'unavailable',
-            ];
-        });
     }
 }

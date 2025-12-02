@@ -61,7 +61,7 @@ class ArticleController extends Controller
 
     public function show(Article $article)
     {
-        $article->load(['bike', 'accessory']);
+        $article->load(['bike', 'accessory', 'bike.references']);
 
         if ($article->bike) {
             $defaultReference = $article->bike->references()->orderBy('id_reference')->firstOrFail();

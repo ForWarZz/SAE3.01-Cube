@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\ArticleReference;
 use App\Models\Bike;
 use App\Models\BikeModel;
+use App\Models\BikeReference;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -170,8 +171,11 @@ class ArticleService
 
     public function prepareViewData(Article $article, ArticleReference $reference): array
     {
+        $sizeOptions = $this->buildSizeOptions($reference);
+
         $base = [
             'article' => $article,
+            'sizeOptions' => $sizeOptions,
 
             'realPrice' => $article->prix_article,
             'discountedPrice' => $article->getDiscountedPrice(),
@@ -273,5 +277,38 @@ class ArticleService
             'reference_asc' => 'Référence (croissant)',
             'reference_desc' => 'Référence (décroissant)',
         ];
+    }
+
+    /**
+     * Build size options for current reference
+     */
+    private function buildSizeOptions(ArticleReference $reference): Collection
+    {
+        $sizeList = $reference->availableSizes;
+        $orderableInShopStatus = config('bike.availability.orderable');
+        $inStockInShopStatus = config('bike.availability.in_stock');
+
+        return $sizeList->map(function ($size) use ($orderableInShopStatus, $inStockInShopStatus, $reference) {
+            $availableOnline = $size->pivot->dispo_en_ligne;
+            $storeStatuses = $reference->shopAvailabilities()
+                ->where('id_taille', $size->id_taille)
+                ->pluck('statut');
+
+            if ($storeStatuses->contains($inStockInShopStatus)) {
+                $shopStatus = 'in_stock';
+            } elseif ($storeStatuses->contains($orderableInShopStatus)) {
+                $shopStatus = 'orderable';
+            } else {
+                $shopStatus = 'unavailable';
+            }
+
+            return [
+                'id' => $size->id_taille,
+                'label' => $size->nom_taille,
+                'availableOnline' => $availableOnline,
+                'shopStatus' => $shopStatus,
+                'disabled' => ! $availableOnline && $shopStatus === 'unavailable',
+            ];
+        });
     }
 }
