@@ -13,7 +13,7 @@
     </div>
 
     <div class="flex flex-col items-end gap-2">
-        <span class="text-lg font-semibold text-gray-900">{{ number_format($cartItem["article"]->prix_article, 0, ",", " ") }} €</span>
+        <span class="text-lg font-semibold text-gray-900">{{ number_format($cartItem["article"]->prix_article, 0, ",", " ") }} € TTC</span>
 
         <form action="{{ route("cart.update-quantity") }}" method="POST" class="flex items-center gap-2">
             @csrf
