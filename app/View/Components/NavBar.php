@@ -3,6 +3,7 @@
 namespace App\View\Components;
 
 use App\Models\Category;
+use App\Services\CartService;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
@@ -15,15 +16,20 @@ class NavBar extends Component
      */
     public Collection $categories;
 
+    public int $cartItemCount = 0;
+
     /**
      * Create a new component instance.
      */
-    public function __construct()
-    {
+    public function __construct(
+        protected CartService $cartService,
+    ) {
         $this->categories = Category::query()
             ->orderBy('id_categorie', 'desc')
             ->whereNull('id_categorie_parent')
             ->get();
+
+        $this->cartItemCount = count($this->cartService->getCartFromSession());
     }
 
     /**
@@ -33,6 +39,7 @@ class NavBar extends Component
     {
         return view('components.nav-bar', [
             'categories' => $this->categories,
+            'cartItemCount' => $this->cartItemCount,
         ]);
     }
 }

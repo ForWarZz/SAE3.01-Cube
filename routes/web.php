@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\BikeController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,12 +28,14 @@ Route::prefix('articles')->name('articles.')->group(function () {
     Route::get('/modeles/{model}', [ArticleController::class, 'viewByModel'])->name('by-model');
 
     Route::get('/{article}/{reference}', [ArticleController::class, 'showByRef'])->name('show-reference');
+});
 
-    //    Route::prefix('/velos')->name('bikes.')->group(function () {
-    //        //        Route::get('/reference/{reference}', [BikeController::class, 'show'])->name('show');
-    //        Route::get('/{bike}', [BikeController::class, 'redirectToDefaultVariant'])->name('redirect-to-default');
-    //    });
-
+Route::prefix('cart')->name('cart.')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('index');
+    Route::post('/add', [CartController::class, 'addToCart'])->name('add');
+    //    Route::post('/add', [\App\Http\Controllers\CartController::class, 'add'])->name('add');
+    //    Route::post('/update', [\App\Http\Controllers\CartController::class, 'update'])->name('update');
+    //    Route::post('/remove', [\App\Http\Controllers\CartController::class, 'remove'])->name('remove');
 });
 
 // Route::get('/tableau-de-bord', function () {

@@ -59,7 +59,11 @@
     </div>
 
     @if ($article->bike)
-        <div class="flex flex-col gap-8">
+        <form method="post" action="{{ route("cart.add") }}" class="flex flex-col gap-8">
+            @csrf
+
+            <input hidden type="text" name="reference_id" value="{{ $currentReference->id_reference }}" />
+
             <div>
                 <label class="mb-3 block text-sm font-medium text-gray-900">Type de cadre</label>
 
@@ -118,7 +122,7 @@
                         <div class="relative">
                             <input
                                 type="radio"
-                                name="size"
+                                name="size_id"
                                 id="size_{{ $opt["id"] }}"
                                 value="{{ $opt["id"] }}"
                                 class="peer sr-only"
@@ -147,10 +151,12 @@
 
             <button
                 x-show="selectedSize && !selectedSize.disabled"
-                class="mt-6 cursor-pointer rounded-lg bg-black px-4 py-4 text-xl font-bold text-white transition-colors hover:bg-gray-900"
+                type="submit"
+                class="mt-6 flex cursor-pointer items-center justify-center gap-3 rounded-lg bg-black px-5 py-4 text-xl font-bold text-white transition-colors hover:bg-gray-900"
             >
-                Ajouter au panier
+                <x-bi-cart-plus class="size-6" />
+                <span>Ajouter au panier</span>
             </button>
-        </div>
+        </form>
     @endif
 </div>

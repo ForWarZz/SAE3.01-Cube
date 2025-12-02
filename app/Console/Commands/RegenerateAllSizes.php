@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Bike;
 use App\Models\BikeModel;
 use App\Models\BikeReference;
-use App\Models\BikeSize;
+use App\Models\Size;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -18,7 +18,7 @@ class RegenerateAllSizes extends Command
     public function handle()
     {
         $models = BikeModel::all();
-        $allSizes = BikeSize::all();
+        $allSizes = Size::all();
         $stores = DB::table('magasin')->get();
 
         if ($models->isEmpty() || $allSizes->isEmpty()) {

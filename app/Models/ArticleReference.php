@@ -35,7 +35,7 @@ class ArticleReference extends Model
     public function availableSizes(): BelongsToMany
     {
         return $this->belongsToMany(
-            BikeSize::class,
+            Size::class,
             'taille_dispo',
             'id_reference',
             'id_taille'

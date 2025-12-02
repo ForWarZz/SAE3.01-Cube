@@ -9,14 +9,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $nom_taille
  * @property string $pivot
  */
-class BikeSize extends Model
+class Size extends Model
 {
-    protected $table = 'taille_velo';
+    protected $table = 'taille';
+
     protected $primaryKey = 'id_taille';
+
     public $timestamps = false;
 
     protected $fillable = [
-        "id_taille",
-        "nom_taille",
+        'id_taille',
+        'nom_taille',
     ];
 }

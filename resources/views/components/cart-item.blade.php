@@ -1,0 +1,27 @@
+<div class="flex items-center gap-5 rounded-lg bg-white p-4 shadow-sm">
+    <img src="{{ $cartItem["img_url"] }}" class="h-24 w-24 rounded object-cover" alt="Produit" />
+
+    <div class="flex flex-1 flex-col gap-1">
+        <span class="text-lg font-semibold text-gray-900">{{ $cartItem["article"]->nom_article }}</span>
+        <span class="text-sm text-gray-500">Taille : {{ $cartItem["size"]->nom_taille }}</span>
+
+        @if ($cartItem["color"] !== null)
+            <span class="text-sm text-gray-500">Couleur : {{ $cartItem["color"] }}</span>
+        @endif
+    </div>
+
+    <div class="flex items-center gap-4">
+        <input
+            type="number"
+            name="quantity"
+            value="1"
+            min="1"
+            class="w-16 rounded-md border border-gray-300 px-2 py-1 text-center text-gray-900 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 focus:outline-none"
+        />
+
+        <div class="flex flex-col items-end">
+            <span class="text-lg font-semibold text-gray-900">{{ number_format($cartItem["article"]->prix_article, 0, ",", " ") }} €</span>
+            <button class="mt-2 text-sm text-red-500 hover:text-red-700">Supprimer</button>
+        </div>
+    </div>
+</div>

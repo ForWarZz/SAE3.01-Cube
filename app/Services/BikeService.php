@@ -23,7 +23,7 @@ class BikeService
             'ebike.battery',
             'color',
             'frame',
-            'availableSizes',
+            'baseReference.availableSizes',
         ]);
 
         $bike = $currentReference->bike;
@@ -188,13 +188,13 @@ class BikeService
      */
     private function buildSizeOptions(BikeReference $currentReference): Collection
     {
-        $sizeList = $currentReference->availableSizes;
+        $sizeList = $currentReference->baseReference->availableSizes;
         $orderableInShopStatus = config('bike.availability.orderable');
         $inStockInShopStatus = config('bike.availability.in_stock');
 
         return $sizeList->map(function ($size) use ($orderableInShopStatus, $inStockInShopStatus, $currentReference) {
             $availableOnline = $size->pivot->dispo_en_ligne;
-            $storeStatuses = $currentReference->shopAvailabilities()
+            $storeStatuses = $currentReference->baseReference->shopAvailabilities()
                 ->where('id_taille', $size->id_taille)
                 ->pluck('statut');
 
