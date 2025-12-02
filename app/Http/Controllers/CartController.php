@@ -55,6 +55,10 @@ class CartController extends Controller
                 'quantity' => $item['quantity'],
                 'article' => $article,
                 'color' => $reference->bikeReference?->color->label_couleur,
+                'article_url' => route('articles.show', [
+                    'reference' => $reference->id_reference,
+                    'article' => $article->id_article,
+                ]),
             ];
 
             $summaryData['subtotal'] += $article->prix_article * $item['quantity'];

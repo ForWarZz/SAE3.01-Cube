@@ -2,7 +2,9 @@
     <img src="{{ $cartItem["img_url"] }}" class="size-56 rounded object-cover" alt="Produit" />
 
     <div class="flex flex-1 flex-col gap-1">
-        <span class="text-lg font-semibold text-gray-900">{{ $cartItem["article"]->nom_article }}</span>
+        <a href="{{ $cartItem["article_url"] }}" class="text-lg font-semibold text-gray-900 hover:text-gray-800 hover:underline">
+            {{ $cartItem["article"]->nom_article }}
+        </a>
         <span class="text-sm text-gray-500">Taille : {{ $cartItem["size"]->nom_taille }}</span>
 
         @if ($cartItem["color"] !== null)
