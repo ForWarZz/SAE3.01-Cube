@@ -32,4 +32,16 @@ class CartService
 
         Session::put($this->cart, $cart);
     }
+
+    public function removeItem(int $reference_id, int $size_id): void
+    {
+        $cart = $this->getCartFromSession();
+        $key = $reference_id.'_'.$size_id;
+
+        if (isset($cart[$key])) {
+            unset($cart[$key]);
+
+            Session::put($this->cart, $cart);
+        }
+    }
 }

@@ -21,7 +21,16 @@
 
         <div class="flex flex-col items-end">
             <span class="text-lg font-semibold text-gray-900">{{ number_format($cartItem["article"]->prix_article, 0, ",", " ") }} €</span>
-            <button class="mt-2 text-sm text-red-500 hover:text-red-700">Supprimer</button>
+
+            <form action="{{ route("cart.delete") }}" method="POST" class="mt-2">
+                @csrf
+                @method("DELETE")
+
+                <input type="hidden" name="reference_id" value="{{ $cartItem["reference"]->id_reference }}" />
+                <input type="hidden" name="size_id" value="{{ $cartItem["size"]->id_taille }}" />
+
+                <button type="submit" class="cursor-pointer text-sm text-red-500 hover:text-red-700">Supprimer</button>
+            </form>
         </div>
     </div>
 </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CartAddRequest;
+use App\Http\Requests\CartDeleteRequest;
 use App\Models\ArticleReference;
 use App\Models\Size;
 use App\Services\CartService;
@@ -65,5 +66,16 @@ class CartController extends Controller
             'cartItems' => $cartData,
             'summaryData' => $summaryData,
         ]);
+    }
+
+    public function delete(CartDeleteRequest $request)
+    {
+        $validated = $request->validated();
+        $this->cartService->removeItem(
+            reference_id: $validated['reference_id'],
+            size_id: $validated['size_id']
+        );
+
+        return redirect()->back()->with('success', 'L\'article a été supprimé du panier.');
     }
 }
