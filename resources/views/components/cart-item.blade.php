@@ -34,7 +34,7 @@
         </div>
     </div>
 
-    <div class="flex flex-col items-end justify-between gap-4 sm:gap-6">
+    <div class="flex flex-col items-end justify-between gap-4">
         <div class="flex flex-col items-end">
             @if ($cartItem["has_discount"])
                 <div class="mb-1 flex items-center gap-2">
