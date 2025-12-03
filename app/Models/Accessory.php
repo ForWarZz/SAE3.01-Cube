@@ -69,25 +69,6 @@ class Accessory extends Model
         return $this->belongsToMany(Article::class, 'similaire', 'id_article_simil', 'id_article');
     }
 
-    public function getPourcentageRemiseAttribute(): int
-    {
-        return $this->article?->pourcentage_remise ?? 0;
-    }
-
-    public function hasDiscount(): bool
-    {
-        return $this->pourcentage_remise > 0;
-    }
-
-    public function getDiscountedPrice(): float
-    {
-        if ($this->pourcentage_remise > 0) {
-            return round($this->prix_article * (1 - $this->pourcentage_remise / 100), 2);
-        }
-
-        return $this->prix_article;
-    }
-
     public function availableSizes(): BelongsToMany
     {
         return $this->belongsToMany(
