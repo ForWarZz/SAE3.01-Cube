@@ -90,7 +90,7 @@
                 </div>
             </div>
 
-            @if ($article->bike->ebike && $batteryOptions->count() > 0)
+            @if ($batteryOptions->count() > 0)
                 <div>
                     <label class="mb-3 block text-sm font-medium text-gray-900">Batterie</label>
 
