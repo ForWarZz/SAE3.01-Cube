@@ -36,6 +36,10 @@ Route::prefix('articles')->name('articles.')->group(function () {
 
 });
 
+Route::get('/view-360', function(){
+    return view('article-360-view');
+});
+
 // Route::get('/tableau-de-bord', function () {
 //    return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');

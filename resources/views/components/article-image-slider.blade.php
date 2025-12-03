@@ -57,6 +57,11 @@
     </div>
 
     <div class="mt-4 flex justify-center gap-4">
+        @if (!empty($article->getAllImagesUrls($currentReference->color?->id_couleur, true)))
+            <div>
+                <a href="/view-360">vue 360°</a>
+            </div>
+        @endif
         <template x-for="(img, index) in images" :key="index">
             <img
                 :src="img"
