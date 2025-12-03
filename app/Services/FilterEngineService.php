@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Filters\AccessoryMaterialFilter;
 use App\Filters\ArticleFilter;
 use App\Filters\AvailabilityFilter;
 use App\Filters\BikeModelFilter;
@@ -34,6 +35,7 @@ class FilterEngineService
         AvailabilityFilter::class,
         PriceFilter::class,
         CategoryFilter::class,
+        AccessoryMaterialFilter::class,
     ];
 
     /**
