@@ -30,7 +30,6 @@
             <span class="bg-gray-100 p-1">Poids : {{ $weight }}</span>
 
             @if ($article->bike)
-                <span class="bg-gray-100 p-1">Millésime : {{ $article->bike->vintage->millesime_velo }}</span>
                 <span class="bg-gray-100 p-1">Matériau du cadre : {{ $article->bike->frameMaterial->label_materiau_cadre }}</span>
             @endif
         </div>
