@@ -17,19 +17,19 @@ class AvailabilityFilter extends AbstractFilter
         if (! empty($values)) {
             $query->where(function ($q) use ($inStockStatus, $orderableStatus, $values) {
                 if (in_array('online', $values)) {
-                    $q->orWhereHas('bike.references.availableSizes', function ($q2) {
+                    $q->orWhereHas('bike.references.baseReference.availableSizes', function ($q2) {
                         $q2->where('dispo_en_ligne', true);
                     });
                 }
 
                 if (in_array('in_stock', $values)) {
-                    $q->orWhereHas('bike.references.shopAvailabilities', function ($q2) use ($orderableStatus) {
+                    $q->orWhereHas('bike.references.baseReference.shopAvailabilities', function ($q2) use ($orderableStatus) {
                         $q2->where('statut', $orderableStatus);
                     });
                 }
 
                 if (in_array('orderable', $values)) {
-                    $q->orWhereHas('bike.references.shopAvailabilities', function ($q2) use ($inStockStatus) {
+                    $q->orWhereHas('bike.references.baseReference.shopAvailabilities', function ($q2) use ($inStockStatus) {
                         $q2->where('statut', $inStockStatus);
                     });
                 }
@@ -45,7 +45,7 @@ class AvailabilityFilter extends AbstractFilter
         $options = collect();
 
         $hasOnline = (clone $baseQuery)
-            ->whereHas('bike.references.availableSizes', function ($q) {
+            ->whereHas('bike.references.baseReference.availableSizes', function ($q) {
                 $q->where('dispo_en_ligne', true);
             })
             ->exists();
@@ -58,7 +58,7 @@ class AvailabilityFilter extends AbstractFilter
         }
 
         $hasStock = (clone $baseQuery)
-            ->whereHas('bike.references.shopAvailabilities', function ($q) use ($inStockStatus) {
+            ->whereHas('bike.references.baseReference.shopAvailabilities', function ($q) use ($inStockStatus) {
                 $q->where('statut', $inStockStatus);
             })
             ->exists();
@@ -71,7 +71,7 @@ class AvailabilityFilter extends AbstractFilter
         }
 
         $hasOrderable = (clone $baseQuery)
-            ->whereHas('bike.references.shopAvailabilities', function ($q) use ($orderableStatus) {
+            ->whereHas('bike.references.baseReference.shopAvailabilities', function ($q) use ($orderableStatus) {
                 $q->where('statut', $orderableStatus);
             })
             ->exists();

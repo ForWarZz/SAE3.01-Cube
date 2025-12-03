@@ -13,7 +13,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Geometry extends Model
 {
     protected $table = 'de_geometrie';
+
     public $incrementing = false;
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -24,7 +26,7 @@ class Geometry extends Model
 
     public function size(): BelongsTo
     {
-        return $this->belongsTo(BikeSize::class, 'id_taille');
+        return $this->belongsTo(Size::class, 'id_taille');
     }
 
     public function characteristic(): BelongsTo

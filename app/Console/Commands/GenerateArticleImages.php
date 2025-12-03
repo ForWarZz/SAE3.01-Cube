@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Accessory;
-use App\Models\Bike;
 use App\Models\BikeReference;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -60,7 +59,7 @@ class GenerateArticleImages extends Command
 
     private function generateFolderAndImages($disk, $folderPath, $textLabel): void
     {
-        if (!$disk->exists($folderPath)) {
+        if (! $disk->exists($folderPath)) {
             $disk->makeDirectory($folderPath);
         }
 
@@ -72,7 +71,7 @@ class GenerateArticleImages extends Command
 
             if ($i === 1) {
                 $bg = imagecolorallocate($img, 220, 220, 220);
-                $textInfo = "COVER (1.jpg)";
+                $textInfo = 'COVER (1.jpg)';
             } else {
                 $bg = imagecolorallocate($img, 245, 245, 245);
                 $textInfo = "VUE $i ($i.jpg)";

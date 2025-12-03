@@ -19,7 +19,6 @@ class AccessoryService
             'frameOptions' => collect(),
             'colorOptions' => collect(),
             'batteryOptions' => collect(),
-            'sizeOptions' => collect(),
 
             'geometries' => collect(),
             'geometrySizes' => collect(),

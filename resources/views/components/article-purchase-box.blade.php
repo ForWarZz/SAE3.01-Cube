@@ -72,8 +72,12 @@
         @endif
     </div>
 
-    @if ($article->bike)
-        <div class="flex flex-col gap-8">
+    <form method="post" action="{{ route("cart.add") }}" class="flex flex-col gap-8">
+        @csrf
+
+        <input hidden type="text" name="reference_id" value="{{ $currentReference->id_reference }}" />
+
+        @if ($article->bike)
             <div>
                 <label class="mb-3 block text-sm font-medium text-gray-900">Type de cadre</label>
 
@@ -123,42 +127,50 @@
                     @endforeach
                 </div>
             </div>
+        @endif
 
-            <div>
-                <label class="mb-3 block text-sm font-medium text-gray-900">Tailles</label>
+        <div>
+            <label class="mb-3 block text-sm font-medium text-gray-900">Tailles</label>
 
-                <div class="flex max-w-md min-w-md flex-wrap gap-3">
-                    @foreach ($sizeOptions as $opt)
-                        <div class="relative">
-                            <input
-                                type="radio"
-                                name="size"
-                                id="size_{{ $opt["id"] }}"
-                                value="{{ $opt["id"] }}"
-                                class="peer sr-only"
-                                {{ $opt["disabled"] ? "disabled" : "" }}
-                                @click="selectedSize = @js($opt)"
-                                :checked="selectedSize && selectedSize.id === {{ $opt["id"] }}"
-                            />
-                            <label
-                                for="size_{{ $opt["id"] }}"
-                                class="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all peer-checked:border-black peer-checked:bg-black peer-checked:text-white peer-disabled:cursor-not-allowed peer-disabled:bg-gray-100 peer-disabled:text-gray-400 peer-disabled:opacity-50 hover:border-gray-300 hover:bg-gray-50 peer-checked:hover:border-black peer-checked:hover:bg-black"
-                            >
-                                {{ $opt["label"] }}
-                                @if ($opt["disabled"])
-                                    <svg
-                                        class="absolute h-full w-full text-gray-400 opacity-50"
-                                        viewBox="0 0 100 100"
-                                        preserveAspectRatio="none"
-                                    >
-                                        <line x1="0" y1="100" x2="100" y2="0" stroke="currentColor" stroke-width="1" />
-                                    </svg>
-                                @endif
-                            </label>
-                        </div>
-                    @endforeach
-                </div>
+            <div class="flex max-w-md min-w-md flex-wrap gap-3">
+                @foreach ($sizeOptions as $opt)
+                    <div class="relative">
+                        <input
+                            type="radio"
+                            name="size_id"
+                            id="size_{{ $opt["id"] }}"
+                            value="{{ $opt["id"] }}"
+                            class="peer sr-only"
+                            @click="selectedSize = @js($opt)"
+                            :checked="selectedSize && selectedSize.id === {{ $opt["id"] }}"
+                        />
+                        <label
+                            for="size_{{ $opt["id"] }}"
+                            class="{{ $opt["disabled"] ? "bg-gray-100 text-gray-400 opacity-50" : "" }} flex cursor-pointer items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all peer-checked:border-black peer-checked:bg-black peer-checked:text-white hover:border-gray-300 hover:bg-gray-50 peer-checked:hover:border-black peer-checked:hover:bg-black"
+                        >
+                            {{ $opt["label"] }}
+                            @if ($opt["disabled"])
+                                <svg
+                                    class="absolute h-full w-full text-gray-400 opacity-50"
+                                    viewBox="0 0 100 100"
+                                    preserveAspectRatio="none"
+                                >
+                                    <line x1="0" y1="100" x2="100" y2="0" stroke="currentColor" stroke-width="1" />
+                                </svg>
+                            @endif
+                        </label>
+                    </div>
+                @endforeach
             </div>
         </div>
-    @endif
+
+        <button
+            x-show="selectedSize && !selectedSize.disabled"
+            type="submit"
+            class="mt-6 flex cursor-pointer items-center justify-center gap-3 rounded-lg bg-black px-5 py-4 text-xl font-bold text-white transition-colors hover:bg-gray-900"
+        >
+            <x-bi-cart-plus class="size-6" />
+            <span>Ajouter au panier</span>
+        </button>
+    </form>
 </div>

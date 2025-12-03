@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -10,11 +11,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id_couleur
  * @property int $id_article
  */
-class BikeReference extends ArticleReference
+class BikeReference extends Model
 {
     public $timestamps = false;
 
     protected $table = 'reference_velo';
+
+    protected $primaryKey = 'id_reference';
 
     protected $fillable = [
         'id_reference',
@@ -22,6 +25,11 @@ class BikeReference extends ArticleReference
         'id_couleur',
         'id_article',
     ];
+
+    public function article(): BelongsTo
+    {
+        return $this->belongsTo(Article::class, 'id_article', 'id_article');
+    }
 
     public function bike(): BelongsTo
     {

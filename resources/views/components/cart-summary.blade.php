@@ -1,0 +1,43 @@
+<section class="flex flex-col gap-4">
+    <h2 class="text-xl font-semibold text-gray-900">Récapitulatif</h2>
+
+    <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div class="flex justify-between text-sm text-gray-700">
+            <span>Panier</span>
+            <span>{{ number_format($summaryData["subtotal"], 2, ",", " ") }} €</span>
+        </div>
+
+        <div class="flex justify-between text-sm text-gray-700">
+            <span>Frais de livraison</span>
+            <span class="{{ $summaryData["shipping"] > 0 ? "text-red-500" : "" }} font-medium">
+                {{ number_format($summaryData["shipping"], 2, ",", " ") }} €
+            </span>
+        </div>
+
+        <div class="flex justify-between text-sm text-gray-700">
+            <span>Taxes incluses</span>
+            <span>{{ number_format($summaryData["tax"], 2, ",", " ") }} €</span>
+        </div>
+
+        @if ($discountData)
+            <div class="flex justify-between text-sm font-medium text-green-700">
+                <span>Remise ({{ $discountData->pourcentage_remise }}%)</span>
+                <span>-{{ number_format($summaryData["discount"], 2, ",", " ") }} €</span>
+            </div>
+        @endif
+
+        <div class="border-t pt-4"></div>
+
+        <div class="flex justify-between text-lg font-bold text-gray-900">
+            <span>Total TTC</span>
+            <span>{{ number_format($summaryData["total"], 2, ",", " ") }} €</span>
+        </div>
+
+        <button
+            class="{{ $count == 0 ? "cursor-not-allowed bg-gray-300 hover:bg-gray-300 hover:shadow-none" : "bg-red-500 hover:bg-red-700" }} mt-4 cursor-pointer rounded-md px-5 py-3 text-lg font-medium text-white shadow-sm transition hover:shadow-md"
+            {{ $count == 0 ? "disabled" : "" }}
+        >
+            Valider mon panier
+        </button>
+    </div>
+</section>
