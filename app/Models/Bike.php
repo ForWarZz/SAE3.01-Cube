@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $description_article
  * @property string $resumer_article
  * @property int $nombre_vente_article
+ * @property \Carbon\Carbon|null $date_ajout
  */
 class Bike extends Model
 {
@@ -33,7 +35,24 @@ class Bike extends Model
         'description_article',
         'resumer_article',
         'nombre_vente_article',
+        'date_ajout',  
     ];
+
+    protected $casts = [
+        'date_ajout' => 'datetime',
+    ];
+
+    /**
+     * Check if the bike was added less than 6 months ago
+     */
+    public function isNew(): bool
+    {
+        if (!$this->date_ajout) {
+            return false;
+        }
+
+        return $this->date_ajout->greaterThan(Carbon::now()->subMonths(6));
+    }
 
     public function frameMaterial(): BelongsTo
     {
@@ -64,4 +83,5 @@ class Bike extends Model
     {
         return $this->belongsTo(Usage::class, 'id_usage', 'id_usage');
     }
+    
 }

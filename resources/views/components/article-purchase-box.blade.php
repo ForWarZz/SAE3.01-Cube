@@ -1,8 +1,20 @@
 <div class="flex flex-col" x-data="{ selectedSize: @js($sizeOptions?->first(fn ($s) => ! $s["disabled"])) }">
     <div class="mb-8">
-        <h1 class="mb-3 text-3xl font-bold text-gray-900">{{ $article->nom_article }}</h1>
+        {{-- Badges NOUVEAU et SAISON --}}
+        <div class="mb-4 flex items-center gap-2">
+            @if ($article->bike?->isNew())
+                <span class="bg-lime-400 px-3 py-1 text-xs font-bold uppercase text-black">
+                    Nouveau
+                </span>
+            @endif
+            @if ($article->bike?->vintage)
+                <span class="border border-gray-300 bg-white px-3 py-1 text-xs font-bold uppercase text-gray-700">
+                    Saison {{ $article->bike->vintage->millesime_velo }}
+                </span>
+            @endif
+        </div>
 
-        <div class="mb-4 flex items-center gap-3 text-gray-600">
+        <div class="mb-4 flex items-center gap-3 text-sm uppercase text-gray-500">
             @if ($article->bike)
                 <span>{{ $article->bike->bikeModel->nom_modele_velo }}</span>
 
@@ -13,6 +25,8 @@
                 <span class="font-medium text-gray-600">{{ $article->category->nom_categorie ?? "Accessoire" }}</span>
             @endif
         </div>
+
+        <h1 class="mb-4 text-3xl font-bold text-gray-900">{{ $article->nom_article }}</h1>
 
         <div class="mb-2 flex gap-2 text-sm text-black">
             <span class="bg-gray-100 p-1">Référence : {{ $currentReference->id_reference }}</span>
