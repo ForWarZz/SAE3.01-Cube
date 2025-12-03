@@ -94,7 +94,7 @@
                     @foreach ($frameOptions as $opt)
                         <a
                             href="{{ $opt["url"] }}"
-                            class="{{ $opt["active"] ? "border-gray-900 bg-gray-900 text-white" : "border-gray-300 bg-white text-gray-700 hover:border-gray-400" }} rounded-lg border px-5 py-2.5 text-sm font-medium"
+                            class="{{ $opt["active"] ? "border-gray-900 bg-gray-900 text-white" : "border-gray-300 bg-white text-gray-700 hover:border-gray-400" }} rounded-lg border px-5 py-2.5 text-sm font-medium transition-colors"
                         >
                             {{ $opt["label"] }}
                         </a>
@@ -110,7 +110,7 @@
                         @foreach ($batteryOptions as $opt)
                             <a
                                 href="{{ $opt["url"] }}"
-                                class="{{ $opt["active"] ? "border-gray-900 bg-gray-900 text-white" : "border-gray-300 bg-white text-gray-700 hover:border-gray-400" }} rounded-lg border px-5 py-2.5 text-sm font-medium"
+                                class="{{ $opt["active"] ? "border-gray-900 bg-gray-900 text-white" : "border-gray-300 bg-white text-gray-700 hover:border-gray-400" }} rounded-lg border px-5 py-2.5 text-sm font-medium transition-colors"
                             >
                                 {{ $opt["label"] }}
                             </a>
@@ -131,7 +131,7 @@
                             style="background-color: {{ $opt["hex"] }}"
                             href="{{ $opt["url"] }}"
                             title="{{ $opt["label"] }}"
-                            class="{{ $opt["active"] ? "ring-2 ring-gray-900 ring-offset-2" : "opacity-70 hover:opacity-100" }} size-10 rounded-full"
+                            class="{{ $opt["active"] ? "ring-2 ring-gray-900 ring-offset-2" : "opacity-70 hover:scale-[1.1] hover:opacity-100" }} size-10 rounded-full transition-all"
                         ></a>
                     @endforeach
                 </div>
@@ -155,7 +155,7 @@
                         />
                         <label
                             for="size_{{ $opt["id"] }}"
-                            class="{{ $opt["disabled"] ? "cursor-not-allowed bg-gray-100 text-gray-400 opacity-50" : "cursor-pointer" }} flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium text-gray-700 transition-all peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
+                            class="{{ $opt["disabled"] ? "cursor-not-allowed bg-gray-100 text-gray-400 opacity-50" : "cursor-pointer " }} flex items-center justify-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors peer-checked:border-black peer-checked:bg-black peer-checked:text-white hover:border-gray-400"
                         >
                             {{ $opt["label"] }}
                         </label>
