@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id_article
@@ -46,5 +47,64 @@ class Accessory extends Model
     public function material(): BelongsTo
     {
         return $this->belongsTo(AccessoryMaterial::class, 'id_matiere_accessoire', 'id_matiere_accessoire');
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'id_categorie', 'id_categorie');
+    }
+
+    public function characteristics(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Characteristic::class,
+            'caracterise',
+            'id_article',
+            'id_caracteristique'
+        )->withPivot('valeur_caracteristique');
+    }
+
+    public function similar(): BelongsToMany
+    {
+        return $this->belongsToMany(Article::class, 'similaire', 'id_article_simil', 'id_article');
+    }
+
+    public function getPourcentageRemiseAttribute(): int
+    {
+        return $this->article?->pourcentage_remise ?? 0;
+    }
+
+    public function hasDiscount(): bool
+    {
+        return $this->pourcentage_remise > 0;
+    }
+
+    public function getDiscountedPrice(): float
+    {
+        if ($this->pourcentage_remise > 0) {
+            return round($this->prix_article * (1 - $this->pourcentage_remise / 100), 2);
+        }
+
+        return $this->prix_article;
+    }
+
+    public function availableSizes(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Size::class,
+            'taille_dispo',
+            'id_reference',
+            'id_taille'
+        )->withPivot('dispo_en_ligne');
+    }
+
+    public function shopAvailabilities(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Shop::class,
+            'dispo_magasin',
+            'id_reference',
+            'id_magasin'
+        )->withPivot(['id_taille', 'statut']);
     }
 }

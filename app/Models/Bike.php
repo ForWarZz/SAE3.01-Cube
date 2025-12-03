@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $description_article
  * @property string $resumer_article
  * @property int $nombre_vente_article
- * @property \Carbon\Carbon|null $date_ajout
+ * @property Carbon|null $date_ajout
  */
 class Bike extends Model
 {
@@ -35,7 +36,7 @@ class Bike extends Model
         'description_article',
         'resumer_article',
         'nombre_vente_article',
-        'date_ajout',  
+        'date_ajout',
     ];
 
     protected $casts = [
@@ -47,7 +48,7 @@ class Bike extends Model
      */
     public function isNew(): bool
     {
-        if (!$this->date_ajout) {
+        if (! $this->date_ajout) {
             return false;
         }
 
@@ -83,5 +84,43 @@ class Bike extends Model
     {
         return $this->belongsTo(Usage::class, 'id_usage', 'id_usage');
     }
-    
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'id_categorie', 'id_categorie');
+    }
+
+    public function characteristics(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Characteristic::class,
+            'caracterise',
+            'id_article',
+            'id_caracteristique'
+        )->withPivot('valeur_caracteristique');
+    }
+
+    public function similar(): BelongsToMany
+    {
+        return $this->belongsToMany(Article::class, 'similaire', 'id_article_simil', 'id_article');
+    }
+
+    public function getPourcentageRemiseAttribute(): int
+    {
+        return $this->article?->pourcentage_remise ?? 0;
+    }
+
+    public function hasDiscount(): bool
+    {
+        return $this->pourcentage_remise > 0;
+    }
+
+    public function getDiscountedPrice(): float
+    {
+        if ($this->pourcentage_remise > 0) {
+            return round($this->prix_article * (1 - $this->pourcentage_remise / 100), 2);
+        }
+
+        return $this->prix_article;
+    }
 }

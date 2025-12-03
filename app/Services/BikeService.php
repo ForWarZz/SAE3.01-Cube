@@ -19,11 +19,11 @@ class BikeService
         $currentReference->load([
             'bike.bikeModel.geometries.characteristic',
             'bike.bikeModel.geometries.size',
-            'article.characteristics.characteristicType',
+            'bike.characteristics.characteristicType',
             'ebike.battery',
             'color',
             'frame',
-            'baseReference.availableSizes',
+            'availableSizes',
         ]);
 
         $bike = $currentReference->bike;
@@ -31,7 +31,7 @@ class BikeService
         $variants = $this->bikeVariantService->getVariants($currentReference);
         $geometryData = $this->buildGeometryData($bike->bikeModel);
 
-        $weight = $bike->article->characteristics
+        $weight = $bike->characteristics
             ->firstWhere('id_caracteristique', config('bike.characteristics.weight'))
             ?->pivot->valeur_caracteristique ?? null;
 

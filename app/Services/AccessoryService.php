@@ -8,7 +8,7 @@ class AccessoryService
 {
     public function prepareAccessoryData(Accessory $accessory): array
     {
-        $weight = $accessory->article->characteristics
+        $weight = $accessory->characteristics
             ->firstWhere('id_caracteristique', config('accessory.characteristics.weight'))
             ?->pivot->valeur_caracteristique ?? null;
 

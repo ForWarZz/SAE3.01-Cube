@@ -22,18 +22,18 @@ class AvailabilityFilter extends AbstractFilter
             foreach ($values as $value) {
                 switch ($value) {
                     case 'online':
-                        $q->orWhereHas('bike.references.baseReference.availableSizes', fn ($q2) => $q2->where('dispo_en_ligne', true))
-                            ->orWhereHas('accessory.baseReference.availableSizes', fn ($q2) => $q2->where('dispo_en_ligne', true));
+                        $q->orWhereHas('bike.references.availableSizes', fn ($q2) => $q2->where('dispo_en_ligne', true))
+                            ->orWhereHas('accessory.availableSizes', fn ($q2) => $q2->where('dispo_en_ligne', true));
                         break;
 
                     case 'in_stock':
-                        $q->orWhereHas('bike.references.baseReference.shopAvailabilities', fn ($q2) => $q2->where('statut', $inStockStatus))
-                            ->orWhereHas('accessory.baseReference.shopAvailabilities', fn ($q2) => $q2->where('statut', $inStockStatus));
+                        $q->orWhereHas('bike.references.shopAvailabilities', fn ($q2) => $q2->where('statut', $inStockStatus))
+                            ->orWhereHas('accessory.shopAvailabilities', fn ($q2) => $q2->where('statut', $inStockStatus));
                         break;
 
                     case 'orderable':
-                        $q->orWhereHas('bike.references.baseReference.shopAvailabilities', fn ($q2) => $q2->where('statut', $orderableStatus))
-                            ->orWhereHas('accessory.baseReference.shopAvailabilities', fn ($q2) => $q2->where('statut', $orderableStatus));
+                        $q->orWhereHas('bike.references.shopAvailabilities', fn ($q2) => $q2->where('statut', $orderableStatus))
+                            ->orWhereHas('accessory.shopAvailabilities', fn ($q2) => $q2->where('statut', $orderableStatus));
                         break;
                 }
             }
@@ -49,8 +49,8 @@ class AvailabilityFilter extends AbstractFilter
 
         // Check online availability
         $hasOnline = (clone $baseQuery)
-            ->whereHas('bike.references.baseReference.availableSizes', fn ($q) => $q->where('dispo_en_ligne', true))
-            ->orWhereHas('accessory.baseReference.availableSizes', fn ($q) => $q->where('dispo_en_ligne', true))
+            ->whereHas('bike.references.availableSizes', fn ($q) => $q->where('dispo_en_ligne', true))
+            ->orWhereHas('accessory.availableSizes', fn ($q) => $q->where('dispo_en_ligne', true))
             ->exists();
 
         if ($hasOnline) {
@@ -59,8 +59,8 @@ class AvailabilityFilter extends AbstractFilter
 
         // Check in stock
         $hasStock = (clone $baseQuery)
-            ->whereHas('bike.references.baseReference.shopAvailabilities', fn ($q) => $q->where('statut', $inStockStatus))
-            ->orWhereHas('accessory.baseReference.shopAvailabilities', fn ($q) => $q->where('statut', $inStockStatus))
+            ->whereHas('bike.references.shopAvailabilities', fn ($q) => $q->where('statut', $inStockStatus))
+            ->orWhereHas('accessory.shopAvailabilities', fn ($q) => $q->where('statut', $inStockStatus))
             ->exists();
 
         if ($hasStock) {
@@ -69,8 +69,8 @@ class AvailabilityFilter extends AbstractFilter
 
         // Check orderable
         $hasOrderable = (clone $baseQuery)
-            ->whereHas('bike.references.baseReference.shopAvailabilities', fn ($q) => $q->where('statut', $orderableStatus))
-            ->orWhereHas('accessory.baseReference.shopAvailabilities', fn ($q) => $q->where('statut', $orderableStatus))
+            ->whereHas('bike.references.shopAvailabilities', fn ($q) => $q->where('statut', $orderableStatus))
+            ->orWhereHas('accessory.shopAvailabilities', fn ($q) => $q->where('statut', $orderableStatus))
             ->exists();
 
         if ($hasOrderable) {
