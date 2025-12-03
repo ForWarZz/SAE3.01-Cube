@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdresseController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BikeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,14 +38,16 @@ Route::prefix('articles')->name('articles.')->group(function () {
 
 });
 
-// Route::get('/tableau-de-bord', function () {
-//    return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-//
-// Route::middleware('auth')->prefix('profil')->name('profile.')->group(function () {
-//    Route::get('/', [ProfileController::class, 'edit'])->name('edit');
-//    Route::patch('/', [ProfileController::class, 'update'])->name('update');
-//    Route::delete('/', [ProfileController::class, 'destroy'])->name('delete');
-// });
+// Dashboard routes (requires client session)
+Route::middleware('client.auth')->prefix('tableau-de-bord')->name('dashboard.')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('index');
+    
+    Route::prefix('adresses')->name('adresses.')->group(function () {
+        Route::get('/', [AdresseController::class, 'index'])->name('index');
+        Route::get('/nouvelle', [AdresseController::class, 'create'])->name('create');
+        Route::post('/', [AdresseController::class, 'store'])->name('store');
+        Route::delete('/{adresse}', [AdresseController::class, 'destroy'])->name('destroy');
+    });
+});
 
 require __DIR__.'/auth.php';
