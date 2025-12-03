@@ -155,18 +155,9 @@
                         />
                         <label
                             for="size_{{ $opt["id"] }}"
-                            class="{{ $opt["disabled"] ? "bg-gray-100 text-gray-400 opacity-50" : "" }} flex cursor-pointer items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all peer-checked:border-black peer-checked:bg-black peer-checked:text-white hover:border-gray-300 hover:bg-gray-50 peer-checked:hover:border-black peer-checked:hover:bg-black"
+                            class="{{ $opt["disabled"] ? "cursor-not-allowed bg-gray-100 text-gray-400 opacity-50" : "cursor-pointer" }} flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium text-gray-700 transition-all peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
                         >
                             {{ $opt["label"] }}
-                            @if ($opt["disabled"])
-                                <svg
-                                    class="absolute h-full w-full text-gray-400 opacity-50"
-                                    viewBox="0 0 100 100"
-                                    preserveAspectRatio="none"
-                                >
-                                    <line x1="0" y1="100" x2="100" y2="0" stroke="currentColor" stroke-width="1" />
-                                </svg>
-                            @endif
                         </label>
                     </div>
                 @endforeach
