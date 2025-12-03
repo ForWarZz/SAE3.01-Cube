@@ -18,7 +18,7 @@ class BikeModelFilter extends AbstractFilter
         }
     }
 
-    public function options(Builder $baseQuery): Collection
+    public function options(Builder $baseQuery, array $context = []): Collection
     {
         $articleIds = $baseQuery->pluck('id_article');
 

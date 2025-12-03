@@ -24,7 +24,7 @@ class PriceFilter extends AbstractFilter
         }
     }
 
-    public function options(Builder $baseQuery): Collection
+    public function options(Builder $baseQuery, array $context = []): Collection
     {
         return collect([
             'min' => (int) $baseQuery->min('prix_article'),

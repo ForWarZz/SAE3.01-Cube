@@ -8,17 +8,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
 /**
- * @property integer $id_categorie
- * @property integer $id_categorie_parent
+ * @property int $id_categorie
+ * @property int $id_categorie_parent
  * @property string $nom_categorie
  */
 class Category extends Model
 {
     protected $table = 'categorie';
+
     protected $primaryKey = 'id_categorie';
+
     protected $fillable = [
         'id_categorie_parent',
-        'nom_categorie'
+        'nom_categorie',
     ];
 
     public function articles(): HasMany
@@ -33,11 +35,15 @@ class Category extends Model
 
     public function children(): HasMany
     {
-        return $this->hasMany('App\Models\Category', 'id_categorie_parent', 'id_categorie');
+        return $this->hasMany(Category::class, 'id_categorie_parent', 'id_categorie');
+    }
+
+    public function childrenRecursive(): HasMany
+    {
+        return $this->children()->with('childrenRecursive');
     }
 
     /**
-     * @param ?Collection $allCategories
      * @return int[]
      */
     public function getAllChildrenIds(?Collection $allCategories = null): array

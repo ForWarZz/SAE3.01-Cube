@@ -16,6 +16,8 @@
             </a>
         </div>
 
+        <x-filter-checkbox-group label="Catégorie" name="category" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />
+
         <x-filter-checkbox-group
             label="Disponibilité"
             name="availability"

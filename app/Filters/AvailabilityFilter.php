@@ -37,7 +37,7 @@ class AvailabilityFilter extends AbstractFilter
         }
     }
 
-    public function options(Builder $baseQuery): Collection
+    public function options(Builder $baseQuery, array $context = []): Collection
     {
         $orderableStatus = config('bike.availability.orderable');
         $inStockStatus = config('bike.availability.in_stock');

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Filters\ArticleFilter;
 use App\Filters\AvailabilityFilter;
 use App\Filters\BikeModelFilter;
+use App\Filters\CategoryFilter;
 use App\Filters\ColorFilter;
 use App\Filters\DiscountFilter;
 use App\Filters\FrameFilter;
@@ -32,6 +33,7 @@ class FilterEngineService
         DiscountFilter::class,
         AvailabilityFilter::class,
         PriceFilter::class,
+        CategoryFilter::class,
     ];
 
     /**
@@ -39,9 +41,18 @@ class FilterEngineService
      */
     private array $filters;
 
+    private array $context = [];
+
     public function __construct()
     {
         $this->filters = array_map(fn ($class) => new $class, $this->filterClasses);
+    }
+
+    public function setContext(array $context): self
+    {
+        $this->context = $context;
+
+        return $this;
     }
 
     public function retrieveSelectedFilters(Request $request): array
@@ -69,7 +80,7 @@ class FilterEngineService
         $opts = [];
 
         foreach ($this->filters as $filter) {
-            $opts[$filter->key()] = $filter->options((clone $query));
+            $opts[$filter->key()] = $filter->options((clone $query), $this->context);
         }
 
         return $opts;

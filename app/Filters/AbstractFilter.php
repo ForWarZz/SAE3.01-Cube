@@ -21,8 +21,8 @@ abstract class AbstractFilter implements ArticleFilter
 
     protected function format(Collection $collection, string $idField, string $labelField): Collection
     {
-        return $collection->map(fn($item) => [
-            'id' => (string)$item->$idField,
+        return $collection->map(fn ($item) => [
+            'id' => (string) $item->$idField,
             'label' => $item->$labelField,
         ]);
     }
