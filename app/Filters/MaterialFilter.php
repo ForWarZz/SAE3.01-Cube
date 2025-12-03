@@ -2,7 +2,6 @@
 
 namespace App\Filters;
 
-use App\Filters\AbstractFilter;
 use App\Models\Bike;
 use App\Models\BikeFrameMaterial;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,12 +13,12 @@ class MaterialFilter extends AbstractFilter
 
     public function apply(Builder $query, array $values): void
     {
-        if (!empty($values)) {
-            $query->whereHas('bike', fn($q) => $q->whereIn('id_materiau_cadre', $values));
+        if (! empty($values)) {
+            $query->whereHas('bike', fn ($q) => $q->whereIn('id_materiau_cadre', $values));
         }
     }
 
-    public function options(Builder $baseQuery): Collection
+    public function options(Builder $baseQuery, array $context = []): Collection
     {
         $articleIds = $baseQuery->pluck('id_article');
 

@@ -99,6 +99,7 @@ class ArticleService
     public function listByCategory(Category $category, Request $request): array
     {
         $baseQuery = Article::whereIn('id_categorie', $category->getAllChildrenIds());
+        $this->filterEngineService->setContext(['category' => $category]);
 
         return $this->finalizeQuery($baseQuery, $request);
     }

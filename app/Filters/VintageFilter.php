@@ -13,12 +13,12 @@ class VintageFilter extends AbstractFilter
 
     public function apply(Builder $query, array $values): void
     {
-        if (!empty($values)) {
-            $query->whereHas('bike', fn($q) => $q->whereIn('id_millesime', $values));
+        if (! empty($values)) {
+            $query->whereHas('bike', fn ($q) => $q->whereIn('id_millesime', $values));
         }
     }
 
-    public function options(Builder $baseQuery): Collection
+    public function options(Builder $baseQuery, array $context = []): Collection
     {
         $articleIds = $baseQuery->pluck('id_article');
 

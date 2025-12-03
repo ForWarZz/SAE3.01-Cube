@@ -13,12 +13,12 @@ class ColorFilter extends AbstractFilter
 
     public function apply(Builder $query, array $values): void
     {
-        if (!empty($values)) {
-            $query->whereHas('bike.references', fn($q) => $q->whereIn('id_couleur', $values));
+        if (! empty($values)) {
+            $query->whereHas('bike.references', fn ($q) => $q->whereIn('id_couleur', $values));
         }
     }
 
-    public function options(Builder $baseQuery): Collection
+    public function options(Builder $baseQuery, array $context = []): Collection
     {
         $articleIds = $baseQuery->pluck('id_article');
 

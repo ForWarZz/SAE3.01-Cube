@@ -16,6 +16,8 @@
             </a>
         </div>
 
+        <x-filter-checkbox-group label="Catégorie" name="category" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />
+
         <x-filter-checkbox-group
             label="Disponibilité"
             name="availability"
@@ -33,6 +35,12 @@
         <x-filter-checkbox-group label="Millésime" name="vintage" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />
         <x-filter-checkbox-group label="Type de cadre" name="frame" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />
         <x-filter-checkbox-group label="Matériau" name="material" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />
+        <x-filter-checkbox-group
+            label="Matière"
+            name="accessory_material"
+            :filterOptions="$filterOptions"
+            :activeFilters="$activeFilters"
+        />
         <x-filter-checkbox-group label="Couleur" name="color" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />
 
         <x-filter-price :options="$filterOptions" :active="$activeFilters" />

@@ -14,5 +14,5 @@ interface ArticleFilter
 
     public function apply(Builder $query, array $values): void;
 
-    public function options(Builder $baseQuery): Collection;
+    public function options(Builder $baseQuery, array $context = []): Collection;
 }
