@@ -3,13 +3,19 @@
         <div class="flex items-center justify-between mb-4">
             <h1 class="text-2xl font-bold text-gray-900">Cube France</h1>
 
-            <div class="relative w-64">
-                <input
-                    type="text"
-                    id="search-input"
-                    placeholder="Rechercher un article..."
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
+            <div class="flex items-center space-x-4">
+                <div class="relative w-64">
+                    <input
+                        type="text"
+                        id="search-input"
+                        placeholder="Rechercher un article..."
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                </div>
+
+                <a href="{{ route('login') }}" class="hover:opacity-80 transition-opacity">
+                    <img src="{{ asset('storage/cyclist.svg') }}" alt="Login" class="w-8 h-8">
+                </a>
             </div>
         </div>
 
