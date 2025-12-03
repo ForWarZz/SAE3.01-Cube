@@ -44,6 +44,34 @@ class CartService
     {
         $cartItems = $this->getCartFromSession();
 
+        if (empty($cartItems)) {
+            return [
+                'cartData' => [],
+                'summaryData' => [
+                    'subtotal' => 0,
+                    'discount' => 0,
+                    'shipping' => 0,
+                    'tax' => 0,
+                    'total' => 0,
+                ],
+                'discountData' => null,
+                'count' => 0,
+            ];
+        }
+
+        // Load all references and sizes at once
+        $referenceIds = array_column($cartItems, 'reference_id');
+        $sizeIds = array_column($cartItems, 'size_id');
+
+        $references = ArticleReference::with([
+            'article',
+            'bikeReference.color',
+            'bikeReference.article',
+            'accessory.article',
+        ])->whereIn('id_reference', $referenceIds)->get()->keyBy('id_reference');
+
+        $sizes = Size::whereIn('id_taille', $sizeIds)->get()->keyBy('id_taille');
+
         $cartData = [];
         $summaryData = [
             'subtotal' => 0,
@@ -53,9 +81,18 @@ class CartService
         $discountData = $this->getAppliedDiscountCode();
 
         foreach ($cartItems as $item) {
-            $reference = ArticleReference::with(['article', 'bikeReference', 'bikeReference.color'])->find($item['reference_id']);
-            $size = Size::find($item['size_id']);
-            $article = $reference->bikeReference->article ?? $reference->accessory->article;
+            $reference = $references->get($item['reference_id']);
+            $size = $sizes->get($item['size_id']);
+
+            if (! $reference || ! $size) {
+                continue;
+            }
+
+            $article = $reference->bikeReference?->article ?? $reference->accessory?->article;
+
+            if (! $article) {
+                continue;
+            }
 
             $cartData[] = [
                 'reference' => $reference->bikeReference ?? $reference->accessory,

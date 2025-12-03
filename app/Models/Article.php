@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 
@@ -48,11 +47,6 @@ class Article extends Model
         }
 
         return $this->prix_article;
-    }
-
-    public function accessories(): HasMany
-    {
-        return $this->hasMany('App\Models\Accessory', 'id_article', 'id_article');
     }
 
     public function accessory(): BelongsTo

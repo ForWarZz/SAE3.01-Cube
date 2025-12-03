@@ -1,20 +1,17 @@
 <div class="flex flex-col" x-data="{ selectedSize: @js($sizeOptions?->first(fn ($s) => ! $s["disabled"])) }">
     <div class="mb-8">
-        {{-- Badges NOUVEAU et SAISON --}}
         <div class="mb-4 flex items-center gap-2">
             @if ($article->bike?->isNew())
-                <span class="bg-lime-400 px-3 py-1 text-xs font-bold uppercase text-black">
-                    Nouveau
-                </span>
+                <span class="bg-lime-400 px-3 py-1 text-xs font-bold text-black uppercase">Nouveau</span>
             @endif
+
             @if ($article->bike?->vintage)
-                <span class="border border-gray-300 bg-white px-3 py-1 text-xs font-bold uppercase text-gray-700">
+                <span class="border border-gray-300 bg-white px-3 py-1 text-xs font-bold text-gray-700 uppercase">
                     Saison {{ $article->bike->vintage->millesime_velo }}
-                </span>
             @endif
         </div>
 
-        <div class="mb-4 flex items-center gap-3 text-sm uppercase text-gray-500">
+        <div class="mb-4 flex items-center gap-3 text-sm text-gray-500 uppercase">
             @if ($article->bike)
                 <span>{{ $article->bike->bikeModel->nom_modele_velo }}</span>
 

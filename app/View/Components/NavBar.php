@@ -25,6 +25,10 @@ class NavBar extends Component
         protected CartService $cartService,
     ) {
         $this->categories = Category::query()
+            ->with([
+                'childrenRecursive',
+                'articles.bike.bikeModel',
+            ])
             ->orderBy('id_categorie', 'desc')
             ->whereNull('id_categorie_parent')
             ->get();

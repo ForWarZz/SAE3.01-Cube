@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -24,6 +25,8 @@ class Bike extends Model
 {
     protected $table = 'velo';
 
+    protected $primaryKey = 'id_article';
+
     protected $fillable = [
         'id_millesime',
         'id_modele_velo',
@@ -35,7 +38,7 @@ class Bike extends Model
         'description_article',
         'resumer_article',
         'nombre_vente_article',
-        'date_ajout',  
+        'date_ajout',
     ];
 
     protected $casts = [
@@ -47,7 +50,7 @@ class Bike extends Model
      */
     public function isNew(): bool
     {
-        if (!$this->date_ajout) {
+        if (! $this->date_ajout) {
             return false;
         }
 
@@ -83,5 +86,15 @@ class Bike extends Model
     {
         return $this->belongsTo(Usage::class, 'id_usage', 'id_usage');
     }
-    
+
+    public function compatibleAccessories(): BelongsToMany
+    {
+        return $this->belongsToMany(Accessory::class,
+            'compatible',
+            'vel_id_article',
+            'id_article',
+            'id_article',
+            'id_article'
+        );
+    }
 }
