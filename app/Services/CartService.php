@@ -55,6 +55,14 @@ class CartService
         foreach ($cartItems as $item) {
             $reference = ArticleReference::with(['article', 'bikeReference', 'bikeReference.color'])->find($item['reference_id']);
             $size = Size::find($item['size_id']);
+
+            // Remove invalid items from cart automatically
+            if (! $reference || ! $size) {
+                $this->removeItem($item['reference_id'], $item['size_id']);
+
+                continue;
+            }
+
             $article = $reference->bikeReference->article ?? $reference->accessory->article;
 
             $cartData[] = [
