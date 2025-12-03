@@ -8,6 +8,7 @@
             @if ($article->bike?->vintage)
                 <span class="border border-gray-300 bg-white px-3 py-1 text-xs font-bold text-gray-700 uppercase">
                     Saison {{ $article->bike->vintage->millesime_velo }}
+                </span>
             @endif
         </div>
 
