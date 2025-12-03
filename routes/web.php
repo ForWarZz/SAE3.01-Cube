@@ -24,13 +24,13 @@ Route::prefix('articles')->name('articles.')->group(function () {
     Route::get('/search', [ArticleController::class, 'search'])->name('search');
     Route::get('/{article}', [ArticleController::class, 'show'])->name('show');
 
+    Route::get('/{article}/360/{color?}', [ArticleController::class, 'show360'])->name('view-360');
+
     Route::get('/categories/{category}', [ArticleController::class, 'viewByCategory'])->name('by-category');
     Route::get('/modeles/{model}', [ArticleController::class, 'viewByModel'])->name('by-model');
 
     Route::get('/{article}/{reference}', [ArticleController::class, 'showByRef'])->name('show-reference');
 });
-
-Route::get('/{article}/360/{color?}', [ArticleController::class, 'show360'])->name('view-360');
 
 Route::prefix('cart')->name('cart.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
