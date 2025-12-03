@@ -91,8 +91,8 @@ class CartService
                 continue;
             }
 
+            /** @var Article $article */
             $article = $reference->bikeReference->article ?? $reference->accessory->article;
-
 
             $cartData[] = [
                 'reference' => $reference->bikeReference ?? $reference->accessory,
@@ -100,6 +100,10 @@ class CartService
                 'size' => $size,
                 'quantity' => $item['quantity'],
                 'article' => $article,
+                'price_per_unit' => $article->getDiscountedPrice(),
+                'real_price' => $article->prix_article,
+                'has_discount' => $article->hasDiscount(),
+                'discount_percent' => $article->pourcentage_remise,
                 'color' => $reference->bikeReference?->color->label_couleur,
                 'article_url' => route('articles.show', [
                     'reference' => $reference->id_reference,
@@ -107,7 +111,7 @@ class CartService
                 ]),
             ];
 
-            $summaryData['subtotal'] += $article->prix_article * $item['quantity'];
+            $summaryData['subtotal'] += $article->getDiscountedPrice() * $item['quantity'];
         }
 
         if ($discountData) {
