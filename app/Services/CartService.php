@@ -53,7 +53,7 @@ class CartService
         $discountData = $this->getAppliedDiscountCode();
 
         foreach ($cartItems as $item) {
-            $reference = ArticleReference::with(['article', 'bikeReference', 'bikeReference.color'])->find($item['reference_id']);
+            $reference = ArticleReference::with(['article', 'bikeReference', 'bikeReference.color', 'accessory'])->find($item['reference_id']);
             $size = Size::find($item['size_id']);
 
             // Remove invalid items from cart automatically

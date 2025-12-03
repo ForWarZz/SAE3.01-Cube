@@ -11,76 +11,70 @@ class AvailabilityFilter extends AbstractFilter
 
     public function apply(Builder $query, array $values): void
     {
-        $orderableStatus = config('bike.availability.orderable');
-        $inStockStatus = config('bike.availability.in_stock');
+        $orderableStatus = config('article.availability.orderable');
+        $inStockStatus = config('article.availability.in_stock');
 
-        if (! empty($values)) {
-            $query->where(function ($q) use ($inStockStatus, $orderableStatus, $values) {
-                if (in_array('online', $values)) {
-                    $q->orWhereHas('bike.references.baseReference.availableSizes', function ($q2) {
-                        $q2->where('dispo_en_ligne', true);
-                    });
-                }
-
-                if (in_array('in_stock', $values)) {
-                    $q->orWhereHas('bike.references.baseReference.shopAvailabilities', function ($q2) use ($orderableStatus) {
-                        $q2->where('statut', $orderableStatus);
-                    });
-                }
-
-                if (in_array('orderable', $values)) {
-                    $q->orWhereHas('bike.references.baseReference.shopAvailabilities', function ($q2) use ($inStockStatus) {
-                        $q2->where('statut', $inStockStatus);
-                    });
-                }
-            });
+        if (empty($values)) {
+            return;
         }
+
+        $query->where(function ($q) use ($values, $orderableStatus, $inStockStatus) {
+            foreach ($values as $value) {
+                switch ($value) {
+                    case 'online':
+                        $q->orWhereHas('bike.references.baseReference.availableSizes', fn ($q2) => $q2->where('dispo_en_ligne', true))
+                            ->orWhereHas('accessory.baseReference.availableSizes', fn ($q2) => $q2->where('dispo_en_ligne', true));
+                        break;
+
+                    case 'in_stock':
+                        $q->orWhereHas('bike.references.baseReference.shopAvailabilities', fn ($q2) => $q2->where('statut', $inStockStatus))
+                            ->orWhereHas('accessory.baseReference.shopAvailabilities', fn ($q2) => $q2->where('statut', $inStockStatus));
+                        break;
+
+                    case 'orderable':
+                        $q->orWhereHas('bike.references.baseReference.shopAvailabilities', fn ($q2) => $q2->where('statut', $orderableStatus))
+                            ->orWhereHas('accessory.baseReference.shopAvailabilities', fn ($q2) => $q2->where('statut', $orderableStatus));
+                        break;
+                }
+            }
+        });
     }
 
     public function options(Builder $baseQuery, array $context = []): Collection
     {
-        $orderableStatus = config('bike.availability.orderable');
-        $inStockStatus = config('bike.availability.in_stock');
+        $orderableStatus = config('article.availability.orderable');
+        $inStockStatus = config('article.availability.in_stock');
 
         $options = collect();
 
+        // Check online availability
         $hasOnline = (clone $baseQuery)
-            ->whereHas('bike.references.baseReference.availableSizes', function ($q) {
-                $q->where('dispo_en_ligne', true);
-            })
+            ->whereHas('bike.references.baseReference.availableSizes', fn ($q) => $q->where('dispo_en_ligne', true))
+            ->orWhereHas('accessory.baseReference.availableSizes', fn ($q) => $q->where('dispo_en_ligne', true))
             ->exists();
 
         if ($hasOnline) {
-            $options[] = [
-                'id' => 'online',
-                'label' => 'Disponible en ligne',
-            ];
+            $options[] = ['id' => 'online', 'label' => 'Disponible en ligne'];
         }
 
+        // Check in stock
         $hasStock = (clone $baseQuery)
-            ->whereHas('bike.references.baseReference.shopAvailabilities', function ($q) use ($inStockStatus) {
-                $q->where('statut', $inStockStatus);
-            })
+            ->whereHas('bike.references.baseReference.shopAvailabilities', fn ($q) => $q->where('statut', $inStockStatus))
+            ->orWhereHas('accessory.baseReference.shopAvailabilities', fn ($q) => $q->where('statut', $inStockStatus))
             ->exists();
 
         if ($hasStock) {
-            $options[] = [
-                'id' => 'in_stock',
-                'label' => 'En stock magasin',
-            ];
+            $options[] = ['id' => 'in_stock', 'label' => 'En stock magasin'];
         }
 
+        // Check orderable
         $hasOrderable = (clone $baseQuery)
-            ->whereHas('bike.references.baseReference.shopAvailabilities', function ($q) use ($orderableStatus) {
-                $q->where('statut', $orderableStatus);
-            })
+            ->whereHas('bike.references.baseReference.shopAvailabilities', fn ($q) => $q->where('statut', $orderableStatus))
+            ->orWhereHas('accessory.baseReference.shopAvailabilities', fn ($q) => $q->where('statut', $orderableStatus))
             ->exists();
 
         if ($hasOrderable) {
-            $options[] = [
-                'id' => 'orderable',
-                'label' => 'Commandable en magasin',
-            ];
+            $options[] = ['id' => 'orderable', 'label' => 'Commandable en magasin'];
         }
 
         return $options;

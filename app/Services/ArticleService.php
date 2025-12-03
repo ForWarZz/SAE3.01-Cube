@@ -286,8 +286,8 @@ class ArticleService
     private function buildSizeOptions(ArticleReference $reference): Collection
     {
         $sizeList = $reference->availableSizes;
-        $orderableInShopStatus = config('bike.availability.orderable');
-        $inStockInShopStatus = config('bike.availability.in_stock');
+        $orderableInShopStatus = config('article.availability.orderable');
+        $inStockInShopStatus = config('article.availability.in_stock');
 
         return $sizeList->map(function ($size) use ($orderableInShopStatus, $inStockInShopStatus, $reference) {
             $availableOnline = $size->pivot->dispo_en_ligne;
