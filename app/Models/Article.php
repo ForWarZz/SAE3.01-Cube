@@ -93,10 +93,14 @@ class Article extends Model
         return Storage::url("articles/$this->id_article/default/1.jpg");
     }
 
-    public function getAllImagesUrls($colorId = null): array
+    public function getAllImagesUrls($colorId = null, $is360 = false): array
     {
         $folder = $colorId ?: 'default';
         $directory = "articles/$this->id_article/$folder";
+
+        if ($is360){
+            $directory .= '/360';
+        }
 
         $files = Storage::disk('public')->files($directory);
 

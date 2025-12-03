@@ -30,6 +30,8 @@ Route::prefix('articles')->name('articles.')->group(function () {
     Route::get('/{article}/{reference}', [ArticleController::class, 'showByRef'])->name('show-reference');
 });
 
+Route::get('/{article}/360/{color?}', [ArticleController::class, 'show360'])->name('view-360');
+
 Route::prefix('cart')->name('cart.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
     Route::delete('/', [CartController::class, 'delete'])->name('delete');

@@ -57,6 +57,13 @@
     </div>
 
     <div class="mt-4 flex justify-center gap-4">
+        @if (!empty($article->getAllImagesUrls($currentReference->color?->id_couleur, true)))
+            <div>
+                <a href="{{ route('articles.view-360', ['article' => $currentReference->id_article, 'color' => $currentReference->id_couleur]) }}">
+                    <img src="{{ asset('storage/360.svg') }}" alt="vue 360°" class="h-20 w-16">
+                </a>
+            </div>
+        @endif
         <template x-for="(img, index) in images" :key="index">
             <img
                 :src="img"

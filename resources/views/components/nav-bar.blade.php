@@ -1,5 +1,5 @@
 <nav id="nav" class="sticky top-0 z-50 w-full border-b border-gray-200 bg-white shadow-sm">
-    <div class="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-screen-2xl px-8">
         <div class="flex h-16 items-center justify-between">
             <div class="flex flex-shrink-0 items-center">
                 <a href="{{ route("home") }}" class="text-2xl font-bold tracking-tight text-gray-900 uppercase transition">Cube France</a>
@@ -12,7 +12,7 @@
             </ul>
 
             <div class="flex items-center gap-4">
-                <div class="relative hidden sm:block">
+                <div class="relative">
                     <input
                         type="text"
                         id="search-input"
@@ -25,7 +25,11 @@
                     </span>
                 </div>
 
-                <div class="hidden h-6 w-px bg-gray-200 sm:block"></div>
+                <div class="h-6 w-px bg-gray-200"></div>
+
+                <a href="{{ route('login') }}" class="hover:opacity-80 transition-opacity">
+                    <img src="{{ asset('storage/cyclist.svg') }}" alt="Login" class="w-8 h-8">
+                </a>
 
                 <a href="{{ route("cart.index") }}" class="group relative flex items-center p-2" title="Voir le panier">
                     <x-bi-cart class="size-6 text-gray-700 transition group-hover:text-blue-600" />

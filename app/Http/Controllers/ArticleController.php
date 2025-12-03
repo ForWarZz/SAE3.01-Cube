@@ -132,4 +132,11 @@ class ArticleController extends Controller
     {
         return route('articles.by-category', ['category' => $category->id_categorie]);
     }
+
+    public function show360(Article $article, $colorid = null)
+    {
+        $images = $article->getAllImagesUrls($colorid, true);
+
+        return view('article-360-view', ['article' => $article, 'images' => $images, 'colorid' => $colorid]);
+    }
 }
