@@ -3,6 +3,7 @@
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,7 +18,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('index');
+    $bikeCategoryId = Category::firstWhere('nom_categorie', 'Vélos')->id_categorie;
+    $accessoryCategoryId = Category::firstWhere('nom_categorie', 'Accessoires')->id_categorie;
+
+    return view('index', [
+        'bikeCategoryId' => $bikeCategoryId,
+        'accessoryCategoryId' => $accessoryCategoryId,
+    ]);
 })->name('home');
 
 Route::prefix('articles')->name('articles.')->group(function () {

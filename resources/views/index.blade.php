@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="relative h-screen overflow-hidden bg-gray-900">
+    <div class="relative flex-1 overflow-hidden bg-gray-900">
         <div class="absolute inset-0">
             <img
                 src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?q=80&w=2070&auto=format&fit=crop"
@@ -10,9 +10,9 @@
 
         <div class="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/80 to-transparent"></div>
 
-        <div class="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-6 py-24 sm:py-32 lg:px-8">
+        <div class="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-8 py-56">
             <div class="max-w-2xl">
-                <h1 class="text-5xl font-bold tracking-tight text-white uppercase drop-shadow-lg sm:text-7xl">
+                <h1 class="text-7xl font-bold tracking-tight text-white uppercase drop-shadow-lg">
                     Des vélos
                     <br />
                     et accessoires,
@@ -26,12 +26,15 @@
 
                 <div class="mt-10 flex items-center gap-x-6">
                     <a
-                        href="#"
+                        href="{{ route("articles.by-category", $bikeCategoryId) }}"
                         class="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm transition-all duration-300 hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                     >
                         Acheter un vélo
                     </a>
-                    <a href="#" class="text-sm leading-6 font-semibold text-white transition-colors duration-300 hover:text-blue-300">
+                    <a
+                        href="{{ route("articles.by-category", $accessoryCategoryId) }}"
+                        class="text-sm leading-6 font-semibold text-white transition-colors duration-300 hover:text-blue-300"
+                    >
                         Nos accessoires
                         <span aria-hidden="true">→</span>
                     </a>
