@@ -29,15 +29,13 @@ Route::prefix('articles')->name('articles.')->group(function () {
 
     Route::get('/{article}/{reference}', [ArticleController::class, 'showByRef'])->name('show-reference');
 
+    Route::get('/{article}/360/{color?}', [ArticleController::class, 'show360'])->name('view-360');
+
     //    Route::prefix('/velos')->name('bikes.')->group(function () {
     //        //        Route::get('/reference/{reference}', [BikeController::class, 'show'])->name('show');
     //        Route::get('/{bike}', [BikeController::class, 'redirectToDefaultVariant'])->name('redirect-to-default');
     //    });
 
-});
-
-Route::get('/view-360', function(){
-    return view('article-360-view');
 });
 
 // Route::get('/tableau-de-bord', function () {
