@@ -34,13 +34,16 @@ class ArticleController extends Controller
     public function viewByModel(BikeModel $model, Request $request)
     {
         $data = $this->articleService->listByModel($model, $request);
+        $category = $model->bikes->first()?->category;
+
+        $breadcrumbs = $this->prepareBreadcrumbs($category);
+        $breadcrumbs[] = [
+            'label' => $model->nom_modele_velo, 'url' => route('articles.by-model', ['model' => $model->id_modele_velo]),
+        ];
 
         return view('article.index', [
             'pageTitle' => $model->nom_modele_velo,
-            'breadcrumbs' => [
-                ['label' => 'Home', 'url' => route('home')],
-                ['label' => $model->nom_modele_velo, 'url' => null],
-            ],
+            'breadcrumbs' => $breadcrumbs,
             ...$data,
         ]);
     }
@@ -48,13 +51,11 @@ class ArticleController extends Controller
     public function viewByCategory(Category $category, Request $request)
     {
         $data = $this->articleService->listByCategory($category, $request);
+        $breadcrumbs = $this->prepareBreadcrumbs($category);
 
         return view('article.index', [
             'pageTitle' => $category->nom_categorie,
-            'breadcrumbs' => [
-                ['label' => 'Home', 'url' => route('home')],
-                ['label' => $category->nom_categorie, 'url' => null],
-            ],
+            'breadcrumbs' => $breadcrumbs,
             ...$data,
         ]);
     }
@@ -102,5 +103,33 @@ class ArticleController extends Controller
         $data = $this->articleService->prepareViewData($article, $reference);
 
         return view('article.show', $data);
+    }
+
+    private function prepareBreadcrumbs(Category $category): array
+    {
+        $breadcrumbs = [
+            ['label' => 'Accueil', 'url' => route('home')],
+        ];
+
+        $ancestors = $category->getAncestors();
+
+        foreach ($ancestors as $ancestor) {
+            $breadcrumbs[] = [
+                'label' => $ancestor->nom_categorie,
+                'url' => $this->buildCategoryUrl($ancestor),
+            ];
+        }
+
+        $breadcrumbs[] = [
+            'label' => $category->nom_categorie,
+            'url' => $this->buildCategoryUrl($category),
+        ];
+
+        return $breadcrumbs;
+    }
+
+    private function buildCategoryUrl(Category $category): string
+    {
+        return route('articles.by-category', ['category' => $category->id_categorie]);
     }
 }

@@ -26,12 +26,24 @@
 
         <h1 class="mb-4 text-3xl font-bold text-gray-900">{{ $article->nom_article }}</h1>
 
-        <div class="mb-2 flex gap-2 text-sm text-black">
-            <span class="bg-gray-100 p-1">Référence : {{ $currentReference->id_reference }}</span>
-            <span class="bg-gray-100 p-1">Poids : {{ $weight }}</span>
+        <div class="mb-4 flex flex-wrap gap-2 text-sm">
+            <span class="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-gray-100 px-2 py-1 font-medium text-gray-700">
+                <x-bi-hash class="size-4 text-gray-500" />
+                {{ $currentReference->id_reference }}
+            </span>
 
-            @if ($article->bike)
-                <span class="bg-gray-100 p-1">Matériau du cadre : {{ $article->bike->frameMaterial->label_materiau_cadre }}</span>
+            <span class="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-gray-100 px-2 py-1 font-medium text-gray-700">
+                <x-bi-box-seam class="size-4 text-gray-500" />
+                {{ $weight }}
+            </span>
+
+            @if ($article->bike?->frameMaterial)
+                <span
+                    class="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-gray-100 px-2 py-1 font-medium text-gray-700"
+                >
+                    <x-bi-layers class="size-4 text-gray-500" />
+                    {{ $article->bike->frameMaterial->label_materiau_cadre }}
+                </span>
             @endif
         </div>
 
@@ -143,18 +155,9 @@
                         />
                         <label
                             for="size_{{ $opt["id"] }}"
-                            class="{{ $opt["disabled"] ? "bg-gray-100 text-gray-400 opacity-50" : "" }} flex cursor-pointer items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all peer-checked:border-black peer-checked:bg-black peer-checked:text-white hover:border-gray-300 hover:bg-gray-50 peer-checked:hover:border-black peer-checked:hover:bg-black"
+                            class="{{ $opt["disabled"] ? "cursor-not-allowed bg-gray-100 text-gray-400 opacity-50" : "cursor-pointer" }} flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium text-gray-700 transition-all peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
                         >
                             {{ $opt["label"] }}
-                            @if ($opt["disabled"])
-                                <svg
-                                    class="absolute h-full w-full text-gray-400 opacity-50"
-                                    viewBox="0 0 100 100"
-                                    preserveAspectRatio="none"
-                                >
-                                    <line x1="0" y1="100" x2="100" y2="0" stroke="currentColor" stroke-width="1" />
-                                </svg>
-                            @endif
                         </label>
                     </div>
                 @endforeach

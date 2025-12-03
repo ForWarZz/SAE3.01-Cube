@@ -1,28 +1,38 @@
-<nav id="nav" class="border-b border-gray-200 bg-white shadow-sm">
-    <div class="mx-auto max-w-7xl px-6 py-4">
-        <div class="mb-4 flex items-center justify-between">
-            <h1 class="text-2xl font-bold text-gray-900">Cube France</h1>
+<nav id="nav" class="sticky top-0 z-50 w-full border-b border-gray-200 bg-white shadow-sm">
+    <div class="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between">
+            <div class="flex flex-shrink-0 items-center">
+                <a href="{{ route("home") }}" class="text-2xl font-bold tracking-tight text-gray-900 uppercase transition">Cube France</a>
+            </div>
 
-            <div class="flex items-center gap-6">
-                <div class="relative w-64">
-                    <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-                        <x-bi-search class="size-5 text-gray-500" />
-                    </span>
+            <ul class="hidden items-center space-x-8 text-sm font-medium text-gray-700 lg:flex">
+                @foreach ($categories as $category)
+                    <x-category-item :category="$category" :n="0" />
+                @endforeach
+            </ul>
 
+            <div class="flex items-center gap-4">
+                <div class="relative hidden sm:block">
                     <input
                         type="text"
                         id="search-input"
-                        placeholder="Rechercher un article..."
-                        class="w-full rounded-lg border border-gray-300 py-2 pr-4 pl-10 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        placeholder="Rechercher..."
+                        value="{{ request("search") }}"
+                        class="w-48 rounded-full border border-gray-300 bg-gray-50 py-1.5 pr-10 pl-4 text-sm transition-all focus:w-64 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 focus:outline-none"
                     />
+                    <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                        <x-bi-search class="size-4 text-gray-400" />
+                    </span>
                 </div>
 
-                <a href="{{ route("cart.index") }}" class="relative flex items-center" title="Voir le panier">
-                    <x-bi-cart class="size-7 text-gray-700 transition hover:text-gray-900" />
+                <div class="hidden h-6 w-px bg-gray-200 sm:block"></div>
+
+                <a href="{{ route("cart.index") }}" class="group relative flex items-center p-2" title="Voir le panier">
+                    <x-bi-cart class="size-6 text-gray-700 transition group-hover:text-blue-600" />
 
                     @if ($cartItemCount > 0)
                         <span
-                            class="absolute -top-1 -right-2 flex size-5 items-center justify-center rounded-full bg-black text-xs font-bold text-white"
+                            class="absolute top-0 right-0 flex size-4 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white shadow-sm"
                         >
                             {{ $cartItemCount }}
                         </span>
@@ -30,11 +40,5 @@
                 </a>
             </div>
         </div>
-
-        <ul class="flex items-center space-x-0">
-            @foreach ($categories as $category)
-                <x-category-item :category="$category" :n="0" />
-            @endforeach
-        </ul>
     </div>
 </nav>
