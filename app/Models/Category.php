@@ -64,4 +64,20 @@ class Category extends Model
 
         return $ids;
     }
+
+    /**
+     * @return Category[]
+     */
+    public function getAncestors(): array
+    {
+        $ancestors = [];
+        $currentCategory = $this;
+
+        while ($currentCategory->parent) {
+            $ancestors[] = $currentCategory->parent;
+            $currentCategory = $currentCategory->parent;
+        }
+
+        return array_reverse($ancestors);
+    }
 }
