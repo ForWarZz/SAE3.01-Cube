@@ -33,7 +33,7 @@
                 <p class="mb-3 text-sm text-gray-500">
                     {{ $article->bike->bikeModel->nom_modele_velo }}
                 </p>
-            @elseif ($article->accessories)
+            @elseif ($article->accessory)
                 <p class="mb-3 text-sm text-gray-500">
                     {{ $article->category->nom_categorie ?? "Accessoire" }}
                 </p>

@@ -25,6 +25,8 @@ class Bike extends Model
 {
     protected $table = 'velo';
 
+    protected $primaryKey = 'id_article';
+
     protected $fillable = [
         'id_millesime',
         'id_modele_velo',
@@ -83,6 +85,17 @@ class Bike extends Model
     public function usage(): BelongsTo
     {
         return $this->belongsTo(Usage::class, 'id_usage', 'id_usage');
+    }
+
+    public function compatibleAccessories(): BelongsToMany
+    {
+        return $this->belongsToMany(Accessory::class,
+            'compatible',
+            'vel_id_article',
+            'id_article',
+            'id_article',
+            'id_article'
+        );
     }
 
     public function category(): BelongsTo

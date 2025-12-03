@@ -61,9 +61,7 @@ class ArticleController extends Controller
 
     public function show(Article $article)
     {
-        $article->load(['bike', 'accessory', 'bike.references']);
-
-        if ($article->bike) {
+        if ($article->bike()->exists()) {
             $defaultReference = $article->bike->references()->orderBy('id_reference')->firstOrFail();
 
             return redirect()->route('articles.show-reference', [
@@ -71,6 +69,8 @@ class ArticleController extends Controller
                 'reference' => $defaultReference->id_reference,
             ]);
         }
+
+        $article->load('accessory');
 
         return redirect()->route('articles.show-reference', [
             'article' => $article->id_article,
@@ -80,6 +80,25 @@ class ArticleController extends Controller
 
     public function showByRef(Article $article, ArticleReference $reference)
     {
+        $article->load([
+            'bike.bikeModel',
+            'bike.vintage',
+            'bike.frameMaterial',
+            'bike.usage',
+            'accessory',
+            'characteristics.characteristicType',
+            'category',
+        ]);
+
+        $reference->load([
+            'bikeReference.bike.bikeModel',
+            'bikeReference.color',
+            'bikeReference.frame',
+            'bikeReference.ebike.battery',
+            'bikeReference.baseReference.availableSizes',
+            'availableSizes',
+        ]);
+
         $data = $this->articleService->prepareViewData($article, $reference);
 
         return view('article.show', $data);

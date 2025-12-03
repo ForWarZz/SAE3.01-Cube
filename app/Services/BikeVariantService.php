@@ -26,7 +26,11 @@ class BikeVariantService
     public function getVariants(BikeReference $currentReference): Collection
     {
         return BikeReference::where('id_article', $currentReference->id_article)
-            ->with(['color', 'frame', 'ebike.battery'])
+            ->with([
+                'color',
+                'frame',
+                'ebike.battery',
+            ])
             ->get();
     }
 
@@ -73,7 +77,7 @@ class BikeVariantService
                 $criteria = [
                     'id_couleur' => $color->id_couleur,
                     'id_cadre_velo' => $currentReference->id_cadre_velo,
-                    'id_batterie' => $current->ebike->id_batterie ?? null,
+                    'id_batterie' => $currentReference->ebike?->id_batterie ?? null,
                 ];
 
                 $target = $this->findVariant($variants, $criteria)

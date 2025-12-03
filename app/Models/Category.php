@@ -40,7 +40,10 @@ class Category extends Model
 
     public function childrenRecursive(): HasMany
     {
-        return $this->children()->with('childrenRecursive');
+        return $this->children()->with([
+            'childrenRecursive',
+            'articles.bike.bikeModel',
+        ]);
     }
 
     /**

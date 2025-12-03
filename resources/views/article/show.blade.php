@@ -23,8 +23,8 @@
         <x-article-resume :article="$article" />
 
         <x-bike-geometries :sizes="$geometrySizes" :geometries="$geometries" :bike="$article->bike" />
-    </div>
 
-    <x-bike-compatible-accessories :compatible-accessories="$compatibleAccessories" />
-    <x-similar-articles :similar-articles="$similarArticles" />
+        <x-bike-compatible-accessories :compatible-accessories="$compatibleAccessories" />
+        <x-similar-articles :similar-articles="$similarArticles" />
+    </div>
 </x-app-layout>
