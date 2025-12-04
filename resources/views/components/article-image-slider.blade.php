@@ -22,7 +22,7 @@
         },
     }"
 >
-    <div class="relative h-[400px] w-full overflow-hidden rounded-lg shadow">
+    <div class="relative h-[550px] w-full overflow-hidden rounded-lg">
         <img
             :src="images[currentImageIndex]"
             alt="{{ $article->nom_article }} - {{ $currentReference->color?->label_couleur }}"
@@ -57,13 +57,14 @@
     </div>
 
     <div class="mt-4 flex justify-center gap-4">
-        @if (!empty($article->getAllImagesUrls($currentReference->color?->id_couleur, true)))
+        @if (! empty($article->getAllImagesUrls($currentReference->color?->id_couleur, true)))
             <div>
                 <button type="button" id="butOverlay" class="cursor-pointer">
-                    <img src="{{ asset('storage/360.svg') }}" alt="vue 360°" class="h-20 w-16">
+                    <img src="{{ asset("storage/360.svg") }}" alt="vue 360°" class="h-20 w-16" />
                 </button>
             </div>
         @endif
+
         <template x-for="(img, index) in images" :key="index">
             <img
                 :src="img"

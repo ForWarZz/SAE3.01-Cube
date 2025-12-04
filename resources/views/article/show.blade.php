@@ -16,7 +16,7 @@
 </div>
 
 <x-app-layout>
-    <div class="mx-auto max-w-7xl px-6 py-12">
+    <div class="px-36 py-12">
         <div class="flex gap-16">
             <x-article-image-slider :article="$article" :current-reference="$currentReference" />
             <x-article-purchase-box
