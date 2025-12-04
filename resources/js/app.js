@@ -2,7 +2,6 @@ import './bootstrap';
 import './navbar/main.js';
 import './search/main.js';
 import './cart/main.js';
-import './overlay360/main.js';
 
 import Alpine from 'alpinejs';
 

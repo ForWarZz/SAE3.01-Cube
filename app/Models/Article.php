@@ -98,7 +98,7 @@ class Article extends Model
         $folder = $colorId ?: 'default';
         $directory = "articles/$this->id_article/$folder";
 
-        if ($is360){
+        if ($is360) {
             $directory .= '/360';
         }
 

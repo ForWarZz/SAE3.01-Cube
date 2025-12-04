@@ -1,15 +1,20 @@
-<div id="overlay360" class="fixed inset-0 z-[9999] h-screen w-screen bg-black/80 flex justify-center items-center hidden">
-    <div class="relative w-[90%] h-[90%] bg-white rounded-lg p-6 shadow-2xl flex flex-col">
-        <button id="closeBtn" class="absolute top-4 right-4 text-gray-500 hover:text-black text-3xl font-bold leading-none z-10 cursor-pointer">
-            &times; </button>
-        <h1 class="text-2xl font-bold mb-4 pr-8">
-            Vue 360 : {{ $article->nom_article }}
-        </h1>
-        <div class="flex-1 w-full h-full relative overflow-hidden rounded bg-gray-200">
+@vite("resources/js/overlay360/main.js")
+
+<div id="overlay360" class="fixed inset-0 z-[9999] flex hidden h-screen w-screen items-center justify-center bg-black/80">
+    <div class="relative flex h-[90%] w-[90%] flex-col rounded-lg bg-white p-6 shadow-2xl">
+        <button
+            id="closeBtn"
+            class="absolute top-4 right-4 z-10 cursor-pointer text-3xl leading-none font-bold text-gray-500 hover:text-black"
+        >
+            &times;
+        </button>
+        <h1 class="mb-4 pr-8 text-2xl font-bold">Vue 360 : {{ $article->nom_article }}</h1>
+        <div class="relative h-full w-full flex-1 overflow-hidden rounded bg-gray-200">
             <x-article-360 :images="$article->getAllImagesUrls($currentReference->color?->id_couleur, true)" />
         </div>
     </div>
 </div>
+
 <x-app-layout>
     <div class="mx-auto max-w-7xl px-6 py-12">
         <div class="flex gap-16">
