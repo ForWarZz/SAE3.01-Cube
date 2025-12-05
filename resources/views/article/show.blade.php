@@ -41,7 +41,10 @@
 
         <x-bike-geometries :sizes="$geometrySizes" :geometries="$geometries" :bike="$article->bike" />
 
-        <x-bike-compatible-accessories :compatible-accessories="$compatibleAccessories" />
+        @if (! $article->accessory)
+            <x-bike-compatible-accessories :compatible-accessories="$compatibleAccessories" />
+        @endif
+
         <x-similar-articles :similar-articles="$similarArticles" />
     </div>
 </x-app-layout>
