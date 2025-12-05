@@ -28,20 +28,16 @@ class SizeFilter extends AbstractFilter
 
     public function options(Builder $baseQuery, array $context = []): Collection
     {
+        $articleIds = $baseQuery->pluck('id_article');
+
         $availableSizes = Size::query()
-            ->whereHas('references.bikeReference', function (Builder $q) use ($baseQuery) {
-                $q->whereIn('id_article', $baseQuery->pluck('id_article'));
-            })
-            ->orWhereHas('references.accessory', function (Builder $q) use ($baseQuery) {
-                $q->whereIn('id_article', $baseQuery->pluck('id_article'));
+            ->whereHas('references', function ($q) use ($articleIds) {
+                $q->whereHas('bikeReference', fn ($b) => $b->whereIn('id_article', $articleIds))
+                    ->orWhereHas('accessory', fn ($a) => $a->whereIn('id_article', $articleIds));
             })
             ->orderBy('nom_taille')
             ->get();
 
-        return $this->format(
-            $availableSizes,
-            'id_taille',
-            'nom_taille'
-        );
+        return $this->format($availableSizes, 'id_taille', 'nom_taille');
     }
 }
