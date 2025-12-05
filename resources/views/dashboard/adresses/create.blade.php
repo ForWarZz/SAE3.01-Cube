@@ -43,7 +43,7 @@
 
                         <!-- Téléphone mobile (optionnel) -->
                         <div class="mb-4">
-                            <label for="tel_mobile_adresse" class="block text-sm font-medium text-gray-700">Téléphone mobile (optionnel)</label>
+                            <label for="tel_mobile_adresse" class="block text-sm font-medium text-gray-700">Téléphone mobile entreprise (optionnel)</label>
                             <input type="tel" name="tel_mobile_adresse" id="tel_mobile_adresse" value="{{ old('tel_mobile_adresse') }}"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                 placeholder="06 12 34 56 78">
