@@ -3,61 +3,72 @@
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <!-- Error Message -->
-    @if (session('error'))
-        <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-            {{ session('error') }}
+    @if (session("error"))
+        <div class="mb-4 rounded border border-red-400 bg-red-100 p-4 text-red-700">
+            {{ session("error") }}
         </div>
     @endif
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route("login") }}">
         @csrf
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <x-input-label for="email" :value="__('Adresse électronique')" />
+            <x-text-input
+                id="email"
+                class="mt-1 block w-full"
+                type="email"
+                name="email"
+                :value="old('email')"
+                required
+                autofocus
+                autocomplete="username"
+            />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" :value="__('Mot de passe')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+            <x-text-input
+                id="password"
+                class="mt-1 block w-full"
+                type="password"
+                name="password"
+                required
+                autocomplete="current-password"
+            />
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
+        <div class="mt-4 flex items-center justify-end">
+            {{-- @if (Route::has("password.request")) --}}
+            {{-- <a --}}
+            {{-- class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800" --}}
+            {{-- href="{{ route("password.request") }}" --}}
+            {{-- > --}}
+            {{-- {{ __("Forgot your password?") }} --}}
+            {{-- </a> --}}
+            {{-- @endif --}}
 
             <x-primary-button class="ms-3">
-                {{ __('Log in') }}
+                {{ __("Se connecter") }}
             </x-primary-button>
         </div>
     </form>
 
     <div class="mt-6 text-center">
         <p class="text-sm text-gray-600 dark:text-gray-400">
-            {{ __("Don't have an account?") }}
+            {{ __("Pas de compte client ?") }}
         </p>
-        <a href="{{ route('register') }}" class="inline-flex items-center justify-center mt-2 px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
-            {{ __('Create an account') }}
+        <a
+            href="{{ route("register") }}"
+            class="mt-2 inline-flex items-center justify-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none active:bg-gray-900 dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-offset-gray-800 dark:active:bg-gray-300"
+        >
+            {{ __("Créer un compte client") }}
         </a>
     </div>
 </x-guest-layout>

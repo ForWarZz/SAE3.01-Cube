@@ -32,7 +32,7 @@ class AuthenticatedSessionController extends Controller
 
         $client = Client::where('email_client', $request->email)->first();
 
-        if (!$client || !Hash::check($request->password, $client->hash_mdp_client)) {
+        if (! $client || ! Hash::check($request->password, $client->hash_mdp_client)) {
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
