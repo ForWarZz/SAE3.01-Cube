@@ -19,6 +19,7 @@ class Client extends Model
 {
     protected $table = 'client';
     protected $primaryKey = 'id_client';
+    public $timestamps = false;
     protected $fillable = ['nom_client', 'prenom_client', 'email_client', 'naissance_client', 'civilite', 'hash_mdp_client', 'date_der_connexion'];
 
     public function addresses(): HasMany

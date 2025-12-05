@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Providers\RouteServiceProvider;
+use App\Models\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -23,13 +23,30 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $request->authenticate();
+        $request->validate([
+            'email' => ['required', 'string', 'email'],
+            'password' => ['required', 'string'],
+        ]);
 
+        $client = Client::where('email_client', $request->email)->first();
+
+        if (!$client || !Hash::check($request->password, $client->hash_mdp_client)) {
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
+            ]);
+        }
+
+        // Update last connection date
+        $client->date_der_connexion = now();
+        $client->save();
+
+        // Store client in session
         $request->session()->regenerate();
+        $request->session()->put('client', $client);
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return redirect()->route('dashboard.index');
     }
 
     /**
@@ -37,10 +54,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
-
+        $request->session()->forget('client');
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect('/');
