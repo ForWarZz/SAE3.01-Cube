@@ -9,7 +9,7 @@
             &times;
         </button>
         <h1 class="mb-4 pr-8 text-2xl font-bold">Vue 360 : {{ $article->nom_article }}</h1>
-        <div class="relative h-full w-full flex-1 overflow-hidden rounded bg-gray-200">
+        <div class="relative h-full w-full flex-1 overflow-hidden rounded">
             <x-article-360 :images="$article->getAllImagesUrls($currentReference->color?->id_couleur, true)" />
         </div>
     </div>
