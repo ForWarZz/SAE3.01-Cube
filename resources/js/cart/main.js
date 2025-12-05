@@ -8,6 +8,6 @@ document.querySelectorAll('#cart input[name=quantity]').forEach((input) => {
 
         debounceTimer = setTimeout(() => {
             form.submit();
-        }, 1500);
+        }, 800);
     });
 });
