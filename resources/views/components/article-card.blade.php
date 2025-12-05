@@ -19,7 +19,7 @@
             <img
                 src="{{ $article->getCoverUrl() }}"
                 alt="{{ $article->nom_article }}"
-                class="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                class="object-contain transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"
             />
         </div>
