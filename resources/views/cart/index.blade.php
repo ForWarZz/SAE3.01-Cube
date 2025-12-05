@@ -54,22 +54,13 @@
                                 class="flex-1 rounded-md border border-gray-300 px-4 py-2"
                             />
 
-                            @if ($count > 0)
-                                <button
-                                    type="submit"
-                                    class="cursor-pointer rounded-md bg-black px-5 py-2 text-lg font-medium text-white shadow-sm transition hover:bg-gray-900 hover:shadow-md"
-                                >
-                                    Appliquer
-                                </button>
-                            @else
-                                <button
-                                    type="button"
-                                    disabled
-                                    class="cursor-not-allowed rounded-md bg-gray-300 px-5 py-2 text-lg font-medium text-white shadow-sm"
-                                >
-                                    Appliquer
-                                </button>
-                            @endif
+                            <button
+                                type="submit"
+                                @disabled($count === 0)
+                                class="{{ $count > 0 ? "cursor-pointer bg-black text-white hover:bg-gray-900 hover:shadow-md" : "cursor-not-allowed bg-gray-300 text-white" }} text-md rounded-md px-5 py-2 font-medium shadow-sm transition"
+                            >
+                                Appliquer
+                            </button>
                         </form>
                     @endif
                 </section>
