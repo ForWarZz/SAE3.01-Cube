@@ -34,8 +34,14 @@ class BreadCrumbService
     public function prepareBreadcrumbsByModel(BikeModel $model): array
     {
         $category = $model->bikes->first()?->category;
+        $breadcrumbs = $this->prepareBreadcrumbs($category);
 
-        return $this->prepareBreadcrumbs($category);
+        $breadcrumbs[] = [
+            'label' => $model->nom_modele_velo,
+            'url' => null,
+        ];
+
+        return $breadcrumbs;
     }
 
     public function prepareBreadcrumbsForArticle(Article $article): array
