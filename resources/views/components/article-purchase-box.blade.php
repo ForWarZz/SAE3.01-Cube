@@ -82,13 +82,21 @@
 
         <!-- Pour voir les disponibilitées -->
         <div class="mt-4">
-            <button type="button" x-on:click="$dispatch('open-shop-modal', { showAvailability: true, referenceId: {{ $currentReference->id_reference }}, sizeId: selectedSize ? selectedSize.id : null })" class="w-full border-2 border-black bg-white text-black py-3 px-6 font-bold hover:bg-gray-100 transition flex items-center justify-center">
+            <button
+                type="button"
+                x-on:click="
+                    $dispatch('open-shop-modal', {
+                        showAvailability: true,
+                        referenceId: {{ $currentReference->id_reference }},
+                        sizeId: selectedSize ? selectedSize.id : null,
+                    })
+                "
+                class="flex w-full items-center justify-center border-2 border-black bg-white px-6 py-3 font-bold text-black transition hover:bg-gray-100"
+            >
                 <span class="mr-2">▸</span>
                 VOIR LES DISPONIBILITÉS
             </button>
         </div>
-
-
     </div>
 
     <form method="post" action="{{ route("cart.add") }}" class="flex flex-col gap-8">
