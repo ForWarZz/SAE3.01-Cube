@@ -101,7 +101,7 @@
                         </div>
 
                         <div>
-                            <label class="mb-2 block text-sm font-medium text-gray-700">Confirmation</label>
+                            <label class="mb-2 block text-sm font-medium text-gray-700">Confirmer votre mot de passe</label>
                             <input
                                 type="password"
                                 name="password_confirmation"

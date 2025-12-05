@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddressCreateRequest;
 use App\Models\Adresse;
 use App\Models\Ville;
 use Illuminate\Http\RedirectResponse;
@@ -40,24 +41,10 @@ class AdresseController extends Controller
     /**
      * Store a newly created address in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(AddressCreateRequest $request): RedirectResponse
     {
         $client = Auth::user();
-
-        $validated = $request->validate([
-            'alias_adresse' => ['required', 'string', 'max:255'],
-            'nom_adresse' => ['required', 'string', 'max:255'],
-            'prenom_adresse' => ['required', 'string', 'max:255'],
-            'telephone_adresse' => ['required', 'string', 'max:20'],
-            'tel_mobile_adresse' => ['nullable', 'string', 'max:20'],
-            'societe_adresse' => ['nullable', 'string', 'max:255'],
-            'tva_adresse' => ['nullable', 'string', 'max:50'],
-            'num_voie_adresse' => ['required', 'string', 'max:10'],
-            'rue_adresse' => ['required', 'string', 'max:255'],
-            'complement_adresse' => ['nullable', 'string', 'max:255'],
-            'code_postal' => ['required', 'string', 'max:10'],
-            'nom_ville' => ['required', 'string', 'max:255'],
-        ]);
+        $validated = $request->validated();
 
         // Find or create the city
         $ville = Ville::firstOrCreate(
