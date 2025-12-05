@@ -64,7 +64,6 @@ class CartService
         $sizeIds = array_column($cartItems, 'size_id');
 
         $references = ArticleReference::with([
-            'article',
             'bikeReference.color',
             'bikeReference.article',
             'accessory.article',

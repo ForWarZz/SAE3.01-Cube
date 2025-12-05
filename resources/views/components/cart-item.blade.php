@@ -1,6 +1,6 @@
 <div class="flex items-center gap-6 rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
     <div class="relative shrink-0 overflow-hidden rounded-lg bg-gray-50">
-        <img src="{{ $cartItem["img_url"] }}" class="size-32 object-cover object-center sm:size-40" alt="Produit" />
+        <img src="{{ $cartItem["img_url"] }}" class="h-56 object-contain" alt="Produit" />
 
         @if ($cartItem["has_discount"])
             <div class="absolute top-0 right-0 rounded-bl-lg bg-red-600 px-2 py-1 text-[10px] font-bold text-white shadow-sm">
