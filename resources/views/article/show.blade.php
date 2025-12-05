@@ -43,7 +43,7 @@
 
         <x-bike-geometries :sizes="$geometrySizes" :geometries="$geometries" :bike="$article->bike" />
 
-        @if (! $article->accessory)
+        @if ($isBike)
             <x-bike-compatible-accessories :compatible-accessories="$compatibleAccessories" />
         @endif
 
