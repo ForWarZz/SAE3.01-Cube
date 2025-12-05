@@ -27,7 +27,7 @@
 
                 <div class="h-6 w-px bg-gray-200"></div>
 
-                @if (session("client"))
+                @if (! auth()->guest())
                     <!-- Logged in: Show dashboard icon and logout -->
                     <div class="flex items-center space-x-3">
                         <a href="{{ route("dashboard.index") }}" class="transition-opacity hover:opacity-80" title="Tableau de bord">
