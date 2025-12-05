@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * @property int $id_client
@@ -15,12 +16,58 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $hash_mdp_client
  * @property string $date_der_connexion
  */
-class Client extends Model
+class Client extends Authenticatable
 {
+    use Notifiable;
+
     protected $table = 'client';
+
     protected $primaryKey = 'id_client';
+
     public $timestamps = false;
+
     protected $fillable = ['nom_client', 'prenom_client', 'email_client', 'naissance_client', 'civilite', 'hash_mdp_client', 'date_der_connexion'];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'hash_mdp_client',
+    ];
+
+    /**
+     * Get the password for the user.
+     */
+    public function getAuthPassword(): string
+    {
+        return $this->hash_mdp_client;
+    }
+
+    /**
+     * Get the unique identifier for the user.
+     */
+    public function getAuthIdentifierName(): string
+    {
+        return 'id_client';
+    }
+
+    /**
+     * Get the unique identifier for the user.
+     */
+    public function getAuthIdentifier()
+    {
+        return $this->id_client;
+    }
+
+    /**
+     * Get the email address for the user.
+     */
+    public function getEmailForPasswordReset(): string
+    {
+        return $this->email_client;
+    }
 
     public function addresses(): HasMany
     {

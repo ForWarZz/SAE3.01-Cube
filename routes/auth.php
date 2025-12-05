@@ -56,8 +56,8 @@ Route::middleware('auth')->group(function () {
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 });
 
-// Client logout (requires client session)
-Route::middleware('client.auth')->group(function () {
+// Client logout (requires authentication)
+Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });

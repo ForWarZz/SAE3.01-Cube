@@ -15,7 +15,7 @@ return [
 
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'users',
+        'passwords' => 'clients',
     ],
 
     /*
@@ -38,7 +38,7 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'clients',
         ],
     ],
 
@@ -55,20 +55,15 @@ return [
     | sources which represent each model / table. These sources may then
     | be assigned to any extra authentication guards you have defined.
     |
-    | Supported: "database", "eloquent"
+    | Supported: "database", "eloquent", "client"
     |
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+        'clients' => [
+            'driver' => 'client',
+            'model' => App\Models\Client::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -91,8 +86,8 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'clients' => [
+            'provider' => 'clients',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,

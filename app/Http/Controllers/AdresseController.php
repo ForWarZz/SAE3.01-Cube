@@ -6,6 +6,7 @@ use App\Models\Adresse;
 use App\Models\Ville;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class AdresseController extends Controller
@@ -15,9 +16,9 @@ class AdresseController extends Controller
      */
     public function index(Request $request): View
     {
-        $client = $request->session()->get('client');
+        $client = Auth::user();
         $adresses = Adresse::where('id_client', $client->id_client)->with('ville')->get();
-        
+
         return view('dashboard.adresses.index', [
             'client' => $client,
             'adresses' => $adresses,
@@ -29,8 +30,8 @@ class AdresseController extends Controller
      */
     public function create(Request $request): View
     {
-        $client = $request->session()->get('client');
-        
+        $client = Auth::user();
+
         return view('dashboard.adresses.create', [
             'client' => $client,
         ]);
@@ -41,8 +42,8 @@ class AdresseController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $client = $request->session()->get('client');
-        
+        $client = Auth::user();
+
         $validated = $request->validate([
             'alias_adresse' => ['required', 'string', 'max:255'],
             'nom_adresse' => ['required', 'string', 'max:255'],
@@ -88,8 +89,8 @@ class AdresseController extends Controller
      */
     public function destroy(Request $request, Adresse $adresse): RedirectResponse
     {
-        $client = $request->session()->get('client');
-        
+        $client = Auth::user();
+
         // Ensure the address belongs to the logged-in client
         if ($adresse->id_client !== $client->id_client) {
             abort(403);

@@ -3,9 +3,7 @@
 use App\Http\Controllers\AdresseController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\BikeController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProfileController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
@@ -57,8 +55,8 @@ Route::prefix('cart')->name('cart.')->group(function () {
     //    Route::post('/update', [\App\Http\Controllers\CartController::class, 'update'])->name('update');
 });
 
-// Dashboard routes (requires client session)
-Route::middleware('client.auth')->prefix('tableau-de-bord')->name('dashboard.')->group(function () {
+// Dashboard routes (requires authentication)
+Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     Route::prefix('adresses')->name('adresses.')->group(function () {
