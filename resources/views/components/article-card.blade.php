@@ -1,9 +1,7 @@
 <article class="group rounded-lg border border-gray-200 bg-white transition-shadow hover:shadow-lg">
     <a href="{{ route("articles.show", $article->id_article) }}" class="relative block p-6">
         @if ($article->hasDiscount())
-            <span class="absolute top-2 left-2 z-10 rounded bg-red-600 px-2 py-1 text-xs font-bold text-white">
-                -{{ $article->pourcentage_remise }}%
-            </span>
+            <x-discount-badge class="absolute top-3 left-3" :discount-percent="$article->pourcentage_remise" />
         @endif
 
         @if ($article->bike?->isNew())

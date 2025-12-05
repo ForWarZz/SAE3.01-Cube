@@ -53,7 +53,7 @@
             @if ($hasDiscount)
                 <div class="flex items-center space-x-2">
                     <span class="text-md font-semibold text-gray-400 line-through">{{ number_format($realPrice, 2, ",", " ") }} €</span>
-                    <span class="rounded bg-red-600 px-2 py-0.5 text-xs font-bold text-white">-{{ $discountPercent }}%</span>
+                    <x-discount-badge :discount-percent="$discountPercent" />
                 </div>
             @endif
         </div>
