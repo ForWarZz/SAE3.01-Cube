@@ -31,6 +31,7 @@
                 {{ $slot }}
             </main>
         </div>
+        <x-shop-selector-modal />
     </body>
 
     {{-- <script src="{{ asset("tarteaucitron/tarteaucitron.min.js") }}"></script> --}}

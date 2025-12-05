@@ -23,6 +23,6 @@ class Shop extends Model
         'num_voie_magasin',
         'rue_magasin',
         'complement_magasin',
-        'nom_magasin',
+        'nom_magasin'
     ];
 }

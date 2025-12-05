@@ -67,4 +67,12 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
     });
 });
 
+use App\Http\Controllers\ShopController;
+use App\Http\Controllers\AvailabilityController;
+
+Route::get('/shops', [ShopController::class, 'index'])->name('shops.index');
+Route::post('/shop/select', [ShopController::class, 'select'])->name('shop.select');
+Route::get('/availability/{reference}', [AvailabilityController::class, 'show'])->name('availability.show');
+
+
 require __DIR__.'/auth.php';
