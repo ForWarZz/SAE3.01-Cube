@@ -26,7 +26,7 @@
         <img
             :src="images[currentImageIndex]"
             alt="{{ $article->nom_article }} - {{ $currentReference->color?->label_couleur }}"
-            class="h-full w-full object-cover transition-transform duration-200"
+            class="h-full w-full object-contain transition-transform duration-200"
             @mousemove="zoomed = true; updateZoom($event)"
             @mouseleave="zoomed = false"
         />
