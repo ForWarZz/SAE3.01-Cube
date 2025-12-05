@@ -45,7 +45,7 @@
                     </div>
 
                     
-                    <div x-show="showAvailability" class="px-6 py-4 flex items-center">
+                    <div x-show="showAvailability" class="px-6 pb-4 flex items-center">
                         <button type="button" x-on:click="showOnlyInStock = !showOnlyInStock" class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none" :class="showOnlyInStock ? 'bg-green-500' : 'bg-gray-300'" role="switch" :aria-checked="showOnlyInStock">
                             <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out" :class="showOnlyInStock ? 'translate-x-5' : 'translate-x-0'"></span>
                         </button>
@@ -58,12 +58,15 @@
                         <button x-on:click="activeTab = 'list'" class="flex-1 py-3 text-sm font-bold tracking-wide transition-colors" :class="activeTab === 'list' ? 'text-gray-900 border-b-2 border-green-500' : 'text-gray-400 hover:text-gray-600'">
                             VUE LISTE
                         </button>
-                        <button x-on:click="activeTab = 'map'" class="flex-1 py-3 text-sm font-bold tracking-wide transition-colors" :class="activeTab === 'map' ? 'text-gray-900 border-b-2 border-green-500' : 'text-gray-400 hover:text-gray-600'">
+                        <button x-on:click="switchToMap()" class="flex-1 py-3 text-sm font-bold tracking-wide transition-colors" :class="activeTab === 'map' ? 'text-gray-900 border-b-2 border-green-500' : 'text-gray-400 hover:text-gray-600'">
                             VUE CARTE
                         </button>
                     </div>
 
-                    
+                    <!-- Info text (availability mode) -->
+                    <div x-show="showAvailability" class="px-6 py-3 bg-gray-50 text-sm text-gray-600">
+                        Le stock est approximatif. Pour plus d'informations, veuillez contacter le magasin.
+                    </div>
 
                     
                     <div x-show="activeTab === 'list'" class="flex-1 overflow-y-auto min-h-0">
@@ -93,6 +96,21 @@
                                             <p class="mt-1 text-sm text-gray-600" x-text="item.shop.address"></p>
                                             
                                             
+                                            <div class="mt-2 flex items-center text-sm">
+                                                <span class="text-gray-600">Votre magasin est actuellement :</span>
+                                                <template x-if="item.shop.isOpen !== false">
+                                                    <span class="ml-2 flex items-center text-green-500 font-medium">
+                                                        <span class="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
+                                                        OUVERT
+                                                    </span>
+                                                </template>
+                                                <template x-if="item.shop.isOpen === false">
+                                                    <span class="ml-2 flex items-center text-orange-500 font-medium">
+                                                        <span class="w-2 h-2 bg-orange-500 rounded-full mr-1"></span>
+                                                        FERMÉ
+                                                    </span>
+                                                </template>
+                                            </div>
                                             
                                             
                                             <p x-show="item.shop.hours" class="text-sm text-gray-600" x-text="'Horaires aujourd\'hui : ' + item.shop.hours"></p>
@@ -101,7 +119,6 @@
                                             <template x-if="showAvailability">
                                                 <div class="mt-2">
                                                     <template x-if="item.status === 'in_stock'">
-
                                                         <span class="flex items-center text-green-600 text-sm font-medium">
                                                             <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -110,7 +127,6 @@
                                                         </span>
                                                     </template>
                                                     <template x-if="item.status === 'orderable'">
-
                                                         <span class="flex items-center text-orange-500 text-sm font-medium">
                                                             <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
@@ -155,7 +171,10 @@
                     </div>
 
                     
-                    <!-- Ici c'est la vu carte a mettre -->
+                    <!-- Vue Carte -->
+                    <div x-show="activeTab === 'map'" class="flex-1 min-h-0 relative">
+                        <div id="shop-map" class="w-full h-full"></div>
+                    </div>
 
                 </div>
             </div>
@@ -176,6 +195,8 @@ function shopSelector() {
         sizeId: null,
         selectedShopId: null,
         activeTab: 'list',
+        map: null,
+        markers: [],
 
         init() {
             const savedShop = localStorage.getItem('selectedShop');
@@ -221,11 +242,85 @@ function shopSelector() {
             this.loading = false;
         },
 
-        
+        switchToMap() {
+            this.activeTab = 'map';
+            this.$nextTick(() => {
+                setTimeout(() => this.initMap(), 100);
+            });
+        },
+
+        initMap() {
+            const mapContainer = document.getElementById('shop-map');
+            if (!mapContainer) return;
+
+            if (this.map) {
+                this.map.invalidateSize();
+                this.updateMarkers();
+                return;
+            }
+
+            // Centré sur la France
+            this.map = L.map('shop-map').setView([46.603354, 1.888334], 6);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(this.map);
+
+            this.updateMarkers();
+        },
+
+        updateMarkers() {
+            // Supprimer les anciens marqueurs
+            this.markers.forEach(marker => marker.remove());
+            this.markers = [];
+
+            const shopsWithCoords = this.filteredShops.filter(item => item.shop.lat && item.shop.lng);
+
+            shopsWithCoords.forEach(item => {
+                const statusColor = this.getMarkerColor(item.status);
+                const statusText = this.getStatusText(item.status);
+
+                const popupContent = `
+                    <div class="p-2 min-w-[200px]">
+                        <h3 class="font-bold text-gray-900 uppercase text-sm">${item.shop.name}</h3>
+                        <p class="text-xs text-gray-600 mt-1">${item.shop.address}</p>
+                        ${this.showAvailability ? `<p class="text-xs mt-1" style="color: ${statusColor}">${statusText}</p>` : ''}
+                        <button onclick="window.dispatchEvent(new CustomEvent('select-shop-from-map', { detail: { id: ${item.shop.id}, name: '${item.shop.name.replace(/'/g, "\\'")}' } }))" class="mt-2 w-full bg-gray-900 text-white px-3 py-2 text-xs font-bold hover:bg-gray-800">
+                            ▸ CHOISIR CE MAGASIN
+                        </button>
+                    </div>
+                `;
+
+                const marker = L.marker([item.shop.lat, item.shop.lng])
+                    .addTo(this.map)
+                    .bindPopup(popupContent);
+
+                this.markers.push(marker);
+            });
+
+            
+        },
+
+        getMarkerColor(status) {
+            const colors = {
+                'in_stock': '#16a34a',
+                'orderable': '#f97316',
+                'unavailable': '#9ca3af'
+            };
+            return colors[status] || '#374151';
+        },
+
+        getStatusText(status) {
+            const texts = {
+                'in_stock': '✓ Disponible dans ce magasin',
+                'orderable': '⏱ Commandable en magasin',
+                'unavailable': '✗ Indisponible'
+            };
+            return texts[status] ;
+        },
 
         get filteredShops() {
             let result = this.shops;
-            
             
             if (this.searchQuery.trim()) {
                 const query = this.searchQuery.toLowerCase();
@@ -236,7 +331,6 @@ function shopSelector() {
                     (item.shop.postalCode && item.shop.postalCode.includes(query))
                 );
             }
-            
             
             if (this.showOnlyInStock && this.showAvailability) {
                 result = result.filter(item => item.status === 'in_stock');
@@ -275,6 +369,39 @@ function shopSelector() {
         }
     };
 }
+
+// Écouter la sélection depuis la carte
+window.addEventListener('select-shop-from-map', async (event) => {
+    const { id, name } = event.detail;
+    try {
+        const response = await fetch('/shop/select', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({ shop_id: id })
+        });
+        
+        if (response.ok) {
+            localStorage.setItem('selectedShop', JSON.stringify({ id, name }));
+            
+            const headerBtn = document.getElementById('store-button-text');
+            if (headerBtn) {
+                headerBtn.textContent = name;
+            }
+            
+            // Fermer le modal
+            window.dispatchEvent(new CustomEvent('close-shop-modal'));
+            document.body.style.overflow = '';
+            
+            // Recharger la page pour mettre à jour les disponibilitées
+            window.location.reload();
+        }
+    } catch (error) {
+        console.error('Error selecting shop:', error);
+    }
+});
 </script>
 
 <style>
