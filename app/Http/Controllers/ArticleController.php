@@ -7,12 +7,14 @@ use App\Models\ArticleReference;
 use App\Models\BikeModel;
 use App\Models\Category;
 use App\Services\ArticleService;
+use App\Services\BreadCrumbService;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
     public function __construct(
         protected ArticleService $articleService,
+        protected BreadCrumbService $breadCrumbService,
     ) {}
 
     public function search(Request $request)
@@ -34,12 +36,7 @@ class ArticleController extends Controller
     public function viewByModel(BikeModel $model, Request $request)
     {
         $data = $this->articleService->listByModel($model, $request);
-        $category = $model->bikes->first()?->category;
-
-        $breadcrumbs = $this->prepareBreadcrumbs($category);
-        $breadcrumbs[] = [
-            'label' => $model->nom_modele_velo, 'url' => route('articles.by-model', ['model' => $model->id_modele_velo]),
-        ];
+        $breadcrumbs = $this->breadCrumbService->prepareBreadcrumbsByModel($model);
 
         return view('article.index', [
             'pageTitle' => $model->nom_modele_velo,
@@ -51,7 +48,7 @@ class ArticleController extends Controller
     public function viewByCategory(Category $category, Request $request)
     {
         $data = $this->articleService->listByCategory($category, $request);
-        $breadcrumbs = $this->prepareBreadcrumbs($category);
+        $breadcrumbs = $this->breadCrumbService->prepareBreadcrumbs($category);
 
         return view('article.index', [
             'pageTitle' => $category->nom_categorie,
@@ -103,33 +100,5 @@ class ArticleController extends Controller
         $data = $this->articleService->prepareViewData($article, $reference);
 
         return view('article.show', $data);
-    }
-
-    private function prepareBreadcrumbs(Category $category): array
-    {
-        $breadcrumbs = [
-            ['label' => 'Accueil', 'url' => route('home')],
-        ];
-
-        $ancestors = $category->getAncestors();
-
-        foreach ($ancestors as $ancestor) {
-            $breadcrumbs[] = [
-                'label' => $ancestor->nom_categorie,
-                'url' => $this->buildCategoryUrl($ancestor),
-            ];
-        }
-
-        $breadcrumbs[] = [
-            'label' => $category->nom_categorie,
-            'url' => $this->buildCategoryUrl($category),
-        ];
-
-        return $breadcrumbs;
-    }
-
-    private function buildCategoryUrl(Category $category): string
-    {
-        return route('articles.by-category', ['category' => $category->id_categorie]);
     }
 }

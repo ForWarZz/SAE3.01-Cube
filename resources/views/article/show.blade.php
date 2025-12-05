@@ -17,6 +17,8 @@
 
 <x-app-layout>
     <div class="px-36 py-12">
+        <x-breadcrumb :breadcrumbs="$breadcrumbs" />
+
         <div class="flex gap-16">
             <x-article-image-slider :article="$article" :current-reference="$currentReference" />
             <x-article-purchase-box

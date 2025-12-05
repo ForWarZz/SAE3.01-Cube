@@ -16,6 +16,7 @@ class ArticleService
         protected FilterEngineService $filterEngineService,
         protected BikeService $bikeService,
         protected AccessoryService $accessoryService,
+        protected BreadCrumbService $breadCrumbService,
     ) {}
 
     /**
@@ -126,6 +127,7 @@ class ArticleService
                 ->get(),
 
             'isBike' => false,
+            'breadcrumbs' => $this->breadCrumbService->prepareBreadcrumbsForArticle($article),
         ];
 
         if ($article->isBike()) {
