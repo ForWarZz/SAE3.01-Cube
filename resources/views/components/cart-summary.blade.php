@@ -34,7 +34,7 @@
         </div>
 
         <button
-            class="{{ $count == 0 ? "cursor-not-allowed bg-gray-300 hover:bg-gray-300 hover:shadow-none" : "bg-red-500 hover:bg-red-700" }} mt-4 cursor-pointer rounded-md px-5 py-3 text-lg font-medium text-white shadow-sm transition hover:shadow-md"
+            class="{{ $count == 0 ? "cursor-not-allowed bg-gray-300 hover:bg-gray-300 hover:shadow-none" : "cursor-pointer bg-red-500 hover:bg-red-700" }} mt-4 rounded-md px-5 py-3 text-lg font-medium text-white shadow-sm transition hover:shadow-md"
             {{ $count == 0 ? "disabled" : "" }}
         >
             Valider mon panier
