@@ -27,23 +27,21 @@
 
                 <div class="h-6 w-px bg-gray-200"></div>
 
-                @if(session('client'))
+                @if (session("client"))
                     <!-- Logged in: Show dashboard icon and logout -->
                     <div class="flex items-center space-x-3">
-                        <a href="{{ route('dashboard.index') }}" class="hover:opacity-80 transition-opacity" title="Tableau de bord">
-                            <img src="{{ asset('storage/cyclist.svg') }}" alt="Dashboard" class="w-5 h-5">
+                        <a href="{{ route("dashboard.index") }}" class="transition-opacity hover:opacity-80" title="Tableau de bord">
+                            <img src="{{ asset("storage/cyclist.svg") }}" alt="Dashboard" class="size-8" />
                         </a>
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                        <form method="POST" action="{{ route("logout") }}" class="inline">
                             @csrf
-                            <button type="submit" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">
-                                Déconnexion
-                            </button>
+                            <button type="submit" class="text-sm text-gray-600 transition-colors hover:text-gray-900">Déconnexion</button>
                         </form>
                     </div>
                 @else
                     <!-- Not logged in: Show login icon -->
-                    <a href="{{ route('login') }}" class="hover:opacity-80 transition-opacity" title="Se connecter">
-                        <img src="{{ asset('storage/cyclist.svg') }}" alt="Login" class="w-5 h-5">
+                    <a href="{{ route("login") }}" class="transition-opacity hover:opacity-80" title="Se connecter">
+                        <img src="{{ asset("storage/cyclist.svg") }}" alt="Login" class="size-8" />
                     </a>
                 @endif
 
