@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id_taille
@@ -21,4 +22,9 @@ class Size extends Model
         'id_taille',
         'nom_taille',
     ];
+
+    public function references(): BelongsToMany
+    {
+        return $this->belongsToMany(ArticleReference::class, 'taille_dispo', 'id_taille', 'id_reference');
+    }
 }

@@ -17,11 +17,6 @@ class ArticleReference extends Model
 
     protected $primaryKey = 'id_reference';
 
-    public function article(): BelongsTo
-    {
-        return $this->belongsTo(Article::class, 'id_article', 'id_article');
-    }
-
     public function bikeReference(): BelongsTo
     {
         return $this->belongsTo(BikeReference::class, 'id_reference', 'id_reference');

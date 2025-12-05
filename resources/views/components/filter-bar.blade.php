@@ -42,6 +42,7 @@
             :activeFilters="$activeFilters"
         />
         <x-filter-checkbox-group label="Couleur" name="color" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />
+        <x-filter-checkbox-group label="Taille" name="size" :filterOptions="$filterOptions" :activeFilters="$activeFilters" />
 
         <x-filter-price :options="$filterOptions" :active="$activeFilters" />
     </div>

@@ -12,6 +12,7 @@ use App\Filters\DiscountFilter;
 use App\Filters\FrameFilter;
 use App\Filters\MaterialFilter;
 use App\Filters\PriceFilter;
+use App\Filters\SizeFilter;
 use App\Filters\UsageFilter;
 use App\Filters\VintageFilter;
 use Illuminate\Database\Eloquent\Builder;
@@ -36,6 +37,7 @@ class FilterEngineService
         PriceFilter::class,
         CategoryFilter::class,
         AccessoryMaterialFilter::class,
+        SizeFilter::class,
     ];
 
     /**
