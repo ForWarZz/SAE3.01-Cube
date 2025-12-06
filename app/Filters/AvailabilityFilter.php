@@ -48,9 +48,12 @@ class AvailabilityFilter extends AbstractFilter
         $options = collect();
 
         // Check online availability
+        // On encapsule la logique vélo OU accessoire dans un groupe ->where(function($q){...})
         $hasOnline = (clone $baseQuery)
-            ->whereHas('bike.references.availableSizes', fn ($q) => $q->where('dispo_en_ligne', true))
-            ->orWhereHas('accessory.availableSizes', fn ($q) => $q->where('dispo_en_ligne', true))
+            ->where(function ($q) {
+                $q->whereHas('bike.references.availableSizes', fn ($q2) => $q2->where('dispo_en_ligne', true))
+                    ->orWhereHas('accessory.availableSizes', fn ($q2) => $q2->where('dispo_en_ligne', true));
+            })
             ->exists();
 
         if ($hasOnline) {
@@ -59,8 +62,10 @@ class AvailabilityFilter extends AbstractFilter
 
         // Check in stock
         $hasStock = (clone $baseQuery)
-            ->whereHas('bike.references.shopAvailabilities', fn ($q) => $q->where('statut', $inStockStatus))
-            ->orWhereHas('accessory.shopAvailabilities', fn ($q) => $q->where('statut', $inStockStatus))
+            ->where(function ($q) use ($inStockStatus) {
+                $q->whereHas('bike.references.shopAvailabilities', fn ($q2) => $q2->where('statut', $inStockStatus))
+                    ->orWhereHas('accessory.shopAvailabilities', fn ($q2) => $q2->where('statut', $inStockStatus));
+            })
             ->exists();
 
         if ($hasStock) {
@@ -69,8 +74,10 @@ class AvailabilityFilter extends AbstractFilter
 
         // Check orderable
         $hasOrderable = (clone $baseQuery)
-            ->whereHas('bike.references.shopAvailabilities', fn ($q) => $q->where('statut', $orderableStatus))
-            ->orWhereHas('accessory.shopAvailabilities', fn ($q) => $q->where('statut', $orderableStatus))
+            ->where(function ($q) use ($orderableStatus) {
+                $q->whereHas('bike.references.shopAvailabilities', fn ($q2) => $q2->where('statut', $orderableStatus))
+                    ->orWhereHas('accessory.shopAvailabilities', fn ($q2) => $q2->where('statut', $orderableStatus));
+            })
             ->exists();
 
         if ($hasOrderable) {
