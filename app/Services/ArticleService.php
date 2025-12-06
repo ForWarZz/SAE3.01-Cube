@@ -35,8 +35,8 @@ class ArticleService
         $search = $request->input('search', '');
 
         $query = Article::query()
-            ->whereHas('bike')
-            ->with(['bike.bikeModel', 'category']);
+//            ->whereHas('bike')
+            ->with(['bike.bikeModel', 'category', 'accessory']);
 
         $keywords = explode(' ', trim($search));
         $keywords = array_filter($keywords);
