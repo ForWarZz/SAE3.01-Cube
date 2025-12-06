@@ -117,7 +117,17 @@
                                     <div class="flex items-start justify-between gap-4">
                                         <div class="flex-1 space-y-2">
                                             <div>
-                                                <h3 class="font-bold tracking-wide text-gray-900 uppercase" x-text="item.shop.name"></h3>
+                                                <div class="flex items-center gap-2">
+                                                    <h3
+                                                        class="font-bold tracking-wide text-gray-900 uppercase"
+                                                        x-text="item.shop.name"
+                                                    ></h3>
+                                                    <span
+                                                        x-show="item.distance"
+                                                        class="text-xs font-medium whitespace-nowrap text-gray-500"
+                                                        x-text="'(' + item.distance.toFixed(1) + ' km)'"
+                                                    ></span>
+                                                </div>
                                                 <p class="mt-1 text-sm text-gray-600" x-text="item.shop.address"></p>
                                             </div>
 
@@ -227,9 +237,34 @@
             activeTab: 'list',
             map: null,
             markers: [],
+            userLat: null,
+            userLng: null,
 
             init() {
-                // Initialisation si besoin (ex: charger le shop sélectionné)
+                this.getUserLocation();
+            },
+
+            getUserLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => {
+                            this.userLat = pos.coords.latitude;
+                            this.userLng = pos.coords.longitude;
+                        },
+                        (err) => console.log('Géolocalisation désactivée:', err.message),
+                    );
+                }
+            },
+
+            calculateDistance(lat1, lng1, lat2, lng2) {
+                const R = 6371; // Rayon de la Terre en km
+                const dLat = ((lat2 - lat1) * Math.PI) / 180;
+                const dLng = ((lng2 - lng1) * Math.PI) / 180;
+                const a =
+                    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                return R * c;
             },
 
             async openModal(detail = {}) {
@@ -239,7 +274,6 @@
                 this.sizeId = detail.sizeId || null;
                 this.searchQuery = '';
                 this.activeTab = 'list';
-
                 document.body.style.overflow = 'hidden';
                 await this.loadShops();
             },
@@ -252,39 +286,60 @@
             async loadShops() {
                 this.loading = true;
                 try {
-                    let url = '/shops';
-                    if (this.showAvailability && this.referenceId) {
-                        const params = new URLSearchParams();
-                        if (this.sizeId) params.append('size', this.sizeId);
-                        url = `/availability/${this.referenceId}?${params.toString()}`;
-                    }
-
+                    const url = this.buildShopsUrl();
                     const res = await fetch(url);
                     const data = await res.json();
                     this.shops = data.availabilities || data.shops || [];
                 } catch (error) {
                     console.error('Erreur chargement:', error);
                     this.shops = [];
+                } finally {
+                    this.loading = false;
                 }
-                this.loading = false;
+            },
+
+            buildShopsUrl() {
+                if (this.showAvailability && this.referenceId) {
+                    const params = this.sizeId ? `?size=${this.sizeId}` : '';
+                    return `/availability/${this.referenceId}${params}`;
+                }
+                return '/shops';
+            },
+
+            matchesSearchQuery(item, query) {
+                return (
+                    item.shop.name.toLowerCase().includes(query) ||
+                    item.shop.address.toLowerCase().includes(query) ||
+                    (item.shop.postalCode || '').includes(query) ||
+                    (item.shop.city || '').toLowerCase().includes(query)
+                );
             },
 
             get filteredShops() {
                 const query = this.searchQuery.toLowerCase().trim();
                 let result = this.shops;
 
+                // Filtre par recherche textuelle
                 if (query) {
-                    result = result.filter(
-                        (item) =>
-                            item.shop.name.toLowerCase().includes(query) ||
-                            item.shop.address.toLowerCase().includes(query) ||
-                            (item.shop.postalCode || '').includes(query) ||
-                            (item.shop.city || '').toLowerCase().includes(query),
-                    );
+                    result = result.filter((item) => this.matchesSearchQuery(item, query));
                 }
 
+                // Filtre par stock
                 if (this.showOnlyInStock && this.showAvailability) {
                     result = result.filter((item) => item.status === 'in_stock');
+                }
+
+                // Calcul des distances et tri par proximité
+                if (this.userLat && this.userLng) {
+                    result = result
+                        .map((item) => {
+                            const distance =
+                                item.shop.lat && item.shop.lng
+                                    ? this.calculateDistance(this.userLat, this.userLng, item.shop.lat, item.shop.lng)
+                                    : Infinity;
+                            return { ...item, distance };
+                        })
+                        .sort((a, b) => a.distance - b.distance);
                 }
 
                 return result;
@@ -319,23 +374,33 @@
                 this.filteredShops
                     .filter((item) => item.shop.lat && item.shop.lng)
                     .forEach((item) => {
-                        const color = { in_stock: '#16a34a', orderable: '#f97316' }[item.status] || '#6b7280';
-
-                        const popup = `
-                        <div class="p-2 min-w-[200px] font-sans">
-                            <h3 class="font-bold uppercase text-sm mb-1">${item.shop.name}</h3>
-                            <p class="text-xs text-gray-600 mb-2">${item.shop.address}</p>
-                            ${this.showAvailability ? `<p class="text-xs font-bold mb-2" style="color:${color}">${item.status === 'in_stock' ? 'Disponible' : item.status === 'orderable' ? 'Commandable' : 'Indisponible'}</p>` : ''}
-                            <button onclick="window.dispatchEvent(new CustomEvent('select-shop-from-map', { detail: { id: ${item.shop.id}, name: '${item.shop.name.replace(/'/g, "\\'")}' } }))"
-                                    class="w-full bg-gray-900 text-white px-3 py-2 text-xs font-bold uppercase hover:bg-gray-800">
-                                ▸ Choisir ce magasin
-                            </button>
-                        </div>
-                    `;
-
-                        const marker = L.marker([item.shop.lat, item.shop.lng]).addTo(this.map).bindPopup(popup);
+                        const marker = L.marker([item.shop.lat, item.shop.lng]).addTo(this.map).bindPopup(this.buildMarkerPopup(item));
                         this.markers.push(marker);
                     });
+            },
+
+            buildMarkerPopup(item) {
+                const statusColors = { in_stock: '#16a34a', orderable: '#f97316', unavailable: '#6b7280' };
+                const statusLabels = { in_stock: 'Disponible', orderable: 'Commandable', unavailable: 'Indisponible' };
+                const color = statusColors[item.status] || '#6b7280';
+                const statusText = statusLabels[item.status] || 'Indisponible';
+                const distanceText =
+                    item.distance && item.distance !== Infinity
+                        ? `<p class="text-xs text-gray-500 mb-2">📍 ${item.distance.toFixed(1)} km</p>`
+                        : '';
+
+                return `
+                    <div class="p-2 min-w-[200px] font-sans">
+                        <h3 class="font-bold uppercase text-sm mb-1">${item.shop.name}</h3>
+                        <p class="text-xs text-gray-600 mb-2">${item.shop.address}</p>
+                        ${distanceText}
+                        ${this.showAvailability ? `<p class="text-xs font-bold mb-2" style="color:${color}">${statusText}</p>` : ''}
+                        <button onclick="window.dispatchEvent(new CustomEvent('select-shop-from-map', { detail: { id: ${item.shop.id}, name: '${item.shop.name.replace(/'/g, "\\'")}' } }))"
+                                class="w-full bg-gray-900 text-white px-3 py-2 text-xs font-bold uppercase hover:bg-gray-800">
+                            ▸ Choisir ce magasin
+                        </button>
+                    </div>
+                `;
             },
 
             async selectShop(shop) {
@@ -343,40 +408,47 @@
                     const token = document.querySelector('meta[name="csrf-token"]')?.content;
                     const res = await fetch('/shop/select', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': token,
+                        },
                         body: JSON.stringify({ shop_id: shop.id }),
                     });
 
                     if (res.ok) {
-                        localStorage.setItem('selectedShop', JSON.stringify(shop));
-                        window.dispatchEvent(new CustomEvent('shop-selected', { detail: shop }));
-
-                        const btn = document.getElementById('store-button-text');
-                        if (btn) btn.textContent = shop.name;
-
+                        this.updateSelectedShop(shop);
                         this.closeModal();
-                        // window.location.reload(); // Décommenter si rechargement nécessaire
+                    } else {
+                        console.error('Erreur serveur lors de la sélection');
                     }
                 } catch (e) {
                     console.error('Erreur sélection:', e);
                 }
             },
+
+            updateSelectedShop(shop) {
+                localStorage.setItem('selectedShop', JSON.stringify(shop));
+                window.dispatchEvent(new CustomEvent('shop-selected', { detail: shop }));
+                const btn = document.getElementById('store-button-text');
+                if (btn) btn.textContent = shop.name;
+            },
         };
     }
 
-    // Event listener global pour la sélection depuis la map (hors scope Alpine)
-    window.addEventListener('select-shop-from-map', (e) => {
+    // Sélection depuis la carte
+    window.addEventListener('select-shop-from-map', async (e) => {
         const { id, name } = e.detail;
-        // On peut réutiliser la logique de selectShop ici ou appeler une méthode globale si exposée
-        // Pour simplicité ici, on refait le fetch basique :
-        fetch('/shop/select', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-            },
-            body: JSON.stringify({ shop_id: id }),
-        }).then((res) => {
+        try {
+            const token = document.querySelector('meta[name="csrf-token"]')?.content;
+            const res = await fetch('/shop/select', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token,
+                },
+                body: JSON.stringify({ shop_id: id }),
+            });
+
             if (res.ok) {
                 localStorage.setItem('selectedShop', JSON.stringify({ id, name }));
                 const btn = document.getElementById('store-button-text');
@@ -384,7 +456,9 @@
                 window.dispatchEvent(new CustomEvent('close-shop-modal'));
                 window.location.reload();
             }
-        });
+        } catch (e) {
+            console.error('Erreur sélection depuis carte:', e);
+        }
     });
 </script>
 
