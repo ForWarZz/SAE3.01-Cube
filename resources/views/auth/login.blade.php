@@ -15,7 +15,10 @@
 
                 {{-- Email --}}
                 <div>
-                    <label class="text-sm font-medium text-gray-700">Adresse email</label>
+                    <label class="text-sm font-medium text-gray-700">
+                        Adresse email
+                        <span class="text-red-600">*</span>
+                    </label>
                     <input
                         type="email"
                         name="email"
@@ -28,7 +31,10 @@
 
                 {{-- Mot de passe --}}
                 <div>
-                    <label class="text-sm font-medium text-gray-700">Mot de passe</label>
+                    <label class="text-sm font-medium text-gray-700">
+                        Mot de passe
+                        <span class="text-red-600">*</span>
+                    </label>
                     <input
                         type="password"
                         name="password"

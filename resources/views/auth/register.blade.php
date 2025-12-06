@@ -20,7 +20,10 @@
                     @csrf
 
                     <div>
-                        <label for="civilite" class="mb-2 block text-sm font-medium text-gray-700">Civilité</label>
+                        <label for="civilite" class="mb-2 block text-sm font-medium text-gray-700">
+                            Civilité
+                            <span class="text-red-600">*</span>
+                        </label>
                         <select
                             id="civilite"
                             name="civilite"
@@ -36,7 +39,10 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="mb-2 block text-sm font-medium text-gray-700">Nom</label>
+                            <label class="mb-2 block text-sm font-medium text-gray-700">
+                                Nom
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input
                                 type="text"
                                 name="nom_client"
@@ -48,7 +54,10 @@
                         </div>
 
                         <div>
-                            <label class="mb-2 block text-sm font-medium text-gray-700">Prénom</label>
+                            <label class="mb-2 block text-sm font-medium text-gray-700">
+                                Prénom
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input
                                 type="text"
                                 name="prenom_client"
@@ -63,7 +72,10 @@
                     <!-- Email / Date de naissance -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="mb-2 block text-sm font-medium text-gray-700">Adresse email</label>
+                            <label class="mb-2 block text-sm font-medium text-gray-700">
+                                Adresse email
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input
                                 type="email"
                                 name="email"
@@ -80,7 +92,6 @@
                                 type="date"
                                 name="naissance_client"
                                 value="{{ old("naissance_client") }}"
-                                required
                                 class="w-full rounded-lg border-gray-300 bg-gray-50 px-4 py-3 focus:ring-2 focus:ring-blue-200"
                             />
                             <x-input-error :messages="$errors->get('naissance_client')" class="mt-2" />
@@ -90,7 +101,10 @@
                     <!-- MDP / Confirmation -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="mb-2 block text-sm font-medium text-gray-700">Mot de passe</label>
+                            <label class="mb-2 block text-sm font-medium text-gray-700">
+                                Mot de passe
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input
                                 type="password"
                                 name="password"
@@ -101,7 +115,10 @@
                         </div>
 
                         <div>
-                            <label class="mb-2 block text-sm font-medium text-gray-700">Confirmer votre mot de passe</label>
+                            <label class="mb-2 block text-sm font-medium text-gray-700">
+                                Confirmer votre mot de passe
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input
                                 type="password"
                                 name="password_confirmation"
@@ -129,6 +146,7 @@
                                 . Je comprends que je dispose d'un droit d'accès, de rectification, d'opposition et de suppression de mes
                                 données personnelles en contactant le service client, conformément au Règlement Général sur la Protection
                                 des Données (RGPD).
+                                <span class="text-red-600">*</span>
                             </label>
                         </div>
                         <x-input-error :messages="$errors->get('privacy_policy')" class="mt-2" />

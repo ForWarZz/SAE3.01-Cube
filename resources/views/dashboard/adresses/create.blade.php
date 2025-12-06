@@ -59,7 +59,10 @@
 
                         <!-- Prénom -->
                         <div class="mb-4">
-                            <label for="prenom_adresse" class="block text-sm font-medium text-gray-700">Prénom</label>
+                            <label for="prenom_adresse" class="block text-sm font-medium text-gray-700">
+                                Prénom
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input
                                 type="text"
                                 name="prenom_adresse"
@@ -75,7 +78,10 @@
 
                         <!-- Nom -->
                         <div class="mb-4">
-                            <label for="nom_adresse" class="block text-sm font-medium text-gray-700">Nom</label>
+                            <label for="nom_adresse" class="block text-sm font-medium text-gray-700">
+                                Nom
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input
                                 type="text"
                                 name="nom_adresse"
@@ -91,7 +97,10 @@
 
                         <!-- Téléphone -->
                         <div class="mb-4">
-                            <label for="telephone_adresse" class="block text-sm font-medium text-gray-700">Téléphone</label>
+                            <label for="telephone_adresse" class="block text-sm font-medium text-gray-700">
+                                Téléphone
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input
                                 type="tel"
                                 name="telephone_adresse"
@@ -140,7 +149,10 @@
 
                         <!-- Numéro de voie -->
                         <div class="mb-4">
-                            <label for="num_voie_adresse" class="block text-sm font-medium text-gray-700">Numéro de voie</label>
+                            <label for="num_voie_adresse" class="block text-sm font-medium text-gray-700">
+                                Numéro de voie
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input
                                 type="text"
                                 name="num_voie_adresse"
@@ -157,7 +169,10 @@
 
                         <!-- Rue -->
                         <div class="mb-4">
-                            <label for="rue_adresse" class="block text-sm font-medium text-gray-700">Rue</label>
+                            <label for="rue_adresse" class="block text-sm font-medium text-gray-700">
+                                Rue
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input
                                 type="text"
                                 name="rue_adresse"
@@ -192,7 +207,10 @@
 
                         <!-- Code postal -->
                         <div class="mb-4">
-                            <label for="code_postal" class="block text-sm font-medium text-gray-700">Code postal</label>
+                            <label for="code_postal" class="block text-sm font-medium text-gray-700">
+                                Code postal
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input
                                 type="text"
                                 name="code_postal"
@@ -209,7 +227,10 @@
 
                         <!-- Ville -->
                         <div class="mb-6">
-                            <label for="nom_ville" class="block text-sm font-medium text-gray-700">Ville</label>
+                            <label for="nom_ville" class="block text-sm font-medium text-gray-700">
+                                Ville
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input
                                 type="text"
                                 name="nom_ville"
