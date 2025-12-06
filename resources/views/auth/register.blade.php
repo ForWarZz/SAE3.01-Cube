@@ -112,6 +112,28 @@
                         </div>
                     </div>
 
+                    <div class="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                        <div class="flex items-start gap-3">
+                            <input
+                                type="checkbox"
+                                name="privacy_policy"
+                                id="privacy_policy"
+                                value="1"
+                                {{ old("privacy_policy") ? "checked" : "" }}
+                                required
+                                class="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                            />
+                            <label for="privacy_policy" class="text-sm text-gray-700">
+                                J'accepte que mes données personnelles soient collectées et traitées conformément à la
+                                <a href="#" class="font-medium text-blue-600 underline hover:text-blue-700">politique de confidentialité</a>
+                                . Je comprends que je dispose d'un droit d'accès, de rectification, d'opposition et de suppression de mes
+                                données personnelles en contactant le service client, conformément au Règlement Général sur la Protection
+                                des Données (RGPD).
+                            </label>
+                        </div>
+                        <x-input-error :messages="$errors->get('privacy_policy')" class="mt-2" />
+                    </div>
+
                     <button
                         type="submit"
                         class="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white shadow-md hover:bg-blue-700 hover:shadow-lg"

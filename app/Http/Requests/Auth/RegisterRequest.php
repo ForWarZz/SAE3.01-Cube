@@ -37,6 +37,7 @@ class RegisterRequest extends FormRequest
                 'regex:/[0-9]/',      // au moins un chiffre
                 'regex:/[@$!%*?&#]/',  // au moins un caractère spécial
             ],
+            'privacy_policy' => ['required', 'accepted'],
         ];
     }
 
@@ -51,6 +52,9 @@ class RegisterRequest extends FormRequest
             'password.regex' => 'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial.',
             'password.min' => 'Le mot de passe doit contenir au moins 12 caractères.',
             'password.confirmed' => 'Les deux mots de passe ne correspondent pas.',
+
+            'privacy_policy.required' => 'Vous devez accepter la politique de confidentialité pour continuer.',
+            'privacy_policy.accepted' => 'Vous devez accepter la politique de confidentialité pour créer un compte.',
         ];
     }
 }
