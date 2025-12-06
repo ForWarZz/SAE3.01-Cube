@@ -12,7 +12,6 @@ class AvailabilityController extends Controller
     {
 
         // On a besoin de l'associations taille et id_reference pour récupérer les disponibilités
-
         $sizeId = $request->query('size');
         $shops = Shop::all();
         
@@ -45,6 +44,10 @@ class AvailabilityController extends Controller
                     'name' => $shop->nom_magasin,
                     'address' => trim($shop->num_voie_magasin . ' ' . $shop->rue_magasin),
                     'complement' => $shop->complement_magasin,
+                    'lat' => $shop->latitude ? (float) $shop->latitude : null,
+                    'lng' => $shop->longitude ? (float) $shop->longitude : null,
+                    'isOpen' => true,
+                    'hours' => '09:00 - 19:00',
                 ],
                 'status' => $globalStatus,
                 'sizes' => $shopStock->map(function($item) {
@@ -56,8 +59,7 @@ class AvailabilityController extends Controller
                 })->values()
             ];
         }
-        
-        // Trie par logique : in_stock > orderable > unavailable
+         // Trie par logique : in_stock > orderable > unavailable
         usort($shopAvailabilities, function($a, $b) {
             $order = ['in_stock' => 0, 'orderable' => 1, 'unavailable' => 2];
             return ($order[$a['status']] ?? 3) <=> ($order[$b['status']] ?? 3);

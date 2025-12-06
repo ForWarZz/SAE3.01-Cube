@@ -16,6 +16,10 @@ class ShopController extends Controller
                     'name' => $shop->nom_magasin,
                     'address' => trim($shop->num_voie_magasin . ' ' . $shop->rue_magasin),
                     'complement' => $shop->complement_magasin,
+                    'lat' => $shop->latitude ? (float) $shop->latitude : null,
+                    'lng' => $shop->longitude ? (float) $shop->longitude : null,
+                    'isOpen' => true
+                    
                 ],
                 'status' => null
             ];
