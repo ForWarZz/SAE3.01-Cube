@@ -125,7 +125,7 @@
                                                     <span
                                                         x-show="item.distance"
                                                         class="text-xs font-medium whitespace-nowrap text-gray-500"
-                                                        x-text="'(' + item.distance.toFixed(1) + ' km)'"
+                                                        x-text="item.distance ? '(' + item.distance.toFixed(1) + ' km)' : ''"
                                                     ></span>
                                                 </div>
                                                 <p class="mt-1 text-sm text-gray-600" x-text="item.shop.address"></p>
@@ -381,7 +381,7 @@
                 const statusLabels = { in_stock: 'Disponible', orderable: 'Commandable', unavailable: 'Indisponible' };
                 const color = statusColors[item.status] || '#6b7280';
                 const statusText = statusLabels[item.status] || 'Indisponible';
-                const distanceText = `<p class="text-xs text-gray-500 mb-2">(${item.distance.toFixed(1)} km)</p>`;
+                const distanceText = item.distance ? `<p class="text-xs text-gray-500 mb-2">(${item.distance.toFixed(1)} km)</p>` : '';
 
                 return `
                     <div class="p-2 min-w-[200px] font-sans">
@@ -389,7 +389,7 @@
                         <p class="text-xs text-gray-600 mb-2">${item.shop.address}</p>
                         ${distanceText}
                         ${this.showAvailability ? `<p class="text-xs font-bold mb-2" style="color:${color}">${statusText}</p>` : ''}
-                        <button onclick="window.dispatchEvent(new CustomEvent('select-shop-from-map', { detail: { id: ${item.shop.id}, name: '${item.shop.name.replace(/'/g, "\\'")}' } }))"
+                        <button onclick="window.dispatchEvent(new CustomEvent('select-shop-from-map', { detail: { id: ${item.shop.id}, name: '${item.shop.name}' } }))"
                                 class="w-full bg-gray-900 text-white px-3 py-2 text-xs font-bold uppercase hover:bg-gray-800">
                             ▸ Choisir ce magasin
                         </button>
