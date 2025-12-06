@@ -333,10 +333,7 @@
                 if (this.userLat && this.userLng) {
                     result = result
                         .map((item) => {
-                            const distance =
-                                item.shop.lat && item.shop.lng
-                                    ? this.calculateDistance(this.userLat, this.userLng, item.shop.lat, item.shop.lng)
-                                    : Infinity;
+                            const distance = this.calculateDistance(this.userLat, this.userLng, item.shop.lat, item.shop.lng);
                             return { ...item, distance };
                         })
                         .sort((a, b) => a.distance - b.distance);
@@ -384,10 +381,7 @@
                 const statusLabels = { in_stock: 'Disponible', orderable: 'Commandable', unavailable: 'Indisponible' };
                 const color = statusColors[item.status] || '#6b7280';
                 const statusText = statusLabels[item.status] || 'Indisponible';
-                const distanceText =
-                    item.distance && item.distance !== Infinity
-                        ? `<p class="text-xs text-gray-500 mb-2">📍 ${item.distance.toFixed(1)} km</p>`
-                        : '';
+                const distanceText = `<p class="text-xs text-gray-500 mb-2">(${item.distance.toFixed(1)} km)</p>`;
 
                 return `
                     <div class="p-2 min-w-[200px] font-sans">
@@ -429,6 +423,7 @@
             updateSelectedShop(shop) {
                 localStorage.setItem('selectedShop', JSON.stringify(shop));
                 window.dispatchEvent(new CustomEvent('shop-selected', { detail: shop }));
+
                 const btn = document.getElementById('store-button-text');
                 if (btn) btn.textContent = shop.name;
             },
@@ -438,6 +433,7 @@
     // Sélection depuis la carte
     window.addEventListener('select-shop-from-map', async (e) => {
         const { id, name } = e.detail;
+
         try {
             const token = document.querySelector('meta[name="csrf-token"]')?.content;
             const res = await fetch('/shop/select', {
@@ -452,7 +448,9 @@
             if (res.ok) {
                 localStorage.setItem('selectedShop', JSON.stringify({ id, name }));
                 const btn = document.getElementById('store-button-text');
+
                 if (btn) btn.textContent = name;
+
                 window.dispatchEvent(new CustomEvent('close-shop-modal'));
                 window.location.reload();
             }
