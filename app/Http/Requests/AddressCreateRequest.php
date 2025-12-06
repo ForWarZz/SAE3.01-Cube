@@ -22,7 +22,7 @@ class AddressCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'alias_adresse' => ['required', 'string', 'max:255'],
+            'alias_adresse' => ['nullable', 'string', 'max:255'],
             'nom_adresse' => ['required', 'string', 'max:255'],
             'prenom_adresse' => ['required', 'string', 'max:255'],
             'telephone_adresse' => ['required', 'string', 'max:20', 'regex:/^0[1-9](?:[0-9]{2}){4}$/'],
