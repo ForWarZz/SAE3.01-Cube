@@ -60,7 +60,7 @@
         @if (! empty($article->getAllImagesUrls($currentReference->color?->id_couleur, true)))
             <div>
                 <button type="button" id="butOverlay" class="cursor-pointer">
-                    <img src="{{ asset("storage/360.svg") }}" alt="vue 360°" class="h-20 w-16" />
+                    <img src="{{ asset("resources/360.svg") }}" alt="vue 360°" class="h-20 w-16" />
                 </button>
             </div>
         @endif

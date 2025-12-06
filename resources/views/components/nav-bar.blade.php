@@ -12,12 +12,28 @@
             </ul>
 
             <div class="flex items-center gap-4">
-                <button type="button" id="store-button" x-data x-on:click="$dispatch('open-shop-modal', { showAvailability: false })" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-lg font-medium text-sm text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    <svg class="w-4 h-4 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <button
+                    type="button"
+                    id="store-button"
+                    x-data
+                    x-on:click="$dispatch('open-shop-modal', { showAvailability: false })"
+                    class="inline-flex items-center rounded-lg border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition duration-150 ease-in-out hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+                >
+                    <svg class="me-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                        />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    <span id="store-button-text">@if(session('selected_shop')){{ session('selected_shop')->nom_magasin }}@else Choisir un magasin @endif</span>
+                    <span id="store-button-text">
+                        @if (session("selected_shop")){{ session("selected_shop")->nom_magasin }}
+                        @else
+                            Choisir un magasin
+                        @endif
+                    </span>
                 </button>
 
                 <div class="relative">
@@ -39,7 +55,7 @@
                     <!-- Logged in: Show dashboard icon and logout -->
                     <div class="flex items-center space-x-3">
                         <a href="{{ route("dashboard.index") }}" class="transition-opacity hover:opacity-80" title="Tableau de bord">
-                            <img src="{{ asset("storage/cyclist.svg") }}" alt="Dashboard" class="size-8" />
+                            <img src="{{ asset("resources/cyclist.svg") }}" alt="Dashboard" class="size-8" />
                         </a>
                         <form method="POST" action="{{ route("logout") }}" class="inline">
                             @csrf
