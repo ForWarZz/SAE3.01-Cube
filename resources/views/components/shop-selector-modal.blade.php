@@ -117,7 +117,7 @@
                                     <div class="flex items-start justify-between gap-4">
                                         <div class="flex-1 space-y-2">
                                             <div>
-                                                <div class="flex items-center gap-2">
+                                                <div class="flex justify-between gap-2">
                                                     <h3
                                                         class="font-bold tracking-wide text-gray-900 uppercase"
                                                         x-text="item.shop.name"
