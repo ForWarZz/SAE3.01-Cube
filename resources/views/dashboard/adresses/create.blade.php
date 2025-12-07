@@ -20,12 +20,10 @@
                                 name="alias_adresse"
                                 id="alias_adresse"
                                 value="{{ old("alias_adresse") }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 placeholder="Ma maison"
                             />
-                            @error("alias_adresse")
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <x-input-error :messages="$errors->get('alias_adresse')" class="mt-2" />
                         </div>
 
                         <!-- Société (optionnel) -->
@@ -36,12 +34,10 @@
                                 name="societe_adresse"
                                 id="societe_adresse"
                                 value="{{ old("societe_adresse") }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 placeholder="Nom de l'entreprise"
                             />
-                            @error("societe_adresse")
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <x-input-error :messages="$errors->get('societe_adresse')" class="mt-2" />
                         </div>
 
                         <!-- Numéro TVA (optionnel) -->
@@ -52,12 +48,10 @@
                                 name="tva_adresse"
                                 id="tva_adresse"
                                 value="{{ old("tva_adresse") }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 placeholder="FR12345678901"
                             />
-                            @error("tva_adresse")
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <x-input-error :messages="$errors->get('tva_adresse')" class="mt-2" />
                         </div>
 
                         <!-- Prénom -->
@@ -72,11 +66,9 @@
                                 id="prenom_adresse"
                                 value="{{ old("prenom_adresse", $client->prenom_client) }}"
                                 required
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             />
-                            @error("prenom_adresse")
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <x-input-error :messages="$errors->get('prenom_adresse')" class="mt-2" />
                         </div>
 
                         <!-- Nom -->
@@ -91,11 +83,9 @@
                                 id="nom_adresse"
                                 value="{{ old("nom_adresse", $client->nom_client) }}"
                                 required
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             />
-                            @error("nom_adresse")
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <x-input-error :messages="$errors->get('nom_adresse')" class="mt-2" />
                         </div>
 
                         <!-- Téléphone -->
@@ -110,12 +100,10 @@
                                 id="telephone_adresse"
                                 value="{{ old("telephone_adresse") }}"
                                 required
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 placeholder="04 50 10 25 21"
                             />
-                            @error("telephone_adresse")
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <x-input-error :messages="$errors->get('telephone_adresse')" class="mt-2" />
                         </div>
 
                         <!-- Téléphone mobile (optionnel) -->
@@ -128,12 +116,10 @@
                                 name="tel_mobile_adresse"
                                 id="tel_mobile_adresse"
                                 value="{{ old("tel_mobile_adresse") }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 placeholder="06 12 34 56 78"
                             />
-                            @error("tel_mobile_adresse")
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <x-input-error :messages="$errors->get('tel_mobile_adresse')" class="mt-2" />
                         </div>
 
                         <!-- Google Places Autocomplete -->
@@ -142,7 +128,7 @@
                             <input
                                 type="text"
                                 id="address_autocomplete"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 placeholder="Commencez à taper votre adresse..."
                             />
                             <p class="mt-1 text-xs text-gray-500">
@@ -162,12 +148,10 @@
                                 id="num_voie_adresse"
                                 value="{{ old("num_voie_adresse") }}"
                                 required
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 placeholder="12"
                             />
-                            @error("num_voie_adresse")
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <x-input-error :messages="$errors->get('num_voie_adresse')" class="mt-2" />
                         </div>
 
                         <!-- Rue -->
@@ -182,12 +166,10 @@
                                 id="rue_adresse"
                                 value="{{ old("rue_adresse") }}"
                                 required
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 placeholder="Rue de la Paix"
                             />
-                            @error("rue_adresse")
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <x-input-error :messages="$errors->get('rue_adresse')" class="mt-2" />
                         </div>
 
                         <!-- Complément d'adresse -->
@@ -200,12 +182,10 @@
                                 name="complement_adresse"
                                 id="complement_adresse"
                                 value="{{ old("complement_adresse") }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 placeholder="Appartement 5, Bâtiment B"
                             />
-                            @error("complement_adresse")
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <x-input-error :messages="$errors->get('complement_adresse')" class="mt-2" />
                         </div>
 
                         <!-- Code postal -->
@@ -220,12 +200,10 @@
                                 id="code_postal"
                                 value="{{ old("code_postal") }}"
                                 required
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 placeholder="75001"
                             />
-                            @error("code_postal")
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <x-input-error :messages="$errors->get('code_postal')" class="mt-2" />
                         </div>
 
                         <!-- Ville -->
@@ -240,12 +218,10 @@
                                 id="nom_ville"
                                 value="{{ old("nom_ville") }}"
                                 required
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 placeholder="Paris"
                             />
-                            @error("nom_ville")
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <x-input-error :messages="$errors->get('nom_ville')" class="mt-2" />
                         </div>
 
                         <div class="flex items-center justify-between">
