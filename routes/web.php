@@ -52,7 +52,7 @@ Route::prefix('panier')->name('cart.')->group(function () {
         Route::delete('/', [CartController::class, 'clearDiscount'])->name('remove');
     });
 
-    Route::get('/validation', [CartController::class, 'checkout'])->name('checkout')
+    Route::get('/validation', [OrderController::class, 'checkout'])->name('checkout')
         ->middleware('auth');
 
     //    Route::post('/add', [\App\Http\Controllers\CartController::class, 'add'])->name('add');
@@ -71,8 +71,10 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
     });
 
     Route::prefix('commande')->name('orders.')->group(function () {
-        Route::get('/', [OrderController::class, 'index'])->name('index');
+        //        Route::get('/', [OrderController::class, 'index'])->name('index');
         //        Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
+
+        Route::post('/validation/livraison', [OrderController::class, 'updateOrder'])->name('update-shipping');
     });
 });
 

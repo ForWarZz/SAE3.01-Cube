@@ -6,8 +6,10 @@ use App\Models\Accessory;
 use App\Models\Article;
 use App\Models\ArticleReference;
 use App\Models\BikeReference;
+use App\Models\DeliveryMode;
 use App\Models\DiscountCode;
 use App\Models\Size;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Session;
 
 class CartService
@@ -41,7 +43,7 @@ class CartService
      *     hasBikes: bool,
      * }
      */
-    public function getCartData(): array
+    public function getCartData(?float $shippingPrice = null): array
     {
         $cartItems = $this->getCartFromSession();
 
@@ -57,6 +59,7 @@ class CartService
                 ],
                 'discountData' => null,
                 'count' => 0,
+                'hasBikes' => false,
             ];
         }
 
@@ -123,7 +126,12 @@ class CartService
             $summaryData['discount'] = $summaryData['subtotal'] * ($discountData->pourcentage_remise / 100);
         }
 
-        $summaryData['shipping'] = $summaryData['subtotal'] > 50 ? 0 : ($summaryData['subtotal'] == 0 ? 0 : 6);
+        if ($shippingPrice === null) {
+            $availableShippingModes = $this->getAvailableShippingModes($summaryData['subtotal'], $hasBikes);
+            $shippingPrice = $availableShippingModes->min('price') ?? 0;
+        }
+
+        $summaryData['shipping'] = $shippingPrice;
         $totalTTC = $summaryData['subtotal'] - $summaryData['discount'] + $summaryData['shipping'];
 
         $summaryData['tax'] = $totalTTC * 0.20;
@@ -203,5 +211,76 @@ class CartService
     public function removeDiscountCode(): void
     {
         Session::forget($this->discount);
+    }
+
+    /**
+     * @return array{subtotal: float, hasBikes: bool}
+     */
+    private function calculateCartSubtotalAndBikes(): array
+    {
+        $cartItems = $this->getCartFromSession();
+        $subtotal = 0;
+        $hasBikes = false;
+
+        if (empty($cartItems)) {
+            return ['subtotal' => 0, 'hasBikes' => false];
+        }
+
+        $referenceIds = array_column($cartItems, 'reference_id');
+        $references = ArticleReference::with([
+            'bikeReference.article',
+            'accessory.article',
+        ])->whereIn('id_reference', $referenceIds)->get()->keyBy('id_reference');
+
+        foreach ($cartItems as $item) {
+            $reference = $references->get($item['reference_id']);
+            if ($reference) {
+                $article = $reference->bikeReference->article ?? $reference->accessory->article;
+                $subtotal += $article->getDiscountedPrice() * $item['quantity'];
+
+                if ($reference->bikeReference && ! $hasBikes) {
+                    $hasBikes = true;
+                }
+            }
+        }
+
+        $discountData = $this->getAppliedDiscountCode();
+        if ($discountData) {
+            $discount = $subtotal * ($discountData->pourcentage_remise / 100);
+            $subtotal -= $discount;
+        }
+
+        return ['subtotal' => $subtotal, 'hasBikes' => $hasBikes];
+    }
+
+    public function getAvailableShippingModes(?float $subtotal = null, ?bool $hasBikes = null): Collection
+    {
+        if ($subtotal === null || $hasBikes === null) {
+            $calculated = $this->calculateCartSubtotalAndBikes();
+            $subtotal = $calculated['subtotal'];
+            $hasBikes = $calculated['hasBikes'];
+        }
+
+        $deliveryPrice = $subtotal >= 50 ? 0 : 6;
+
+        return DeliveryMode::query()
+            ->when($hasBikes, fn ($q) => $q->where('id_moyen_livraison', '=', 1))
+            ->get()
+            ->map(function ($mode) use ($deliveryPrice) {
+                $price = $mode->id_moyen_livraison === 1 ? $deliveryPrice : 6;
+
+                return [
+                    'id' => $mode->id_moyen_livraison,
+                    'name' => $mode->label_moyen_livraison,
+                    'price' => $price,
+                ];
+            });
+    }
+
+    public function isCartEmpty(): bool
+    {
+        $cartItems = $this->getCartFromSession();
+
+        return empty($cartItems);
     }
 }

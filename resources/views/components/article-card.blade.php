@@ -39,10 +39,10 @@
 
             <div class="mt-4 flex items-center justify-between">
                 <div class="flex flex-col">
-                    <span class="text-xl font-bold text-blue-600">{{ number_format($article->getDiscountedPrice(), 0, ",", " ") }} €</span>
+                    <span class="text-xl font-bold text-blue-600">{{ number_format($article->getDiscountedPrice(), 2, ",", " ") }} €</span>
 
                     @if ($article->hasDiscount())
-                        <span class="text-sm text-gray-400 line-through">{{ number_format($article->prix_article, 0, ",", " ") }} €</span>
+                        <span class="text-sm text-gray-400 line-through">{{ number_format($article->prix_article, 2, ",", " ") }} €</span>
                     @endif
                 </div>
 

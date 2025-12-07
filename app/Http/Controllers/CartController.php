@@ -7,14 +7,15 @@ use App\Http\Requests\CartApplyDiscountRequest;
 use App\Http\Requests\CartDeleteRequest;
 use App\Http\Requests\CartUpdateQuantityRequest;
 use App\Models\ArticleReference;
-use App\Models\DeliveryMode;
 use App\Models\Size;
 use App\Services\CartService;
+use App\Services\OrderService;
 
 class CartController extends Controller
 {
     public function __construct(
-        protected CartService $cartService
+        protected CartService $cartService,
+        protected OrderService $orderService
     ) {}
 
     public function addToCart(CartAddRequest $request)
@@ -36,6 +37,8 @@ class CartController extends Controller
 
     public function index()
     {
+        $this->orderService->clearOrderSessionData();
+
         return view('cart.index', $this->cartService->getCartData());
     }
 
@@ -75,33 +78,5 @@ class CartController extends Controller
         $this->cartService->applyDiscountCode($validated['discount_code']);
 
         return redirect()->back();
-    }
-
-    public function checkout()
-    {
-        $cartData = $this->cartService->getCartData();
-        $client = auth()->user();
-
-        $addresses = $client->addresses()->with('ville')->get();
-        $deliveryPrice = $cartData['summaryData']['subtotal'] >= 50 ? 0 : 6;
-
-        $deliveryModes = DeliveryMode::query()
-            ->when($cartData['hasBikes'], fn ($q) => $q->where('id_moyen_livraison', '=', 1)
-            )
-            ->get()
-            ->map(function ($mode) use ($deliveryPrice) {
-                $price = $mode->id_moyen_livraison === 1 ? $deliveryPrice : 6;
-
-                return [
-                    'id' => $mode->id_moyen_livraison,
-                    'name' => $mode->label_moyen_livraison,
-                    'price' => $price,
-                ];
-            });
-
-        return view('order.checkout', array_merge($cartData, [
-            'addresses' => $addresses,
-            'deliveryModes' => $deliveryModes,
-        ]));
     }
 }
