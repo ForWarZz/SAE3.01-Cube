@@ -14,7 +14,6 @@
     x-show="isOpen"
     x-cloak
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-    style="display: none"
     x-on:click="closeModal()"
 >
     <div x-show="isOpen" class="w-full max-w-md rounded-lg bg-white p-6 shadow-lg" x-on:click.stop>
