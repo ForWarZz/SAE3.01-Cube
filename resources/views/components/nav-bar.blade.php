@@ -65,7 +65,7 @@
                 @else
                     <!-- Not logged in: Show login icon -->
                     <a href="{{ route("login") }}" class="transition-opacity hover:opacity-80" title="Se connecter">
-                        <img src="{{ asset("storage/cyclist.svg") }}" alt="Login" class="size-8" />
+                        <img src="{{ asset("resources/cyclist.svg") }}" alt="Login" class="size-8" />
                     </a>
                 @endif
 
