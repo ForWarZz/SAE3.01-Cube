@@ -15,6 +15,20 @@
     </div>
 </div>
 
+<x-cart-added-modal />
+
+@if (session("cart_added"))
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.dispatchEvent(
+                new CustomEvent('cart-added', {
+                    detail: @json(session("cart_added")),
+                }),
+            );
+        });
+    </script>
+@endif
+
 <x-app-layout>
     <div class="px-36 py-12">
         <x-breadcrumb :breadcrumbs="$breadcrumbs" />

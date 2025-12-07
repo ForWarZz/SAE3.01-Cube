@@ -26,13 +26,21 @@ class CartController extends Controller
             size_id: $validated['size_id']
         );
 
-        $reference = ArticleReference::findOrFail($validated['reference_id']);
+        $reference = ArticleReference::with(['bikeReference.article', 'bikeReference.color', 'accessory.article'])->findOrFail($validated['reference_id']);
         $size = Size::findOrFail($validated['size_id']);
 
-        return redirect()->back()->with('success', [
-            'reference' => $reference,
-            'size_id' => $size,
-        ]);
+        $article = $reference->bikeReference?->article ?? $reference->accessory?->article;
+        $color = $reference->bikeReference?->color;
+
+        $itemData = [
+            'name' => $article->nom_article ?? 'Article',
+            'image' => $article->getCoverUrl($color?->id_couleur ?? null),
+            'color' => $color?->label_couleur ?? null,
+            'size' => $size->nom_taille,
+            'price' => number_format($article->getDiscountedPrice(), 2, ',', ' ').' €',
+        ];
+
+        return redirect()->back()->with('cart_added', $itemData);
     }
 
     public function index()
