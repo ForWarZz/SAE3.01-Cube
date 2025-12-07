@@ -7,6 +7,7 @@ use App\Http\Requests\CartApplyDiscountRequest;
 use App\Http\Requests\CartDeleteRequest;
 use App\Http\Requests\CartUpdateQuantityRequest;
 use App\Models\ArticleReference;
+use App\Models\DeliveryMode;
 use App\Models\Size;
 use App\Services\CartService;
 
@@ -81,11 +82,26 @@ class CartController extends Controller
         $cartData = $this->cartService->getCartData();
         $client = auth()->user();
 
-        // Récupérer les adresses du client
         $addresses = $client->addresses()->with('ville')->get();
+        $deliveryPrice = $cartData['summaryData']['subtotal'] >= 50 ? 0 : 6;
+
+        $deliveryModes = DeliveryMode::query()
+            ->when($cartData['hasBikes'], fn ($q) => $q->where('id_moyen_livraison', '=', 1)
+            )
+            ->get()
+            ->map(function ($mode) use ($deliveryPrice) {
+                $price = $mode->id_moyen_livraison === 1 ? $deliveryPrice : 6;
+
+                return [
+                    'id' => $mode->id_moyen_livraison,
+                    'name' => $mode->label_moyen_livraison,
+                    'price' => $price,
+                ];
+            });
 
         return view('order.checkout', array_merge($cartData, [
             'addresses' => $addresses,
+            'deliveryModes' => $deliveryModes,
         ]));
     }
 }

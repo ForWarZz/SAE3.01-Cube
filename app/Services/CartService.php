@@ -38,6 +38,7 @@ class CartService
      *        total: float,
      *     },
      *     count: int,
+     *     hasBikes: bool,
      * }
      */
     public function getCartData(): array
@@ -78,6 +79,7 @@ class CartService
         ];
 
         $discountData = $this->getAppliedDiscountCode();
+        $hasBikes = false;
 
         foreach ($cartItems as $item) {
             $reference = $references->get($item['reference_id']);
@@ -110,6 +112,10 @@ class CartService
                 ]),
             ];
 
+            if ($reference->bikeReference && ! $hasBikes) {
+                $hasBikes = true;
+            }
+
             $summaryData['subtotal'] += $article->getDiscountedPrice() * $item['quantity'];
         }
 
@@ -128,6 +134,7 @@ class CartService
             'summaryData' => $summaryData,
             'discountData' => $discountData,
             'count' => count($cartData),
+            'hasBikes' => $hasBikes,
         ];
     }
 

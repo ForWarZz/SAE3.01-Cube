@@ -3,6 +3,8 @@
     "count",
     "discountData" => null,
     "isCheckout" => false,
+    "alpineShipping" => null,
+    "alpineTotal" => null,
 ])
 
 <section class="flex flex-col gap-4">
@@ -16,7 +18,10 @@
 
         <div class="flex justify-between text-sm text-gray-700">
             <span>Frais de livraison</span>
-            <span class="{{ $summaryData["shipping"] > 0 ? "text-red-500" : "" }} font-medium">
+            <span
+                class="{{ $summaryData["shipping"] > 0 ? "text-red-500" : "" }} font-medium"
+                @if($alpineShipping) x-text="{{ $alpineShipping }}" @endif
+            >
                 {{ number_format($summaryData["shipping"], 2, ",", " ") }} €
             </span>
         </div>
@@ -37,7 +42,7 @@
 
         <div class="flex justify-between text-lg font-bold text-gray-900">
             <span>Total TTC</span>
-            <span>{{ number_format($summaryData["total"], 2, ",", " ") }} €</span>
+            <span @if($alpineTotal) x-text="{{ $alpineTotal }}" @endif>{{ number_format($summaryData["total"], 2, ",", " ") }} €</span>
         </div>
 
         @if (! $isCheckout)
