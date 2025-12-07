@@ -48,22 +48,22 @@ class CategoryFilter extends AbstractFilter
         $currentCategory = $context['category'];
 
         $availableArticleIds = $baseQuery->pluck('id_article')->toArray();
-        $childCategoryIds = Category::where('id_categorie_parent', $currentCategory->id_categorie)
-            ->get()
-            ->flatMap(function ($cat) {
-                return $cat->getAllChildrenIds();
-            })
-            ->unique()
-            ->toArray();
+        $directChildren = Category::where('id_categorie_parent', $currentCategory->id_categorie)->get();
 
-        $categoriesWithArticles = Category::whereIn('id_categorie', $childCategoryIds)
-            ->whereHas('articles', function ($q) use ($availableArticleIds) {
-                $q->whereIn('id_article', $availableArticleIds);
-            })
-            ->get();
+        $validChildren = $directChildren->filter(function ($child) use ($availableArticleIds) {
+            $ids = collect([$child->id_categorie])
+                ->merge($child->getAllChildrenIds())
+                ->toArray();
+
+            return Category::whereIn('id_categorie', $ids)
+                ->whereHas('articles', function ($q) use ($availableArticleIds) {
+                    $q->whereIn('id_article', $availableArticleIds);
+                })
+                ->exists();
+        })->values();
 
         return $this->format(
-            $categoriesWithArticles,
+            $validChildren,
             'id_categorie',
             'nom_categorie'
         );
