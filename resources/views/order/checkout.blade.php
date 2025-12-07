@@ -159,32 +159,6 @@
                             @endforeach
                         </div>
 
-                        {{-- @if ($addresses->isNotEmpty()) --}}
-                        {{-- <label --}}
-                        {{-- class="mb-6 flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4 transition hover:bg-gray-100" --}}
-                        {{-- > --}}
-                        {{-- <input --}}
-                        {{-- type="checkbox" --}}
-                        {{-- x-model="sameAddress" --}}
-                        {{-- class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" --}}
-                        {{-- /> --}}
-                        {{-- <span class="font-medium text-gray-900">Utiliser l'adresse de facturation pour la livraison</span> --}}
-                        {{-- </label> --}}
-
-                        {{-- <div x-show="!sameAddress" class="grid grid-cols-1 gap-4 md:grid-cols-2" style="display: none"> --}}
-                        {{-- @foreach ($addresses as $address) --}}
-                        {{-- <x-address-card --}}
-                        {{-- :address="$address" --}}
-                        {{-- name="delivery_address_id" --}}
-                        {{-- model="deliveryId" --}}
-                        {{-- :value="$address->id_adresse" --}}
-                        {{-- /> --}}
-                        {{-- @endforeach --}}
-                        {{-- </div> --}}
-
-                        {{-- <input type="hidden" name="delivery_address_id" :value="deliveryId" /> --}}
-                        {{-- @endif --}}
-
                         <x-input-error :messages="$errors->get('shipping_id')" class="mt-2" />
                     </section>
                 </div>
