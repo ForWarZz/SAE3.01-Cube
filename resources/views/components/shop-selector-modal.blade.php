@@ -6,7 +6,9 @@
     x-on:close-shop-modal.window="closeModal()"
     x-show="isOpen"
     x-cloak
+    style="display: none"
 >
+    >
     <div class="fixed inset-0 z-50 overflow-hidden">
         <div
             x-show="isOpen"
