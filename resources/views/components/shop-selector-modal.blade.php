@@ -189,13 +189,13 @@
                                             <div x-show="showAvailability && item.sizes?.length" class="flex flex-wrap gap-2 pt-1">
                                                 <template x-for="size in item.sizes" :key="size.size_id">
                                                     <span
-                                                        class="rounded border px-2 py-1 text-xs"
+                                                        class="rounded border px-2 py-1 text-xs font-medium"
                                                         :class="{
                                                               'bg-green-50 text-green-700 border-green-200': size.status === 'En Stock',
                                                               'bg-orange-50 text-orange-700 border-orange-200': size.status === 'Commandable',
                                                               'bg-gray-50 text-gray-500 border-gray-200': size.status === 'Indisponible'
                                                           }"
-                                                        x-text="size.size_name + ' ' + size.status"
+                                                        x-text="size.size_name + ' : ' + size.status"
                                                     ></span>
                                                 </template>
                                             </div>
