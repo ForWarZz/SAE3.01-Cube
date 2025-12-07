@@ -35,6 +35,7 @@ class AdresseController extends Controller
 
         return view('dashboard.adresses.create', [
             'client' => $client,
+            'intended' => $request->query('intended'),
         ]);
     }
 
@@ -66,6 +67,12 @@ class AdresseController extends Controller
             'rue_adresse' => $validated['rue_adresse'],
             'complement_adresse' => $validated['complement_adresse'] ?? null,
         ]);
+
+        // Si un paramètre intended existe, rediriger vers cette URL
+        $intended = $request->input('intended');
+        if ($intended) {
+            return redirect($intended)->with('success', 'Adresse créée avec succès.');
+        }
 
         return redirect()->route('dashboard.adresses.index')
             ->with('success', 'Adresse créée avec succès.');

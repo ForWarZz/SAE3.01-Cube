@@ -1,3 +1,10 @@
+@props([
+    "summaryData",
+    "count",
+    "discountData" => null,
+    "isCheckout" => false,
+])
+
 <section class="flex flex-col gap-4">
     <h2 class="text-xl font-semibold text-gray-900">Récapitulatif</h2>
 
@@ -33,11 +40,14 @@
             <span>{{ number_format($summaryData["total"], 2, ",", " ") }} €</span>
         </div>
 
-        <button
-            class="{{ $count == 0 ? "cursor-not-allowed bg-gray-300 hover:bg-gray-300 hover:shadow-none" : "cursor-pointer bg-red-500 hover:bg-red-700" }} mt-4 rounded-md px-5 py-3 text-lg font-medium text-white shadow-sm transition hover:shadow-md"
-            {{ $count == 0 ? "disabled" : "" }}
-        >
-            Valider mon panier
-        </button>
+        @if (! $isCheckout)
+            <a
+                href="{{ route("cart.checkout") }}"
+                class="{{ $count == 0 ? "cursor-not-allowed bg-gray-300 hover:bg-gray-300 hover:shadow-none" : "cursor-pointer bg-red-500 hover:bg-red-700" }} mt-4 rounded-md px-5 py-3 text-center text-lg font-medium text-white shadow-sm transition hover:shadow-md"
+                {{ $count == 0 ? "disabled" : "" }}
+            >
+                Valider mon panier
+            </a>
+        @endif
     </div>
 </section>

@@ -17,16 +17,12 @@
             Continuer mes achats
         </a>
 
-        @if ($count > 0)
-            <button
-                class="text-md cursor-pointer rounded-md bg-black px-6 py-3 font-medium text-white shadow-sm transition hover:bg-gray-900"
-            >
-                Valider mon panier
-            </button>
-        @else
-            <button disabled class="cursor-not-allowed rounded-md bg-gray-300 px-6 py-3 font-medium text-white shadow-sm">
-                Valider mon panier
-            </button>
-        @endif
+        <a
+            href="{{ route("cart.checkout") }}"
+            @disabled($count === 0)
+            class="text-md {{ $count > 0 ? "cursor-pointer bg-black hover:bg-gray-900" : "cursor-not-allowed bg-gray-300" }} rounded-md px-6 py-3 font-medium text-white shadow-sm"
+        >
+            Valider mon panier
+        </a>
     </div>
 </section>

@@ -8,6 +8,10 @@
                     <form method="POST" action="{{ route("dashboard.adresses.store") }}" id="address-form">
                         @csrf
 
+                        @if (isset($intended))
+                            <input type="hidden" name="intended" value="{{ $intended }}" />
+                        @endif
+
                         <!-- Alias -->
                         <div class="mb-4">
                             <label for="alias_adresse" class="block text-sm font-medium text-gray-700">Alias (ex: Ma maison, Bureau)</label>

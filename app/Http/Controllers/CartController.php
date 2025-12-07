@@ -75,4 +75,17 @@ class CartController extends Controller
 
         return redirect()->back();
     }
+
+    public function checkout()
+    {
+        $cartData = $this->cartService->getCartData();
+        $client = auth()->user();
+
+        // Récupérer les adresses du client
+        $addresses = $client->addresses()->with('ville')->get();
+
+        return view('order.checkout', array_merge($cartData, [
+            'addresses' => $addresses,
+        ]));
+    }
 }

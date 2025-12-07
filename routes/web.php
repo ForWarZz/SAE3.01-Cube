@@ -4,6 +4,7 @@ use App\Http\Controllers\AdresseController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OrderController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
@@ -40,7 +41,7 @@ Route::prefix('articles')->name('articles.')->group(function () {
     Route::get('/{article}/{reference}', [ArticleController::class, 'showByRef'])->name('show-reference');
 });
 
-Route::prefix('cart')->name('cart.')->group(function () {
+Route::prefix('panier')->name('cart.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
     Route::delete('/', [CartController::class, 'delete'])->name('delete');
     Route::patch('/quantity', [CartController::class, 'updateQuantity'])->name('update-quantity');
@@ -50,6 +51,9 @@ Route::prefix('cart')->name('cart.')->group(function () {
         Route::post('/', [CartController::class, 'applyDiscount'])->name('apply');
         Route::delete('/', [CartController::class, 'clearDiscount'])->name('remove');
     });
+
+    Route::get('/validation', [CartController::class, 'checkout'])->name('checkout')
+        ->middleware('auth');
 
     //    Route::post('/add', [\App\Http\Controllers\CartController::class, 'add'])->name('add');
     //    Route::post('/update', [\App\Http\Controllers\CartController::class, 'update'])->name('update');
@@ -65,14 +69,18 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
         Route::post('/', [AdresseController::class, 'store'])->name('store');
         Route::delete('/{adresse}', [AdresseController::class, 'destroy'])->name('destroy');
     });
+
+    Route::prefix('commande')->name('orders.')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        //        Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
+    });
 });
 
-use App\Http\Controllers\ShopController;
 use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\ShopController;
 
 Route::get('/shops', [ShopController::class, 'index'])->name('shops.index');
 Route::post('/shop/select', [ShopController::class, 'select'])->name('shop.select');
 Route::get('/availability/{reference}', [AvailabilityController::class, 'show'])->name('availability.show');
-
 
 require __DIR__.'/auth.php';
