@@ -47,10 +47,24 @@
     @mousedown="startDrag"
     @mousemove.window="move"
     @mouseup.window="stopDrag"
+    @mouseleave="stopDrag"
 >
-    <img :src="images[currentIndex]" class="pointer-events-none h-full w-full object-contain" alt="Vue 360" />
+    <div class="relative h-full w-full overflow-hidden">
+        <img :src="images[0]" class="pointer-events-none invisible h-auto w-full opacity-0" alt="" />
 
-    <div class="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/50 px-2 py-1 text-xs text-white">
+        <template x-for="(image, index) in images" :key="index">
+            <img
+                :src="image"
+                x-show="currentIndex === index"
+                class="pointer-events-none absolute inset-0 block h-full w-full object-contain"
+                alt="Vue 360"
+            />
+        </template>
+    </div>
+
+    <div
+        class="pointer-events-none absolute bottom-4 left-1/2 z-10 -translate-x-1/2 rounded-full bg-black/50 px-2 py-1 text-xs whitespace-nowrap text-white"
+    >
         <span x-text="currentIndex + 1"></span>
         /
         <span x-text="images.length"></span>
