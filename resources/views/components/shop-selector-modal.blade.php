@@ -5,8 +5,9 @@
     x-on:open-shop-modal.window="openModal($event.detail)"
     x-on:close-shop-modal.window="closeModal()"
     x-cloak
+    x-show="isOpen"
 >
-    <div x-show="isOpen" class="fixed inset-0 z-50 overflow-hidden">
+    <div class="fixed inset-0 z-50 overflow-hidden">
         <div
             x-show="isOpen"
             x-transition:enter="duration-300 ease-out"
