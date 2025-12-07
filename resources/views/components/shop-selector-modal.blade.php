@@ -4,8 +4,8 @@
     x-data="shopSelector()"
     x-on:open-shop-modal.window="openModal($event.detail)"
     x-on:close-shop-modal.window="closeModal()"
-    x-cloak
     x-show="isOpen"
+    x-cloak
 >
     <div class="fixed inset-0 z-50 overflow-hidden">
         <div
