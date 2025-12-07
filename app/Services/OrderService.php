@@ -12,26 +12,6 @@ class OrderService
         protected CartService $cartService,
     ) {}
 
-    /**
-     * @return array{
-     *     id: int,
-     *     name: string,
-     *     price: float,
-     * }|null
-     */
-    public function getSelectedShippingMode(): ?array
-    {
-        $shippingModeId = session(self::ORDER_SESSION_KEY)['shipping_mode_id'] ?? null;
-
-        if (! $shippingModeId) {
-            return null;
-        }
-
-        $availableShippingModes = $this->cartService->getAvailableShippingModes();
-
-        return $availableShippingModes->firstWhere('id', $shippingModeId);
-    }
-
     public function getOrderSessionData(): array
     {
         return session(self::ORDER_SESSION_KEY, []);
