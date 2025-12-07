@@ -22,13 +22,19 @@ class CartApplyDiscountRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'discount_code' => ['required', 'string', 'exists:code_promo,label_code_promo,est_actif,1'],
+            'discount_code' => [
+                'required',
+                'string',
+                'exists:code_promo,label_code_promo,est_actif,1',
+            ],
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
+            'discount_code.required' => 'Le code promo est obligatoire.',
+            'discount_code.string' => 'Le code promo doit être une chaîne de caractères.',
             'discount_code.exists' => 'Le code promo est invalide ou inactif.',
         ];
     }

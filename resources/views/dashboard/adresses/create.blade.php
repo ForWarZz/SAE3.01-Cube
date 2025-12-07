@@ -111,7 +111,7 @@
                                 value="{{ old("telephone_adresse") }}"
                                 required
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                placeholder="06 12 34 56 78"
+                                placeholder="04 50 10 25 21"
                             />
                             @error("telephone_adresse")
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -316,6 +316,24 @@
                 }
             });
         };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('address-form');
+
+            form.addEventListener('submit', function () {
+                function cleanPhoneNumber(phoneInput) {
+                    if (phoneInput && phoneInput.value) {
+                        phoneInput.value = phoneInput.value.replace(/[^\d+]/g, '');
+                    }
+                }
+
+                const telephoneAdresse = document.getElementById('telephone_adresse');
+                const telMobileAdresse = document.getElementById('tel_mobile_adresse');
+
+                cleanPhoneNumber(telephoneAdresse);
+                cleanPhoneNumber(telMobileAdresse);
+            });
+        });
     </script>
 
     @if (config("services.google.places_api_key"))
