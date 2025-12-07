@@ -134,7 +134,7 @@ class CartService
         $summaryData['shipping'] = $shippingPrice;
         $totalTTC = $summaryData['subtotal'] - $summaryData['discount'] + $summaryData['shipping'];
 
-        $summaryData['tax'] = $totalTTC * 0.20;
+        $summaryData['tax'] = $totalTTC - ($totalTTC / 1.20);
         $summaryData['total'] = $totalTTC;
 
         return [
