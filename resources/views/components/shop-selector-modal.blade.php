@@ -7,7 +7,6 @@
     x-show="isOpen"
     x-cloak
 >
-    >
     <div class="fixed inset-0 z-50 overflow-hidden">
         <div
             x-show="isOpen"
@@ -93,10 +92,6 @@
                         </template>
                     </div>
 
-                    <div x-show="showAvailability" class="border-b border-gray-100 bg-gray-50 px-6 py-3 text-sm text-gray-600">
-                        Le stock est approximatif. Pour plus d'informations, veuillez contacter le magasin.
-                    </div>
-
                     <div x-show="activeTab === 'list'" class="relative flex-1 overflow-y-auto bg-gray-50">
                         <div x-show="loading" class="bg-opacity-80 absolute inset-0 z-10 flex items-center justify-center bg-white">
                             <svg class="h-8 w-8 animate-spin text-gray-400" fill="none" viewBox="0 0 24 24">
@@ -131,6 +126,11 @@
                                                     ></span>
                                                 </div>
                                                 <p class="mt-1 text-sm text-gray-600" x-text="item.shop.address"></p>
+
+                                                <p class="mt-1 text-sm text-gray-600">
+                                                    <span x-text="item.shop.postalCode"></span>
+                                                    <span x-text="item.shop.city"></span>
+                                                </p>
                                             </div>
 
                                             <div
@@ -140,12 +140,6 @@
                                                 <span class="mr-2 h-2 w-2 rounded-full bg-current"></span>
                                                 <span x-text="item.shop.isOpen !== false ? 'OUVERT' : 'FERMÉ'"></span>
                                             </div>
-
-                                            <p
-                                                x-show="item.shop.hours"
-                                                class="text-sm text-gray-600"
-                                                x-text="'Horaires : ' + item.shop.hours"
-                                            ></p>
 
                                             <template x-if="showAvailability">
                                                 <div
@@ -187,20 +181,6 @@
                                                     ></span>
                                                 </div>
                                             </template>
-
-                                            {{-- <div x-show="showAvailability && item.sizes?.length" class="flex flex-wrap gap-2 pt-1"> --}}
-                                            {{-- <template x-for="size in item.sizes" :key="size.size_id"> --}}
-                                            {{-- <span --}}
-                                            {{-- class="rounded border px-2 py-1 text-xs font-medium" --}}
-                                            {{-- :class="{ --}}
-                                            {{-- 'bg-green-50 text-green-700 border-green-200': size.status === 'En Stock', --}}
-                                            {{-- 'bg-orange-50 text-orange-700 border-orange-200': size.status === 'Commandable', --}}
-                                            {{-- 'bg-gray-50 text-gray-500 border-gray-200': size.status === 'Indisponible' --}}
-                                            {{-- }" --}}
-                                            {{-- x-text="size.size_name + ' : ' + size.status" --}}
-                                            {{-- ></span> --}}
-                                            {{-- </template> --}}
-                                            {{-- </div> --}}
                                         </div>
 
                                         <button
@@ -259,7 +239,7 @@
             },
 
             calculateDistance(lat1, lng1, lat2, lng2) {
-                const R = 6371; // Rayon de la Terre en km
+                const R = 6371;
                 const dLat = ((lat2 - lat1) * Math.PI) / 180;
                 const dLng = ((lng2 - lng1) * Math.PI) / 180;
                 const a =
@@ -292,6 +272,19 @@
                     const res = await fetch(url);
                     const data = await res.json();
                     this.shops = data.availabilities || data.shops || [];
+                    
+                    
+                    if (this.userLat && this.userLng) {
+                        this.shops = this.shops.map((item) => {
+                            const distance = this.calculateDistance(
+                                this.userLat, 
+                                this.userLng, 
+                                item.shop.lat, 
+                                item.shop.lng
+                            );
+                            return { ...item, distance };
+                        });
+                    }
                 } catch (error) {
                     console.error('Erreur chargement:', error);
                     this.shops = [];
@@ -331,14 +324,9 @@
                     result = result.filter((item) => item.status === 'in_stock');
                 }
 
-                // Calcul des distances et tri par proximité
-                if (this.userLat && this.userLng) {
-                    result = result
-                        .map((item) => {
-                            const distance = this.calculateDistance(this.userLat, this.userLng, item.shop.lat, item.shop.lng);
-                            return { ...item, distance };
-                        })
-                        .sort((a, b) => a.distance - b.distance);
+                // Tri par distance (déjà calculée dans loadShops)
+                if (result.some(item => item.distance !== undefined)) {
+                    result = [...result].sort((a, b) => (a.distance || Infinity) - (b.distance || Infinity));
                 }
 
                 return result;
@@ -383,16 +371,21 @@
                 const statusLabels = { in_stock: 'Disponible', orderable: 'Commandable', unavailable: 'Indisponible' };
                 const color = statusColors[item.status] || '#6b7280';
                 const statusText = statusLabels[item.status] || 'Indisponible';
-                const distanceText = item.distance ? `<p class="text-xs text-gray-500 mb-2">(${item.distance.toFixed(1)} km)</p>` : '';
+                const distanceText = item.distance ? `<span class="text-xs text-gray-500 ml-2">(${item.distance.toFixed(1)} km)</span>` : '';
 
                 return `
-                    <div class="p-2 min-w-[200px] font-sans">
-                        <h3 class="font-bold uppercase text-sm mb-1">${item.shop.name}</h3>
-                        <p class="text-xs text-gray-600 mb-2">${item.shop.address}</p>
-                        ${distanceText}
-                        ${this.showAvailability ? `<p class="text-xs font-bold mb-2" style="color:${color}">${statusText}</p>` : ''}
-                        <button onclick="window.dispatchEvent(new CustomEvent('select-shop-from-map', { detail: { id: ${item.shop.id}, name: '${item.shop.name}' } }))"
-                                class="w-full bg-gray-900 text-white px-3 py-2 text-xs font-bold uppercase hover:bg-gray-800">
+                    <div class="p-3 min-w-[220px] font-sans">
+                        <h3 class="font-bold uppercase text-sm mb-2">${item.shop.name}</h3>
+                        <div class="space-y-0.5 mb-3">
+                            <p class="text-xs text-gray-600 leading-tight">${item.shop.address}</p>
+                            <p class="text-xs text-gray-600 leading-tight">${item.shop.postalCode || ''} ${item.shop.city || ''}</p>
+                        </div>
+                        ${this.showAvailability ? 
+                            `<p class="text-xs font-bold mb-3" style="color:${color}">${statusText}${distanceText}</p>` : 
+                            (item.distance ? `<p class="text-xs text-gray-500 mb-3">${distanceText}</p>` : '')
+                        }
+                        <button onclick="window.dispatchEvent(new CustomEvent('select-shop-from-map', { detail: { id: ${item.shop.id}, name: '${item.shop.name.replace(/'/g, "\\'")}' } }))"
+                                class="w-full bg-gray-900 text-white px-3 py-2 text-xs font-bold uppercase hover:bg-gray-800 transition-colors">
                             ▸ Choisir ce magasin
                         </button>
                     </div>
@@ -432,7 +425,6 @@
         };
     }
 
-    // Sélection depuis la carte
     window.addEventListener('select-shop-from-map', async (e) => {
         const { id, name } = e.detail;
 
@@ -450,9 +442,7 @@
             if (res.ok) {
                 localStorage.setItem('selectedShop', JSON.stringify({ id, name }));
                 const btn = document.getElementById('store-button-text');
-
                 if (btn) btn.textContent = name;
-
                 window.dispatchEvent(new CustomEvent('close-shop-modal'));
                 window.location.reload();
             }
