@@ -22,14 +22,18 @@ class CheckoutController extends Controller
             $checkoutData = $this->checkoutService->initStripeCheckoutSession($order);
 
             return redirect()->to($checkoutData->url);
+
         } catch (\DomainException $e) {
-            return redirect()->back()
+            return redirect()
+                ->route('cart.index')
                 ->with('error', $e->getMessage());
+
         } catch (\Throwable $e) {
             report($e);
 
-            return redirect()->back()
-                ->with('error', 'Une erreur est survenue lors du traitement de votre commande. Veuillez réessayer plus tard.');
+            return redirect()
+                ->route('cart.index')
+                ->with('error', 'Une erreur est survenue lors de la création de la session de paiement. Veuillez réessayer plus tard.');
         }
     }
 
