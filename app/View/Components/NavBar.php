@@ -3,7 +3,7 @@
 namespace App\View\Components;
 
 use App\Models\Category;
-use App\Services\CartService;
+use App\Services\Cart\CartSessionManager;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
@@ -22,7 +22,7 @@ class NavBar extends Component
      * Create a new component instance.
      */
     public function __construct(
-        protected CartService $cartService,
+        protected CartSessionManager $cartSession,
     ) {
         $this->categories = Category::query()
             ->with([
@@ -33,7 +33,7 @@ class NavBar extends Component
             ->whereNull('id_categorie_parent')
             ->get();
 
-        $this->cartItemCount = count($this->cartService->getCartFromSession());
+        $this->cartItemCount = count($this->cartSession->getItems());
     }
 
     /**

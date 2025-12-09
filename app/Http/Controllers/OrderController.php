@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderUpdateRequest;
-use App\Services\CartService;
-use App\Services\OrderService;
+use App\Services\Cart\CartService;
+use App\Services\Cart\CheckoutService;
 
 class OrderController extends Controller
 {
     public function __construct(
-        protected CartService $cartService,
-        protected OrderService $orderService,
+        protected readonly CartService $cartService,
+        protected readonly CheckoutService $checkoutService,
     ) {}
 
     public function updateOrder(OrderUpdateRequest $request)
@@ -18,41 +18,35 @@ class OrderController extends Controller
         $validated = $request->validated();
         $client = auth()->user();
 
-        $selectedBillingAddressId = $validated['billing_id'] ?? null;
-        $selectedDeliveryAddressId = $validated['delivery_id'] ?? null;
-        $selectedShippingModeId = $validated['shipping_id'] ?? null;
-
-        if (! $client->addresses()->where('id_adresse', $selectedBillingAddressId)->exists()) {
-            $selectedBillingAddressId = null;
-        }
-
-        if (! $client->addresses()->where('id_adresse', $selectedDeliveryAddressId)->exists()) {
-            $selectedDeliveryAddressId = null;
-        }
-
-        $availableShippingModes = $this->cartService->getAvailableShippingModes();
-        if (! collect($availableShippingModes)->pluck('id')->contains($selectedShippingModeId)) {
-            $selectedShippingModeId = null;
-        }
-
-        $this->orderService->updateOrderSessionData(
-            billingAddressId: $selectedBillingAddressId,
-            deliveryAddressId: $selectedDeliveryAddressId,
-            shippingModeId: $selectedShippingModeId,
+        // Validation des adresses
+        $billingAddressId = $this->checkoutService->validateAddressForClient(
+            $client,
+            $validated['billing_id'] ?? null
         );
+        $deliveryAddressId = $this->checkoutService->validateAddressForClient(
+            $client,
+            $validated['delivery_id'] ?? null
+        );
+
+        // Validation du mode de livraison
+        $shippingModeId = $this->checkoutService->validateShippingMode(
+            $validated['shipping_id'] ?? null
+        );
+
+        $this->checkoutService->updateCheckout($billingAddressId, $deliveryAddressId, $shippingModeId);
 
         return redirect()->route('cart.checkout');
     }
 
     public function checkout()
     {
-        if ($this->cartService->isCartEmpty()) {
-            return redirect()->route('cart.index')->with('error', 'Votre panier est vide. Veuillez ajouter des articles avant de passer à la caisse.');
+        if ($this->cartService->isEmpty()) {
+            return redirect()->route('cart.index')
+                ->with('error', 'Votre panier est vide. Veuillez ajouter des articles avant de passer à la caisse.');
         }
 
         $client = auth()->user();
-        $checkoutData = $this->orderService->createOrderViewData($client);
 
-        return view('order.checkout', $checkoutData);
+        return view('order.checkout', $this->checkoutService->getCheckoutViewData($client));
     }
 }

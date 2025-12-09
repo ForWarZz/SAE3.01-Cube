@@ -8,22 +8,22 @@ use App\Http\Requests\CartDeleteRequest;
 use App\Http\Requests\CartUpdateQuantityRequest;
 use App\Models\ArticleReference;
 use App\Models\Size;
-use App\Services\CartService;
-use App\Services\OrderService;
+use App\Services\Cart\CartService;
+use App\Services\Cart\CheckoutService;
 
 class CartController extends Controller
 {
     public function __construct(
-        protected CartService $cartService,
-        protected OrderService $orderService
+        protected readonly CartService $cartService,
+        protected readonly CheckoutService $checkoutService,
     ) {}
 
     public function addToCart(CartAddRequest $request)
     {
         $validated = $request->validated();
         $this->cartService->addItem(
-            reference_id: $validated['reference_id'],
-            size_id: $validated['size_id']
+            referenceId: $validated['reference_id'],
+            sizeId: $validated['size_id']
         );
 
         $reference = ArticleReference::with(['bikeReference.article', 'bikeReference.color', 'accessory.article'])->findOrFail($validated['reference_id']);
@@ -45,17 +45,17 @@ class CartController extends Controller
 
     public function index()
     {
-        $this->orderService->clearOrderSessionData();
+        $this->checkoutService->clearCheckout();
 
-        return view('cart.index', $this->cartService->getCartData());
+        return view('cart.index', $this->cartService->getCartViewData());
     }
 
     public function updateQuantity(CartUpdateQuantityRequest $request)
     {
         $validated = $request->validated();
-        $this->cartService->updateItemQuantity(
-            reference_id: $validated['reference_id'],
-            size_id: $validated['size_id'],
+        $this->cartService->updateQuantity(
+            referenceId: $validated['reference_id'],
+            sizeId: $validated['size_id'],
             quantity: $validated['quantity']
         );
 
@@ -66,8 +66,8 @@ class CartController extends Controller
     {
         $validated = $request->validated();
         $this->cartService->removeItem(
-            reference_id: $validated['reference_id'],
-            size_id: $validated['size_id']
+            referenceId: $validated['reference_id'],
+            sizeId: $validated['size_id']
         );
 
         return redirect()->back()->with('success', 'L\'article a été supprimé du panier.');
