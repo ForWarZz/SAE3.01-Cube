@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $id_code_promo
  * @property float|null $pourcentage_remise
  * @property string|null $stripe_session_id
+ * @property string|null $cb_last4
  * @property string|null $date_paiement
  */
 class Order extends Model
@@ -49,6 +50,7 @@ class Order extends Model
         'id_code_promo',
         'pourcentage_remise',
         'stripe_session_id',
+        'cb_last4',
         'date_paiement',
     ];
 

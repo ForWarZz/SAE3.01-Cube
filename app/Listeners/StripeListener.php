@@ -30,8 +30,6 @@ class StripeListener
                 $order = Order::find($orderId);
                 $currentOrderState = $order->currentState();
 
-                $paymentTypeId = PaymentType::UNKNOWN;
-
                 try {
                     $session = Cashier::stripe()->checkout->sessions->retrieve($sessionRaw['id'], [
                         'expand' => ['payment_intent.payment_method'],
@@ -41,7 +39,9 @@ class StripeListener
                     $paymentTypeId = PaymentType::query()
                         ->select('id_type_paiement')
                         ->where('stripe_type', $stripeType)
-                        ->get();
+                        ->first()?->id_type_paiement ?? PaymentType::UNKNOWN;
+
+                    $last4 = $session->payment_intent->payment_method->card->last4 ?? null;
                 } catch (ApiErrorException $e) {
                     Log::error($e->getMessage());
                 }
@@ -50,7 +50,8 @@ class StripeListener
                     $order->update([
                         'stripe_session_id' => $sessionRaw['id'],
                         'date_paiement' => now(),
-                        'id_type_paiement' => $paymentTypeId,
+                        'id_type_paiement' => $paymentTypeId ?? PaymentType::UNKNOWN,
+                        'cb_last4' => $last4 ?? null,
                     ]);
 
                     $order->states()->attach(OrderState::PAYMENT_ACCEPTED, ['date_changement' => now()]);

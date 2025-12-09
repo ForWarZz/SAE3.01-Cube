@@ -16,6 +16,7 @@ use Laravel\Cashier\Billable;
  * @property string $civilite
  * @property string $hash_mdp_client
  * @property string $date_der_connexion
+ * @property string|null $stripe_id
  */
 class Client extends Authenticatable
 {
@@ -35,6 +36,7 @@ class Client extends Authenticatable
         'civilite',
         'hash_mdp_client',
         'date_der_connexion',
+        'stripe_id',
     ];
 
     protected $casts = [
