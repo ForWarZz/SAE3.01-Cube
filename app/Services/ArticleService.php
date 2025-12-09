@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\ArticleReference;
 use App\Models\BikeModel;
 use App\Models\Category;
+use App\Models\ShopAvailability;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -221,18 +222,16 @@ class ArticleService
     private function buildSizeOptions(ArticleReference $reference): Collection
     {
         $sizeList = $reference->availableSizes;
-        $orderableInShopStatus = config('article.availability.orderable');
-        $inStockInShopStatus = config('article.availability.in_stock');
 
-        return $sizeList->map(function ($size) use ($orderableInShopStatus, $inStockInShopStatus, $reference) {
+        return $sizeList->map(function ($size) use ($reference) {
             $availableOnline = $size->pivot->dispo_en_ligne;
             $storeStatuses = $reference->shopAvailabilities()
                 ->where('id_taille', $size->id_taille)
                 ->pluck('statut');
 
-            if ($storeStatuses->contains($inStockInShopStatus)) {
+            if ($storeStatuses->contains(ShopAvailability::STATUS_IN_STOCK)) {
                 $shopStatus = 'in_stock';
-            } elseif ($storeStatuses->contains($orderableInShopStatus)) {
+            } elseif ($storeStatuses->contains(ShopAvailability::STATUS_ORDERABLE)) {
                 $shopStatus = 'orderable';
             } else {
                 $shopStatus = 'unavailable';

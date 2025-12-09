@@ -27,7 +27,7 @@ class BikeService
         $geometryData = $this->buildGeometryData($bike->bikeModel);
 
         $weight = $bike->characteristics
-            ->firstWhere('id_caracteristique', config('bike.characteristics.weight'))
+            ->firstWhere('id_caracteristique', Bike::WEIGHT_CHARACTERISTIC_ID)
             ?->pivot->valeur_caracteristique ?? null;
 
         return [

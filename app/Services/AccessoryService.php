@@ -9,7 +9,7 @@ class AccessoryService
     public function prepareAccessoryData(Accessory $accessory): array
     {
         $weight = $accessory->characteristics
-            ->firstWhere('id_caracteristique', config('accessory.characteristics.weight'))
+            ->firstWhere('id_caracteristique', Accessory::WEIGHT_CHARACTERISTIC_ID)
             ?->pivot->valeur_caracteristique ?? null;
 
         return [

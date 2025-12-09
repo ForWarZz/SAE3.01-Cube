@@ -2,6 +2,7 @@
 
 namespace App\Filters;
 
+use App\Models\ShopAvailability;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -11,14 +12,11 @@ class AvailabilityFilter extends AbstractFilter
 
     public function apply(Builder $query, array $values): void
     {
-        $orderableStatus = config('article.availability.orderable');
-        $inStockStatus = config('article.availability.in_stock');
-
         if (empty($values)) {
             return;
         }
 
-        $query->where(function ($q) use ($values, $orderableStatus, $inStockStatus) {
+        $query->where(function ($q) use ($values) {
             foreach ($values as $value) {
                 switch ($value) {
                     case 'online':
@@ -27,13 +25,13 @@ class AvailabilityFilter extends AbstractFilter
                         break;
 
                     case 'in_stock':
-                        $q->orWhereHas('bike.references.shopAvailabilities', fn ($q2) => $q2->where('statut', $inStockStatus))
-                            ->orWhereHas('accessory.shopAvailabilities', fn ($q2) => $q2->where('statut', $inStockStatus));
+                        $q->orWhereHas('bike.references.shopAvailabilities', fn ($q2) => $q2->where('statut', ShopAvailability::STATUS_IN_STOCK))
+                            ->orWhereHas('accessory.shopAvailabilities', fn ($q2) => $q2->where('statut', ShopAvailability::STATUS_IN_STOCK));
                         break;
 
                     case 'orderable':
-                        $q->orWhereHas('bike.references.shopAvailabilities', fn ($q2) => $q2->where('statut', $orderableStatus))
-                            ->orWhereHas('accessory.shopAvailabilities', fn ($q2) => $q2->where('statut', $orderableStatus));
+                        $q->orWhereHas('bike.references.shopAvailabilities', fn ($q2) => $q2->where('statut', ShopAvailability::STATUS_ORDERABLE))
+                            ->orWhereHas('accessory.shopAvailabilities', fn ($q2) => $q2->where('statut', ShopAvailability::STATUS_ORDERABLE));
                         break;
                 }
             }
@@ -42,9 +40,6 @@ class AvailabilityFilter extends AbstractFilter
 
     public function options(Builder $baseQuery, array $context = []): Collection
     {
-        $orderableStatus = config('article.availability.orderable');
-        $inStockStatus = config('article.availability.in_stock');
-
         $options = collect();
 
         // Check online availability
@@ -62,9 +57,9 @@ class AvailabilityFilter extends AbstractFilter
 
         // Check in stock
         $hasStock = (clone $baseQuery)
-            ->where(function ($q) use ($inStockStatus) {
-                $q->whereHas('bike.references.shopAvailabilities', fn ($q2) => $q2->where('statut', $inStockStatus))
-                    ->orWhereHas('accessory.shopAvailabilities', fn ($q2) => $q2->where('statut', $inStockStatus));
+            ->where(function ($q) {
+                $q->whereHas('bike.references.shopAvailabilities', fn ($q2) => $q2->where('statut', ShopAvailability::STATUS_IN_STOCK))
+                    ->orWhereHas('accessory.shopAvailabilities', fn ($q2) => $q2->where('statut', ShopAvailability::STATUS_IN_STOCK));
             })
             ->exists();
 
@@ -74,9 +69,9 @@ class AvailabilityFilter extends AbstractFilter
 
         // Check orderable
         $hasOrderable = (clone $baseQuery)
-            ->where(function ($q) use ($orderableStatus) {
-                $q->whereHas('bike.references.shopAvailabilities', fn ($q2) => $q2->where('statut', $orderableStatus))
-                    ->orWhereHas('accessory.shopAvailabilities', fn ($q2) => $q2->where('statut', $orderableStatus));
+            ->where(function ($q) {
+                $q->whereHas('bike.references.shopAvailabilities', fn ($q2) => $q2->where('statut', ShopAvailability::STATUS_ORDERABLE))
+                    ->orWhereHas('accessory.shopAvailabilities', fn ($q2) => $q2->where('statut', ShopAvailability::STATUS_ORDERABLE));
             })
             ->exists();
 

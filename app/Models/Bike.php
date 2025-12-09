@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Bike extends Model
 {
+    public const WEIGHT_CHARACTERISTIC_ID = 22;
+
     protected $table = 'velo';
 
     protected $primaryKey = 'id_article';

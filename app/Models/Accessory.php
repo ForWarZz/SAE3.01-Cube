@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Accessory extends Model
 {
+    public const WEIGHT_CHARACTERISTIC_ID = 31;
+
     protected $table = 'accessoire';
 
     protected $primaryKey = 'id_article';
