@@ -34,7 +34,7 @@ class CartController extends Controller
 
         $itemData = [
             'name' => $article->nom_article ?? 'Article',
-            'image' => $article->getCoverUrl($color?->id_couleur ?? null),
+            'image' => $article->getCoverThumbnailUrl($color?->id_couleur ?? null),
             'color' => $color?->label_couleur ?? null,
             'size' => $size->nom_taille,
             'price' => number_format($article->getDiscountedPrice(), 2, ',', ' ').' €',
