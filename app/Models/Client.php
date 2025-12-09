@@ -27,7 +27,20 @@ class Client extends Authenticatable
 
     public $timestamps = false;
 
-    protected $fillable = ['nom_client', 'prenom_client', 'email_client', 'naissance_client', 'civilite', 'hash_mdp_client', 'date_der_connexion'];
+    protected $fillable = [
+        'nom_client',
+        'prenom_client',
+        'email_client',
+        'naissance_client',
+        'civilite',
+        'hash_mdp_client',
+        'date_der_connexion',
+    ];
+
+    protected $casts = [
+        'naissance_client' => 'date',
+        'date_der_connexion' => 'datetime',
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
