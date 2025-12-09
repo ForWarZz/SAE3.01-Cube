@@ -45,7 +45,6 @@ class Order extends Model
         'num_commande',
         'date_commande',
         'num_suivi_commande',
-        'frais_expedition',
         'frais_livraison',
         'id_code_promo',
         'pourcentage_remise',
