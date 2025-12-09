@@ -98,4 +98,9 @@ class Order extends Model
     {
         return $this->hasMany(OrderLine::class, 'id_commande', 'id_commande');
     }
+
+    public function paymentType(): BelongsTo
+    {
+        return $this->belongsTo(PaymentType::class, 'id_type_paiement', 'id_type_paiement');
+    }
 }
