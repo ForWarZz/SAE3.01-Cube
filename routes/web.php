@@ -70,6 +70,14 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
         Route::delete('/{adresse}', [AdresseController::class, 'destroy'])->name('destroy');
     });
 
+    Route::prefix('profil')->name('profile.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\ProfileController::class, 'show'])->name('show');
+        Route::get('/modifier', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('edit');
+        Route::put('/', [\App\Http\Controllers\ProfileController::class, 'update'])->name('update');
+        Route::put('/mot-de-passe', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('password');
+        Route::delete('/', [\App\Http\Controllers\ProfileController::class, 'destroy'])->name('destroy');
+    });
+
     Route::prefix('commande')->name('orders.')->group(function () {
         //        Route::get('/', [OrderController::class, 'index'])->name('index');
         //        Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');

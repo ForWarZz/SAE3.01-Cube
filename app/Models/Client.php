@@ -26,7 +26,7 @@ class Client extends Authenticatable
 
     public $timestamps = false;
 
-    protected $fillable = ['nom_client', 'prenom_client', 'email_client', 'naissance_client', 'civilite', 'hash_mdp_client', 'date_der_connexion'];
+    protected $fillable = ['nom_client', 'prenom_client', 'email_client', 'naissance_client', 'civilite', 'hash_mdp_client', 'date_der_connexion', 'google_id'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -74,18 +74,20 @@ class Client extends Authenticatable
         return $this->hasMany('App\Models\Adresse', 'id_client', 'id_client');
     }
 
-    public function serviceRequests(): HasMany
-    {
-        return $this->hasMany('App\Models\DemandeServiceClient', 'id_client', 'id_client');
-    }
+    // TODO: Uncomment when model is created
+    // public function serviceRequests(): HasMany
+    // {
+    //     return $this->hasMany('App\Models\DemandeServiceClient', 'id_client', 'id_client');
+    // }
 
-    public function orders(): HasMany
-    {
-        return $this->hasMany('App\Models\Commande', 'id_client', 'id_client');
-    }
+    // TODO: Uncomment when models are created
+    // public function orders(): HasMany
+    // {
+    //     return $this->hasMany('App\Models\Commande', 'id_client', 'id_client');
+    // }
 
-    public function registeredBikes(): HasMany
-    {
-        return $this->hasMany('App\Models\VeloEnregistre', 'id_client', 'id_client');
-    }
+    // public function registeredBikes(): HasMany
+    // {
+    //     return $this->hasMany('App\Models\VeloEnregistre', 'id_client', 'id_client');
+    // }
 }
