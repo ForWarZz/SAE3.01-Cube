@@ -5,6 +5,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CommercialAuthController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
@@ -75,6 +76,17 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
         //        Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
 
         Route::post('/validation/livraison', [OrderController::class, 'updateOrder'])->name('update-shipping');
+    });
+});
+
+Route::prefix('commercial')->name('commercial.')->group(function() {
+    Route::get('/login', [CommercialAuthController::class, 'showLoginForm'])->name('login'); 
+    Route::post('/login', [CommercialAuthController::class, 'login'])->name('login.submit');
+    Route::post('/logout', [CommercialAuthController::class, 'logout'])->name('logout');
+    Route::middleware('auth:commercial')->group(function () {
+        Route::get('/dashboard', function () {
+            return view('commercial.dashboard'); 
+        })->name('dashboard');
     });
 });
 
