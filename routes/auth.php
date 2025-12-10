@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,12 @@ Route::middleware('guest')->group(function () {
         ->name('login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+    // Two-factor authentication challenge
+    Route::get('two-factor-challenge', [TwoFactorAuthenticationController::class, 'show'])
+        ->name('two-factor.login');
+    Route::post('two-factor-challenge', [TwoFactorAuthenticationController::class, 'verify'])
+        ->name('two-factor.verify');
 
     // Google OAuth
     Route::get('auth/google', [GoogleAuthController::class, 'redirectToGoogle'])

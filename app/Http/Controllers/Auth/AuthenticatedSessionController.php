@@ -26,12 +26,23 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        $user = Auth::user();
+
+        // Check if user has 2FA enabled
+        if ($user->two_factor_confirmed_at) {
+            // Store user ID in session and log them out temporarily
+            Auth::logout();
+            $request->session()->put('2fa:user:id', $user->id_client);
+            $request->session()->put('2fa:remember', $request->filled('remember'));
+            
+            return redirect()->route('two-factor.login');
+        }
+
         $request->session()->regenerate();
 
         // Update last connection date
-        $client = Auth::user();
-        $client->date_der_connexion = now();
-        $client->save();
+        $user->date_der_connexion = now();
+        $user->save();
 
         return redirect()->intended(route('dashboard.index'));
     }
