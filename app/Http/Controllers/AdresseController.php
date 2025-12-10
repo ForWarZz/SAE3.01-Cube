@@ -47,11 +47,22 @@ class AdresseController extends Controller
         $client = Auth::user();
         $validated = $request->validated();
 
-        // Find or create the city
-        $ville = Ville::firstOrCreate(
-            ['cp_ville' => $validated['code_postal'], 'nom_ville' => $validated['nom_ville']],
-            ['cp_ville' => $validated['code_postal'], 'nom_ville' => $validated['nom_ville'], 'pays_ville' => 'France']
-        );
+        // Find or create the city - search by postal code (unique identifier for cities)
+        $ville = Ville::where('cp_ville', $validated['code_postal'])->first();
+
+        if (!$ville) {
+            // Try to create, handling potential race conditions
+            try {
+                $ville = Ville::create([
+                    'cp_ville' => $validated['code_postal'],
+                    'nom_ville' => $validated['nom_ville'],
+                    'pays_ville' => 'France',
+                ]);
+            } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
+                // If unique constraint violation, the city was just created by another request
+                $ville = Ville::where('cp_ville', $validated['code_postal'])->first();
+            }
+        }
 
         Adresse::create([
             'id_client' => $client->id_client,
