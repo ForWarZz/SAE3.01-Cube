@@ -7,10 +7,10 @@
                     <h1 class="text-3xl font-bold text-gray-900 uppercase">Cube France</h1>
                 </a>
                 <h2 class="mt-2 text-2xl font-semibold text-gray-800">Connexion</h2>
-                <p class="text-sm text-gray-600">Accédez à votre espace client</p>
+                <p class="text-sm text-gray-600">Accédez à votre espace commercial</p>
             </div>
 
-            <form method="POST" action="{{ route("login") }}" class="space-y-6">
+            <form method="POST" action="{{ route("commercial.login.submit") }}" class="space-y-6">
                 @csrf
 
                 {{-- Email --}}
@@ -50,13 +50,9 @@
                     Se connecter
                 </button>
             </form>
-
-            <p class="mt-6 text-center text-sm text-gray-600">
-                Pas encore de compte ?
-                <a href="{{ route("register") }}" class="font-semibold text-blue-600 hover:text-blue-700">Créer un compte</a>
-            </p>
+            
             <p class="mt-6 text-right text-sm text-gray-600">
-                <a href="{{ route("commercial.login") }}" class="font-semibold text-blue-600 hover:text-blue-700">Connexion Service Commercial</a>
+                <a href="{{ route("login") }}" class="font-semibold text-blue-600 hover:text-blue-700">Connexion Client</a>
             </p>
         </div>
     </div>

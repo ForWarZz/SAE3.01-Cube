@@ -6,6 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CommercialAuthController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
@@ -97,6 +98,17 @@ Route::get('/paiement/erreur', [CheckoutController::class, 'cancel'])
 Route::get('/paiement/echec', function () {
     return 'Le paiement a été annulé.';
 })->name('paiement.echec');
+
+Route::prefix('commercial')->name('commercial.')->group(function() {
+    Route::get('/login', [CommercialAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [CommercialAuthController::class, 'login'])->name('login.submit');
+    Route::post('/logout', [CommercialAuthController::class, 'logout'])->name('logout');
+    Route::middleware('auth:commercial')->group(function () {
+        Route::get('/dashboard', function () {
+            return view('commercial.dashboard');
+        })->name('dashboard');
+    });
+});
 
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\ShopController;
