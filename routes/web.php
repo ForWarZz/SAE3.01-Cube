@@ -4,9 +4,9 @@ use App\Http\Controllers\AdresseController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CommercialAuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\CommercialAuthController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
@@ -34,8 +34,6 @@ Route::get('/', function () {
 Route::prefix('articles')->name('articles.')->group(function () {
     Route::get('/search', [ArticleController::class, 'search'])->name('search');
     Route::get('/{article}', [ArticleController::class, 'show'])->name('show');
-
-    Route::get('/{article}/360/{color?}', [ArticleController::class, 'show360'])->name('view-360');
 
     Route::get('/categories/{category}', [ArticleController::class, 'viewByCategory'])->name('by-category');
     Route::get('/modeles/{model}', [ArticleController::class, 'viewByModel'])->name('by-model');
@@ -99,7 +97,7 @@ Route::get('/paiement/echec', function () {
     return 'Le paiement a été annulé.';
 })->name('paiement.echec');
 
-Route::prefix('commercial')->name('commercial.')->group(function() {
+Route::prefix('commercial')->name('commercial.')->group(function () {
     Route::get('/login', [CommercialAuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [CommercialAuthController::class, 'login'])->name('login.submit');
     Route::post('/logout', [CommercialAuthController::class, 'logout'])->name('logout');
