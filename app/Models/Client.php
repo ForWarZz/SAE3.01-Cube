@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
 
 /**
  * @property int $id_client
@@ -15,10 +16,11 @@ use Illuminate\Notifications\Notifiable;
  * @property string $civilite
  * @property string $hash_mdp_client
  * @property string $date_der_connexion
+ * @property string|null $stripe_id
  */
 class Client extends Authenticatable
 {
-    use Notifiable;
+    use Billable, Notifiable;
 
     protected $table = 'client';
 
@@ -26,7 +28,21 @@ class Client extends Authenticatable
 
     public $timestamps = false;
 
-    protected $fillable = ['nom_client', 'prenom_client', 'email_client', 'naissance_client', 'civilite', 'hash_mdp_client', 'date_der_connexion'];
+    protected $fillable = [
+        'nom_client',
+        'prenom_client',
+        'email_client',
+        'naissance_client',
+        'civilite',
+        'hash_mdp_client',
+        'date_der_connexion',
+        'stripe_id',
+    ];
+
+    protected $casts = [
+        'naissance_client' => 'date',
+        'date_der_connexion' => 'datetime',
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -69,23 +85,28 @@ class Client extends Authenticatable
         return $this->email_client;
     }
 
-    public function addresses(): HasMany
+    public function stripeEmail(): ?string
     {
-        return $this->hasMany('App\Models\Adresse', 'id_client', 'id_client');
+        return $this->email_client;
     }
 
-    public function serviceRequests(): HasMany
+    public function addresses(): HasMany
     {
-        return $this->hasMany('App\Models\DemandeServiceClient', 'id_client', 'id_client');
+        return $this->hasMany(Adresse::class, 'id_client', 'id_client');
     }
+
+    //    public function serviceRequests(): HasMany
+    //    {
+    //        return $this->hasMany('App\Models\DemandeServiceClient', 'id_client', 'id_client');
+    //    }
 
     public function orders(): HasMany
     {
-        return $this->hasMany('App\Models\Commande', 'id_client', 'id_client');
+        return $this->hasMany(Order::class, 'id_client', 'id_client');
     }
-
-    public function registeredBikes(): HasMany
-    {
-        return $this->hasMany('App\Models\VeloEnregistre', 'id_client', 'id_client');
-    }
+    //
+    //    public function registeredBikes(): HasMany
+    //    {
+    //        return $this->hasMany('App\Models\VeloEnregistre', 'id_client', 'id_client');
+    //    }
 }

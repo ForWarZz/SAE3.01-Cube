@@ -100,7 +100,7 @@
                     <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                         <h2 class="mb-4 text-xl font-bold text-gray-900">Mode de livraison</h2>
 
-                        <form method="POST" action="{{ route("dashboard.orders.update-shipping") }}">
+                        <form method="POST" action="{{ route("checkout.update-shipping") }}">
                             @csrf
 
                             <input type="hidden" name="billing_id" :value="billingId" />
@@ -154,14 +154,18 @@
                 <aside class="flex flex-1 flex-col gap-6">
                     <x-cart-summary :summary-data="$summaryData" :count="$count" :discount-data="$discountData" :is-checkout="true" />
 
-                    <button
-                        type="submit"
-                        :disabled="!deliveryId || !billingId || !shippingId"
-                        :class="(!deliveryId || !billingId || !shippingId) ? 'cursor-not-allowed bg-gray-300' : 'cursor-pointer bg-green-600 hover:bg-green-700'"
-                        class="w-full rounded-md px-5 py-4 text-lg font-bold text-white uppercase shadow-md transition hover:shadow-lg"
-                    >
-                        Passer la commande
-                    </button>
+                    <form action="{{ route("payment.checkout") }}" method="post">
+                        @csrf
+
+                        <button
+                            type="submit"
+                            :disabled="!deliveryId || !billingId || !shippingId"
+                            :class="(!deliveryId || !billingId || !shippingId) ? 'cursor-not-allowed bg-gray-300' : 'cursor-pointer bg-green-600 hover:bg-green-700'"
+                            class="w-full rounded-md px-5 py-4 text-lg font-bold text-white uppercase shadow-md transition hover:shadow-lg"
+                        >
+                            Passer la commande
+                        </button>
+                    </form>
 
                     <a
                         href="{{ route("cart.index") }}"

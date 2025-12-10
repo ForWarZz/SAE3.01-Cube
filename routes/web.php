@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdresseController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Models\Category;
@@ -59,7 +60,6 @@ Route::prefix('panier')->name('cart.')->group(function () {
     //    Route::post('/update', [\App\Http\Controllers\CartController::class, 'update'])->name('update');
 });
 
-// Dashboard routes (requires authentication)
 Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
@@ -69,14 +69,34 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
         Route::post('/', [AdresseController::class, 'store'])->name('store');
         Route::delete('/{adresse}', [AdresseController::class, 'destroy'])->name('destroy');
     });
+});
 
-    Route::prefix('commande')->name('orders.')->group(function () {
-        //        Route::get('/', [OrderController::class, 'index'])->name('index');
-        //        Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
+Route::middleware('auth')->group(function () {
+    Route::prefix('commande')->name('checkout.')->group(function () {
+        Route::get('/validation', [OrderController::class, 'checkout'])->name('index');
+        Route::post('/livraison', [OrderController::class, 'updateOrder'])->name('update-shipping');
+    });
 
-        Route::post('/validation/livraison', [OrderController::class, 'updateOrder'])->name('update-shipping');
+    Route::prefix('paiement')->name('payment.')->group(function () {
+        Route::post('/', [CheckoutController::class, 'checkout'])->name('process');
+        Route::get('/succes', [CheckoutController::class, 'success'])->name('success');
+        Route::get('/erreur', [CheckoutController::class, 'cancel'])->name('cancel');
     });
 });
+
+Route::post('/paiement/checkout/', [CheckoutController::class, 'checkout'])
+    ->name('payment.checkout')
+    ->middleware('auth');
+
+Route::get('/paiement/succes', [CheckoutController::class, 'success'])
+    ->name('payment.success');
+Route::get('/paiement/erreur', [CheckoutController::class, 'cancel'])
+    ->name('payment.cancel');
+
+// Route de retour échec
+Route::get('/paiement/echec', function () {
+    return 'Le paiement a été annulé.';
+})->name('paiement.echec');
 
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\ShopController;
