@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AdresseController;
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
@@ -60,10 +60,10 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     Route::prefix('adresses')->name('adresses.')->group(function () {
-        Route::get('/', [AdresseController::class, 'index'])->name('index');
-        Route::get('/nouvelle', [AdresseController::class, 'create'])->name('create');
-        Route::post('/', [AdresseController::class, 'store'])->name('store');
-        Route::delete('/{adresse}', [AdresseController::class, 'destroy'])->name('destroy');
+        Route::get('/', [AddressController::class, 'index'])->name('index');
+        Route::get('/nouvelle', [AddressController::class, 'create'])->name('create');
+        Route::post('/', [AddressController::class, 'store'])->name('store');
+        Route::delete('/{adresse}', [AddressController::class, 'destroy'])->name('destroy');
     });
 });
 

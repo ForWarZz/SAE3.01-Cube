@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
-class AdresseController extends Controller
+class AddressController extends Controller
 {
     /**
      * Display a listing of the client's addresses.
