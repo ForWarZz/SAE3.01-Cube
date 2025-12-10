@@ -44,8 +44,8 @@ Route::prefix('articles')->name('articles.')->group(function () {
 Route::prefix('panier')->name('cart.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
     Route::delete('/', [CartController::class, 'delete'])->name('delete');
-    Route::patch('/quantity', [CartController::class, 'updateQuantity'])->name('update-quantity');
-    Route::post('/add', [CartController::class, 'addToCart'])->name('add');
+    Route::patch('/quantite', [CartController::class, 'updateQuantity'])->name('update-quantity');
+    Route::post('/ajouter', [CartController::class, 'addToCart'])->name('add');
 
     Route::prefix('/code-promo')->name('discount.')->group(function () {
         Route::post('/', [CartController::class, 'applyDiscount'])->name('apply');
@@ -54,9 +54,6 @@ Route::prefix('panier')->name('cart.')->group(function () {
 
     Route::get('/validation', [OrderController::class, 'checkout'])->name('checkout')
         ->middleware('auth');
-
-    //    Route::post('/add', [\App\Http\Controllers\CartController::class, 'add'])->name('add');
-    //    Route::post('/update', [\App\Http\Controllers\CartController::class, 'update'])->name('update');
 });
 
 Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(function () {
