@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddressCreateRequest;
 use App\Models\Adresse;
-use App\Models\Ville;
+use App\Models\City;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,7 +48,7 @@ class AdresseController extends Controller
         $validated = $request->validated();
 
         // Find or create the city
-        $ville = Ville::firstOrCreate(
+        $ville = City::firstOrCreate(
             ['cp_ville' => $validated['code_postal'], 'nom_ville' => $validated['nom_ville']],
             ['cp_ville' => $validated['code_postal'], 'nom_ville' => $validated['nom_ville'], 'pays_ville' => 'France']
         );

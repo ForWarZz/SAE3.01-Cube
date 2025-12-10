@@ -23,8 +23,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Adresse extends Model
 {
     public $timestamps = false;
+
     protected $table = 'adresse';
+
     protected $primaryKey = 'id_adresse';
+
     protected $fillable = [
         'id_client',
         'id_ville',
@@ -47,6 +50,6 @@ class Adresse extends Model
 
     public function ville(): BelongsTo
     {
-        return $this->belongsTo(Ville::class, 'id_ville', 'id_ville');
+        return $this->belongsTo(City::class, 'id_ville', 'id_ville');
     }
 }

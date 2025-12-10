@@ -23,22 +23,22 @@ class Commercial extends Authenticatable
     public $timestamps = false;
 
     protected $fillable = [
-        'nom_commercial', 
-        'prenom_commercial', 
-        'email_commercial', 
-        'hash_mdp_commercial'
+        'nom_commercial',
+        'prenom_commercial',
+        'email_commercial',
+        'hash_mdp_commercial',
     ];
 
     protected $hidden = [
         'hash_mdp_commercial',
     ];
 
-    public function getAuthPassword()
+    public function getAuthPassword(): string
     {
         return $this->hash_mdp_commercial;
     }
 
-    public function getAuthIdentifierName()
+    public function getAuthIdentifierName(): string
     {
         return 'id_commercial';
     }
@@ -48,7 +48,7 @@ class Commercial extends Authenticatable
         return $this->id_commercial;
     }
 
-    public function getEmailForPasswordReset()
+    public function getEmailForPasswordReset(): string
     {
         return $this->email_commercial;
     }

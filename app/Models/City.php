@@ -11,11 +11,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $cp_ville
  * @property string $pays_ville
  */
-class Ville extends Model
+class City extends Model
 {
     public $timestamps = false;
+
     protected $table = 'ville';
+
     protected $primaryKey = 'id_ville';
+
     protected $fillable = [
         'nom_ville',
         'cp_ville',

@@ -206,7 +206,7 @@
                             <x-input-error :messages="$errors->get('code_postal')" class="mt-2" />
                         </div>
 
-                        <!-- Ville -->
+                        <!-- City -->
                         <div class="mb-6">
                             <label for="nom_ville" class="block text-sm font-medium text-gray-700">
                                 Ville
