@@ -13,6 +13,12 @@
 
 @php
     $id = $id ?? $name;
+
+    // Détecte si l'input est readonly
+    $isReadonly = $attributes->get("readonly") ? true : false;
+
+    // Classe spécifique si readonly
+    $readonlyClass = $isReadonly ? "cursor-not-allowed border-gray-200 bg-gray-100" : "";
 @endphp
 
 <div class="{{ $wrapperClass }}">
@@ -31,7 +37,7 @@
             id="{{ $id }}"
             placeholder="{{ $placeholder }}"
             {{ $attributes->except(["class"])->merge([]) }}
-            class="{{ $inputClass }}"
+            class="{{ $inputClass }} {{ $readonlyClass }}"
         >
 {{ old($name, $value) }}</textarea
         >
@@ -44,7 +50,7 @@
             placeholder="{{ $placeholder }}"
             @if($required) required @endif
             {{ $attributes->except(["class"])->merge([]) }}
-            class="{{ $inputClass }}"
+            class="{{ $inputClass }} {{ $readonlyClass }}"
         />
     @endif
 

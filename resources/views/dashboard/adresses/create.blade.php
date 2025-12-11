@@ -61,10 +61,10 @@
                         />
 
                         <!-- Code postal -->
-                        <x-form-input name="code_postal" label="Code postal" placeholder="75001" required />
+                        <x-form-input name="code_postal" label="Code postal" placeholder="75001" required readonly />
 
                         <!-- City -->
-                        <x-form-input name="nom_ville" label="Ville" placeholder="Paris" required wrapperClass="mb-6" />
+                        <x-form-input name="nom_ville" label="Ville" placeholder="Paris" required readonly wrapperClass="mb-6" />
 
                         <div class="flex items-center justify-between">
                             <a
