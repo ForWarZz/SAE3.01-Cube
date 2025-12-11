@@ -107,8 +107,12 @@ Route::get('/paiement/erreur', [CheckoutController::class, 'cancel'])
 
 Route::prefix('commercial')->name('commercial.')->group(function () {
     Route::get('/login', [CommercialAuthController::class, 'showLoginForm'])->name('login');
+
     Route::post('/login', [CommercialAuthController::class, 'login'])->name('login.submit');
     Route::post('/logout', [CommercialAuthController::class, 'logout'])->name('logout');
+
+    Route::get('/references', [CommercialAuthController::class, 'viewReferences'])->name('references');
+
     Route::middleware('auth:commercial')->group(function () {
         Route::get('/dashboard', function () {
             return view('commercial.dashboard');
