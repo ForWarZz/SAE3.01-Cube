@@ -5,6 +5,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CommercialAuthController;
+use App\Http\Controllers\CommercialCategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
@@ -72,6 +73,7 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
         Route::get('/modifier', [ProfileController::class, 'edit'])->name('edit');
         Route::put('/', [ProfileController::class, 'update'])->name('update');
         Route::put('/mot-de-passe', [ProfileController::class, 'updatePassword'])->name('password');
+        Route::get('/export-donnees', [ProfileController::class, 'exportData'])->name('export');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
     });
 });

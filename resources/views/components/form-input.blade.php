@@ -6,6 +6,7 @@
     "value" => null,
     "placeholder" => null,
     "required" => false,
+    "readonly" => false,
     "help" => null,
     "wrapperClass" => "mb-4",
     "inputClass" => "mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
@@ -13,12 +14,7 @@
 
 @php
     $id = $id ?? $name;
-
-    // Détecte si l'input est readonly
-    $isReadonly = $attributes->get("readonly") ? true : false;
-
-    // Classe spécifique si readonly
-    $readonlyClass = $isReadonly ? "cursor-not-allowed border-gray-200 bg-gray-100" : "";
+    $readonlyClass = $readonly ? "cursor-not-allowed border-gray-200 bg-gray-100" : "";
 @endphp
 
 <div class="{{ $wrapperClass }}">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Services\GdprService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -100,8 +101,9 @@ class ProfileController extends Controller
 
     /**
      * Delete the user's account (GDPR compliance).
+     * Anonymise le compte si des commandes existent, sinon le supprime.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request, GdprService $gdprService): RedirectResponse
     {
         $client = $request->user();
 
@@ -122,27 +124,32 @@ class ProfileController extends Controller
             ]);
         }
 
-        // Delete all related data (GDPR compliance)
-        // Delete addresses if the relationship exists
-        if (method_exists($client, 'addresses')) {
-            $client->addresses()->delete();
-        }
-
-        // TODO: Uncomment when serviceRequests model is created
-        // if (method_exists($client, 'serviceRequests')) {
-        //     $client->serviceRequests()->delete();
-        // }
+        // Use GDPR service to delete or anonymize client data
+        $result = $gdprService->deleteOrAnonymizeClient($client);
 
         // Logout
         Auth::logout();
 
-        // Delete the client account
-        $client->delete();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('home')
-            ->with('success', 'Votre compte et toutes vos données ont été supprimés conformément au RGPD.');
+        return redirect()->route('login')
+            ->with('success', $result['message']);
+    }
+
+    /**
+     * Export user's personal data (GDPR right of access).
+     * Exporte toutes les données personnelles du client au format JSON.
+     */
+    public function exportData(Request $request, GdprService $gdprService)
+    {
+        $client = $request->user();
+        $data = $gdprService->exportClientData($client);
+
+        $filename = 'mes-donnees-personnelles-'.now()->format('Y-m-d').'.json';
+
+        return response()->json($data, 200, [
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 }

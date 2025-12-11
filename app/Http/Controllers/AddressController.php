@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddressCreateRequest;
 use App\Models\Adresse;
 use App\Models\City;
+use App\Services\GdprService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -80,8 +81,9 @@ class AddressController extends Controller
 
     /**
      * Remove the specified address from storage.
+     * RGPD: Anonymise l'adresse si elle est liée à une commande, sinon la supprime.
      */
-    public function destroy(Request $request, Adresse $adresse): RedirectResponse
+    public function destroy(Request $request, Adresse $adresse, GdprService $gdprService): RedirectResponse
     {
         $client = Auth::user();
 
@@ -90,9 +92,9 @@ class AddressController extends Controller
             abort(403);
         }
 
-        $adresse->delete();
+        $result = $gdprService->deleteOrAnonymizeAddress($adresse);
 
         return redirect()->route('dashboard.adresses.index')
-            ->with('success', 'Adresse supprimée avec succès.');
+            ->with('success', $result['message']);
     }
 }
