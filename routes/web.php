@@ -66,6 +66,14 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
         Route::post('/', [AddressController::class, 'store'])->name('store');
         Route::delete('/{adresse}', [AddressController::class, 'destroy'])->name('destroy');
     });
+
+    Route::prefix('profil')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'show'])->name('show');
+        Route::get('/modifier', [ProfileController::class, 'edit'])->name('edit');
+        Route::put('/', [ProfileController::class, 'update'])->name('update');
+        Route::put('/mot-de-passe', [ProfileController::class, 'updatePassword'])->name('password');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+    });
 });
 
 Route::middleware('auth')->group(function () {
@@ -90,23 +98,10 @@ Route::get('/paiement/succes', [CheckoutController::class, 'success'])
 Route::get('/paiement/erreur', [CheckoutController::class, 'cancel'])
     ->name('payment.cancel');
 
-Route::prefix('profil')->name('profile.')->group(function () {
-    Route::get('/', [ProfileController::class, 'show'])->name('show');
-    Route::get('/modifier', [ProfileController::class, 'edit'])->name('edit');
-    Route::put('/', [ProfileController::class, 'update'])->name('update');
-    Route::put('/mot-de-passe', [ProfileController::class, 'updatePassword'])->name('password');
-    Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
-});
-
-Route::prefix('commande')->name('orders.')->group(function () {
-        //        Route::get('/', [OrderController::class, 'index'])->name('index');
-        //        Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
-});
-
-// Route de retour échec
-Route::get('/paiement/echec', function () {
-    return 'Le paiement a été annulé.';
-})->name('paiement.echec');
+// Route::prefix('commande')->name('orders.')->group(function () {
+//    //        Route::get('/', [OrderController::class, 'index'])->name('index');
+//    //        Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
+// });
 
 Route::prefix('commercial')->name('commercial.')->group(function () {
     Route::get('/login', [CommercialAuthController::class, 'showLoginForm'])->name('login');

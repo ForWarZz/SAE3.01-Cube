@@ -86,7 +86,7 @@ class ProfileController extends Controller
         ]);
 
         // Check if current password is correct
-        if (!Hash::check($validated['current_password'], $client->hash_mdp_client)) {
+        if (! Hash::check($validated['current_password'], $client->hash_mdp_client)) {
             return back()->withErrors(['current_password' => 'Le mot de passe actuel est incorrect.']);
         }
 
@@ -106,14 +106,14 @@ class ProfileController extends Controller
         $client = $request->user();
 
         // For Google OAuth users, skip password verification
-        if (!$client->google_id) {
+        if (! $client->google_id) {
             $request->validate([
                 'password' => ['required', 'string'],
                 'confirmation' => ['required', 'accepted'],
             ]);
 
             // Verify password
-            if (!Hash::check($request->password, $client->hash_mdp_client)) {
+            if (! Hash::check($request->password, $client->hash_mdp_client)) {
                 return back()->withErrors(['password' => 'Le mot de passe est incorrect.']);
             }
         } else {
