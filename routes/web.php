@@ -88,9 +88,10 @@ Route::prefix('commercial')->name('commercial.')->group(function() {
         Route::get('/dashboard', function () {
             return view('commercial.dashboard'); 
         })->name('dashboard');
-        Route::get('/categories', [CommercialCategoryController::class, 'index'])
-             ->name('categories.index');
+        Route::get('/categories', [CommercialCategoryController::class, 'index'])->name('categories.index');
         Route::post('/categories', [CommercialCategoryController::class, 'store'])->name('categories.store');
+        Route::get('/modeles', [App\Http\Controllers\CommercialModelController::class, 'index'])->name('models.index');
+        Route::post('/modeles', [App\Http\Controllers\CommercialModelController::class, 'store'])->name('models.store');
     });
 });
 
