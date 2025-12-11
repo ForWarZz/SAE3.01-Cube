@@ -20,12 +20,13 @@ class CommercialAuthController extends Controller
         ]);
 
         $credentials = [
-            'email_commercial' => $request->email, 
-            'password' => $request->password
+            'email_commercial' => $request->email,
+            'password' => $request->password,
         ];
 
         if (Auth::guard('commercial')->attempt($credentials)) {
             $request->session()->regenerate();
+
             return redirect()->intended(route('commercial.dashboard'));
         }
 
@@ -33,11 +34,18 @@ class CommercialAuthController extends Controller
             'email' => 'Identifiants invalides.',
         ]);
     }
+
     public function logout(Request $request)
     {
         Auth::guard('commercial')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect()->route('home');
+    }
+
+    public function viewReferences()
+    {
+        return view('commercial.references');
     }
 }
