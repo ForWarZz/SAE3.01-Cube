@@ -114,7 +114,7 @@ class ProfileController extends Controller
 
             // Verify password
             if (! Hash::check($request->password, $client->hash_mdp_client)) {
-                return back()->withErrors(['password' => 'Le mot de passe est incorrect.']);
+                return back()->with('delete_error', 'Le mot de passe est incorrect.');
             }
         } else {
             $request->validate([

@@ -13,216 +13,58 @@
                         @endif
 
                         <!-- Alias -->
-                        <div class="mb-4">
-                            <label for="alias_adresse" class="block text-sm font-medium text-gray-700">Alias (ex: Ma maison, Bureau)</label>
-                            <input
-                                type="text"
-                                name="alias_adresse"
-                                id="alias_adresse"
-                                value="{{ old("alias_adresse") }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                placeholder="Ma maison"
-                            />
-                            <x-input-error :messages="$errors->get('alias_adresse')" class="mt-2" />
-                        </div>
+                        <x-form-input name="alias_adresse" label="Alias (ex: Ma maison, Bureau)" placeholder="Ma maison" />
 
                         <!-- Société (optionnel) -->
-                        <div class="mb-4">
-                            <label for="societe_adresse" class="block text-sm font-medium text-gray-700">Société (optionnel)</label>
-                            <input
-                                type="text"
-                                name="societe_adresse"
-                                id="societe_adresse"
-                                value="{{ old("societe_adresse") }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                placeholder="Nom de l'entreprise"
-                            />
-                            <x-input-error :messages="$errors->get('societe_adresse')" class="mt-2" />
-                        </div>
+                        <x-form-input name="societe_adresse" label="Société (optionnel)" placeholder="Nom de l'entreprise" />
 
                         <!-- Numéro TVA (optionnel) -->
-                        <div class="mb-4">
-                            <label for="tva_adresse" class="block text-sm font-medium text-gray-700">Numéro de TVA (optionnel)</label>
-                            <input
-                                type="text"
-                                name="tva_adresse"
-                                id="tva_adresse"
-                                value="{{ old("tva_adresse") }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                placeholder="FR12345678901"
-                            />
-                            <x-input-error :messages="$errors->get('tva_adresse')" class="mt-2" />
-                        </div>
+                        <x-form-input name="tva_adresse" label="Numéro de TVA (optionnel)" placeholder="FR12345678901" />
 
                         <!-- Prénom -->
-                        <div class="mb-4">
-                            <label for="prenom_adresse" class="block text-sm font-medium text-gray-700">
-                                Prénom
-                                <span class="text-red-600">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                name="prenom_adresse"
-                                id="prenom_adresse"
-                                value="{{ old("prenom_adresse", $client->prenom_client) }}"
-                                required
-                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            />
-                            <x-input-error :messages="$errors->get('prenom_adresse')" class="mt-2" />
-                        </div>
+                        <x-form-input name="prenom_adresse" label="Prénom" :value="$client->prenom_client" required />
 
                         <!-- Nom -->
-                        <div class="mb-4">
-                            <label for="nom_adresse" class="block text-sm font-medium text-gray-700">
-                                Nom
-                                <span class="text-red-600">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                name="nom_adresse"
-                                id="nom_adresse"
-                                value="{{ old("nom_adresse", $client->nom_client) }}"
-                                required
-                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            />
-                            <x-input-error :messages="$errors->get('nom_adresse')" class="mt-2" />
-                        </div>
+                        <x-form-input name="nom_adresse" label="Nom" :value="$client->nom_client" required />
 
                         <!-- Téléphone -->
-                        <div class="mb-4">
-                            <label for="telephone_adresse" class="block text-sm font-medium text-gray-700">
-                                Téléphone
-                                <span class="text-red-600">*</span>
-                            </label>
-                            <input
-                                type="tel"
-                                name="telephone_adresse"
-                                id="telephone_adresse"
-                                value="{{ old("telephone_adresse") }}"
-                                required
-                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                placeholder="04 50 10 25 21"
-                            />
-                            <x-input-error :messages="$errors->get('telephone_adresse')" class="mt-2" />
-                        </div>
+                        <x-form-input type="tel" name="telephone_adresse" label="Téléphone" placeholder="04 50 10 25 21" required />
 
                         <!-- Téléphone mobile (optionnel) -->
-                        <div class="mb-4">
-                            <label for="tel_mobile_adresse" class="block text-sm font-medium text-gray-700">
-                                Téléphone mobile (optionnel)
-                            </label>
-                            <input
-                                type="tel"
-                                name="tel_mobile_adresse"
-                                id="tel_mobile_adresse"
-                                value="{{ old("tel_mobile_adresse") }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                placeholder="06 12 34 56 78"
-                            />
-                            <x-input-error :messages="$errors->get('tel_mobile_adresse')" class="mt-2" />
-                        </div>
+                        <x-form-input
+                            type="tel"
+                            name="tel_mobile_adresse"
+                            label="Téléphone mobile (optionnel)"
+                            placeholder="06 12 34 56 78"
+                        />
 
                         <!-- Google Places Autocomplete -->
-                        <div class="mb-4">
-                            <label for="address_autocomplete" class="block text-sm font-medium text-gray-700">Rechercher une adresse</label>
-                            <input
-                                type="text"
-                                id="address_autocomplete"
-                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                placeholder="Commencez à taper votre adresse..."
-                            />
-                            <p class="mt-1 text-xs text-gray-500">
-                                Utilisez la recherche pour remplir automatiquement les champs ci-dessous
-                            </p>
-                        </div>
+                        <x-form-input
+                            name="address_autocomplete"
+                            id="address_autocomplete"
+                            label="Rechercher une adresse"
+                            placeholder="Commencez à taper votre adresse..."
+                            wrapperClass="mb-4"
+                        />
 
                         <!-- Numéro de voie -->
-                        <div class="mb-4">
-                            <label for="num_voie_adresse" class="block text-sm font-medium text-gray-700">
-                                Numéro de voie
-                                <span class="text-red-600">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                name="num_voie_adresse"
-                                id="num_voie_adresse"
-                                value="{{ old("num_voie_adresse") }}"
-                                required
-                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                placeholder="12"
-                            />
-                            <x-input-error :messages="$errors->get('num_voie_adresse')" class="mt-2" />
-                        </div>
+                        <x-form-input name="num_voie_adresse" label="Numéro de voie" placeholder="12" required />
 
                         <!-- Rue -->
-                        <div class="mb-4">
-                            <label for="rue_adresse" class="block text-sm font-medium text-gray-700">
-                                Rue
-                                <span class="text-red-600">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                name="rue_adresse"
-                                id="rue_adresse"
-                                value="{{ old("rue_adresse") }}"
-                                required
-                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                placeholder="Rue de la Paix"
-                            />
-                            <x-input-error :messages="$errors->get('rue_adresse')" class="mt-2" />
-                        </div>
+                        <x-form-input name="rue_adresse" label="Rue" placeholder="Rue de la Paix" required />
 
                         <!-- Complément d'adresse -->
-                        <div class="mb-4">
-                            <label for="complement_adresse" class="block text-sm font-medium text-gray-700">
-                                Complément d'adresse (optionnel)
-                            </label>
-                            <input
-                                type="text"
-                                name="complement_adresse"
-                                id="complement_adresse"
-                                value="{{ old("complement_adresse") }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                placeholder="Appartement 5, Bâtiment B"
-                            />
-                            <x-input-error :messages="$errors->get('complement_adresse')" class="mt-2" />
-                        </div>
+                        <x-form-input
+                            name="complement_adresse"
+                            label="Complément d'adresse (optionnel)"
+                            placeholder="Appartement 5, Bâtiment B"
+                        />
 
                         <!-- Code postal -->
-                        <div class="mb-4">
-                            <label for="code_postal" class="block text-sm font-medium text-gray-700">
-                                Code postal
-                                <span class="text-red-600">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                name="code_postal"
-                                id="code_postal"
-                                value="{{ old("code_postal") }}"
-                                required
-                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                placeholder="75001"
-                            />
-                            <x-input-error :messages="$errors->get('code_postal')" class="mt-2" />
-                        </div>
+                        <x-form-input name="code_postal" label="Code postal" placeholder="75001" required />
 
                         <!-- City -->
-                        <div class="mb-6">
-                            <label for="nom_ville" class="block text-sm font-medium text-gray-700">
-                                Ville
-                                <span class="text-red-600">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                name="nom_ville"
-                                id="nom_ville"
-                                value="{{ old("nom_ville") }}"
-                                required
-                                class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                placeholder="Paris"
-                            />
-                            <x-input-error :messages="$errors->get('nom_ville')" class="mt-2" />
-                        </div>
+                        <x-form-input name="nom_ville" label="Ville" placeholder="Paris" required wrapperClass="mb-6" />
 
                         <div class="flex items-center justify-between">
                             <a

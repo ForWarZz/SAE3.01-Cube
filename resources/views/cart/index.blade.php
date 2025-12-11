@@ -1,28 +1,7 @@
 <x-app-layout>
     <div id="cart" class="flex-1 flex-col bg-gray-100 px-24 py-12">
-        {{-- Flash Messages --}}
-        @if (session("error"))
-            <div class="mb-6 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
-                <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                </svg>
-                <p class="font-medium">{{ session("error") }}</p>
-            </div>
-        @endif
-
-        @if (session("success"))
-            <div class="mb-6 flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
-                <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <p class="font-medium">{{ session("success") }}</p>
-            </div>
-        @endif
+        <x-flash-message key="error" />
+        <x-flash-message key="success" type="success" />
 
         <div class="flex gap-10">
             <x-cart-list :count="$count" :cart-data="$cartData" />
