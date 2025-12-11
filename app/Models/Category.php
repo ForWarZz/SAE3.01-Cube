@@ -18,6 +18,8 @@ class Category extends Model
 
     protected $primaryKey = 'id_categorie';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'id_categorie_parent',
         'nom_categorie',
@@ -79,5 +81,14 @@ class Category extends Model
         }
 
         return array_reverse($ancestors);
+    }
+
+    public function getFullPath(): string
+    {
+        $parents = $this->getAncestors();
+        $noms = array_map(fn($cat) => $cat->nom_categorie, $parents);
+        $noms[] = $this->nom_categorie;
+
+        return implode(' > ', $noms);
     }
 }

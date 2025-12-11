@@ -6,6 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CommercialAuthController;
+use App\Http\Controllers\CommercialCategoryController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
@@ -87,6 +88,9 @@ Route::prefix('commercial')->name('commercial.')->group(function() {
         Route::get('/dashboard', function () {
             return view('commercial.dashboard'); 
         })->name('dashboard');
+        Route::get('/categories', [CommercialCategoryController::class, 'index'])
+             ->name('categories.index');
+        Route::post('/categories', [CommercialCategoryController::class, 'store'])->name('categories.store');
     });
 });
 

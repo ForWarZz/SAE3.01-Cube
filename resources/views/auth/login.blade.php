@@ -55,7 +55,7 @@
                 Pas encore de compte ?
                 <a href="{{ route("register") }}" class="font-semibold text-blue-600 hover:text-blue-700">Créer un compte</a>
             </p>
-            <p class="mt-6 text-right text-sm text-gray-600">
+            <p class="mt-6 text-center text-sm text-gray-600">
                 <a href="{{ route("commercial.login") }}" class="font-semibold text-blue-600 hover:text-blue-700">Connexion Service Commercial</a>
             </p>
         </div>
