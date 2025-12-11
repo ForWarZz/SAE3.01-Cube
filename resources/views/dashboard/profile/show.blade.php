@@ -6,11 +6,7 @@
     <div class="py-12">
         <div class="mx-auto max-w-4xl space-y-6 px-8">
             <!-- Success Message -->
-            @if (session("success"))
-                <div class="relative rounded border border-green-400 bg-green-100 px-4 py-3 text-green-700">
-                    {{ session("success") }}
-                </div>
-            @endif
+            <x-flash-message key="success" type="success" />
 
             <!-- Profile Information -->
             <div class="overflow-hidden rounded-lg bg-white shadow-sm">

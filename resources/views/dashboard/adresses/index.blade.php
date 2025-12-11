@@ -16,11 +16,7 @@
                         </a>
                     </div>
 
-                    @if (session("success"))
-                        <div class="mb-4 rounded border border-green-400 bg-green-100 p-4 text-green-700">
-                            {{ session("success") }}
-                        </div>
-                    @endif
+                    <x-flash-message key="success" type="success" />
 
                     @if ($adresses->isEmpty())
                         <div class="py-12 text-center">
