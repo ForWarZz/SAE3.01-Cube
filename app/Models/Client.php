@@ -37,6 +37,7 @@ class Client extends Authenticatable
         'hash_mdp_client',
         'date_der_connexion',
         'stripe_id',
+        'google_id',
     ];
 
     protected $casts = [
@@ -95,10 +96,11 @@ class Client extends Authenticatable
         return $this->hasMany(Adresse::class, 'id_client', 'id_client');
     }
 
-    //    public function serviceRequests(): HasMany
-    //    {
-    //        return $this->hasMany('App\Models\DemandeServiceClient', 'id_client', 'id_client');
-    //    }
+    // TODO: Uncomment when model is created
+    // public function serviceRequests(): HasMany
+    // {
+    //     return $this->hasMany('App\Models\DemandeServiceClient', 'id_client', 'id_client');
+    // }
 
     public function orders(): HasMany
     {

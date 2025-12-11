@@ -7,6 +7,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CommercialAuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProfileController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
@@ -88,6 +89,19 @@ Route::get('/paiement/succes', [CheckoutController::class, 'success'])
     ->name('payment.success');
 Route::get('/paiement/erreur', [CheckoutController::class, 'cancel'])
     ->name('payment.cancel');
+
+Route::prefix('profil')->name('profile.')->group(function () {
+    Route::get('/', [ProfileController::class, 'show'])->name('show');
+    Route::get('/modifier', [ProfileController::class, 'edit'])->name('edit');
+    Route::put('/', [ProfileController::class, 'update'])->name('update');
+    Route::put('/mot-de-passe', [ProfileController::class, 'updatePassword'])->name('password');
+    Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+});
+
+Route::prefix('commande')->name('orders.')->group(function () {
+        //        Route::get('/', [OrderController::class, 'index'])->name('index');
+        //        Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
+});
 
 // Route de retour échec
 Route::get('/paiement/echec', function () {
