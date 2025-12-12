@@ -42,6 +42,8 @@ class BikeCreateRequest extends FormRequest
             'references.*.id_cadre_velo' => 'required|integer',
             'references.*.id_couleur' => 'required|integer',
             'references.*.sizes' => 'required|array|min:1',
+            'references.*.images' => 'nullable|array|max:5',
+            'references.*.images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
 
         if ($isVae) {
@@ -124,6 +126,12 @@ class BikeCreateRequest extends FormRequest
             'references.*.numero_reference.integer' => 'Le numéro de référence doit être un entier.',
             'references.*.numero_reference.min' => 'Le numéro de référence doit être positif.',
             'references.*.numero_reference.distinct' => 'Les numéros de référence doivent être uniques parmi les références soumises.',
+
+            'references.*.images.array' => 'Les images doivent être un tableau.',
+            'references.*.images.max' => 'Vous ne pouvez pas ajouter plus de 5 images par référence.',
+            'references.*.images.*.image' => 'Le fichier doit être une image.',
+            'references.*.images.*.mimes' => 'L\'image doit être au format JPEG, PNG, JPG ou WebP.',
+            'references.*.images.*.max' => 'L\'image ne doit pas dépasser 2 Mo.',
         ];
     }
 }

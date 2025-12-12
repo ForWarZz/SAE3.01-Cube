@@ -1,6 +1,6 @@
 <x-commercial-layout>
     <div x-data="bikeForm()" class="min-h-screen bg-gray-50 pb-12">
-        <form action="{{ route("commercial.bikes.store") }}" method="POST">
+        <form action="{{ route("commercial.bikes.store") }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-6 flex items-center justify-between border-b bg-white px-6 py-4 shadow-sm">
@@ -221,6 +221,36 @@
                                                 class="block w-full rounded-md border border-gray-300 p-2 text-sm"
                                             />
                                         </div>
+
+                                        <div class="mt-3">
+                                            <label class="mb-1 block text-xs font-medium text-gray-600">
+                                                Images (max. 5, 2 Mo chacune)
+                                            </label>
+                                            <div class="flex flex-col gap-2">
+                                                <input
+                                                    type="file"
+                                                    :name="`references[${idx}][images][]`"
+                                                    accept="image/jpeg,image/png,image/jpg,image/webp"
+                                                    multiple
+                                                    @change="handleImageUpload($event, idx)"
+                                                    class="block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-blue-700 hover:file:bg-blue-100"
+                                                />
+                                                <div
+                                                    x-show="ref.imagePreviews && ref.imagePreviews.length > 0"
+                                                    class="mt-2 flex flex-wrap gap-2"
+                                                >
+                                                    <template x-for="(preview, imgIdx) in ref.imagePreviews" :key="imgIdx">
+                                                        <div class="relative">
+                                                            <img
+                                                                :src="preview"
+                                                                class="h-16 w-16 rounded border border-gray-200 object-cover"
+                                                            />
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                                <p class="text-xs text-gray-400">Formats acceptés : JPEG, PNG, WebP</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </template>
                             </div>
@@ -359,6 +389,7 @@
                     id_batterie: '',
                     sizes: [],
                     numero_reference: '',
+                    imagePreviews: [],
                 };
             }
 
@@ -373,6 +404,7 @@
                     id_batterie: ref.id_batterie ?? '',
                     sizes: Array.isArray(ref.sizes) ? ref.sizes.map(String) : [],
                     numero_reference: ref.numero_reference ?? '',
+                    imagePreviews: [],
                 };
             }
 
@@ -421,6 +453,33 @@
 
                 removeRef(idx) {
                     if (this.refs.length > 1) this.refs.splice(idx, 1);
+                },
+
+                handleImageUpload(event, idx) {
+                    const files = event.target.files;
+                    this.refs[idx].imagePreviews = [];
+
+                    if (files.length > 5) {
+                        alert('Vous ne pouvez pas ajouter plus de 5 images par référence.');
+                        event.target.value = '';
+                        return;
+                    }
+
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        if (file.size > 2 * 1024 * 1024) {
+                            alert(`L'image "${file.name}" dépasse 2 Mo.`);
+                            event.target.value = '';
+                            this.refs[idx].imagePreviews = [];
+                            return;
+                        }
+
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.refs[idx].imagePreviews.push(e.target.result);
+                        };
+                        reader.readAsDataURL(file);
+                    }
                 },
             };
         }

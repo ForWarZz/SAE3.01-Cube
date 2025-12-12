@@ -101,7 +101,7 @@ class CommercialBikeController extends Controller
 
             $articleId = $result->id_article;
 
-            foreach ($validated['references'] as $refData) {
+            foreach ($validated['references'] as $idx => $refData) {
                 $forcedId = $refData['numero_reference'] ?? null;
 
                 $refResult = DB::selectOne('SELECT fn_add_bike_reference(?, ?, ?, ?, ?, ?) as id_ref',
@@ -122,6 +122,16 @@ class CommercialBikeController extends Controller
                         $refData['sizes'],
                         ['dispo_en_ligne' => true]
                     );
+                }
+
+                if ($request->hasFile("references.{$idx}.images")) {
+                    $images = $request->file("references.{$idx}.images");
+                    $storagePath = "articles/references/{$referenceId}";
+
+                    foreach ($images as $index => $image) {
+                        $filename = ($index + 1).'.'.$image->getClientOriginalExtension();
+                        $image->storeAs($storagePath, $filename, 'public');
+                    }
                 }
             }
 
