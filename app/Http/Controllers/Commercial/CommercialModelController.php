@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Commercial;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\BikeModel;
+use Illuminate\Http\Request;
 
 class CommercialModelController extends Controller
 {
@@ -17,13 +18,13 @@ class CommercialModelController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nom_modele_velo' => 'required|string|max:50|unique:modele_velo,nom_modele_velo'
+            'nom_modele_velo' => 'required|string|max:50|unique:modele_velo,nom_modele_velo',
         ], [
-            'nom_modele_velo.unique' => 'Ce modèle de vélo existe déjà.'
+            'nom_modele_velo.unique' => 'Ce modèle de vélo existe déjà.',
         ]);
 
         BikeModel::create([
-            'nom_modele_velo' => $request->nom_modele_velo
+            'nom_modele_velo' => $request->nom_modele_velo,
         ]);
 
         return redirect()->back();

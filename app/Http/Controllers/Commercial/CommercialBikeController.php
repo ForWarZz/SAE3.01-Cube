@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Commercial;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\BikeCreateRequest;
 use App\Models\ArticleReference;
 use App\Models\Battery;

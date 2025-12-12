@@ -4,9 +4,9 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\CommercialAuthController;
-use App\Http\Controllers\CommercialBikeController;
-use App\Http\Controllers\CommercialCategoryController;
+use App\Http\Controllers\Commercial\CommercialAuthController;
+use App\Http\Controllers\Commercial\CommercialBikeController;
+use App\Http\Controllers\Commercial\CommercialCategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
@@ -121,8 +121,8 @@ Route::prefix('commercial')->name('commercial.')->group(function () {
 
         Route::get('/categories', [CommercialCategoryController::class, 'index'])->name('categories.index');
         Route::post('/categories', [CommercialCategoryController::class, 'store'])->name('categories.store');
-        Route::get('/modeles', [App\Http\Controllers\CommercialModelController::class, 'index'])->name('models.index');
-        Route::post('/modeles', [App\Http\Controllers\CommercialModelController::class, 'store'])->name('models.store');
+        Route::get('/modeles', [\App\Http\Controllers\Commercial\CommercialModelController::class, 'index'])->name('models.index');
+        Route::post('/modeles', [\App\Http\Controllers\Commercial\CommercialModelController::class, 'store'])->name('models.store');
 
         // Gestion des vélos
         Route::prefix('/velos')->name('bikes.')->group(function () {
