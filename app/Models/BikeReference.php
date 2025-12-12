@@ -27,6 +27,13 @@ class BikeReference extends Model
         'id_article',
     ];
 
+    protected static function booted(): void
+    {
+        static::addGlobalScope('active_reference', function ($builder) {
+            $builder->whereHas('baseReference');
+        });
+    }
+
     public function article(): BelongsTo
     {
         return $this->belongsTo(Article::class, 'id_article', 'id_article');

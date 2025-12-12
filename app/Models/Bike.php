@@ -49,6 +49,13 @@ class Bike extends Model
         'date_ajout' => 'datetime',
     ];
 
+    protected static function booted(): void
+    {
+        static::addGlobalScope('active_article', function ($builder) {
+            $builder->whereHas('article');
+        });
+    }
+
     /**
      * Check if the bike was added less than 6 months ago
      */

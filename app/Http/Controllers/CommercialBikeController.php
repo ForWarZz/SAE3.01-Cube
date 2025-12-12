@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BikeCreateRequest;
+use App\Models\ArticleReference;
 use App\Models\Bike;
 use App\Models\BikeFrame;
 use App\Models\BikeFrameMaterial;
@@ -137,6 +138,35 @@ class CommercialBikeController extends Controller
             DB::rollBack();
 
             return back()->withErrors(['error' => 'Erreur lors de la suppression : '.$e->getMessage()]);
+        }
+    }
+
+    public function destroy(Bike $bike)
+    {
+        try {
+            DB::beginTransaction();
+
+            $bike->load([
+                'references',
+                'article',
+            ]);
+
+            $ids = $bike->references->pluck('id_reference')->toArray();
+            ArticleReference::whereIn('id_reference', $ids)->delete();
+
+            $bike->article->delete();
+
+            DB::commit();
+
+            return redirect()
+                ->route('commercial.bikes.index')
+                ->with('success', 'Vélo supprimé avec succès.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()
+                ->withErrors(['error' => 'Erreur lors de la suppression : '.$e->getMessage()]);
         }
     }
 }

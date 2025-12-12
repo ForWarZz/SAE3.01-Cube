@@ -128,12 +128,15 @@ Route::prefix('commercial')->name('commercial.')->group(function () {
         Route::prefix('/velos')->name('bikes.')->group(function () {
             Route::get('/', [CommercialBikeController::class, 'index'])->name('index');
             Route::get('/nouveau', [CommercialBikeController::class, 'create'])->name('create');
+
             Route::post('/', [CommercialBikeController::class, 'store'])->name('store');
-            Route::get('/{bike}', [CommercialBikeController::class, 'show'])->name('show');
-            Route::get('/{bike}/modifier', [CommercialBikeController::class, 'edit'])->name('edit');
-            Route::put('/{bike}', [CommercialBikeController::class, 'update'])->name('update');
-            Route::post('/{bike}/references', [CommercialBikeController::class, 'addReference'])->name('add-reference');
-            Route::delete('/references/{reference}', [CommercialBikeController::class, 'deleteReference'])->name('delete-reference');
+            Route::delete('/{bike}', [CommercialBikeController::class, 'destroy'])->name('destroy');
+
+            //            Route::get('/{bike}', [CommercialBikeController::class, 'show'])->name('show');
+            //            Route::get('/{bike}/modifier', [CommercialBikeController::class, 'edit'])->name('edit');
+            //            Route::put('/{bike}', [CommercialBikeController::class, 'update'])->name('update');
+            //            Route::post('/{bike}/references', [CommercialBikeController::class, 'addReference'])->name('add-reference');
+            //            Route::delete('/references/{reference}', [CommercialBikeController::class, 'deleteReference'])->name('delete-reference');
         });
     });
 });
