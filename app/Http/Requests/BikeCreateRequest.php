@@ -21,7 +21,9 @@ class BikeCreateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $isVae = $this->boolean('is_vae');
+
+        $rules = [
             'model_choice' => 'required|in:new,existing',
             'new_model_name' => 'required_if:model_choice,new',
             'id_modele_velo' => 'required_if:model_choice,existing',
@@ -34,11 +36,22 @@ class BikeCreateRequest extends FormRequest
             'id_materiau_cadre' => 'required|integer',
             'id_millesime' => 'required|integer',
             'id_usage' => 'required|integer',
+            'is_vae' => 'required|boolean',
             'references' => 'required|array|min:1',
             'references.*.id_cadre_velo' => 'required|integer',
             'references.*.id_couleur' => 'required|integer',
             'references.*.sizes' => 'required|array|min:1',
         ];
+
+        if ($isVae) {
+            $rules['references.*.id_batterie'] = 'required|integer|exists:batterie,id_batterie';
+            $rules['id_type_vae'] = ['required', 'integer', 'exists:type_vae,id_type_vae'];
+        } else {
+            $rules['references.*.id_batterie'] = 'nullable|integer';
+            $rules['id_type_vae'] = ['nullable', 'integer'];
+        }
+
+        return $rules;
     }
 
     public function messages(): array
@@ -94,6 +107,17 @@ class BikeCreateRequest extends FormRequest
             'references.*.sizes.required' => 'Chaque référence doit contenir au moins une taille.',
             'references.*.sizes.array' => 'Les tailles doivent être un tableau.',
             'references.*.sizes.min' => 'Chaque référence doit avoir au moins une taille.',
+
+            'is_vae.required' => 'Veuillez indiquer si c\'est un vélo électrique.',
+            'is_vae.boolean' => 'La valeur VAE doit être vrai ou faux.',
+
+            'references.*.id_batterie.required' => 'La batterie est obligatoire pour chaque référence de vélo électrique.',
+            'references.*.id_batterie.integer' => 'L\'identifiant de la batterie doit être valide.',
+            'references.*.id_batterie.exists' => 'La batterie sélectionnée n\'existe pas.',
+
+            'id_type_vae.required' => 'Le type de VAE est obligatoire pour les vélos électriques.',
+            'id_type_vae.integer' => 'L\'identifiant du type de VAE doit être valide.',
+            'id_type_vae.exists' => 'Le type de VAE sélectionné n\'existe pas.',
         ];
     }
 }

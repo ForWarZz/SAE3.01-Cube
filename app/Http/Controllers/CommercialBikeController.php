@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BikeCreateRequest;
 use App\Models\ArticleReference;
+use App\Models\Battery;
 use App\Models\Bike;
 use App\Models\BikeFrame;
 use App\Models\BikeFrameMaterial;
@@ -11,6 +12,7 @@ use App\Models\BikeModel;
 use App\Models\BikeReference;
 use App\Models\Category;
 use App\Models\Color;
+use App\Models\EBikeType;
 use App\Models\Size;
 use App\Models\Usage;
 use App\Models\Vintage;
@@ -41,10 +43,12 @@ class CommercialBikeController extends Controller
         $frames = BikeFrame::all();
         $colors = Color::all();
         $sizes = Size::all();
+        $batteries = Battery::all();
+        $eBikeTypes = EBikeType::all();
 
         return view('commercial.bikes.create', compact(
             'models', 'categories', 'materials', 'vintages',
-            'usages', 'frames', 'colors', 'sizes'
+            'usages', 'frames', 'colors', 'sizes', 'batteries', 'eBikeTypes'
         ));
     }
 
@@ -66,8 +70,9 @@ class CommercialBikeController extends Controller
                 $modelId = $validated['id_modele_velo'];
             }
 
-            $result = DB::selectOne('SELECT fn_create_muscular_bike(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) as id_article',
+            $result = DB::selectOne('SELECT fn_create_bike(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) as id_article',
                 [
+                    $validated['is_vae'] ?? false,
                     $validated['nom_article'],
                     $validated['description_article'],
                     $validated['resumer_article'],
@@ -78,6 +83,7 @@ class CommercialBikeController extends Controller
                     $validated['id_materiau_cadre'],
                     $validated['id_millesime'],
                     $validated['id_usage'],
+                    $validated['id_type_vae'],
                 ]);
 
             $articleId = $result->id_article;
@@ -85,12 +91,14 @@ class CommercialBikeController extends Controller
             foreach ($validated['references'] as $refData) {
                 $forcedId = $refData['id_reference'] ?? null;
 
-                $refResult = DB::selectOne('SELECT fn_add_bike_reference(?, ?, ?, ?) as id_ref',
+                $refResult = DB::selectOne('SELECT fn_add_bike_reference(?, ?, ?, ?, ?, ?) as id_ref',
                     [
+                        $validated['is_vae'] ?? false,
                         $forcedId,
                         $articleId,
                         $refData['id_cadre_velo'],
                         $refData['id_couleur'],
+                        $refData['id_batterie'],
                     ]);
 
                 $referenceId = $refResult->id_ref;

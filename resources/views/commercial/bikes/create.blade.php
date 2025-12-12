@@ -22,7 +22,6 @@
             </div>
 
             <div class="px-6">
-                {{-- Erreurs --}}
                 @if ($errors->any())
                     <div class="mb-6 rounded-md border border-red-200 bg-red-50 p-4">
                         <h3 class="text-sm font-medium text-red-800">Erreurs de validation</h3>
@@ -35,13 +34,10 @@
                 @endif
 
                 <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                    {{-- Colonne principale --}}
                     <div class="space-y-6 lg:col-span-2">
-                        {{-- Informations générales --}}
                         <div class="rounded-lg bg-white p-6 shadow-sm">
                             <h2 class="mb-4 border-b pb-2 text-base font-semibold text-gray-900">Informations générales</h2>
 
-                            {{-- Modèle --}}
                             <div class="mb-4">
                                 <label class="mb-2 block text-sm font-medium text-gray-700">
                                     Modèle de vélo
@@ -69,6 +65,7 @@
                                         <span class="ml-2">Nouveau</span>
                                     </label>
                                 </div>
+
                                 <div x-show="modelChoice === 'existing'">
                                     <select
                                         name="id_modele_velo"
@@ -120,11 +117,11 @@
                                 label="Description complète"
                                 :value="old('description_article')"
                                 placeholder="Description détaillée..."
+                                required
                                 rows="4"
                             />
                         </div>
 
-                        {{-- Références / Déclinaisons --}}
                         <div class="rounded-lg bg-white p-6 shadow-sm">
                             <div class="mb-4 flex items-center justify-between border-b pb-3">
                                 <h2 class="text-base font-semibold text-gray-900">Déclinaisons</h2>
@@ -176,6 +173,20 @@
                                             </div>
                                         </div>
 
+                                        <div x-show="isVae" x-transition class="mt-3">
+                                            <label class="mb-1 block text-xs font-medium text-yellow-700">Batterie *</label>
+                                            <select
+                                                :name="`references[${idx}][id_batterie]`"
+                                                x-model="ref.id_batterie"
+                                                class="block w-full rounded-md border-gray-300 p-2 text-sm"
+                                            >
+                                                <option value="">-- Choisir --</option>
+                                                @foreach ($batteries as $battery)
+                                                    <option value="{{ $battery->id_batterie }}">{{ $battery->label_batterie }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
                                         <div class="mt-3">
                                             <label class="mb-2 block text-xs font-medium text-gray-600">Tailles *</label>
                                             <div class="flex flex-wrap gap-2">
@@ -186,6 +197,7 @@
                                                         <input
                                                             type="checkbox"
                                                             :name="`references[${idx}][sizes][]`"
+                                                            x-model="ref.sizes"
                                                             value="{{ $size->id_taille }}"
                                                             class="sr-only"
                                                         />
@@ -200,11 +212,30 @@
                         </div>
                     </div>
 
-                    {{-- Sidebar --}}
                     <div class="space-y-6">
-                        {{-- Configuration --}}
                         <div class="rounded-lg bg-white p-6 shadow-sm">
                             <h2 class="mb-4 text-base font-semibold text-gray-900">Configuration</h2>
+
+                            <div class="mb-4 rounded-md border border-gray-200 bg-gray-50 p-3">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-900">Vélo Électrique (VAE)</span>
+                                        <p class="text-xs text-gray-500">Nécessite une batterie par référence</p>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        @click="isVae = !isVae"
+                                        :class="isVae ? 'bg-blue-600' : 'bg-gray-200'"
+                                        class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors"
+                                    >
+                                        <span
+                                            :class="isVae ? 'translate-x-5' : 'translate-x-0'"
+                                            class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition"
+                                        ></span>
+                                    </button>
+                                    <input type="hidden" name="is_vae" :value="isVae ? 1 : 0" />
+                                </div>
+                            </div>
 
                             <div class="mb-4">
                                 <label class="mb-1 block text-sm font-medium text-gray-700">Catégorie *</label>
@@ -242,7 +273,7 @@
                                 </select>
                             </div>
 
-                            <div>
+                            <div class="mb-4">
                                 <label class="mb-1 block text-sm font-medium text-gray-700">Usage *</label>
                                 <select name="id_usage" class="block w-full rounded-md border-gray-300 p-2 text-sm">
                                     @foreach ($usages as $use)
@@ -252,9 +283,19 @@
                                     @endforeach
                                 </select>
                             </div>
+
+                            <div x-show="isVae">
+                                <label class="mb-1 block text-sm font-medium text-gray-700">Type VAE *</label>
+                                <select name="id_type_vae" class="block w-full rounded-md border-gray-300 p-2 text-sm">
+                                    @foreach ($eBikeTypes as $type)
+                                        <option value="{{ $type->id_type_vae }}" @selected(old("id_type_vae") == $type->id_type_vae)>
+                                            {{ $type->label_type_vae }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
 
-                        {{-- Tarification --}}
                         <div class="rounded-lg bg-white p-6 shadow-sm">
                             <h2 class="mb-4 text-base font-semibold text-gray-900">Tarification</h2>
 
@@ -286,12 +327,20 @@
 
     <script>
         function bikeForm() {
+            const emptyRow = {
+                id_cadre_velo: '',
+                id_couleur: '',
+                id_batterie: '',
+                sizes: [],
+            };
+
             return {
                 modelChoice: '{{ old("model_choice", "existing") }}',
-                refs: [{ id_cadre_velo: '', id_couleur: '' }],
+                isVae: {{ old("is_vae", 0) == 1 ? "true" : "false" }},
+                refs: @json(old("references", [""])),
 
                 addRef() {
-                    this.refs.push({ id_cadre_velo: '', id_couleur: '' });
+                    this.refs.push(emptyRow);
                 },
 
                 removeRef(idx) {
