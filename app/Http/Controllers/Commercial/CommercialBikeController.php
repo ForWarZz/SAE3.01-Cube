@@ -102,7 +102,7 @@ class CommercialBikeController extends Controller
             $articleId = $result->id_article;
 
             foreach ($validated['references'] as $refData) {
-                $forcedId = $refData['id_reference'] ?? null;
+                $forcedId = $refData['numero_reference'] ?? null;
 
                 $refResult = DB::selectOne('SELECT fn_add_bike_reference(?, ?, ?, ?, ?, ?) as id_ref',
                     [

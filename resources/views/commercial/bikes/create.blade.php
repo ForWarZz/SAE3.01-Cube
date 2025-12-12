@@ -200,13 +200,26 @@
                                                             type="checkbox"
                                                             :name="`references[${idx}][sizes][]`"
                                                             x-model="ref.sizes"
-                                                            value="{{ $size->id_taille }}"
+                                                            :value="'{{ $size->id_taille }}'"
                                                             class="sr-only"
                                                         />
                                                         {{ $size->nom_taille }}
                                                     </label>
                                                 @endforeach
                                             </div>
+                                        </div>
+
+                                        <div class="mt-3">
+                                            <label class="mb-1 block text-xs font-medium text-gray-600">
+                                                Numéro de référence (optionnel)
+                                            </label>
+                                            <input
+                                                type="text"
+                                                :name="`references[${idx}][numero_reference]`"
+                                                x-model="ref.numero_reference"
+                                                placeholder="Ex : 123456"
+                                                class="block w-full rounded-md border border-gray-300 p-2 text-sm"
+                                            />
                                         </div>
                                     </div>
                                 </template>
@@ -256,6 +269,8 @@
                                 <p x-show="categoryLocked" class="mt-1 text-xs text-gray-500 italic">
                                     Catégorie verrouillée par le modèle.
                                 </p>
+
+                                <input name="id_categorie" hidden x-model="selectedCategory" x-show="categoryLocked" />
                             </div>
 
                             <div class="mb-4">
@@ -337,19 +352,39 @@
 
     <script>
         function bikeForm() {
-            const emptyRow = {
-                id_cadre_velo: '',
-                id_couleur: '',
-                id_batterie: '',
-                sizes: [],
-            };
+            function createEmptyRow() {
+                return {
+                    id_cadre_velo: '',
+                    id_couleur: '',
+                    id_batterie: '',
+                    sizes: [],
+                    numero_reference: '',
+                };
+            }
+
+            function normalizeRef(ref) {
+                if (typeof ref !== 'object' || ref === null) {
+                    return createEmptyRow();
+                }
+
+                return {
+                    id_cadre_velo: ref.id_cadre_velo ?? '',
+                    id_couleur: ref.id_couleur ?? '',
+                    id_batterie: ref.id_batterie ?? '',
+                    sizes: Array.isArray(ref.sizes) ? ref.sizes.map(String) : [],
+                    numero_reference: ref.numero_reference ?? '',
+                };
+            }
 
             const modelsCategory = @json($modelsCategory);
+
+            const oldRefs = @json(old("references"));
+            const initialRefs = oldRefs && Array.isArray(oldRefs) && oldRefs.length > 0 ? oldRefs.map(normalizeRef) : [createEmptyRow()];
 
             return {
                 modelChoice: '{{ old("model_choice", "existing") }}',
                 isVae: {{ old("is_vae", 0) == 1 ? "true" : "false" }},
-                refs: @json(old("references", [""])),
+                refs: initialRefs,
                 selectedModel: '{{ old("id_modele_velo") }}',
                 selectedCategory: '{{ old("id_categorie") }}',
                 categoryLocked: false,
@@ -381,7 +416,7 @@
                 },
 
                 addRef() {
-                    this.refs.push(emptyRow);
+                    this.refs.push(createEmptyRow());
                 },
 
                 removeRef(idx) {
