@@ -38,6 +38,7 @@ class BikeCreateRequest extends FormRequest
             'id_usage' => 'required|integer',
             'is_vae' => 'required|boolean',
             'references' => 'required|array|min:1',
+            'references.*.numero_reference' => 'nullable|integer|distinct|min:0|unique:reference_article,id_reference',
             'references.*.id_cadre_velo' => 'required|integer',
             'references.*.id_couleur' => 'required|integer',
             'references.*.sizes' => 'required|array|min:1',
@@ -118,6 +119,11 @@ class BikeCreateRequest extends FormRequest
             'id_type_vae.required' => 'Le type de VAE est obligatoire pour les vélos électriques.',
             'id_type_vae.integer' => 'L\'identifiant du type de VAE doit être valide.',
             'id_type_vae.exists' => 'Le type de VAE sélectionné n\'existe pas.',
+
+            'references.*.numero_reference.unique' => 'Le numéro de référence :input est déjà utilisé.',
+            'references.*.numero_reference.integer' => 'Le numéro de référence doit être un entier.',
+            'references.*.numero_reference.min' => 'Le numéro de référence doit être positif.',
+            'references.*.numero_reference.distinct' => 'Les numéros de référence doivent être uniques parmi les références soumises.',
         ];
     }
 }
