@@ -84,24 +84,44 @@ class Article extends Model
         )->withPivot('valeur_caracteristique');
     }
 
-    public function getCoverUrl($colorId = null): string
+    public function getCoverUrl($referenceId = null): string
     {
-        if ($colorId) {
-            return Storage::url("articles/$this->id_article/$colorId/1.jpg");
+        if ($referenceId) {
+            return Storage::url("articles/{$this->id_article}/{$referenceId}/1.jpg");
         }
 
-        $firstRef = BikeReference::where('id_article', $this->id_article)->first();
-        if ($firstRef) {
-            return Storage::url("articles/$this->id_article/$firstRef->id_couleur/1.jpg");
+        $bikeRef = BikeReference::where('id_article', $this->id_article)->first();
+        if ($bikeRef) {
+            return Storage::url("articles/{$this->id_article}/{$bikeRef->id_reference}/1.jpg");
         }
 
-        return Storage::url("articles/$this->id_article/default/1.jpg");
+        $accessory = Accessory::where('id_article', $this->id_article)->first();
+        if ($accessory && $accessory->id_reference) {
+            return Storage::url("articles/{$this->id_article}/{$accessory->id_reference}/1.jpg");
+        }
+
+        return Storage::url("articles/{$this->id_article}/default/1.jpg");
     }
 
-    public function getAllImagesUrls($colorId = null, $is360 = false): array
+    public function getAllImagesUrls($referenceId = null, $is360 = false): array
     {
-        $folder = $colorId ?: 'default';
-        $directory = "articles/$this->id_article/$folder";
+        if ($referenceId) {
+            $directory = "articles/{$this->id_article}/{$referenceId}";
+        } else {
+            $bikeRef = BikeReference::where('id_article', $this->id_article)->first();
+
+            if ($bikeRef) {
+                $directory = "articles/{$this->id_article}/{$bikeRef->id_reference}";
+            } else {
+                $accessory = Accessory::where('id_article', $this->id_article)->first();
+
+                if ($accessory && $accessory->id_reference) {
+                    $directory = "articles/{$this->id_article}/{$accessory->id_reference}";
+                } else {
+                    $directory = "articles/{$this->id_article}/default";
+                }
+            }
+        }
 
         if ($is360) {
             $directory .= '/360';

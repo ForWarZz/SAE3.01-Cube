@@ -162,7 +162,7 @@ class CartService
 
             $cartData[] = [
                 'reference' => $reference->bikeReference ?? $reference->accessory,
-                'img_url' => $article->getCoverUrl($reference->bikeReference?->color?->id_couleur),
+                'img_url' => $article->getCoverUrl($reference->id_reference),
                 'size' => $size,
                 'quantity' => $sessionItem['quantity'],
                 'article' => $article,

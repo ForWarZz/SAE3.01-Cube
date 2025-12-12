@@ -57,7 +57,7 @@
     </div>
 
     <div class="mt-4 flex justify-center gap-4">
-        @if (! empty($article->getAllImagesUrls($currentReference->color?->id_couleur, true)))
+        @if (! empty($article->getAllImagesUrls($currentReference->id_reference, true)))
             <div>
                 <button type="button" id="butOverlay" class="cursor-pointer">
                     <img src="{{ asset("resources/360.svg") }}" alt="vue 360°" class="h-20 w-16" />
