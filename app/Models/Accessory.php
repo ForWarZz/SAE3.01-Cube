@@ -25,6 +25,8 @@ class Accessory extends Model
 
     protected $primaryKey = 'id_article';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'id_article',
         'id_reference',

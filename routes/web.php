@@ -5,6 +5,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CommercialAuthController;
+use App\Http\Controllers\CommercialBikeController;
 use App\Http\Controllers\CommercialCategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
@@ -122,6 +123,18 @@ Route::prefix('commercial')->name('commercial.')->group(function () {
         Route::post('/categories', [CommercialCategoryController::class, 'store'])->name('categories.store');
         Route::get('/modeles', [App\Http\Controllers\CommercialModelController::class, 'index'])->name('models.index');
         Route::post('/modeles', [App\Http\Controllers\CommercialModelController::class, 'store'])->name('models.store');
+
+        // Gestion des vélos
+        Route::prefix('/velos')->name('bikes.')->group(function () {
+            Route::get('/', [CommercialBikeController::class, 'index'])->name('index');
+            Route::get('/nouveau', [CommercialBikeController::class, 'create'])->name('create');
+            Route::post('/', [CommercialBikeController::class, 'store'])->name('store');
+            Route::get('/{bike}', [CommercialBikeController::class, 'show'])->name('show');
+            Route::get('/{bike}/modifier', [CommercialBikeController::class, 'edit'])->name('edit');
+            Route::put('/{bike}', [CommercialBikeController::class, 'update'])->name('update');
+            Route::post('/{bike}/references', [CommercialBikeController::class, 'addReference'])->name('add-reference');
+            Route::delete('/references/{reference}', [CommercialBikeController::class, 'deleteReference'])->name('delete-reference');
+        });
     });
 });
 

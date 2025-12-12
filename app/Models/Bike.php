@@ -28,7 +28,10 @@ class Bike extends Model
 
     protected $primaryKey = 'id_article';
 
+    public $timestamps = false;
+
     protected $fillable = [
+        'id_article',
         'id_millesime',
         'id_modele_velo',
         'id_materiau_cadre',
@@ -39,6 +42,7 @@ class Bike extends Model
         'description_article',
         'resumer_article',
         'date_ajout',
+        'nombre_vente_article',
     ];
 
     protected $casts = [

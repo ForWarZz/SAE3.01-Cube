@@ -86,7 +86,7 @@ class Category extends Model
     public function getFullPath(): string
     {
         $parents = $this->getAncestors();
-        $noms = array_map(fn($cat) => $cat->nom_categorie, $parents);
+        $noms = array_map(fn ($cat) => $cat->nom_categorie, $parents);
         $noms[] = $this->nom_categorie;
 
         return implode(' > ', $noms);
