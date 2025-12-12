@@ -5,13 +5,17 @@
         zoomed: false,
         zoomX: 0,
         zoomY: 0,
-        images: @js($article->getAllImagesUrls($currentReference->id_reference)),
+        images: @js($article->getAllImagesUrls(228)),
         prev() {
+            if (! this.images.length) return
+
             this.currentImageIndex =
                 (this.currentImageIndex - 1 + this.images.length) %
                 this.images.length
         },
         next() {
+            if (! this.images.length) return
+
             this.currentImageIndex =
                 (this.currentImageIndex + 1) % this.images.length
         },
@@ -24,10 +28,10 @@
 >
     <div class="relative h-[550px] w-full overflow-hidden rounded-lg">
         <img
-            :src="images[currentImageIndex]"
-            alt="{{ $article->nom_article }} - {{ $currentReference->color?->label_couleur }}"
+            :src="images.length > 0 ? images[currentImageIndex] : ''"
+            alt="{{ $article->nom_article }}"
             class="h-full w-full object-contain transition-transform duration-200"
-            @mousemove="zoomed = true; updateZoom($event)"
+            @mousemove="images.length && (zoomed = true); updateZoom($event)"
             @mouseleave="zoomed = false"
         />
 
@@ -57,13 +61,13 @@
     </div>
 
     <div class="mt-4 flex justify-center gap-4">
-        @if (! empty($article->getAllImagesUrls($currentReference->id_reference, true)))
-            <div>
-                <button type="button" id="butOverlay" class="cursor-pointer">
-                    <img src="{{ asset("resources/360.svg") }}" alt="vue 360°" class="h-20 w-16" />
-                </button>
-            </div>
-        @endif
+        {{-- @if (! empty($article->getAllImagesUrls($currentReference->id_reference, true))) --}}
+        {{-- <div> --}}
+        {{-- <button type="button" id="butOverlay" class="cursor-pointer"> --}}
+        {{-- <img src="{{ asset("resources/360.svg") }}" alt="vue 360°" class="h-20 w-16" /> --}}
+        {{-- </button> --}}
+        {{-- </div> --}}
+        {{-- @endif --}}
 
         <template x-for="(img, index) in images" :key="index">
             <img

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -106,8 +105,6 @@ class Article extends Model
 
     public function getAllImagesUrls($referenceId, $is360 = false): array
     {
-        Log::info('Getting images for article '.$this->id_article.' with reference '.($referenceId ?? 'null').' and is360='.($is360 ? 'true' : 'false'));
-
         $directory = "articles/$this->id_article/$referenceId";
 
         if ($is360) {
