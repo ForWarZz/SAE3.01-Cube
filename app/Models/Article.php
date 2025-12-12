@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -87,41 +88,27 @@ class Article extends Model
     public function getCoverUrl($referenceId = null): string
     {
         if ($referenceId) {
-            return Storage::url("articles/{$this->id_article}/{$referenceId}/1.jpg");
+            return Storage::url("articles/$this->id_article/$referenceId/1.jpg");
         }
 
         $bikeRef = BikeReference::where('id_article', $this->id_article)->first();
         if ($bikeRef) {
-            return Storage::url("articles/{$this->id_article}/{$bikeRef->id_reference}/1.jpg");
+            return Storage::url("articles/$this->id_article/$bikeRef->id_reference/1.jpg");
         }
 
         $accessory = Accessory::where('id_article', $this->id_article)->first();
         if ($accessory && $accessory->id_reference) {
-            return Storage::url("articles/{$this->id_article}/{$accessory->id_reference}/1.jpg");
+            return Storage::url("articles/$this->id_article/$accessory->id_reference/1.jpg");
         }
 
-        return Storage::url("articles/{$this->id_article}/default/1.jpg");
+        return Storage::url("articles/$this->id_article/default/1.jpg");
     }
 
-    public function getAllImagesUrls($referenceId = null, $is360 = false): array
+    public function getAllImagesUrls($referenceId, $is360 = false): array
     {
-        if ($referenceId) {
-            $directory = "articles/{$this->id_article}/{$referenceId}";
-        } else {
-            $bikeRef = BikeReference::where('id_article', $this->id_article)->first();
+        Log::info('Getting images for article '.$this->id_article.' with reference '.($referenceId ?? 'null').' and is360='.($is360 ? 'true' : 'false'));
 
-            if ($bikeRef) {
-                $directory = "articles/{$this->id_article}/{$bikeRef->id_reference}";
-            } else {
-                $accessory = Accessory::where('id_article', $this->id_article)->first();
-
-                if ($accessory && $accessory->id_reference) {
-                    $directory = "articles/{$this->id_article}/{$accessory->id_reference}";
-                } else {
-                    $directory = "articles/{$this->id_article}/default";
-                }
-            }
-        }
+        $directory = "articles/$this->id_article/$referenceId";
 
         if ($is360) {
             $directory .= '/360';

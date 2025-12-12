@@ -5,7 +5,7 @@
         zoomed: false,
         zoomX: 0,
         zoomY: 0,
-        images: @js($article->getAllImagesUrls($currentReference->color?->id_couleur)),
+        images: @js($article->getAllImagesUrls($currentReference->id_reference)),
         prev() {
             this.currentImageIndex =
                 (this.currentImageIndex - 1 + this.images.length) %
