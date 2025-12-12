@@ -117,7 +117,7 @@ class BikeVariantService
                     ?? $variants->first(fn ($r) => $r->ebike?->id_batterie === $battery->id_batterie);
 
                 return [
-                    'label' => $battery->capacite_batterie.' Wh',
+                    'label' => $battery->label_batterie,
                     'url' => route('articles.show-reference', [
                         'article' => $currentReference->id_article,
                         'reference' => $target->id_reference,
