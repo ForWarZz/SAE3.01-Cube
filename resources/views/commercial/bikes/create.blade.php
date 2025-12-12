@@ -69,6 +69,8 @@
                                 <div x-show="modelChoice === 'existing'">
                                     <select
                                         name="id_modele_velo"
+                                        x-model="selectedModel"
+                                        @change="applyModelCategory()"
                                         class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                     >
                                         <option value="">-- Sélectionner --</option>
@@ -239,13 +241,21 @@
 
                             <div class="mb-4">
                                 <label class="mb-1 block text-sm font-medium text-gray-700">Catégorie *</label>
-                                <select name="id_categorie" class="block w-full rounded-md border-gray-300 p-2 text-sm">
+                                <select
+                                    x-model="selectedCategory"
+                                    :disabled="categoryLocked"
+                                    name="id_categorie"
+                                    class="block w-full rounded-md border-gray-300 p-2 text-sm"
+                                >
                                     @foreach ($categories as $cat)
                                         <option value="{{ $cat->id_categorie }}" @selected(old("id_categorie") == $cat->id_categorie)>
                                             {{ $cat->getFullPath() }}
                                         </option>
                                     @endforeach
                                 </select>
+                                <p x-show="categoryLocked" class="mt-1 text-xs text-gray-500 italic">
+                                    Catégorie verrouillée par le modèle.
+                                </p>
                             </div>
 
                             <div class="mb-4">
@@ -334,10 +344,41 @@
                 sizes: [],
             };
 
+            const modelsCategory = @json($modelsCategory);
+
             return {
                 modelChoice: '{{ old("model_choice", "existing") }}',
                 isVae: {{ old("is_vae", 0) == 1 ? "true" : "false" }},
                 refs: @json(old("references", [""])),
+                selectedModel: '{{ old("id_modele_velo") }}',
+                selectedCategory: '{{ old("id_categorie") }}',
+                categoryLocked: false,
+
+                init() {
+                    this.applyModelCategory();
+                },
+
+                applyModelCategory() {
+                    console.log('Applying category for model:', this.selectedModel);
+
+                    if (this.modelChoice !== 'existing') {
+                        this.categoryLocked = false;
+                        return;
+                    }
+
+                    const cat = modelsCategory[this.selectedModel] ?? null;
+
+                    console.log('Found category:', cat);
+
+                    if (cat) {
+                        this.selectedCategory = cat;
+                        this.categoryLocked = true;
+
+                        console.log('Category locked to:', cat);
+                    } else {
+                        this.categoryLocked = false;
+                    }
+                },
 
                 addRef() {
                     this.refs.push(emptyRow);

@@ -47,8 +47,20 @@ class CommercialBikeController extends Controller
         $batteries = Battery::all();
         $eBikeTypes = EBikeType::all();
 
+        $bikesByModel = Bike::with('category')
+            ->get()
+            ->keyBy('id_modele_velo');
+
+        $modelsCategory = $models->mapWithKeys(function (BikeModel $bikeModel) use ($bikesByModel) {
+            $bike = $bikesByModel->get($bikeModel->id_modele_velo);
+
+            return [
+                $bikeModel->id_modele_velo => $bike?->category?->id_categorie,
+            ];
+        });
+
         return view('commercial.bikes.create', compact(
-            'models', 'categories', 'materials', 'vintages',
+            'modelsCategory', 'models', 'categories', 'materials', 'vintages',
             'usages', 'frames', 'colors', 'sizes', 'batteries', 'eBikeTypes'
         ));
     }
