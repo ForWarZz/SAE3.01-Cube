@@ -7,7 +7,7 @@ use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Hash;
 
-class ClientUserProvider extends EloquentUserProvider
+class CustomUserProvider extends EloquentUserProvider
 {
     /**
      * Retrieve a user by their unique identifier.
@@ -27,21 +27,18 @@ class ClientUserProvider extends EloquentUserProvider
      */
     public function retrieveByCredentials(array $credentials)
     {
-        if (empty($credentials) || (count($credentials) === 1 && array_key_exists('password', $credentials))) {
-            return null;
-        }
+        $model = $this->createModel();
 
-        $query = $this->createModel()->newQuery();
+        if (isset($credentials['email'])) {
+            $realColumn = $model->getLoginIdentifierName();
 
-        foreach ($credentials as $key => $value) {
-            if ($key === 'email') {
-                $query->where('email_client', $value);
-            } elseif (! str_contains($key, 'password')) {
-                $query->where($key, $value);
+            if ($realColumn !== 'email') {
+                $credentials[$realColumn] = $credentials['email'];
+                unset($credentials['email']);
             }
         }
 
-        return $query->first();
+        return parent::retrieveByCredentials($credentials);
     }
 
     /**

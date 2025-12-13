@@ -20,9 +20,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * Validation rules
      */
     public function rules(): array
     {
@@ -32,6 +30,9 @@ class LoginRequest extends FormRequest
         ];
     }
 
+    /**
+     * Validation messages
+     */
     public function messages(): array
     {
         return [
@@ -43,15 +44,17 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Attempt to authenticate the request's credentials.
+     * Attempt authentication using dynamic guard
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        if (! Auth::guard($this->guard())
+            ->attempt($this->only('email', 'password'))
+        ) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -63,9 +66,9 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Ensure the login request is not rate limited.
+     * Rate limit protection
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function ensureIsNotRateLimited(): void
     {
@@ -86,10 +89,22 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the rate limiting throttle key for the request.
+     * Rate limiting key (isolated per guard)
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(
+            Str::lower($this->string('email'))
+            .'|'.$this->guard()
+            .'|'.$this->ip()
+        );
+    }
+
+    /**
+     * Guard resolver (client / commercial / web)
+     */
+    protected function guard(): string
+    {
+        return $this->attributes->get('guard', 'web');
     }
 }

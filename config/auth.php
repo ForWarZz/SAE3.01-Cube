@@ -65,11 +65,11 @@ return [
 
     'providers' => [
         'clients' => [
-            'driver' => 'client',
+            'driver' => 'custom_eloquent',
             'model' => App\Models\Client::class,
         ],
         'commercials' => [
-            'driver' => 'eloquent',
+            'driver' => 'custom_eloquent',
             'model' => App\Models\Commercial::class,
         ],
     ],

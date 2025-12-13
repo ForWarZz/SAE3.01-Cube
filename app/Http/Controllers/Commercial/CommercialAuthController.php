@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Commercial;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Models\Commercial;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,27 +16,13 @@ class CommercialAuthController extends Controller
         return view('auth.commercial-login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request): RedirectResponse
     {
-        $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $request->attributes->set('guard', 'commercial');
+        $request->authenticate();
+        $request->session()->regenerate();
 
-        $credentials = [
-            'email_commercial' => $request->email,
-            'password' => $request->password,
-        ];
-
-        if (Auth::guard('commercial')->attempt($credentials)) {
-            $request->session()->regenerate();
-
-            return redirect()->intended(route('commercial.dashboard'));
-        }
-
-        return back()->withErrors([
-            'email' => 'Identifiants invalides.',
-        ]);
+        return redirect()->intended(route('commercial.dashboard'));
     }
 
     public function logout(Request $request)

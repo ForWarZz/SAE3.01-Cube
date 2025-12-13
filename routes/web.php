@@ -110,11 +110,12 @@ Route::get('/paiement/erreur', [CheckoutController::class, 'cancel'])
     ->name('payment.cancel');
 
 Route::prefix('commercial')->name('commercial.')->group(function () {
-    Route::get('/login', [CommercialAuthController::class, 'showLoginForm'])->name('login');
+    Route::middleware('guest:commercial')->group(function () {
+        Route::get('/login', [CommercialAuthController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [CommercialAuthController::class, 'login'])->name('login.submit');
+    });
 
-    Route::post('/login', [CommercialAuthController::class, 'login'])->name('login.submit');
     Route::post('/logout', [CommercialAuthController::class, 'logout'])->name('logout');
-
     Route::get('/references', [CommercialAuthController::class, 'viewReferences'])->name('references');
 
     Route::middleware('auth:commercial')->group(function () {
@@ -137,13 +138,11 @@ Route::prefix('commercial')->name('commercial.')->group(function () {
 
             // Gestion des références
             Route::post('/{bike}/references', [CommercialBikeController::class, 'addReference'])->name('references.store');
-            Route::put('/{bike}/references/{reference}', [CommercialBikeController::class, 'updateReference'])->name('references.update');
             Route::delete('/{bike}/references/{reference}', [CommercialBikeController::class, 'deleteReference'])->name('references.destroy');
 
             // Gestion des images des références
             Route::post('/{bike}/references/{reference}/images', [CommercialBikeController::class, 'addReferenceImages'])->name('references.images.store');
             Route::delete('/{bike}/references/{reference}/images/{imageName}', [CommercialBikeController::class, 'deleteReferenceImage'])->name('references.images.destroy');
-            Route::post('/{bike}/references/{reference}/images/reorder', [CommercialBikeController::class, 'reorderReferenceImages'])->name('references.images.reorder');
         });
 
         Route::get('/stats', [CommercialAuthController::class, 'viewStats'])->name('stats');

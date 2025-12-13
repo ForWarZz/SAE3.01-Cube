@@ -78,6 +78,11 @@ class Client extends Authenticatable
         return $this->id_client;
     }
 
+    public function getLoginIdentifierName(): string
+    {
+        return 'email_client';
+    }
+
     /**
      * Get the email address for the user.
      */

@@ -22,9 +22,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Register custom client user provider
-        Auth::provider('client', function ($app, array $config) {
-            return new ClientUserProvider($app['hash'], $config['model']);
+        Auth::provider('custom_eloquent', function ($app, array $config) {
+            return new CustomUserProvider($app['hash'], $config['model']);
         });
     }
 }

@@ -54,6 +54,11 @@ class Commercial extends Authenticatable
         return $this->id_commercial;
     }
 
+    public function getLoginIdentifierName(): string
+    {
+        return 'email_commercial';
+    }
+
     public function getEmailForPasswordReset(): string
     {
         return $this->email_commercial;
