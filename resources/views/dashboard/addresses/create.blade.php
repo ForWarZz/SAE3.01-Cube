@@ -5,7 +5,7 @@
                 <div class="p-6">
                     <h1 class="mb-6 text-2xl font-bold text-gray-900">Nouvelle adresse</h1>
 
-                    <form method="POST" action="{{ route("dashboard.adresses.store") }}" id="address-form">
+                    <form method="POST" action="{{ route("dashboard.addresses.store") }}" id="address-form">
                         @csrf
 
                         @if (isset($intended))
@@ -68,7 +68,7 @@
 
                         <div class="flex items-center justify-between">
                             <a
-                                href="{{ route("dashboard.adresses.index") }}"
+                                href="{{ route("dashboard.addresses.index") }}"
                                 class="text-sm font-medium text-indigo-600 hover:text-indigo-800"
                             >
                                 &larr; Retour aux adresses

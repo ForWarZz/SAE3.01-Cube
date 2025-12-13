@@ -63,7 +63,7 @@ Route::prefix('panier')->name('cart.')->group(function () {
 Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
-    Route::prefix('adresses')->name('adresses.')->group(function () {
+    Route::prefix('adresses')->name('addresses.')->group(function () {
         Route::get('/', [AddressController::class, 'index'])->name('index');
         Route::get('/nouvelle', [AddressController::class, 'create'])->name('create');
         Route::post('/', [AddressController::class, 'store'])->name('store');

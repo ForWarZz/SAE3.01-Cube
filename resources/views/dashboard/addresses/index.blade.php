@@ -9,7 +9,7 @@
                             <p class="mt-1 text-sm text-gray-500">Gérez vos adresses de livraison</p>
                         </div>
                         <a
-                            href="{{ route("dashboard.adresses.create") }}"
+                            href="{{ route("dashboard.addresses.create") }}"
                             class="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-800"
                         >
                             + Nouvelle adresse
@@ -18,7 +18,7 @@
 
                     <x-flash-message key="success" type="success" />
 
-                    @if ($adresses->isEmpty())
+                    @if ($addresses->isEmpty())
                         <div class="py-12 text-center">
                             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path
@@ -39,13 +39,13 @@
                         </div>
                     @else
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                            @foreach ($adresses as $adresse)
+                            @foreach ($addresses as $adresse)
                                 <x-address-card :address="$adresse">
                                     {{-- Injection du bouton supprimer via le slot 'actions' --}}
                                     <x-slot name="actions">
                                         <form
                                             method="POST"
-                                            action="{{ route("dashboard.adresses.destroy", $adresse) }}"
+                                            action="{{ route("dashboard.addresses.destroy", $adresse) }}"
                                             onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette adresse ?');"
                                         >
                                             @csrf

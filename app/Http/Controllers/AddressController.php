@@ -21,9 +21,9 @@ class AddressController extends Controller
         $client = Auth::user();
         $adresses = Adresse::where('id_client', $client->id_client)->with('ville')->get();
 
-        return view('dashboard.adresses.index', [
+        return view('dashboard.addresses.index', [
             'client' => $client,
-            'adresses' => $adresses,
+            'addresses' => $adresses,
         ]);
     }
 
@@ -34,7 +34,7 @@ class AddressController extends Controller
     {
         $client = Auth::user();
 
-        return view('dashboard.adresses.create', [
+        return view('dashboard.addresses.create', [
             'client' => $client,
             'intended' => $request->query('intended'),
         ]);
@@ -75,7 +75,7 @@ class AddressController extends Controller
             return redirect($intended)->with('success', 'Adresse créée avec succès.');
         }
 
-        return redirect()->route('dashboard.adresses.index')
+        return redirect()->route('dashboard.addresses.index')
             ->with('success', 'Adresse créée avec succès.');
     }
 
@@ -94,7 +94,7 @@ class AddressController extends Controller
 
         $result = $gdprService->deleteOrAnonymizeAddress($adresse);
 
-        return redirect()->route('dashboard.adresses.index')
+        return redirect()->route('dashboard.addresses.index')
             ->with('success', $result['message']);
     }
 }

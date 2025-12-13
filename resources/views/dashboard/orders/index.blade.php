@@ -70,7 +70,7 @@
 
                                             <div class="mt-3 space-y-1 border-t border-gray-100 pt-3">
                                                 <div class="flex justify-between text-gray-500">
-                                                    <span>{{ $order->count_articles }} article(s)</span>
+                                                    <span>{{ $order->countArticles }} article(s)</span>
                                                     <span>{{ number_format($order->financials->subtotal, 2, ",", " ") }} €</span>
                                                 </div>
 

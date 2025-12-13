@@ -65,13 +65,13 @@ class OrderService
                 'name' => $articleParent->nom_article,
                 'subtitle' => $subtitle,
                 'image' => $image,
-                'colorHex' => $isBike ? ($bikeRef->color?->code_hex ?? null) : null,
-                'colorName' => $isBike ? ($bikeRef->color?->nom_couleur ?? null) : null,
+                'colorHex' => $isBike ? $bikeRef->color?->code_hex : null,
+                'colorName' => $isBike ? $bikeRef->color?->nom_couleur : null,
                 'size' => $item->size?->nom_taille,
                 'quantity' => $item->quantite_ligne,
                 'unitPrice' => $item->prix_unit_ligne,
                 'totalPrice' => $item->prix_unit_ligne * $item->quantite_ligne,
-                'articleId' => $articleParent->id_article,
+                'articleId' => $ref->id_article,
             ];
         });
     }

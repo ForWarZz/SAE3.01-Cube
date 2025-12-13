@@ -7,7 +7,7 @@
 
         @php
             $defaultId = $addresses->isEmpty() ? "null" : $addresses->first()->id_adresse;
-            $newAddressRoute = route("dashboard.adresses.create", ["intended" => route("cart.checkout")]);
+            $newAddressRoute = route("dashboard.addresses.create", ["intended" => route("cart.checkout")]);
 
             $savedBillingId = $orderData["billing_address_id"] ?? $defaultId;
             $savedDeliveryId = $orderData["delivery_address_id"] ?? $defaultId;
