@@ -209,7 +209,7 @@
                                             {{ $order->deliveryAddress->ville->cp_ville }} {{ $order->deliveryAddress->ville->nom_ville }}
                                         </p>
                                     </address>
-                                    <p class="mt-2 text-gray-500">Mode : {{ $order->deliveryMode->nom_moyen_livraison ?? "Standard" }}</p>
+                                    <p class="mt-2 text-gray-500">Mode : {{ $order->deliveryMode->label_moyen_livraison }}</p>
                                 </div>
                             @endif
 
