@@ -5,8 +5,9 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\CommercialAuthController;
-use App\Http\Controllers\CommercialCategoryController;
+use App\Http\Controllers\Commercial\CommercialAuthController;
+use App\Http\Controllers\Commercial\CommercialBikeController;
+use App\Http\Controllers\Commercial\CommercialCategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
@@ -127,8 +128,27 @@ Route::prefix('commercial')->name('commercial.')->group(function () {
 
         Route::get('/categories', [CommercialCategoryController::class, 'index'])->name('categories.index');
         Route::post('/categories', [CommercialCategoryController::class, 'store'])->name('categories.store');
-        Route::get('/modeles', [App\Http\Controllers\CommercialModelController::class, 'index'])->name('models.index');
-        Route::post('/modeles', [App\Http\Controllers\CommercialModelController::class, 'store'])->name('models.store');
+        Route::get('/modeles', [\App\Http\Controllers\Commercial\CommercialModelController::class, 'index'])->name('models.index');
+        Route::post('/modeles', [\App\Http\Controllers\Commercial\CommercialModelController::class, 'store'])->name('models.store');
+
+        // Gestion des vélos
+        Route::prefix('/velos')->name('bikes.')->group(function () {
+            Route::get('/', [CommercialBikeController::class, 'index'])->name('index');
+            Route::get('/nouveau', [CommercialBikeController::class, 'create'])->name('create');
+            Route::post('/', [CommercialBikeController::class, 'store'])->name('store');
+            Route::get('/{bike}', [CommercialBikeController::class, 'show'])->name('show');
+            Route::delete('/{bike}', [CommercialBikeController::class, 'destroy'])->name('destroy');
+
+            // Gestion des références
+            Route::post('/{bike}/references', [CommercialBikeController::class, 'addReference'])->name('references.store');
+            Route::put('/{bike}/references/{reference}', [CommercialBikeController::class, 'updateReference'])->name('references.update');
+            Route::delete('/{bike}/references/{reference}', [CommercialBikeController::class, 'deleteReference'])->name('references.destroy');
+
+            // Gestion des images des références
+            Route::post('/{bike}/references/{reference}/images', [CommercialBikeController::class, 'addReferenceImages'])->name('references.images.store');
+            Route::delete('/{bike}/references/{reference}/images/{imageName}', [CommercialBikeController::class, 'deleteReferenceImage'])->name('references.images.destroy');
+            Route::post('/{bike}/references/{reference}/images/reorder', [CommercialBikeController::class, 'reorderReferenceImages'])->name('references.images.reorder');
+        });
     });
 });
 

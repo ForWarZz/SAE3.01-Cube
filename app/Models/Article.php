@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -20,9 +21,13 @@ use Illuminate\Support\Facades\Storage;
  */
 class Article extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'article';
 
     protected $primaryKey = 'id_article';
+
+    public $timestamps = false;
 
     protected $fillable = [
         'id_article',
@@ -79,49 +84,37 @@ class Article extends Model
         )->withPivot('valeur_caracteristique');
     }
 
-    public function getCoverUrl($colorId = null): string
+    public function getCoverUrl($referenceId = null): string
     {
-        if ($colorId) {
-            return Storage::url("articles/$this->id_article/$colorId/1.jpg");
+        if ($referenceId) {
+            return Storage::url("articles/$this->id_article/$referenceId/1.jpg");
         }
 
-        $firstRef = BikeReference::where('id_article', $this->id_article)->first();
-        if ($firstRef) {
-            return Storage::url("articles/$this->id_article/$firstRef->id_couleur/1.jpg");
+        $bikeRef = BikeReference::where('id_article', $this->id_article)->first();
+        if ($bikeRef) {
+            return Storage::url("articles/$this->id_article/$bikeRef->id_reference/1.jpg");
+        }
+
+        $accessory = Accessory::where('id_article', $this->id_article)->first();
+        if ($accessory && $accessory->id_reference) {
+            return Storage::url("articles/$this->id_article/$accessory->id_reference/1.jpg");
         }
 
         return Storage::url("articles/$this->id_article/default/1.jpg");
     }
 
-    public function getCoverThumbnailUrl($colorId = null): string
-    {
-        if ($colorId) {
-            $path = "articles/$this->id_article/$colorId/thumbs/1.jpg";
-        } else {
-            $firstRef = BikeReference::where('id_article', $this->id_article)->first();
-            if ($firstRef) {
-                $path = "articles/$this->id_article/$firstRef->id_couleur/thumbs/1.jpg";
-            } else {
-                $path = "articles/$this->id_article/default/thumbs/1.jpg";
-            }
-        }
-
-        return Storage::url($path);
-    }
-
-    public function getAllImagesUrls($colorId = null, $is360 = false): array
-    {
-        $folder = $colorId ?: 'default';
-        $directory = "articles/$this->id_article/$folder";
-
-        if ($is360) {
-            $directory .= '/360';
-        }
-
-        $files = Storage::disk('public')->files($directory);
-
-        return array_map(fn ($f) => Storage::url($f), $files);
-    }
+    //    public function getAllImagesUrls($referenceId, $is360 = false): array
+    //    {
+    //        $directory = "articles/$this->id_article/$referenceId";
+    //
+    //        if ($is360) {
+    //            $directory .= '/360';
+    //        }
+    //
+    //        $files = Storage::disk('public')->files($directory);
+    //
+    //        return array_map(fn ($f) => Storage::url($f), $files);
+    //    }
 
     public function isBike(): bool
     {

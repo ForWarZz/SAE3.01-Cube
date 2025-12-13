@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CartAddRequest;
-use App\Http\Requests\CartApplyDiscountRequest;
-use App\Http\Requests\CartDeleteRequest;
-use App\Http\Requests\CartUpdateQuantityRequest;
+use App\Http\Requests\Cart\CartAddRequest;
+use App\Http\Requests\Cart\CartApplyDiscountRequest;
+use App\Http\Requests\Cart\CartDeleteRequest;
+use App\Http\Requests\Cart\CartUpdateQuantityRequest;
 use App\Models\ArticleReference;
 use App\Models\Size;
 use App\Services\Cart\CartService;
@@ -34,7 +34,7 @@ class CartController extends Controller
 
         $itemData = [
             'name' => $article->nom_article ?? 'Article',
-            'image' => $article->getCoverThumbnailUrl($color?->id_couleur ?? null),
+            'image' => $article->getCoverUrl($reference->id_reference),
             'color' => $color?->label_couleur ?? null,
             'size' => $size->nom_taille,
             'price' => number_format($article->getDiscountedPrice(), 2, ',', ' ').' €',

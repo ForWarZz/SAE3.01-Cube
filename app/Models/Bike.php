@@ -28,7 +28,10 @@ class Bike extends Model
 
     protected $primaryKey = 'id_article';
 
+    public $timestamps = false;
+
     protected $fillable = [
+        'id_article',
         'id_millesime',
         'id_modele_velo',
         'id_materiau_cadre',
@@ -39,11 +42,19 @@ class Bike extends Model
         'description_article',
         'resumer_article',
         'date_ajout',
+        'nombre_vente_article',
     ];
 
     protected $casts = [
         'date_ajout' => 'datetime',
     ];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('active_article', function ($builder) {
+            $builder->whereHas('article');
+        });
+    }
 
     /**
      * Check if the bike was added less than 6 months ago
@@ -80,6 +91,11 @@ class Bike extends Model
     public function references(): HasMany
     {
         return $this->hasMany(BikeReference::class, 'id_article', 'id_article');
+    }
+
+    public function ebikeReferences(): HasMany
+    {
+        return $this->hasMany(EBikeReference::class, 'id_article', 'id_article');
     }
 
     public function usage(): BelongsTo

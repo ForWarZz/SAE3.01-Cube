@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int $id_article
@@ -25,6 +26,8 @@ class Accessory extends Model
 
     protected $primaryKey = 'id_article';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'id_article',
         'id_reference',
@@ -35,6 +38,13 @@ class Accessory extends Model
         'description_article',
         'resumer_article',
     ];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('active_article', function ($builder) {
+            $builder->whereHas('article');
+        });
+    }
 
     public function article(): BelongsTo
     {
@@ -89,5 +99,18 @@ class Accessory extends Model
             'id_reference',
             'id_magasin'
         )->withPivot(['id_taille', 'statut']);
+    }
+
+    public function getImagesUrls(bool $is360 = false): array
+    {
+        $directory = "articles/$this->id_article/$this->id_reference/";
+
+        if ($is360) {
+            $directory .= '/360';
+        }
+
+        $files = Storage::disk('public')->files($directory);
+
+        return array_map(fn ($f) => Storage::url($f), $files);
     }
 }
