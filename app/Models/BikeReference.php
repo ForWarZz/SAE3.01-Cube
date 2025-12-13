@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int $id_reference
@@ -82,5 +83,33 @@ class BikeReference extends Model
             'id_reference',
             'id_magasin'
         )->withPivot(['id_taille', 'statut']);
+    }
+
+    public function getImagesUrls(bool $is360 = false): array
+    {
+        $files = $this->getImageFiles($is360);
+
+        return array_map(fn ($f) => Storage::url($f), $files);
+    }
+
+    public function getImageFiles(bool $is360 = false): array
+    {
+        $directory = $this->getStorageDirectory();
+
+        if ($is360) {
+            $directory .= '/360';
+        }
+
+        return Storage::disk('public')->files($directory);
+    }
+
+    public function getStorageDirectory(): string
+    {
+        return "articles/$this->id_article/$this->id_reference/";
+    }
+
+    public function getImagePathFromName(string $imageName): string
+    {
+        return $this->getStorageDirectory().$imageName;
     }
 }

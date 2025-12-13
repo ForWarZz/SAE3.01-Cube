@@ -76,6 +76,13 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     <div class="flex space-x-2">
+                                        <a
+                                            href="{{ route("commercial.bikes.show", $bike) }}"
+                                            class="text-blue-600 hover:text-blue-800"
+                                            title="Voir / Gérer les références"
+                                        >
+                                            <x-heroicon-o-eye class="h-5 w-5" />
+                                        </a>
                                         <form action="{{ route("commercial.bikes.destroy", $bike) }}" method="post">
                                             @csrf
                                             @method("DELETE")
@@ -89,22 +96,6 @@
                                                 <x-heroicon-o-trash class="h-5 w-5" />
                                             </button>
                                         </form>
-                                        {{-- <a --}}
-                                        {{--  --}}
-                                        {{-- href="{{ route("commercial.bikes.show", $bike) }}" --}}
-                                        {{-- class="text-blue-600 hover:text-blue-800" --}}
-                                        {{-- title="Voir" --}}
-                                        {{-- > --}}
-                                        {{-- <x-heroicon-o-eye class="h-5 w-5" /> --}}
-                                        {{-- </a> --}}
-                                        {{-- <a --}}
-                                        {{--  --}}
-                                        {{-- href="{{ route("commercial.bikes.edit", $bike) }}" --}}
-                                        {{-- class="text-yellow-600 hover:text-yellow-800" --}}
-                                        {{-- title="Modifier" --}}
-                                        {{-- > --}}
-                                        {{-- <x-heroicon-o-pencil class="h-5 w-5" /> --}}
-                                        {{-- </a> --}}
                                     </div>
                                 </td>
                             </tr>

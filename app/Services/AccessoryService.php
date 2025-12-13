@@ -25,6 +25,7 @@ class AccessoryService
 
             'compatibleAccessories' => collect(),
             'weight' => $weight ?? 0,
+            'images' => $accessory->getImagesUrls(),
         ];
     }
 }

@@ -45,6 +45,7 @@ class BikeService
             'weight' => $weight,
 
             'compatibleAccessories' => $this->getCompatibleAccessories($bike),
+            'images' => $currentReference->getImagesUrls(),
         ];
     }
 

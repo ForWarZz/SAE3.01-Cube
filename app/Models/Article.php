@@ -103,18 +103,18 @@ class Article extends Model
         return Storage::url("articles/$this->id_article/default/1.jpg");
     }
 
-    public function getAllImagesUrls($referenceId, $is360 = false): array
-    {
-        $directory = "articles/$this->id_article/$referenceId";
-
-        if ($is360) {
-            $directory .= '/360';
-        }
-
-        $files = Storage::disk('public')->files($directory);
-
-        return array_map(fn ($f) => Storage::url($f), $files);
-    }
+    //    public function getAllImagesUrls($referenceId, $is360 = false): array
+    //    {
+    //        $directory = "articles/$this->id_article/$referenceId";
+    //
+    //        if ($is360) {
+    //            $directory .= '/360';
+    //        }
+    //
+    //        $files = Storage::disk('public')->files($directory);
+    //
+    //        return array_map(fn ($f) => Storage::url($f), $files);
+    //    }
 
     public function isBike(): bool
     {

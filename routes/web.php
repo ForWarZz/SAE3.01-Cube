@@ -128,15 +128,19 @@ Route::prefix('commercial')->name('commercial.')->group(function () {
         Route::prefix('/velos')->name('bikes.')->group(function () {
             Route::get('/', [CommercialBikeController::class, 'index'])->name('index');
             Route::get('/nouveau', [CommercialBikeController::class, 'create'])->name('create');
-
             Route::post('/', [CommercialBikeController::class, 'store'])->name('store');
+            Route::get('/{bike}', [CommercialBikeController::class, 'show'])->name('show');
             Route::delete('/{bike}', [CommercialBikeController::class, 'destroy'])->name('destroy');
 
-            //            Route::get('/{bike}', [CommercialBikeController::class, 'show'])->name('show');
-            //            Route::get('/{bike}/modifier', [CommercialBikeController::class, 'edit'])->name('edit');
-            //            Route::put('/{bike}', [CommercialBikeController::class, 'update'])->name('update');
-            //            Route::post('/{bike}/references', [CommercialBikeController::class, 'addReference'])->name('add-reference');
-            //            Route::delete('/references/{reference}', [CommercialBikeController::class, 'deleteReference'])->name('delete-reference');
+            // Gestion des références
+            Route::post('/{bike}/references', [CommercialBikeController::class, 'addReference'])->name('references.store');
+            Route::put('/{bike}/references/{reference}', [CommercialBikeController::class, 'updateReference'])->name('references.update');
+            Route::delete('/{bike}/references/{reference}', [CommercialBikeController::class, 'deleteReference'])->name('references.destroy');
+
+            // Gestion des images des références
+            Route::post('/{bike}/references/{reference}/images', [CommercialBikeController::class, 'addReferenceImages'])->name('references.images.store');
+            Route::delete('/{bike}/references/{reference}/images/{imageName}', [CommercialBikeController::class, 'deleteReferenceImage'])->name('references.images.destroy');
+            Route::post('/{bike}/references/{reference}/images/reorder', [CommercialBikeController::class, 'reorderReferenceImages'])->name('references.images.reorder');
         });
     });
 });

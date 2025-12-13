@@ -116,7 +116,6 @@ class ArticleService
             'hasDiscount' => $article->hasDiscount(),
             'discountPercent' => $article->pourcentage_remise,
 
-            'images' => $article->getAllImagesUrls($reference->id_reference),
             'characteristics' => $article->characteristics
                 ->groupBy('characteristicType.nom_type_carac'),
 
