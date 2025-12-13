@@ -85,6 +85,17 @@ class BikeReference extends Model
         )->withPivot(['id_taille', 'statut']);
     }
 
+    public function getCoverUrl(): string
+    {
+        $files = $this->getImageFiles();
+
+        if (empty($files)) {
+            return '';
+        }
+
+        return $this->getImageFiles()[0];
+    }
+
     public function getImagesUrls(bool $is360 = false): array
     {
         $files = $this->getImageFiles($is360);

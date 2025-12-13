@@ -53,9 +53,7 @@ class OrderService
             $isBike = $bikeRef !== null;
 
             $articleParent = $isBike ? $bikeRef?->article : $accessory?->article;
-            $image = $isBike
-                ? $articleParent->getCoverThumbnailUrl($bikeRef->id_couleur)
-                : $articleParent->getCoverThumbnailUrl();
+            $image = $ref->getCoverUrl();
 
             $subtitle = $isBike
                 ? ($articleParent->bike?->bikeModel->nom_modele_velo ?? 'Vélo')
