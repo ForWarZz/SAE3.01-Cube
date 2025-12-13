@@ -17,9 +17,6 @@ use Illuminate\Support\Collection;
 
 class BikeFormDataService
 {
-    /**
-     * Récupère toutes les données nécessaires pour le formulaire de création
-     */
     public function getCreateFormData(): array
     {
         $models = $this->getModels();

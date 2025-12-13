@@ -15,9 +15,6 @@ class CommercialBikeService
         protected BikeReferenceService $referenceService,
     ) {}
 
-    /**
-     * Récupère la liste paginée des vélos
-     */
     public function getPaginatedBikes(int $perPage = 10): LengthAwarePaginator
     {
         return Bike::with(['bikeModel', 'category', 'frameMaterial', 'vintage', 'usage', 'article', 'references'])
@@ -26,8 +23,6 @@ class CommercialBikeService
     }
 
     /**
-     * Crée un nouveau vélo avec ses références
-     *
      * @throws \Exception
      */
     public function createBike(array $validated, array $referenceImages = []): int
@@ -60,8 +55,6 @@ class CommercialBikeService
     }
 
     /**
-     * Supprime un vélo et toutes ses références
-     *
      * @throws \Exception
      */
     public function deleteBike(Bike $bike): void
