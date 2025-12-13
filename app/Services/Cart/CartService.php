@@ -5,8 +5,8 @@ namespace App\Services\Cart;
 use App\DTOs\Cart\ShippingModeDTO;
 use App\Models\Article;
 use App\Models\ArticleReference;
-use App\Models\DeliveryMode;
 use App\Models\DiscountCode;
+use App\Models\ShippingMode;
 use App\Models\Size;
 use Illuminate\Support\Collection;
 
@@ -86,10 +86,10 @@ class CartService
 
         $deliveryPrice = $subtotal >= 50 ? 0 : 6;
 
-        return DeliveryMode::query()
+        return ShippingMode::query()
             ->when($hasBikes, fn ($q) => $q->where('id_moyen_livraison', '=', 1))
             ->get()
-            ->map(function (DeliveryMode $mode) use ($deliveryPrice) {
+            ->map(function (ShippingMode $mode) use ($deliveryPrice) {
                 $price = $mode->id_moyen_livraison === 1 ? $deliveryPrice : 6;
 
                 return new ShippingModeDTO(

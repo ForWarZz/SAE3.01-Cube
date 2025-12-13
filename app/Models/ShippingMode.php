@@ -8,8 +8,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id_moyen_livraison
  * @property string $label_moyen_livraison
  */
-class DeliveryMode extends Model
+class ShippingMode extends Model
 {
+    public const CLICK_AND_COLLECT = 1;
+
+    public const HOME_DELIVERY = 2;
+
     public $timestamps = false;
 
     protected $primaryKey = 'id_moyen_livraison';

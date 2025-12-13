@@ -43,7 +43,7 @@
                 <p class="text-gray-600">{{ $address->complement_adresse }}</p>
             @endif
 
-            <p class="text-gray-600">{{ $address->ville->cp_ville }} {{ $address->ville->nom_ville }}</p>
+            <p class="text-gray-600">{{ $address->city->cp_ville }} {{ $address->city->nom_ville }}</p>
 
             @if ($address->tva_adresse)
                 <p class="mt-1 text-gray-500">TVA: {{ $address->tva_adresse }}</p>

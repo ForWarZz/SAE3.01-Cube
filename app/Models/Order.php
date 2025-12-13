@@ -82,9 +82,9 @@ class Order extends Model
             ->withTrashed();
     }
 
-    public function deliveryMode(): BelongsTo
+    public function shippingMode(): BelongsTo
     {
-        return $this->belongsTo(DeliveryMode::class, 'id_moyen_livraison', 'id_moyen_livraison');
+        return $this->belongsTo(ShippingMode::class, 'id_moyen_livraison', 'id_moyen_livraison');
     }
 
     public function client(): BelongsTo
@@ -105,5 +105,10 @@ class Order extends Model
     public function paymentType(): BelongsTo
     {
         return $this->belongsTo(PaymentType::class, 'id_type_paiement', 'id_type_paiement');
+    }
+
+    public function shop(): BelongsTo
+    {
+        return $this->belongsTo(Shop::class, 'id_magasin', 'id_magasin');
     }
 }

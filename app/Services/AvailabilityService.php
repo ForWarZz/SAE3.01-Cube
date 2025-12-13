@@ -9,7 +9,7 @@ class AvailabilityService
 {
     public function getAvailabilities(int $referenceId, ?int $sizeFilter = null): array
     {
-        $shops = Shop::with('ville')->get();
+        $shops = Shop::with('city')->get();
 
         $allAvailabilities = ShopAvailability::where('id_reference', $referenceId)
             ->with(['size', 'shop'])
@@ -31,8 +31,6 @@ class AvailabilityService
 
             $globalStatus = $hasInStock ? 'in_stock' : ($hasOrderable ? 'orderable' : 'unavailable');
 
-            
-
             $results[] = [
                 'shop' => [
                     'id' => $shop->id_magasin,
@@ -43,12 +41,12 @@ class AvailabilityService
                     'lng' => $shop->longitude ? (float) $shop->longitude : null,
                     'isOpen' => true,
                     'hours' => '09:00 - 19:00',
-                    'city' => $shop->ville ? trim($shop->ville->nom_ville) : null,
-                    'postalCode' => $shop->ville ? trim($shop->ville->cp_ville) : null,
-                    'country' => $shop->ville ? $shop->ville->pays_ville : null,
+                    'city' => $shop->city ? trim($shop->city->nom_ville) : null,
+                    'postalCode' => $shop->city ? trim($shop->city->cp_ville) : null,
+                    'country' => $shop->city ? $shop->city->pays_ville : null,
                 ],
                 'status' => $globalStatus,
-                
+
             ];
         }
 

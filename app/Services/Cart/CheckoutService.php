@@ -61,7 +61,7 @@ class CheckoutService
         );
 
         return [
-            'addresses' => $client->addresses()->with('ville')->get(),
+            'addresses' => $client->addresses()->with('city')->get(),
             'deliveryModes' => $shippingModes->map(fn (ShippingModeDTO $mode) => $mode->toArray())->toArray(),
             'selectedShippingId' => $checkoutData['shipping_mode']?->id,
             'orderData' => [

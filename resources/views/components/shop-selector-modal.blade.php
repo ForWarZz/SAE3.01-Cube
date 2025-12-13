@@ -272,16 +272,10 @@
                     const res = await fetch(url);
                     const data = await res.json();
                     this.shops = data.availabilities || data.shops || [];
-                    
-                    
+
                     if (this.userLat && this.userLng) {
                         this.shops = this.shops.map((item) => {
-                            const distance = this.calculateDistance(
-                                this.userLat, 
-                                this.userLng, 
-                                item.shop.lat, 
-                                item.shop.lng
-                            );
+                            const distance = this.calculateDistance(this.userLat, this.userLng, item.shop.lat, item.shop.lng);
                             return { ...item, distance };
                         });
                     }
@@ -325,7 +319,7 @@
                 }
 
                 // Tri par distance (déjà calculée dans loadShops)
-                if (result.some(item => item.distance !== undefined)) {
+                if (result.some((item) => item.distance !== undefined)) {
                     result = [...result].sort((a, b) => (a.distance || Infinity) - (b.distance || Infinity));
                 }
 
@@ -371,7 +365,9 @@
                 const statusLabels = { in_stock: 'Disponible', orderable: 'Commandable', unavailable: 'Indisponible' };
                 const color = statusColors[item.status] || '#6b7280';
                 const statusText = statusLabels[item.status] || 'Indisponible';
-                const distanceText = item.distance ? `<span class="text-xs text-gray-500 ml-2">(${item.distance.toFixed(1)} km)</span>` : '';
+                const distanceText = item.distance
+                    ? `<span class="text-xs text-gray-500 ml-2">(${item.distance.toFixed(1)} km)</span>`
+                    : '';
 
                 return `
                     <div class="p-3 min-w-[220px] font-sans">
@@ -380,9 +376,12 @@
                             <p class="text-xs text-gray-600 leading-tight">${item.shop.address}</p>
                             <p class="text-xs text-gray-600 leading-tight">${item.shop.postalCode || ''} ${item.shop.city || ''}</p>
                         </div>
-                        ${this.showAvailability ? 
-                            `<p class="text-xs font-bold mb-3" style="color:${color}">${statusText}${distanceText}</p>` : 
-                            (item.distance ? `<p class="text-xs text-gray-500 mb-3">${distanceText}</p>` : '')
+                        ${
+                            this.showAvailability
+                                ? `<p class="text-xs font-bold mb-3" style="color:${color}">${statusText}${distanceText}</p>`
+                                : item.distance
+                                  ? `<p class="text-xs text-gray-500 mb-3">${distanceText}</p>`
+                                  : ''
                         }
                         <button onclick="window.dispatchEvent(new CustomEvent('select-shop-from-map', { detail: { id: ${item.shop.id}, name: '${item.shop.name.replace(/'/g, "\\'")}' } }))"
                                 class="w-full bg-gray-900 text-white px-3 py-2 text-xs font-bold uppercase hover:bg-gray-800 transition-colors">

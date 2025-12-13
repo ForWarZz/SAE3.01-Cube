@@ -51,7 +51,7 @@ class Address extends Model
         return $this->belongsTo(Client::class, 'id_client', 'id_client');
     }
 
-    public function ville(): BelongsTo
+    public function city(): BelongsTo
     {
         return $this->belongsTo(City::class, 'id_ville', 'id_ville');
     }

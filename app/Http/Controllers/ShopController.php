@@ -9,18 +9,18 @@ class ShopController extends Controller
 {
     public function index()
     {
-        $shops = Shop::with('ville')
-            ->withCoordinates() 
+        $shops = Shop::with('city')
+            ->withCoordinates()
             ->get()
             ->map(function ($shop) {
                 return [
                     'shop' => $shop->toApiFormat(),
-                    'status' => null
+                    'status' => null,
                 ];
             });
 
         return response()->json([
-            'shops' => $shops
+            'shops' => $shops,
         ]);
     }
 
@@ -30,15 +30,15 @@ class ShopController extends Controller
     public function select(Request $request)
     {
         $validated = $request->validate([
-            'shop_id' => 'required|exists:magasin,id_magasin'
+            'shop_id' => 'required|exists:magasin,id_magasin',
         ]);
 
-        $shop = Shop::with('ville')->find($validated['shop_id']);
-        
+        $shop = Shop::with('city')->find($validated['shop_id']);
+
         session(['selected_shop' => [
             'id' => $shop->id_magasin,
             'name' => $shop->nom_magasin,
-            'city' => $shop->ville ? trim($shop->ville->nom_ville) : null,
+            'city' => $shop->city ? trim($shop->city->nom_ville) : null,
         ]]);
 
         return response()->json([
@@ -46,7 +46,7 @@ class ShopController extends Controller
             'shop' => [
                 'id' => $shop->id_magasin,
                 'name' => $shop->nom_magasin,
-            ]
+            ],
         ]);
     }
 
@@ -54,16 +54,16 @@ class ShopController extends Controller
     {
         $selectedShop = session('selected_shop');
 
-        if (!$selectedShop) {
+        if (! $selectedShop) {
             return response()->json([
                 'selected' => false,
-                'shop' => null
+                'shop' => null,
             ]);
         }
 
         return response()->json([
             'selected' => true,
-            'shop' => $selectedShop
+            'shop' => $selectedShop,
         ]);
     }
 
@@ -71,22 +71,22 @@ class ShopController extends Controller
     {
         $query = $request->input('q', '');
 
-        $shops = Shop::with('ville')
+        $shops = Shop::with('city')
             ->withCoordinates()
             ->where(function ($q) use ($query) {
                 $q->where('nom_magasin', 'ILIKE', "%{$query}%")
-                  ->orWhere('rue_magasin', 'ILIKE', "%{$query}%")
-                  ->orWhereHas('ville', function ($subQuery) use ($query) {
-                      $subQuery->where('nom_ville', 'ILIKE', "%{$query}%")
-                               ->orWhere('cp_ville', 'LIKE', "%{$query}%");
-                  });
+                    ->orWhere('rue_magasin', 'ILIKE', "%{$query}%")
+                    ->orWhereHas('city', function ($subQuery) use ($query) {
+                        $subQuery->where('nom_ville', 'ILIKE', "%{$query}%")
+                            ->orWhere('cp_ville', 'LIKE', "%{$query}%");
+                    });
             })
             ->limit(20)
             ->get()
-            ->map(fn($shop) => ['shop' => $shop->toApiFormat(), 'status' => null]);
+            ->map(fn ($shop) => ['shop' => $shop->toApiFormat(), 'status' => null]);
 
         return response()->json([
-            'shops' => $shops
+            'shops' => $shops,
         ]);
     }
 }

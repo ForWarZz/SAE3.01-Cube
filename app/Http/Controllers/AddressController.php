@@ -19,7 +19,7 @@ class AddressController extends Controller
     public function index(Request $request): View
     {
         $client = Auth::user();
-        $adresses = Address::where('id_client', $client->id_client)->with('ville')->get();
+        $adresses = Address::where('id_client', $client->id_client)->with('city')->get();
 
         return view('dashboard.addresses.index', [
             'client' => $client,

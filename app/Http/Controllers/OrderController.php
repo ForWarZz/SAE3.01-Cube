@@ -57,7 +57,7 @@ class OrderController extends Controller
     {
         $client = auth()->user();
         $orders = $client->orders()
-            ->with(['items', 'deliveryAddress.ville', 'states'])
+            ->with(['items', 'deliveryAddress.city', 'states'])
             ->orderByDesc('date_commande')
             ->paginate(6)
             ->through(fn ($order) => $this->orderService->formatForIndex($order));
@@ -81,11 +81,12 @@ class OrderController extends Controller
             'items.reference.bikeReference.color',
             'items.reference.accessory.article.category',
             'items.size',
-            'billingAddress.ville',
-            'deliveryAddress.ville',
-            'deliveryMode',
+            'billingAddress.city',
+            'deliveryAddress.city',
+            'shippingMode',
             'states',
             'paymentType',
+            'shop.city',
         ]);
 
         $currentState = $order->currentState();
@@ -97,6 +98,7 @@ class OrderController extends Controller
             'financials' => $this->orderService->calculateFinancials($order),
             'items' => $this->orderService->formatLineItems($order->items),
             'paymentType' => $order->paymentType?->nom_type_paiement,
+            'shop' => $order->shop,
         ]);
     }
 }

@@ -242,8 +242,8 @@ class GdprService
                     'numero_voie' => $adresse->num_voie_adresse,
                     'rue' => $adresse->rue_adresse,
                     'complement' => $adresse->complement_adresse,
-                    'ville' => $adresse->ville?->nom_ville,
-                    'code_postal' => $adresse->ville?->cp_ville,
+                    'ville' => $adresse->city?->nom_ville,
+                    'code_postal' => $adresse->city?->cp_ville,
                 ];
             })->toArray(),
             'commandes' => $client->orders->map(function ($order) {

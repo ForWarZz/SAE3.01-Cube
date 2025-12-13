@@ -166,7 +166,7 @@
                                 @if ($financials->discount > 0)
                                     <div class="flex justify-between text-green-600">
                                         <dt>Remise (-{{ $order->pourcentage_remise }}%)</dt>
-                                        <dd class="font-medium">{{ number_format($financials->discount, 2, ",", " ") }} €</dd>
+                                        <dd class="font-medium">-{{ number_format($financials->discount, 2, ",", " ") }} €</dd>
                                     </div>
                                 @endif
 
@@ -193,7 +193,24 @@
                             <h2 class="font-semibold text-gray-900">Livraison & Facturation</h2>
                         </div>
                         <div class="space-y-6 p-5 text-sm">
-                            @if ($order->deliveryAddress)
+                            @if ($shop)
+                                <div>
+                                    <p class="mb-1 text-xs font-medium tracking-wide text-gray-500 uppercase">Point de retrait</p>
+                                    <address class="text-gray-900 not-italic">
+                                        <p class="flex items-center gap-1 font-bold text-indigo-600">
+                                            <x-heroicon-o-building-storefront class="size-4" />
+                                            {{ $shop->nom_magasin }}
+                                        </p>
+                                        <p>{{ $shop->full_address }}</p>
+                                        @if ($shop->complement_magasin)
+                                            <p>{{ $shop->complement_magasin }}</p>
+                                        @endif
+
+                                        <p>{{ $shop->city->cp_ville }} {{ $shop->city->nom_ville }}</p>
+                                    </address>
+                                    <p class="mt-2 text-gray-500">Mode : {{ $order->shippingMode->label_moyen_livraison }}</p>
+                                </div>
+                            @elseif ($order->deliveryAddress)
                                 <div>
                                     <p class="mb-1 text-xs font-medium tracking-wide text-gray-500 uppercase">Adresse de livraison</p>
                                     <address class="text-gray-900 not-italic">
@@ -206,10 +223,10 @@
                                         @endif
 
                                         <p>
-                                            {{ $order->deliveryAddress->ville->cp_ville }} {{ $order->deliveryAddress->ville->nom_ville }}
+                                            {{ $order->deliveryAddress->city->cp_ville }} {{ $order->deliveryAddress->city->nom_ville }}
                                         </p>
                                     </address>
-                                    <p class="mt-2 text-gray-500">Mode : {{ $order->deliveryMode->label_moyen_livraison }}</p>
+                                    <p class="mt-2 text-gray-500">Mode : {{ $order->shippingMode->label_moyen_livraison }}</p>
                                 </div>
                             @endif
 
@@ -223,9 +240,7 @@
                                             {{ $order->billingAddress->prenom_adresse }} {{ $order->billingAddress->nom_adresse }}
                                         </p>
                                         <p>{{ $order->billingAddress->num_voie_adresse }} {{ $order->billingAddress->rue_adresse }}</p>
-                                        <p>
-                                            {{ $order->billingAddress->ville->cp_ville }} {{ $order->billingAddress->ville->nom_ville }}
-                                        </p>
+                                        <p>{{ $order->billingAddress->city->cp_ville }} {{ $order->billingAddress->city->nom_ville }}</p>
                                     </address>
 
                                     <div class="flex items-center gap-3">

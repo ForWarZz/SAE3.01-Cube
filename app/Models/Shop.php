@@ -14,15 +14,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $nom_magasin
  * @property float|null $latitude
  * @property float|null $longitude
- * @property-read Ville $ville
  */
 class Shop extends Model
 {
     public $timestamps = false;
-    
+
     protected $table = 'magasin';
+
     protected $primaryKey = 'id_magasin';
-    
+
     protected $fillable = [
         'id_magasin',
         'id_ville',
@@ -39,49 +39,31 @@ class Shop extends Model
         'longitude' => 'float',
     ];
 
-    /**
-     * Relation : Un magasin appartient à une ville
-     */
-    public function ville(): BelongsTo
+    public function city(): BelongsTo
     {
-        return $this->belongsTo(Ville::class, 'id_ville', 'id_ville');
+        return $this->belongsTo(City::class, 'id_ville', 'id_ville');
     }
 
-    /**
-     * Accesseur : Adresse complète du magasin
-     */
     public function getFullAddressAttribute(): string
     {
-        return trim($this->num_voie_magasin . ' ' . $this->rue_magasin);
+        return trim($this->num_voie_magasin.' '.$this->rue_magasin);
     }
 
-    /**
-     * Accesseur : Vérifie si le magasin a des coordonnées GPS
-     */
     public function hasCoordinatesAttribute(): bool
     {
-        return !is_null($this->latitude) && !is_null($this->longitude);
+        return ! is_null($this->latitude) && ! is_null($this->longitude);
     }
 
-    /**
-     * Scope : Magasins avec coordonnées GPS
-     */
     public function scopeWithCoordinates($query)
     {
         return $query->whereNotNull('latitude')->whereNotNull('longitude');
     }
 
-    /**
-     * Scope : Magasins d'une ville spécifique
-     */
     public function scopeInCity($query, int $cityId)
     {
         return $query->where('id_ville', $cityId);
     }
 
-    /**
-     * Formate le magasin pour l'API JSON
-     */
     public function toApiFormat(): array
     {
         return [
@@ -92,9 +74,9 @@ class Shop extends Model
             'lat' => $this->latitude,
             'lng' => $this->longitude,
             'isOpen' => true, // À implémenter avec horaires d'ouverture
-            'city' => $this->ville ? trim($this->ville->nom_ville) : null,
-            'postalCode' => $this->ville ? trim($this->ville->cp_ville) : null,
-            'country' => $this->ville ? $this->ville->pays_ville : null,
+            'city' => trim($this->city->nom_ville),
+            'postalCode' => trim($this->city->cp_ville),
+            'country' => $this->city->pays_ville,
         ];
     }
 }
