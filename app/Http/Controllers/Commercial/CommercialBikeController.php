@@ -337,6 +337,11 @@ class CommercialBikeController extends Controller
             return back()->withErrors(['error' => 'Cette référence n\'appartient pas à ce vélo.']);
         }
 
+        $reference->load([
+            'availableSizes',
+            'baseReference',
+        ]);
+
         $remainingCount = $bike->references()->where('id_reference', '!=', $reference->id_reference)->count();
         if ($remainingCount < 1) {
             return back()->withErrors(['error' => 'Impossible de supprimer la dernière référence du vélo.']);
@@ -346,7 +351,7 @@ class CommercialBikeController extends Controller
             DB::beginTransaction();
 
             $reference->availableSizes()->detach();
-            ArticleReference::where('id_reference', $reference->id_reference)->delete();
+            $reference->baseReference->delete();
 
             DB::commit();
 
