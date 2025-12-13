@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id_etat
+ * @property string $label_etat
+ */
 class OrderState extends Model
 {
     public const PENDING_PAYMENT = 1;
@@ -14,7 +18,7 @@ class OrderState extends Model
 
     public const DELIVERED = 4;
 
-    public const CANCELED = 5;
+    public const CANCELLED = 5;
 
     public const RETURNED = 6;
 

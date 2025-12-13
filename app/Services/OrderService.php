@@ -2,95 +2,103 @@
 
 namespace App\Services;
 
-use App\Models\Client;
 use App\Models\Order;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use App\Models\OrderState;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 class OrderService
 {
-    /**
-     * Récupère les commandes paginées pour un client donné
-     */
-    public function getOrdersForClient(Client $client, int $perPage = 10): LengthAwarePaginator
+    public function formatForIndex(Order $order): object
     {
-        return Order::where('id_client', $client->id_client)
-            ->with([
-                'items.reference.bikeReference.article',
-                'items.reference.accessory',
-                'items.size',
-                'deliveryAddress.ville',
-                'billingAddress.ville',
-                'deliveryMode',
-                'states',
-            ])
-            ->orderByDesc('date_commande')
-            ->paginate($perPage);
+        $financials = $this->calculateFinancials($order);
+        $currentState = $order->currentState();
+        $statusStyle = $this->getStatusStyle($currentState->id_etat);
+
+        return (object) [
+            'id' => $order->id_commande,
+            'number' => trim($order->num_commande),
+            'date' => Carbon::parse($order->date_commande)->format('d/m/Y'),
+            'tracking' => $order->num_suivi_commande ? trim($order->num_suivi_commande) : null,
+            'statusLabel' => $currentState->label_etat,
+            'statusColors' => $statusStyle,
+            'countArticles' => $order->items->sum('quantite_ligne'),
+            'financials' => $financials,
+            'address' => $this->formatAddress($order->deliveryAddress),
+        ];
     }
 
-    /**
-     * Récupère une commande spécifique pour un client
-     */
-    public function getOrderForClient(Client $client, int $orderId): ?Order
+    public function calculateFinancials(Order $order): object
     {
-        return Order::where('id_commande', $orderId)
-            ->where('id_client', $client->id_client)
-            ->with([
-                'items.reference.bikeReference.article',
-                'items.reference.accessory',
-                'items.size',
-                'billingAddress.ville',
-                'deliveryAddress.ville',
-                'deliveryMode',
-                'states',
-                'discountCode',
-                'paymentType',
-            ])
-            ->first();
+        $subtotal = $order->items->sum(fn ($item) => $item->quantite_ligne * $item->prix_unit_ligne);
+        $discount = $order->pourcentage_remise ? ($subtotal * $order->pourcentage_remise) / 100 : 0;
+        $shipping = $order->frais_livraison ?? 0;
+
+        return (object) [
+            'subtotal' => $subtotal,
+            'discount' => $discount,
+            'shipping' => $shipping,
+            'total' => $subtotal - $discount + $shipping,
+            'discountPercent' => $order->pourcentage_remise,
+            'count' => $order->items->sum('quantite_ligne'),
+        ];
     }
 
-    /**
-     * Vérifie si une commande appartient à un client
-     */
-    public function orderBelongsToClient(int $orderId, int $clientId): bool
+    public function formatLineItems(Collection $items): Collection
     {
-        return Order::where('id_commande', $orderId)
-            ->where('id_client', $clientId)
-            ->exists();
-    }
+        return $items->map(function ($item) {
+            $ref = $item->reference;
+            $bikeRef = $ref?->bikeReference;
+            $accessory = $ref?->accessory;
+            $isBike = $bikeRef !== null;
 
-    /**
-     * Récupère les commandes récentes pour un client (pour le dashboard)
-     */
-    public function getRecentOrdersForClient(Client $client, int $limit = 5): \Illuminate\Database\Eloquent\Collection
-    {
-        return Order::where('id_client', $client->id_client)
-            ->with(['items', 'states'])
-            ->orderByDesc('date_commande')
-            ->limit($limit)
-            ->get();
-    }
+            $articleParent = $isBike ? $bikeRef?->article : $accessory?->article;
+            $image = $isBike
+                ? $articleParent->getCoverThumbnailUrl($bikeRef->id_couleur)
+                : $articleParent->getCoverThumbnailUrl();
 
-    /**
-     * Compte le nombre total de commandes pour un client
-     */
-    public function countOrdersForClient(Client $client): int
-    {
-        return Order::where('id_client', $client->id_client)->count();
-    }
+            $subtitle = $isBike
+                ? ($articleParent->bike?->bikeModel->nom_modele_velo ?? 'Vélo')
+                : ($articleParent->category->nom_categorie ?? 'Accessoire');
 
-    /**
-     * Calcule le montant total dépensé par un client
-     */
-    public function getTotalSpentByClient(Client $client): float
-    {
-        $orders = Order::where('id_client', $client->id_client)
-            ->with('items')
-            ->get();
-
-        return $orders->sum(function ($order) {
-            $subtotal = $order->items->sum(fn($item) => $item->quantite_ligne * ($item->prix_unit_ligne ?? 0));
-            $discount = $order->pourcentage_remise ? ($subtotal * $order->pourcentage_remise / 100) : 0;
-            return $subtotal - $discount + ($order->frais_livraison ?? 0);
+            return (object) [
+                'name' => $articleParent->nom_article,
+                'subtitle' => $subtitle,
+                'image' => $image,
+                'colorHex' => $isBike ? ($bikeRef->color?->code_hex ?? null) : null,
+                'colorName' => $isBike ? ($bikeRef->color?->nom_couleur ?? null) : null,
+                'size' => $item->size?->nom_taille,
+                'quantity' => $item->quantite_ligne,
+                'unitPrice' => $item->prix_unit_ligne,
+                'totalPrice' => $item->prix_unit_ligne * $item->quantite_ligne,
+                'articleId' => $articleParent->id_article,
+            ];
         });
+    }
+
+    public function getStatusStyle(int $stateId): array
+    {
+        return match ($stateId) {
+            OrderState::PENDING_PAYMENT => ['bg' => 'bg-yellow-100', 'text' => 'text-yellow-800'],
+            OrderState::PAYMENT_ACCEPTED => ['bg' => 'bg-green-100', 'text' => 'text-green-800'],
+            OrderState::SHIPPED => ['bg' => 'bg-blue-100', 'text' => 'text-blue-800'],
+            OrderState::DELIVERED => ['bg' => 'bg-indigo-100', 'text' => 'text-indigo-800'],
+            OrderState::CANCELLED => ['bg' => 'bg-red-100', 'text' => 'text-red-800'],
+            OrderState::RETURNED => ['bg' => 'bg-purple-100', 'text' => 'text-purple-800'],
+            default => ['bg' => 'bg-gray-100', 'text' => 'text-gray-800'],
+        };
+    }
+
+    private function formatAddress($address): ?object
+    {
+        if (! $address) {
+            return null;
+        }
+
+        return (object) [
+            'name' => $address->prenom_adresse.' '.$address->nom_adresse,
+            'street' => $address->num_voie_adresse.' '.$address->rue_adresse,
+            'city' => ($address->ville->cp_ville ?? '').' '.($address->ville->nom_ville ?? ''),
+        ];
     }
 }

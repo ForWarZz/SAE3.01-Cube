@@ -61,14 +61,13 @@ class Order extends Model
             'evolue',
             'id_commande',
             'id_etat'
-        )->withPivot('date_changement');
+        )->withPivot('date_changement')
+            ->orderByPivot('date_changement', 'desc');
     }
 
-    public function currentState()
+    public function currentState(): OrderState
     {
-        return $this->states()
-            ->orderBy('evolue.date_changement', 'desc')
-            ->first();
+        return $this->states->firstOrFail();
     }
 
     public function billingAddress(): BelongsTo
@@ -105,5 +104,4 @@ class Order extends Model
     {
         return $this->belongsTo(PaymentType::class, 'id_type_paiement', 'id_type_paiement');
     }
-
 }

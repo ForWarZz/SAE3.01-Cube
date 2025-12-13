@@ -5,6 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id_ligne
+ * @property int $id_reference
+ * @property int $id_commande
+ * @property int $id_taille
+ * @property int $quantite_ligne
+ * @property float $prix_unit_ligne
+ */
 class OrderLine extends Model
 {
     public $timestamps = false;

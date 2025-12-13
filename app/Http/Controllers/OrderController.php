@@ -56,33 +56,47 @@ class OrderController extends Controller
     public function index()
     {
         $client = auth()->user();
-        $orders = $this->orderService->getOrdersForClient($client);
+        $orders = $client->orders()
+            ->with(['items', 'deliveryAddress.ville', 'states'])
+            ->orderByDesc('date_commande')
+            ->paginate(6)
+            ->through(fn ($order) => $this->orderService->formatForIndex($order));
 
         return view('dashboard.orders.index', [
             'orders' => $orders,
         ]);
     }
 
-    public function show($id)
+    public function show(Order $order)
     {
         $client = auth()->user();
 
-        $order = Order::where('id_commande', $id)
-            ->where('id_client', $client->id_client)
-            ->with([
-                'items.reference.bikeReference.article.bike.bikeModel',
-                'items.reference.bikeReference.color',
-                'items.reference.accessory.article.category',
-                'items.size',
-                'billingAddress.ville',
-                'deliveryAddress.ville',
-                'deliveryMode',
-                'states',
-            ])
-            ->firstOrFail();
+        if ($order->id_client !== $client->id_client) {
+            return redirect()->route('dashboard.orders.index')
+                ->with('error', 'Accès non autorisé à cette commande.');
+        }
 
-        return view('dashboard.orders.order.show', [
+        $order->load([
+            'items.reference.bikeReference.article.bike.bikeModel',
+            'items.reference.bikeReference.color',
+            'items.reference.accessory.article.category',
+            'items.size',
+            'billingAddress.ville',
+            'deliveryAddress.ville',
+            'deliveryMode',
+            'states',
+            'paymentType',
+        ]);
+
+        $currentState = $order->currentState();
+
+        return view('dashboard.orders.show', [
             'order' => $order,
+            'statusName' => $currentState->label_etat,
+            'statusColors' => $this->orderService->getStatusStyle($currentState->id_etat),
+            'financials' => $this->orderService->calculateFinancials($order),
+            'items' => $this->orderService->formatLineItems($order->items),
+            'paymentType' => $order->paymentType?->nom_type_paiement,
         ]);
     }
 }
