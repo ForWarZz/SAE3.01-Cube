@@ -27,6 +27,6 @@ class City extends Model
 
     public function adresses(): HasMany
     {
-        return $this->hasMany(Adresse::class, 'id_ville', 'id_ville');
+        return $this->hasMany(Address::class, 'id_ville', 'id_ville');
     }
 }

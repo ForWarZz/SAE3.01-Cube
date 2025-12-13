@@ -93,7 +93,7 @@ class Client extends Authenticatable
 
     public function addresses(): HasMany
     {
-        return $this->hasMany(Adresse::class, 'id_client', 'id_client');
+        return $this->hasMany(Address::class, 'id_client', 'id_client');
     }
 
     // TODO: Uncomment when model is created

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddressCreateRequest;
-use App\Models\Adresse;
+use App\Models\Address;
 use App\Models\City;
 use App\Services\GdprService;
 use Illuminate\Http\RedirectResponse;
@@ -19,7 +19,7 @@ class AddressController extends Controller
     public function index(Request $request): View
     {
         $client = Auth::user();
-        $adresses = Adresse::where('id_client', $client->id_client)->with('ville')->get();
+        $adresses = Address::where('id_client', $client->id_client)->with('ville')->get();
 
         return view('dashboard.addresses.index', [
             'client' => $client,
@@ -54,7 +54,7 @@ class AddressController extends Controller
             ['cp_ville' => $validated['code_postal'], 'nom_ville' => $validated['nom_ville'], 'pays_ville' => 'France']
         );
 
-        Adresse::create([
+        Address::create([
             'id_client' => $client->id_client,
             'id_ville' => $ville->id_ville,
             'alias_adresse' => $validated['alias_adresse'],
@@ -83,7 +83,7 @@ class AddressController extends Controller
      * Remove the specified address from storage.
      * RGPD: Anonymise l'adresse si elle est liée à une commande, sinon la supprime.
      */
-    public function destroy(Request $request, Adresse $adresse, GdprService $gdprService): RedirectResponse
+    public function destroy(Request $request, Address $adresse, GdprService $gdprService): RedirectResponse
     {
         $client = Auth::user();
 

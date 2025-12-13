@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id_adresse
@@ -20,8 +21,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $societe_adresse
  * @property string $tva_adresse
  */
-class Adresse extends Model
+class Address extends Model
 {
+    use SoftDeletes;
+
     public $timestamps = false;
 
     protected $table = 'adresse';

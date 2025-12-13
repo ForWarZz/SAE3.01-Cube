@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Adresse;
+use App\Models\Address;
 use App\Models\Client;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +34,7 @@ class GdprService
         'stripe_id' => null,
     ];
 
-    public function isAddressLinkedToOrder(Adresse $adresse): bool
+    public function isAddressLinkedToOrder(Address $adresse): bool
     {
         return Order::where('id_adresse_facturation', $adresse->id_adresse)
             ->orWhere('id_adresse_livraison', $adresse->id_adresse)
@@ -51,7 +51,7 @@ class GdprService
      *
      * @throws \Exception
      */
-    public function deleteOrAnonymizeAddress(Adresse $adresse): array
+    public function deleteOrAnonymizeAddress(Address $adresse): array
     {
         if ($this->isAddressLinkedToOrder($adresse)) {
             return $this->anonymizeAddress($adresse);
@@ -65,10 +65,11 @@ class GdprService
      *
      * @throws \Exception
      */
-    public function anonymizeAddress(Adresse $adresse): array
+    public function anonymizeAddress(Address $adresse): array
     {
         try {
             $adresse->update(self::ANONYMIZED_ADDRESS_DATA);
+            $adresse->delete(); // Soft delete
 
             Log::info('RGPD: Adresse anonymisée', [
                 'id_adresse' => $adresse->id_adresse,
@@ -95,13 +96,13 @@ class GdprService
      *
      * @throws \Exception
      */
-    public function deleteAddress(Adresse $adresse): array
+    public function deleteAddress(Address $adresse): array
     {
         try {
             $addressId = $adresse->id_adresse;
             $clientId = $adresse->id_client;
 
-            $adresse->delete();
+            $adresse->forceDelete();
 
             Log::info('RGPD: Adresse supprimée', [
                 'id_adresse' => $addressId,

@@ -72,12 +72,14 @@ class Order extends Model
 
     public function billingAddress(): BelongsTo
     {
-        return $this->belongsTo(Adresse::class, 'id_adresse_facturation', 'id_adresse');
+        return $this->belongsTo(Address::class, 'id_adresse_facturation', 'id_adresse')
+            ->withTrashed();
     }
 
     public function deliveryAddress(): BelongsTo
     {
-        return $this->belongsTo(Adresse::class, 'id_adresse_livraison', 'id_adresse');
+        return $this->belongsTo(Address::class, 'id_adresse_livraison', 'id_adresse')
+            ->withTrashed();
     }
 
     public function deliveryMode(): BelongsTo
