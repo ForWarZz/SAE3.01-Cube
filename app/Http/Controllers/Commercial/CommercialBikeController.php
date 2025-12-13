@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Commercial;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BikeCreateRequest;
-use App\Http\Requests\BikeReferenceImageRequest;
-use App\Http\Requests\BikeReferenceRequest;
+use App\Http\Requests\Bike\BikeCreateRequest;
+use App\Http\Requests\Bike\BikeReferenceImageRequest;
+use App\Http\Requests\Bike\BikeReferenceRequest;
 use App\Models\Bike;
 use App\Models\BikeReference;
 use App\Services\Commercial\BikeFormDataService;

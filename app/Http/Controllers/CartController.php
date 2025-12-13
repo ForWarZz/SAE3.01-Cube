@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CartAddRequest;
-use App\Http\Requests\CartApplyDiscountRequest;
-use App\Http\Requests\CartDeleteRequest;
-use App\Http\Requests\CartUpdateQuantityRequest;
+use App\Http\Requests\Cart\CartAddRequest;
+use App\Http\Requests\Cart\CartApplyDiscountRequest;
+use App\Http\Requests\Cart\CartDeleteRequest;
+use App\Http\Requests\Cart\CartUpdateQuantityRequest;
 use App\Models\ArticleReference;
 use App\Models\Size;
 use App\Services\Cart\CartService;
