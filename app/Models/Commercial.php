@@ -11,10 +11,15 @@ use Illuminate\Notifications\Notifiable;
  * @property string $prenom_commercial
  * @property string $email_commercial
  * @property string $hash_mdp_commercial
+ * @property string $role
  */
 class Commercial extends Authenticatable
 {
     use Notifiable;
+
+    public const COMMERCIAL_ROLE = 'COMMERCIAL';
+
+    public const DIRECTOR_ROLE = 'DIRECTOR';
 
     protected $table = 'commercial';
 
@@ -27,6 +32,7 @@ class Commercial extends Authenticatable
         'prenom_commercial',
         'email_commercial',
         'hash_mdp_commercial',
+        'role',
     ];
 
     protected $hidden = [

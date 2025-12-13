@@ -8,6 +8,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Commercial\CommercialAuthController;
 use App\Http\Controllers\Commercial\CommercialBikeController;
 use App\Http\Controllers\Commercial\CommercialCategoryController;
+use App\Http\Controllers\Commercial\CommercialModelController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
@@ -108,11 +109,6 @@ Route::get('/paiement/succes', [CheckoutController::class, 'success'])
 Route::get('/paiement/erreur', [CheckoutController::class, 'cancel'])
     ->name('payment.cancel');
 
-// Route::prefix('commande')->name('orders.')->group(function () {
-//    //        Route::get('/', [OrderController::class, 'index'])->name('index');
-//    //        Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
-// });
-
 Route::prefix('commercial')->name('commercial.')->group(function () {
     Route::get('/login', [CommercialAuthController::class, 'showLoginForm'])->name('login');
 
@@ -128,8 +124,8 @@ Route::prefix('commercial')->name('commercial.')->group(function () {
 
         Route::get('/categories', [CommercialCategoryController::class, 'index'])->name('categories.index');
         Route::post('/categories', [CommercialCategoryController::class, 'store'])->name('categories.store');
-        Route::get('/modeles', [\App\Http\Controllers\Commercial\CommercialModelController::class, 'index'])->name('models.index');
-        Route::post('/modeles', [\App\Http\Controllers\Commercial\CommercialModelController::class, 'store'])->name('models.store');
+        Route::get('/modeles', [CommercialModelController::class, 'index'])->name('models.index');
+        Route::post('/modeles', [CommercialModelController::class, 'store'])->name('models.store');
 
         // Gestion des vélos
         Route::prefix('/velos')->name('bikes.')->group(function () {
@@ -149,6 +145,8 @@ Route::prefix('commercial')->name('commercial.')->group(function () {
             Route::delete('/{bike}/references/{reference}/images/{imageName}', [CommercialBikeController::class, 'deleteReferenceImage'])->name('references.images.destroy');
             Route::post('/{bike}/references/{reference}/images/reorder', [CommercialBikeController::class, 'reorderReferenceImages'])->name('references.images.reorder');
         });
+
+        Route::get('/stats', [CommercialAuthController::class, 'viewStats'])->name('stats');
     });
 });
 

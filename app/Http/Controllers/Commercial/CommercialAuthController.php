@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Commercial;
 
 use App\Http\Controllers\Controller;
+use App\Models\Commercial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -48,5 +49,16 @@ class CommercialAuthController extends Controller
     public function viewReferences()
     {
         return view('commercial.references');
+    }
+
+    public function viewStats()
+    {
+        $commercial = Auth::guard('commercial')->user();
+
+        if ($commercial->role != Commercial::DIRECTOR_ROLE) {
+            abort(403, 'Accès non autorisé aux statistiques. Réservé aux directeurs commerciaux.');
+        }
+
+        return view('commercial.stats');
     }
 }

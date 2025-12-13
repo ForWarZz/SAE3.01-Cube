@@ -47,6 +47,16 @@
                         Vélos
                     </a>
 
+                    @if ($isDirector)
+                        <a
+                            href="{{ route("commercial.stats") }}"
+                            class="flex items-center rounded-md px-4 py-2 text-gray-300 hover:bg-slate-700 hover:text-white"
+                        >
+                            <x-heroicon-o-chart-bar class="mr-3 size-6" />
+                            Statistiques
+                        </a>
+                    @endif
+
                     <form method="POST" action="{{ route("commercial.logout") }}" class="mt-auto">
                         @csrf
                         <button
