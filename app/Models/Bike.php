@@ -93,6 +93,11 @@ class Bike extends Model
         return $this->hasMany(BikeReference::class, 'id_article', 'id_article');
     }
 
+    public function ebikeReferences(): HasMany
+    {
+        return $this->hasMany(EBikeReference::class, 'id_article', 'id_article');
+    }
+
     public function usage(): BelongsTo
     {
         return $this->belongsTo(Usage::class, 'id_usage', 'id_usage');
