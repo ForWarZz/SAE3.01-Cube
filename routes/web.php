@@ -9,8 +9,8 @@ use App\Http\Controllers\CommercialAuthController;
 use App\Http\Controllers\CommercialCategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ShopController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
@@ -82,9 +82,6 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::get('/{order}', [OrderController::class, 'show'])->name('show');
-        Route::post('/', [OrderController::class, 'store'])->name('store');
-        Route::get('/validation', [OrderController::class, 'checkout'])->name('checkout');
-        Route::post('/livraison', [OrderController::class, 'updateOrder'])->name('update-shipping');
     });
 });
 

@@ -39,31 +39,34 @@ class CheckoutController extends Controller
 
     public function success(Request $request)
     {
-        //        $sessionId = $request->query('session_id');
-        //
-        //        if (! $sessionId) {
-        //            return redirect()->route('home')
-        //                ->with('error', 'Session de paiement invalide.');
-        //        }
-        //
-        //        $order = Order::where('stripe_session_id', $sessionId)
-        //            ->with(['billingAddress.ville', 'deliveryAddress.ville', 'deliveryMode'])
-        //            ->first();
-        //
-        //        if (! $order) {
-        //            return redirect()->route('home')
-        //                ->with('error', 'Commande introuvable.');
-        //        }
-        //
-        //        if ($order->id_client !== auth()->id()) {
-        //            return redirect()->route('home')
-        //                ->with('error', 'Accès non autorisé.');
-        //        }
+        $sessionId = $request->query('session_id');
+
+        if (! $sessionId) {
+            return redirect()->route('cart.index')
+                ->with('error', 'Session de paiement invalide.');
+        }
+
+        $order = Order::where('stripe_session_id', $sessionId)
+            ->select('id_commande', 'id_client')
+            ->first();
+
+        if (! $order) {
+            return redirect()->route('cart.index')
+                ->with('error', 'La commande associée à cette session de paiement est introuvable. Le processus de paiement a peut-être échoué.');
+        }
+
+        if ($order->id_client !== auth()->id()) {
+            return redirect()->route('cart.index')
+                ->with('error', 'Accès non autorisé.');
+        }
 
         $this->cartSession->clearAll();
 
         return redirect()->route('cart.index')
-            ->with('success', 'Paiement réussi ! Votre commande a été prise en compte.');
+            ->with([
+                'success' => 'Paiement réussi ! Votre commande a été prise en compte.',
+                'order_id' => $order->id_commande,
+            ]);
     }
 
     public function cancel(Request $request)

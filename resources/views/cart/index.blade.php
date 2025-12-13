@@ -1,7 +1,30 @@
 <x-app-layout>
     <div id="cart" class="flex-1 flex-col bg-gray-100 px-24 py-12">
         <x-flash-message key="error" />
-        <x-flash-message key="success" type="success" />
+
+        @if (session("success"))
+            <div class="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
+                <div class="flex items-start gap-3">
+                    <x-heroicon-o-check-circle class="mt-0.5 h-5 w-5 shrink-0 text-green-600" />
+
+                    <div class="flex flex-col gap-1">
+                        <p class="font-medium">
+                            {{ session("success") }}
+                        </p>
+
+                        @if (session("order_id"))
+                            <a
+                                href="{{ route("dashboard.orders.show", session("order_id")) }}"
+                                class="group flex items-center gap-1 text-sm font-semibold text-green-700 hover:text-green-900"
+                            >
+                                Voir ma commande
+                                <span class="transition-transform group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endif
 
         <div class="flex gap-10">
             <x-cart-list :count="$count" :cart-data="$cartData" />
