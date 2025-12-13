@@ -130,7 +130,7 @@
                                 <div>
                                     <div class="mb-2 flex items-center justify-between">
                                         <span class="text-sm text-gray-500">
-                                            Images ({{ count($referenceImages[$reference->id_reference] ?? []) }}/5)
+                                            Images ({{ count($referenceImages[$reference->id_reference]) }}/5)
                                         </span>
                                         <button
                                             @click="imagesRef = {{ $reference->id_reference }}; showAddImagesModal = true"
@@ -140,7 +140,7 @@
                                         </button>
                                     </div>
                                     <div class="flex flex-wrap gap-2">
-                                        @forelse ($referenceImages[$reference->id_reference] ?? [] as $image)
+                                        @forelse ($referenceImages[$reference->id_reference] as $image)
                                             <div class="group relative">
                                                 <img
                                                     src="{{ $image["url"] }}"
