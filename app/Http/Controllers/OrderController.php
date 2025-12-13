@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderUpdateRequest;
+use App\Models\Order;
 use App\Services\Cart\CartService;
 use App\Services\Cart\CheckoutService;
+use App\Services\OrderService;
 
 class OrderController extends Controller
 {
     public function __construct(
         protected readonly CartService $cartService,
         protected readonly CheckoutService $checkoutService,
+        protected readonly OrderService $orderService,
     ) {}
 
     public function updateOrder(OrderUpdateRequest $request)
@@ -48,5 +51,38 @@ class OrderController extends Controller
         $client = auth()->user();
 
         return view('order.checkout', $this->checkoutService->getCheckoutViewData($client));
+    }
+
+    public function index()
+    {
+        $client = auth()->user();
+        $orders = $this->orderService->getOrdersForClient($client);
+
+        return view('dashboard.orders.index', [
+            'orders' => $orders,
+        ]);
+    }
+
+    public function show($id)
+    {
+        $client = auth()->user();
+
+        $order = Order::where('id_commande', $id)
+            ->where('id_client', $client->id_client)
+            ->with([
+                'items.reference.bikeReference.article.bike.bikeModel',
+                'items.reference.bikeReference.color',
+                'items.reference.accessory.article.category',
+                'items.size',
+                'billingAddress.ville',
+                'deliveryAddress.ville',
+                'deliveryMode',
+                'states',
+            ])
+            ->firstOrFail();
+
+        return view('dashboard.orders.order.show', [
+            'order' => $order,
+        ]);
     }
 }

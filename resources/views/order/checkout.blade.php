@@ -154,7 +154,7 @@
                 <aside class="flex flex-1 flex-col gap-6">
                     <x-cart-summary :summary-data="$summaryData" :count="$count" :discount-data="$discountData" :is-checkout="true" />
 
-                    <form action="{{ route("payment.checkout") }}" method="post">
+                    <form action="{{ route("payment.process") }}" method="post">
                         @csrf
 
                         <button

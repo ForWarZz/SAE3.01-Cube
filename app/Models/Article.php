@@ -93,6 +93,22 @@ class Article extends Model
         return Storage::url("articles/$this->id_article/default/1.jpg");
     }
 
+    public function getCoverThumbnailUrl($colorId = null): string
+    {
+        if ($colorId) {
+            $path = "articles/$this->id_article/$colorId/thumbs/1.jpg";
+        } else {
+            $firstRef = BikeReference::where('id_article', $this->id_article)->first();
+            if ($firstRef) {
+                $path = "articles/$this->id_article/$firstRef->id_couleur/thumbs/1.jpg";
+            } else {
+                $path = "articles/$this->id_article/default/thumbs/1.jpg";
+            }
+        }
+
+        return Storage::url($path);
+    }
+
     public function getAllImagesUrls($colorId = null, $is360 = false): array
     {
         $folder = $colorId ?: 'default';

@@ -105,4 +105,5 @@ class Order extends Model
     {
         return $this->belongsTo(PaymentType::class, 'id_type_paiement', 'id_type_paiement');
     }
+
 }

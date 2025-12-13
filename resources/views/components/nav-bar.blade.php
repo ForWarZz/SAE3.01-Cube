@@ -29,10 +29,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     <span id="store-button-text">
-                        @if (session("selected_shop")){{ session("selected_shop")->nom_magasin }}
+                        @if (session('selected_shop'))
+                            {{ session('selected_shop')['name'] }}
                         @else
                             Choisir un magasin
                         @endif
+
                     </span>
                 </button>
 

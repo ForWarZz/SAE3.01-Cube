@@ -9,35 +9,37 @@ class ShopController extends Controller
 {
     public function index()
     {
-        $shops = Shop::all()->map(function ($shop) {
-            return [
-                'shop' => [
-                    'id' => $shop->id_magasin,
-                    'name' => $shop->nom_magasin,
-                    'address' => trim($shop->num_voie_magasin . ' ' . $shop->rue_magasin),
-                    'complement' => $shop->complement_magasin,
-                    'lat' => $shop->latitude ? (float) $shop->latitude : null,
-                    'lng' => $shop->longitude ? (float) $shop->longitude : null,
-                    'isOpen' => true
-                    
-                ],
-                'status' => null
-            ];
-        });
+        $shops = Shop::with('ville')
+            ->withCoordinates() 
+            ->get()
+            ->map(function ($shop) {
+                return [
+                    'shop' => $shop->toApiFormat(),
+                    'status' => null
+                ];
+            });
 
         return response()->json([
             'shops' => $shops
         ]);
     }
 
+    /**
+     * Sélectionne un magasin et le stocke en session
+     */
     public function select(Request $request)
     {
         $validated = $request->validate([
             'shop_id' => 'required|exists:magasin,id_magasin'
         ]);
 
-        $shop = Shop::find($validated['shop_id']);
-        session(['selected_shop' => $shop]);
+        $shop = Shop::with('ville')->find($validated['shop_id']);
+        
+        session(['selected_shop' => [
+            'id' => $shop->id_magasin,
+            'name' => $shop->nom_magasin,
+            'city' => $shop->ville ? trim($shop->ville->nom_ville) : null,
+        ]]);
 
         return response()->json([
             'success' => true,
@@ -45,6 +47,46 @@ class ShopController extends Controller
                 'id' => $shop->id_magasin,
                 'name' => $shop->nom_magasin,
             ]
+        ]);
+    }
+
+    public function selected()
+    {
+        $selectedShop = session('selected_shop');
+
+        if (!$selectedShop) {
+            return response()->json([
+                'selected' => false,
+                'shop' => null
+            ]);
+        }
+
+        return response()->json([
+            'selected' => true,
+            'shop' => $selectedShop
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('q', '');
+
+        $shops = Shop::with('ville')
+            ->withCoordinates()
+            ->where(function ($q) use ($query) {
+                $q->where('nom_magasin', 'ILIKE', "%{$query}%")
+                  ->orWhere('rue_magasin', 'ILIKE', "%{$query}%")
+                  ->orWhereHas('ville', function ($subQuery) use ($query) {
+                      $subQuery->where('nom_ville', 'ILIKE', "%{$query}%")
+                               ->orWhere('cp_ville', 'LIKE', "%{$query}%");
+                  });
+            })
+            ->limit(20)
+            ->get()
+            ->map(fn($shop) => ['shop' => $shop->toApiFormat(), 'status' => null]);
+
+        return response()->json([
+            'shops' => $shops
         ]);
     }
 }

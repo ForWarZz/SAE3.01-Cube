@@ -15,7 +15,7 @@
 
         <div class="mb-6 overflow-visible">
             <img
-                src="{{ $article->getCoverUrl() }}"
+                src="{{ $article->getCoverThumbnailUrl() }}"
                 alt="{{ $article->nom_article }}"
                 class="object-contain transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"

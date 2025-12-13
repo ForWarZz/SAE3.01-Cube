@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CommercialAuthController;
 use App\Http\Controllers\CommercialCategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
@@ -76,6 +78,14 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
         Route::get('/export-donnees', [ProfileController::class, 'exportData'])->name('export');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
     });
+
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+        Route::post('/', [OrderController::class, 'store'])->name('store');
+        Route::get('/validation', [OrderController::class, 'checkout'])->name('checkout');
+        Route::post('/livraison', [OrderController::class, 'updateOrder'])->name('update-shipping');
+    });
 });
 
 Route::middleware('auth')->group(function () {
@@ -124,9 +134,6 @@ Route::prefix('commercial')->name('commercial.')->group(function () {
         Route::post('/modeles', [App\Http\Controllers\CommercialModelController::class, 'store'])->name('models.store');
     });
 });
-
-use App\Http\Controllers\AvailabilityController;
-use App\Http\Controllers\ShopController;
 
 Route::get('/shops', [ShopController::class, 'index'])->name('shops.index');
 Route::post('/shop/select', [ShopController::class, 'select'])->name('shop.select');

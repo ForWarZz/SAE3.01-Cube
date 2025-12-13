@@ -23,7 +23,7 @@
                         </a>
 
                         <!-- Mes commandes -->
-                        <div class="block p-6 bg-gray-50 rounded-lg border border-gray-200 opacity-50 cursor-not-allowed">
+                        <a href="{{ route('dashboard.orders.index') }}" class="block p-6 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
                             <div class="flex items-center">
                                 <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
@@ -33,7 +33,7 @@
                                     <p class="text-sm text-gray-500">Voir l'historique de mes commandes</p>
                                 </div>
                             </div>
-                        </div>
+                        </a>
 
                         <!-- Mon profil -->
                         <a href="{{ route('dashboard.profile.show') }}" class="block p-6 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
