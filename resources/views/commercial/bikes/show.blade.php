@@ -186,20 +186,19 @@
 {{--                                >--}}
 {{--                                    <x-heroicon-o-pencil class="h-4 w-4" />--}}
                                 </button>
-                                @if ($bike->references->count() > 1)
-                                    <form action="{{ route("commercial.bikes.references.destroy", [$bike, $reference]) }}" method="POST">
-                                        @csrf
-                                        @method("DELETE")
-                                        <button
-                                            type="submit"
-                                            class="rounded bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
-                                            title="Supprimer"
-                                            onclick="return confirm('Supprimer cette référence ? Cette action est irréversible.');"
-                                        >
-                                            <x-heroicon-o-trash class="h-4 w-4" />
-                                        </button>
-                                    </form>
-                                @endif
+                                <form action="{{ route("commercial.bikes.references.destroy", [$bike, $reference]) }}" method="POST">
+                                    @csrf
+                                    @method("DELETE")
+                                    
+                                    <button
+                                        type="submit"
+                                        class="rounded bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
+                                        title="Supprimer"
+                                        onclick="return confirm('Supprimer cette référence ? Cette action est irréversible.');"
+                                    >
+                                        <x-heroicon-o-trash class="h-4 w-4" />
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

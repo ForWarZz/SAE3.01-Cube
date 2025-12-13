@@ -24,33 +24,36 @@ class BikeCreateRequest extends FormRequest
         $isVae = $this->boolean('is_vae');
 
         $rules = [
-            'model_choice' => 'required|in:new,existing',
-            'new_model_name' => 'required_if:model_choice,new',
-            'id_modele_velo' => 'required_if:model_choice,existing',
-            'nom_article' => 'required|string|max:255',
-            'resumer_article' => 'required|string|max:255',
-            'description_article' => 'required|string',
-            'prix_article' => 'required|numeric|min:0',
-            'pourcentage_remise' => 'nullable|integer|min:0|max:100',
-            'id_categorie' => 'required|integer',
-            'id_materiau_cadre' => 'required|integer',
-            'id_millesime' => 'required|integer',
-            'id_usage' => 'required|integer',
-            'is_vae' => 'required|boolean',
-            'references' => 'required|array|min:1',
-            'references.*.numero_reference' => 'nullable|integer|distinct|min:0|unique:reference_article,id_reference',
-            'references.*.id_cadre_velo' => 'required|integer',
-            'references.*.id_couleur' => 'required|integer',
-            'references.*.sizes' => 'required|array|min:1',
-            'references.*.images' => 'nullable|array|max:5',
-            'references.*.images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'model_choice' => ['required', 'in:new,existing'],
+            'new_model_name' => ['nullable', 'required_if:model_choice,new', 'string', 'max:255'],
+            'id_modele_velo' => ['required_if:model_choice,existing', 'integer'],
+
+            'nom_article' => ['required', 'string', 'max:255'],
+            'resumer_article' => ['required', 'string', 'max:255'],
+            'description_article' => ['required', 'string'],
+            'prix_article' => ['required', 'numeric', 'min:0'],
+            'pourcentage_remise' => ['nullable', 'integer', 'min:0', 'max:100'],
+
+            'id_categorie' => ['required', 'integer'],
+            'id_materiau_cadre' => ['required', 'integer'],
+            'id_millesime' => ['required', 'integer'],
+            'id_usage' => ['required', 'integer'],
+            'is_vae' => ['required', 'boolean'],
+
+            'references' => ['nullable', 'array'],
+            'references.*.numero_reference' => ['nullable', 'integer', 'min:0', 'distinct', 'unique:reference_article,id_reference'],
+            'references.*.id_cadre_velo' => ['required', 'integer'],
+            'references.*.id_couleur' => ['required', 'integer'],
+            'references.*.sizes' => ['required', 'array', 'min:1'],
+            'references.*.images' => ['nullable', 'array', 'max:5'],
+            'references.*.images.*' => ['image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ];
 
         if ($isVae) {
-            $rules['references.*.id_batterie'] = 'required|integer|exists:batterie,id_batterie';
+            $rules['references.*.id_batterie'] = ['required', 'integer', 'exists:batterie,id_batterie'];
             $rules['id_type_vae'] = ['required', 'integer', 'exists:type_vae,id_type_vae'];
         } else {
-            $rules['references.*.id_batterie'] = 'nullable|integer';
+            $rules['references.*.id_batterie'] = ['nullable', 'integer'];
             $rules['id_type_vae'] = ['nullable', 'integer'];
         }
 
@@ -99,7 +102,6 @@ class BikeCreateRequest extends FormRequest
 
             'references.required' => 'Vous devez ajouter au moins une référence.',
             'references.array' => 'Les références doivent être au format tableau.',
-            'references.min' => 'Vous devez ajouter au moins une référence.',
 
             'references.*.id_cadre_velo.required' => 'Le cadre est obligatoire pour chaque référence.',
             'references.*.id_cadre_velo.integer' => "L'identifiant du cadre doit être valide.",
@@ -133,5 +135,12 @@ class BikeCreateRequest extends FormRequest
             'references.*.images.*.mimes' => 'L\'image doit être au format JPEG, PNG, JPG ou WebP.',
             'references.*.images.*.max' => 'L\'image ne doit pas dépasser 2 Mo.',
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'references' => $this->input('references', []),
+        ]);
     }
 }

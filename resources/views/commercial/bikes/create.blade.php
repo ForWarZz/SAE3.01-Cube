@@ -135,16 +135,11 @@
                             <div class="space-y-4">
                                 <template x-for="(ref, idx) in refs" :key="idx">
                                     <div class="relative rounded border border-gray-200 bg-gray-50 p-4">
-                                        <button
-                                            type="button"
-                                            @click="removeRef(idx)"
-                                            x-show="refs.length > 1"
-                                            class="absolute top-2 right-2 text-xs text-gray-400 hover:text-red-500"
-                                        >
-                                            ✕
+                                        <button type="button" @click="removeRef(idx)" class="absolute top-2 right-2">
+                                            <x-heroicon-o-trash class="size-5 text-red-500 hover:text-red-700" />
                                         </button>
 
-                                        <div class="grid grid-cols-2 gap-4">
+                                        <div class="mt-3 grid grid-cols-2 gap-4">
                                             <div>
                                                 <label class="mb-1 block text-xs font-medium text-gray-600">Cadre *</label>
                                                 <select
@@ -411,7 +406,7 @@
             const modelsCategory = @json($modelsCategory);
 
             const oldRefs = @json(old("references"));
-            const initialRefs = oldRefs && Array.isArray(oldRefs) && oldRefs.length > 0 ? oldRefs.map(normalizeRef) : [createEmptyRow()];
+            const initialRefs = oldRefs && Array.isArray(oldRefs) && oldRefs.length > 0 ? oldRefs.map(normalizeRef) : [];
 
             return {
                 modelChoice: '{{ old("model_choice", "existing") }}',
@@ -452,7 +447,7 @@
                 },
 
                 removeRef(idx) {
-                    if (this.refs.length > 1) this.refs.splice(idx, 1);
+                    this.refs.splice(idx, 1);
                 },
 
                 handleImageUpload(event, idx) {

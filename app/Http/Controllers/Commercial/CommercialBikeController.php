@@ -96,10 +96,6 @@ class CommercialBikeController extends Controller
             return back()->withErrors(['error' => 'Cette référence n\'appartient pas à ce vélo.']);
         }
 
-        if (! $this->referenceService->canDeleteReference($bike, $reference)) {
-            return back()->withErrors(['error' => 'Impossible de supprimer la dernière référence du vélo.']);
-        }
-
         $reference->load(['availableSizes', 'baseReference']);
 
         try {
