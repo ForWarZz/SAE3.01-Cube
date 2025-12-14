@@ -68,6 +68,11 @@ class Bike extends Model
         return $this->date_ajout->greaterThan(Carbon::now()->subMonths(6));
     }
 
+    public function ebike(): BelongsTo
+    {
+        return $this->belongsTo(EBike::class, 'id_article', 'id_article');
+    }
+
     public function frameMaterial(): BelongsTo
     {
         return $this->belongsTo(BikeFrameMaterial::class, 'id_materiau_cadre', 'id_materiau_cadre');

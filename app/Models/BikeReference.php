@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
  * @property int $id_cadre_velo
  * @property int $id_couleur
  * @property int $id_article
+ * @property int $numero_reference
  */
 class BikeReference extends Model
 {

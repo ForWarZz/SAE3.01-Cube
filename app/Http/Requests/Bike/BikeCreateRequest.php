@@ -26,7 +26,7 @@ class BikeCreateRequest extends FormRequest
         $rules = [
             'model_choice' => ['required', 'in:new,existing'],
             'new_model_name' => ['nullable', 'required_if:model_choice,new', 'string', 'max:255'],
-            'id_modele_velo' => ['required_if:model_choice,existing', 'integer'],
+            'id_modele_velo' => ['nullable', 'required_if:model_choice,existing', 'integer'],
 
             'nom_article' => ['required', 'string', 'max:255'],
             'resumer_article' => ['required', 'string', 'max:255'],
@@ -41,7 +41,7 @@ class BikeCreateRequest extends FormRequest
             'is_vae' => ['required', 'boolean'],
 
             'references' => ['nullable', 'array'],
-            'references.*.numero_reference' => ['nullable', 'integer', 'min:0', 'distinct', 'unique:reference_article,id_reference'],
+            'references.*.numero_reference' => ['required', 'integer', 'min:0', 'distinct', 'unique:reference_article,numero_reference'],
             'references.*.id_cadre_velo' => ['required', 'integer'],
             'references.*.id_couleur' => ['required', 'integer'],
             'references.*.sizes' => ['required', 'array', 'min:1'],
@@ -128,6 +128,7 @@ class BikeCreateRequest extends FormRequest
             'references.*.numero_reference.integer' => 'Le numéro de référence doit être un entier.',
             'references.*.numero_reference.min' => 'Le numéro de référence doit être positif.',
             'references.*.numero_reference.distinct' => 'Les numéros de référence doivent être uniques parmi les références soumises.',
+            'references.*.numero_reference.required' => 'Le numéro de référence est obligatoire pour chaque référence.',
 
             'references.*.images.array' => 'Les images doivent être un tableau.',
             'references.*.images.max' => 'Vous ne pouvez pas ajouter plus de 5 images par référence.',

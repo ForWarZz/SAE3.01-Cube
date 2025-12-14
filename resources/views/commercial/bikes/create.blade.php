@@ -205,15 +205,14 @@
                                         </div>
 
                                         <div class="mt-3">
-                                            <label class="mb-1 block text-xs font-medium text-gray-600">
-                                                Numéro de référence (optionnel)
-                                            </label>
+                                            <label class="mb-1 block text-xs font-medium text-gray-600">Numéro de référence *</label>
                                             <input
                                                 type="text"
                                                 :name="`references[${idx}][numero_reference]`"
                                                 x-model="ref.numero_reference"
                                                 placeholder="Ex : 123456"
                                                 class="block w-full rounded-md border border-gray-300 p-2 text-sm"
+                                                required
                                             />
                                         </div>
 

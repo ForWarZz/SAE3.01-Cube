@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id_reference
+ * @property int $numero_reference
  */
 class ArticleReference extends Model
 {

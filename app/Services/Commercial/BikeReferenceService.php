@@ -17,11 +17,9 @@ class BikeReferenceService
      */
     public function createReference(int $articleId, array $refData, bool $isVae, array $images = []): int
     {
-        $forcedId = $refData['numero_reference'] ?? null;
-
         $refResult = DB::selectOne('SELECT fn_add_bike_reference(?, ?, ?, ?, ?, ?) as id_ref', [
             $isVae,
-            $forcedId,
+            $refData['numero_reference'],
             $articleId,
             $refData['id_cadre_velo'],
             $refData['id_couleur'],
@@ -46,12 +44,12 @@ class BikeReferenceService
         DB::beginTransaction();
 
         try {
-            $isVae = $bike->references()->whereHas('ebike')->exists();
+            $isVae = $bike->ebike->exists;
 
             $referenceId = $this->createReference(
                 $bike->id_article,
                 [
-                    'numero_reference' => $validated['numero_reference'] ?? null,
+                    'numero_reference' => $validated['numero_reference'],
                     'id_cadre_velo' => $validated['id_cadre_velo'],
                     'id_couleur' => $validated['id_couleur'],
                     'id_batterie' => $isVae ? ($validated['id_batterie'] ?? null) : null,

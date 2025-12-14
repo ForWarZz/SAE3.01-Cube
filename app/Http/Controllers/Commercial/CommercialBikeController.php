@@ -78,6 +78,10 @@ class CommercialBikeController extends Controller
         $validated = $request->validated();
         $images = $request->hasFile('images') ? $request->file('images') : [];
 
+        $bike->load([
+            'ebike',
+        ]);
+
         try {
             $this->referenceService->addReferenceToExistingBike($bike, $validated, $images);
 

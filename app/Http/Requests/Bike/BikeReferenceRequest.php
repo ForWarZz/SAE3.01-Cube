@@ -32,7 +32,7 @@ class BikeReferenceRequest extends FormRequest
         }
 
         $rules = [
-            'numero_reference' => 'nullable|integer|min:0|unique:reference_article,id_reference',
+            'numero_reference' => 'required|integer|min:0|unique:reference_article,id_reference',
             'id_cadre_velo' => 'required|integer|exists:cadre_velo,id_cadre_velo',
             'id_couleur' => 'required|integer|exists:couleur,id_couleur',
             'sizes' => 'required|array|min:1',
@@ -56,6 +56,7 @@ class BikeReferenceRequest extends FormRequest
             'numero_reference.unique' => 'Ce numéro de référence est déjà utilisé.',
             'numero_reference.integer' => 'Le numéro de référence doit être un entier.',
             'numero_reference.min' => 'Le numéro de référence doit être positif.',
+            'numero_reference.required' => 'Le numéro de référence est obligatoire.',
 
             'id_cadre_velo.required' => 'Le cadre est obligatoire.',
             'id_cadre_velo.integer' => "L'identifiant du cadre doit être valide.",

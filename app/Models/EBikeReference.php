@@ -11,13 +11,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id_article
  * @property int $id_cadre_velo
  * @property int $id_couleur
+ * @property int $numero_reference
  */
 class EBikeReference extends Model
 {
     public $timestamps = false;
 
     protected $table = 'reference_vae';
+
     protected $primaryKey = 'id_reference';
+
     protected $fillable = [
         'id_reference',
         'id_batterie',

@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string $nom_article
  * @property string $description_article
  * @property string $resumer_article
- * @property Article $article
+ * @property int $numero_reference
  */
 class Accessory extends Model
 {
@@ -37,6 +37,7 @@ class Accessory extends Model
         'nom_article',
         'description_article',
         'resumer_article',
+        'numero_reference',
     ];
 
     protected static function booted(): void

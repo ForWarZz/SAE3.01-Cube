@@ -90,6 +90,7 @@ class CommercialBikeService
             'references.color',
             'references.availableSizes',
             'ebikeReferences.battery',
+            'ebike',
         ]);
     }
 
@@ -113,7 +114,7 @@ class CommercialBikeService
 
     public function isVae(Bike $bike): bool
     {
-        return $bike->ebikeReferences->isNotEmpty();
+        return $bike->ebike->exists;
     }
 
     private function resolveModelId(array $validated): int

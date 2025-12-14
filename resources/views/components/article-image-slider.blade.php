@@ -29,7 +29,7 @@
     <div class="relative h-[550px] w-full overflow-hidden rounded-lg">
         <img
             :src="images.length > 0 ? images[currentImageIndex] : ''"
-            alt="{){ $article->nom_article }}"
+            alt="{{ $article->nom_article }}"
             class="h-full w-full object-contain transition-transform duration-200"
             @mousemove="images.length && (zoomed = true); updateZoom($event)"
             @mouseleave="zoomed = false"

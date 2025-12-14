@@ -98,7 +98,7 @@
                         <div class="flex items-start justify-between">
                             <div class="flex-1">
                                 <div class="mb-3 flex items-center space-x-4">
-                                    <span class="font-mono text-lg font-bold text-gray-800">#{{ $reference->id_reference }}</span>
+                                    <span class="font-mono text-lg font-bold text-gray-800">#{{ $reference->numero_reference }}</span>
                                     <span class="rounded bg-gray-100 px-2 py-1 text-sm">
                                         {{ $reference->frame->label_cadre_velo }}
                                     </span>
@@ -189,7 +189,7 @@
                                 <form action="{{ route("commercial.bikes.references.destroy", [$bike, $reference]) }}" method="POST">
                                     @csrf
                                     @method("DELETE")
-                                    
+
                                     <button
                                         type="submit"
                                         class="rounded bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
@@ -230,12 +230,13 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="mb-1 block text-sm font-medium text-gray-700">Numéro de référence (optionnel)</label>
+                            <label class="mb-1 block text-sm font-medium text-gray-700">Numéro de référence *</label>
                             <input
                                 type="number"
                                 name="numero_reference"
                                 class="w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                placeholder="Auto-généré si vide"
+                                placeholder="123456"
+                                required
                             />
                         </div>
 
