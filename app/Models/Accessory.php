@@ -101,16 +101,42 @@ class Accessory extends Model
         )->withPivot(['id_taille', 'statut']);
     }
 
+    public function getCoverUrl(): string
+    {
+        $files = $this->getImageFiles();
+
+        if (empty($files)) {
+            return '';
+        }
+
+        return Storage::url($this->getImageFiles()[0]);
+    }
+
     public function getImagesUrls(bool $is360 = false): array
     {
-        $directory = "articles/$this->id_article/$this->id_reference/";
+        $files = $this->getImageFiles($is360);
+
+        return array_map(fn ($f) => Storage::url($f), $files);
+    }
+
+    public function getImageFiles(bool $is360 = false): array
+    {
+        $directory = $this->getStorageDirectory();
 
         if ($is360) {
             $directory .= '/360';
         }
 
-        $files = Storage::disk('public')->files($directory);
+        return Storage::disk('public')->files($directory);
+    }
 
-        return array_map(fn ($f) => Storage::url($f), $files);
+    public function getStorageDirectory(): string
+    {
+        return "articles/$this->id_article/$this->id_reference/";
+    }
+
+    public function getImagePathFromName(string $imageName): string
+    {
+        return $this->getStorageDirectory().$imageName;
     }
 }

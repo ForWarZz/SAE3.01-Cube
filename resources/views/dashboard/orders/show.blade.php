@@ -29,7 +29,10 @@
                             </span>
                         </div>
 
-                        <p class="text-gray-500">Passée le {{ $order->date_commande }}</p>
+                        <p class="text-gray-500">
+                            Passée le
+                            <x-date-local :date="$order->date_commande" />
+                        </p>
 
                         @if ($order->num_suivi_commande)
                             <p class="mt-2 text-sm">
@@ -143,7 +146,7 @@
                                     <div>
                                         <p class="font-medium text-gray-900">{{ $state->label_etat }}</p>
                                         <p class="text-sm text-gray-500">
-                                            {{ Carbon::parse($state->pivot->date_changement)->format("d/m/Y à H:i") }}
+                                            <x-date-local :date="Carbon::parse($state->pivot->date_changement)" />
                                         </p>
                                     </div>
                                 </div>

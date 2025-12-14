@@ -55,7 +55,7 @@
                         <div class="grid grid-cols-3 gap-4">
                             <div class="text-sm font-medium text-gray-500">Date de naissance</div>
                             <div class="col-span-2 text-sm text-gray-900">
-                                {{ Carbon::parse($client->naissance_client)->format("d/m/Y") }}
+                                <x-date-local :date=""
                             </div>
                         </div>
 
@@ -63,7 +63,7 @@
                             <div class="text-sm font-medium text-gray-500">Dernière connexion</div>
                             <div class="col-span-2 text-sm text-gray-900">
                                 @if ($client->date_der_connexion)
-                                    {{ $client->date_der_connexion->format("d/m/Y H:i") }}
+                                    <x-date-local :date="$client->date_der_connexion" />
                                 @else
                                     Jamais
                                 @endif

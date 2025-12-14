@@ -18,14 +18,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id_moyen_livraison
  * @property int $id_client
  * @property string $num_commande
- * @property string $date_commande
+ * @property \Carbon\Carbon $date_commande
  * @property string|null $num_suivi_commande
  * @property float $frais_livraison
  * @property int|null $id_code_promo
  * @property float|null $pourcentage_remise
  * @property string|null $stripe_session_id
  * @property string|null $cb_last4
- * @property string|null $date_paiement
+ * @property \Carbon\Carbon|null $date_paiement
  */
 class Order extends Model
 {
@@ -52,6 +52,11 @@ class Order extends Model
         'stripe_session_id',
         'cb_last4',
         'date_paiement',
+    ];
+
+    protected $casts = [
+        'date_commande' => 'datetime',
+        'date_paiement' => 'datetime',
     ];
 
     public function states(): BelongsToMany

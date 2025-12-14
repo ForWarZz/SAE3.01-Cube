@@ -49,7 +49,7 @@
                                                         {{ $order->statusLabel }}
                                                     </span>
                                                 </div>
-                                                <p class="text-gray-500">{{ $order->date }}</p>
+                                                <p class="text-gray-500">{{ $order->date->format("d/m/y") }}</p>
                                             </div>
 
                                             @if ($order->tracking)

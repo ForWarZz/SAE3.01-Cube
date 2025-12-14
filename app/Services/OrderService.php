@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Order;
 use App\Models\OrderLine;
 use App\Models\OrderState;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 class OrderService
@@ -19,7 +18,7 @@ class OrderService
         return (object) [
             'id' => $order->id_commande,
             'number' => trim($order->num_commande),
-            'date' => Carbon::parse($order->date_commande)->format('d/m/Y'),
+            'date' => $order->date_commande,
             'tracking' => $order->num_suivi_commande ? trim($order->num_suivi_commande) : null,
             'statusLabel' => $currentState->label_etat,
             'statusColors' => $statusStyle,
