@@ -90,12 +90,12 @@
                                                 </div>
                                             </div>
 
-                                            <div class="mt-2 flex items-center gap-4 text-sm text-gray-600">
+                                            <div class="mt-2 flex flex-col gap-1 text-sm text-gray-600">
                                                 @if ($item->colorName)
                                                     <div class="flex items-center gap-1.5">
                                                         <span
                                                             class="h-3 w-3 rounded-full border border-gray-300"
-                                                            style="background-color: {{ $item->color_hex }}"
+                                                            style="background-color: {{ $item->colorHex }}"
                                                         ></span>
                                                         {{ $item->colorName }}
                                                     </div>
