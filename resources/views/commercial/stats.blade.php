@@ -2,9 +2,9 @@
     @php
         $reports = [
             [
-                "title" => "Analyse des ventes",
-                "description" => "Chiffre d’affaires par région et commercial.",
-                "url" => "URL_POWER_BI_1",
+                "title" => "Analyse des ventes d'accessoires",
+                "description" => "Analyse de l'état des ventes d'accessoires par mois.",
+                "url" => "https://app.powerbi.com/view?r=eyJrIjoiNTg5MWYwZDctMDcwZi00ZGEzLTkzMzgtZjliMjQ2OTVkNTk1IiwidCI6ImUyMWU5NzgzLWQwYTAtNDhmOC04NTBlLTBiMDgxYjQ2ZDc4OCIsImMiOjh9",
             ],
             [
                 "title" => "Performance produits",
@@ -39,7 +39,9 @@
                     </p>
 
                     <button
-                        onclick="openReport('{{ $report["url"] }}', '{{ $report["title"] }}')"
+                        data-url="{{ $report["url"] }}"
+                        data-title="{{ $report["title"] }}"
+                        onclick="openReport(this)"
                         class="mt-4 text-sm font-medium text-indigo-600 hover:underline"
                     >
                         Ouvrir le rapport →
@@ -63,7 +65,10 @@
     </div>
 
     <script>
-        function openReport(url, title) {
+        function openReport(button) {
+            const url = button.dataset.url;
+            const title = button.dataset.title;
+
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('reportIframe').src = url;
             document.getElementById('reportModal').classList.remove('hidden');
@@ -71,7 +76,8 @@
         }
 
         function closeReport() {
-            document.getElementById('reportIframe').src = '';
+            const iframe = document.getElementById('reportIframe');
+            iframe.src = '';
             document.getElementById('reportModal').classList.add('hidden');
             document.body.style.overflow = 'auto';
         }
