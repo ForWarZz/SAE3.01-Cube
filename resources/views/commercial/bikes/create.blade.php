@@ -1,5 +1,5 @@
 <x-commercial-layout>
-    <div x-data="bikeForm()" class="min-h-screen bg-gray-50 pb-12">
+    <div x-data="bikeForm()" x-effect="onModelChoiceChange()" class="min-h-screen bg-gray-50 pb-12">
         <form action="{{ route("commercial.bikes.store") }}" method="POST" enctype="multipart/form-data">
             @csrf
 
@@ -475,6 +475,15 @@
                         };
                         reader.readAsDataURL(file);
                     }
+                },
+
+                onModelChoiceChange() {
+                    if (this.modelChoice !== 'existing') {
+                        this.categoryLocked = false;
+                        return;
+                    }
+
+                    this.applyModelCategory();
                 },
             };
         }
