@@ -6,6 +6,7 @@ use App\Http\Requests\AddressCreateRequest;
 use App\Models\Address;
 use App\Models\City;
 use App\Services\GdprService;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,12 +49,27 @@ class AddressController extends Controller
         $client = Auth::user();
         $validated = $request->validated();
 
-        // Find or create the city
-        $ville = City::firstOrCreate(
-            ['cp_ville' => $validated['code_postal'], 'nom_ville' => $validated['nom_ville']],
-            ['cp_ville' => $validated['code_postal'], 'nom_ville' => $validated['nom_ville'], 'pays_ville' => 'France']
-        );
+        //        // Find or create the city
+        //        $ville = City::firstOrCreate(
+        //            ['cp_ville' => $validated['code_postal'], 'nom_ville' => $validated['nom_ville']],
+        //            ['cp_ville' => $validated['code_postal'], 'nom_ville' => $validated['nom_ville'], 'pays_ville' => 'France']
+        //        );
 
+        try {
+            $ville = City::firstOrCreate(
+                [
+                    'cp_ville' => $validated['code_postal'],
+                    'nom_ville' => $validated['nom_ville'],
+                ],
+                [
+                    'pays_ville' => 'France',
+                ]
+            );
+        } catch (QueryException $e) {
+            $ville = City::where('cp_ville', $validated['code_postal'])
+                ->where('nom_ville', $validated['nom_ville'])
+                ->firstOrFail();
+        }
         Address::create([
             'id_client' => $client->id_client,
             'id_ville' => $ville->id_ville,
