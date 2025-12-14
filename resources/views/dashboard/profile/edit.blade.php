@@ -81,8 +81,7 @@
                                 name="naissance_client"
                                 id="naissance_client"
                                 label="Date de naissance"
-                                :value="$client->naissance_client"
-                                required
+                                :value="$client->naissance_client ? $client->naissance_client->format('Y-m-d') : ''"
                             />
 
                             <div class="flex items-center justify-between pt-4">

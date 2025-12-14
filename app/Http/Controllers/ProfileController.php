@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Client;
 use App\Services\GdprService;
 use Illuminate\Http\RedirectResponse;
@@ -36,17 +37,18 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(Request $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $client = $request->user();
+        $validated = $request->validated();
 
-        $validated = $request->validate([
-            'civilite' => ['required', 'string', 'in:Monsieur,Madame'],
-            'prenom_client' => ['required', 'string', 'max:255'],
-            'nom_client' => ['required', 'string', 'max:255'],
-            'email_client' => ['required', 'string', 'email', 'max:255', 'unique:client,email_client,'.$client->id_client.',id_client'],
-            'naissance_client' => ['required', 'date'],
-        ]);
+        //        $validated = $request->validate([
+        //            'civilite' => ['required', 'string', 'in:Monsieur,Madame'],
+        //            'prenom_client' => ['required', 'string', 'max:255'],
+        //            'nom_client' => ['required', 'string', 'max:255'],
+        //            'email_client' => ['required', 'string', 'email', 'max:255', 'unique:client,email_client,'.$client->id_client.',id_client'],
+        //            'naissance_client' => ['required', 'date'],
+        //        ]);
 
         $client->update($validated);
 
