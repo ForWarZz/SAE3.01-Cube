@@ -55,7 +55,7 @@
                         <div class="grid grid-cols-3 gap-4">
                             <div class="text-sm font-medium text-gray-500">Date de naissance</div>
                             <div class="col-span-2 text-sm text-gray-900">
-                                <x-date-local :date=""
+                                {{ $client->naissance_client ? $client->naissance_client->format("d/m/Y") : "Non renseignée" }}
                             </div>
                         </div>
 

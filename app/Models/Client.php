@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,10 +13,10 @@ use Laravel\Cashier\Billable;
  * @property string $nom_client
  * @property string $prenom_client
  * @property string $email_client
- * @property string $naissance_client
+ * @property Carbon $naissance_client
  * @property string $civilite
  * @property string $hash_mdp_client
- * @property string $date_der_connexion
+ * @property Carbon $date_der_connexion
  * @property string|null $stripe_id
  */
 class Client extends Authenticatable
