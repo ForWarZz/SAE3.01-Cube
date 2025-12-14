@@ -32,6 +32,8 @@
             name="{{ $name }}"
             id="{{ $id }}"
             placeholder="{{ $placeholder }}"
+            @if($required) required @endif
+            @if($readonly) readonly @endif
             {{ $attributes->except(["class"])->merge([]) }}
             class="{{ $inputClass }} {{ $readonlyClass }}"
         >
@@ -45,6 +47,7 @@
             value="{{ old($name, $value) }}"
             placeholder="{{ $placeholder }}"
             @if($required) required @endif
+            @if($readonly) readonly @endif
             {{ $attributes->except(["class"])->merge([]) }}
             class="{{ $inputClass }} {{ $readonlyClass }}"
         />

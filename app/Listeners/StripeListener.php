@@ -46,7 +46,7 @@ class StripeListener
                     Log::error($e->getMessage());
                 }
 
-                if ($currentOrderState != OrderState::PAYMENT_ACCEPTED) {
+                if ($currentOrderState->id_etat !== OrderState::PAYMENT_ACCEPTED) {
                     $order->update([
                         'stripe_session_id' => $sessionRaw['id'],
                         'date_paiement' => now(),
