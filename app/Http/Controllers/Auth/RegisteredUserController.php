@@ -43,6 +43,9 @@ class RegisteredUserController extends Controller
         event(new Registered($client));
         Auth::login($client);
 
+        $client->date_der_connexion = now();
+        $client->save();
+
         return redirect()->route('dashboard.index');
     }
 }
