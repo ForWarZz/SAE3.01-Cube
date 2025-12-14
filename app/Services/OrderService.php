@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Order;
+use App\Models\OrderLine;
 use App\Models\OrderState;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -46,25 +47,24 @@ class OrderService
 
     public function formatLineItems(Collection $items): Collection
     {
-        return $items->map(function ($item) {
-            $ref = $item->reference;
-            $bikeRef = $ref?->bikeReference;
-            $accessory = $ref?->accessory;
-            $isBike = $bikeRef !== null;
+        return $items->map(function (OrderLine $item) {
+            $baseReference = $item->reference;
+            $ref = $baseReference->bikeReference ?? $baseReference->accessory;
+            $article = $ref->article;
 
-            $articleParent = $isBike ? $bikeRef?->article : $accessory?->article;
-            $image = $ref->getCoverUrl();
-
+            $isBike = $baseReference->bikeReference;
             $subtitle = $isBike
                 ? ($articleParent->bike?->bikeModel->nom_modele_velo ?? 'Vélo')
                 : ($articleParent->category->nom_categorie ?? 'Accessoire');
 
+            $image = $ref->getCoverUrl();
+
             return (object) [
-                'name' => $articleParent->nom_article,
+                'name' => $article->nom_article,
                 'subtitle' => $subtitle,
                 'image' => $image,
-                'colorHex' => $isBike ? $bikeRef->color?->code_hex : null,
-                'colorName' => $isBike ? $bikeRef->color?->nom_couleur : null,
+                'colorHex' => $isBike ? $ref->color?->code_hex : null,
+                'colorName' => $isBike ? $ref->color?->nom_couleur : null,
                 'size' => $item->size?->nom_taille,
                 'quantity' => $item->quantite_ligne,
                 'unitPrice' => $item->prix_unit_ligne,

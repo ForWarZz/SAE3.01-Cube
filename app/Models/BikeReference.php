@@ -93,7 +93,7 @@ class BikeReference extends Model
             return '';
         }
 
-        return $this->getImageFiles()[0];
+        return Storage::url($this->getImageFiles()[0]);
     }
 
     public function getImagesUrls(bool $is360 = false): array
