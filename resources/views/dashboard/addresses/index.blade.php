@@ -41,31 +41,32 @@
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                             @foreach ($addresses as $adresse)
                                 <x-address-card :address="$adresse">
-                                    {{-- Injection du bouton supprimer via le slot 'actions' --}}
                                     <x-slot name="actions">
-                                        <form
-                                            method="POST"
-                                            action="{{ route("dashboard.addresses.destroy", $adresse) }}"
-                                            onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette adresse ?');"
-                                        >
-                                            @csrf
-                                            @method("DELETE")
-
-                                            <button
-                                                type="submit"
-                                                class="rounded-md p-2 text-gray-400 transition hover:bg-red-50 hover:text-red-600"
-                                                title="Supprimer"
+                                        <div class="flex gap-0.5">
+                                            <a
+                                                href="{{ route("dashboard.addresses.edit", $adresse) }}"
+                                                class="rounded-md p-2 text-gray-400 transition hover:bg-indigo-50 hover:text-indigo-600"
+                                                title="Modifier"
                                             >
-                                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                                    ></path>
-                                                </svg>
-                                            </button>
-                                        </form>
+                                                <x-heroicon-o-pencil-square class="size-5 hover:text-indigo-600" />
+                                            </a>
+                                            <form
+                                                method="POST"
+                                                action="{{ route("dashboard.addresses.destroy", $adresse) }}"
+                                                onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette adresse ?');"
+                                            >
+                                                @csrf
+                                                @method("DELETE")
+
+                                                <button
+                                                    type="submit"
+                                                    class="rounded-md p-2 text-gray-400 transition hover:bg-red-50 hover:text-red-600"
+                                                    title="Supprimer"
+                                                >
+                                                    <x-heroicon-o-trash class="size-5 hover:text-red-600" />
+                                                </button>
+                                            </form>
+                                        </div>
                                     </x-slot>
                                 </x-address-card>
                             @endforeach

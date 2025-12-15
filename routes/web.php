@@ -69,6 +69,8 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
         Route::get('/', [AddressController::class, 'index'])->name('index');
         Route::get('/nouvelle', [AddressController::class, 'create'])->name('create');
         Route::post('/', [AddressController::class, 'store'])->name('store');
+        Route::get('/{adresse}/modifier', [AddressController::class, 'edit'])->name('edit');
+        Route::put('/{adresse}', [AddressController::class, 'update'])->name('update');
         Route::delete('/{adresse}', [AddressController::class, 'destroy'])->name('destroy');
     });
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddressCreateRequest;
+use App\Http\Requests\AddressUpdateRequest;
 use App\Models\Address;
 use App\Models\City;
 use App\Services\GdprService;
@@ -93,6 +94,66 @@ class AddressController extends Controller
 
         return redirect()->route('dashboard.addresses.index')
             ->with('success', 'Adresse créée avec succès.');
+    }
+
+    public function edit(Address $adresse): View
+    {
+        $client = Auth::user();
+
+        if ($adresse->id_client !== $client->id_client) {
+            abort(403);
+        }
+
+        $adresse->load('city');
+
+        return view('dashboard.addresses.edit', [
+            'client' => $client,
+            'address' => $adresse,
+        ]);
+    }
+
+    public function update(AddressUpdateRequest $request, Address $adresse): RedirectResponse
+    {
+        $client = Auth::user();
+
+        if ($adresse->id_client !== $client->id_client) {
+            abort(403);
+        }
+
+        $validated = $request->validated();
+
+        try {
+            $ville = City::firstOrCreate(
+                [
+                    'cp_ville' => $validated['code_postal'],
+                    'nom_ville' => $validated['nom_ville'],
+                ],
+                [
+                    'pays_ville' => 'France',
+                ]
+            );
+        } catch (QueryException $e) {
+            $ville = City::where('cp_ville', $validated['code_postal'])
+                ->where('nom_ville', $validated['nom_ville'])
+                ->firstOrFail();
+        }
+
+        $adresse->update([
+            'id_ville' => $ville->id_ville,
+            'alias_adresse' => $validated['alias_adresse'],
+            'nom_adresse' => $validated['nom_adresse'],
+            'prenom_adresse' => $validated['prenom_adresse'],
+            'telephone_adresse' => $validated['telephone_adresse'],
+            'tel_mobile_adresse' => $validated['tel_mobile_adresse'] ?? null,
+            'societe_adresse' => $validated['societe_adresse'] ?? null,
+            'tva_adresse' => $validated['tva_adresse'] ?? null,
+            'num_voie_adresse' => $validated['num_voie_adresse'],
+            'rue_adresse' => $validated['rue_adresse'],
+            'complement_adresse' => $validated['complement_adresse'] ?? null,
+        ]);
+
+        return redirect()->route('dashboard.addresses.index')
+            ->with('success', 'Adresse modifiée avec succès.');
     }
 
     /**
