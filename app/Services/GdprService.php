@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Address;
 use App\Models\Client;
 use App\Models\Order;
+use App\Models\OrderLine;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -242,15 +243,25 @@ class GdprService
                     'numero_voie' => $adresse->num_voie_adresse,
                     'rue' => $adresse->rue_adresse,
                     'complement' => $adresse->complement_adresse,
-                    'ville' => $adresse->city?->nom_ville,
-                    'code_postal' => $adresse->city?->cp_ville,
+                    'ville' => $adresse->city->nom_ville,
+                    'code_postal' => $adresse->city->cp_ville,
                 ];
             })->toArray(),
-            'commandes' => $client->orders->map(function ($order) {
+            'commandes' => $client->orders->map(function (Order $order) {
                 return [
                     'numero' => $order->num_commande,
                     'date' => $order->date_commande,
                     'montant_livraison' => $order->frais_livraison,
+                    'pourcentage_remise' => $order->pourcentage_remise,
+                    'articles' => $order->items->map(function (OrderLine $item) {
+                        $article = $item->reference->bikeReference->article ?? $item->reference->accessory->article;
+
+                        return [
+                            'produit' => $article->nom_article,
+                            'quantite' => $item->quantite_ligne,
+                            'prix_unitaire' => $item->prix_unit_ligne,
+                        ];
+                    })->toArray(),
                 ];
             })->toArray(),
             'export_date' => now()->format('Y-m-d H:i:s'),

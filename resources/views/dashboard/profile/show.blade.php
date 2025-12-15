@@ -154,13 +154,22 @@
                         </p>
                     </div>
 
-                    <button
-                        type="button"
-                        onclick="document.getElementById('deleteModal').classList.remove('hidden')"
-                        class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-red-500 focus:bg-red-700"
-                    >
-                        Supprimer mon compte
-                    </button>
+                    <div class="flex gap-2">
+                        <button
+                            type="button"
+                            onclick="document.getElementById('deleteModal').classList.remove('hidden')"
+                            class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-red-500 focus:bg-red-700"
+                        >
+                            Supprimer mon compte
+                        </button>
+
+                        <a
+                            href="{{ route("dashboard.profile.export") }}"
+                            class="inline-flex items-center rounded-md border border-transparent bg-gray-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-gray-500 focus:bg-gray-700"
+                        >
+                            Demander mes données (RGPD)
+                        </a>
+                    </div>
                 </div>
             </div>
 

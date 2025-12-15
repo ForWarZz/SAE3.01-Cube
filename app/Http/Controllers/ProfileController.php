@@ -146,6 +146,14 @@ class ProfileController extends Controller
     public function exportData(Request $request, GdprService $gdprService)
     {
         $client = $request->user();
+        $client->load([
+            'addresses.city',
+            'orders.items.reference.accessory.article',
+            'orders.items.reference.bikeReference.article.bike.bikeModel',
+            'orders.billingAddress.city',
+            'orders.deliveryAddress.city',
+        ]);
+
         $data = $gdprService->exportClientData($client);
 
         $filename = 'mes-donnees-personnelles-'.now()->format('Y-m-d').'.json';
