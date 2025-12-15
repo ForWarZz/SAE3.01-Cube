@@ -114,7 +114,7 @@ class CommercialBikeService
 
     public function isVae(Bike $bike): bool
     {
-        return $bike->ebike->exists;
+        return $bike->ebike !== null;
     }
 
     private function resolveModelId(array $validated): int
