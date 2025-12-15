@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Bike;
 
+use App\Models\Bike;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BikeReferenceRequest extends FormRequest
@@ -22,17 +23,16 @@ class BikeReferenceRequest extends FormRequest
     public function rules(): array
     {
         // Déterminer si c'est un VAE en fonction du vélo parent
+        /** @var Bike $bike */
         $bike = $this->route('bike');
         $isVae = false;
 
         if ($bike) {
-            $isVae = $bike->references()
-                ->whereHas('ebike')
-                ->exists();
+            $isVae = $bike->ebike()->exists();
         }
 
         $rules = [
-            'numero_reference' => 'required|integer|min:0|unique:reference_article,id_reference',
+            'numero_reference' => 'required|integer|min:0|unique:reference_article,numero_reference',
             'id_cadre_velo' => 'required|integer|exists:cadre_velo,id_cadre_velo',
             'id_couleur' => 'required|integer|exists:couleur,id_couleur',
             'sizes' => 'required|array|min:1',
