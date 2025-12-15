@@ -263,7 +263,7 @@
                                     </div>
                                     <button
                                         type="button"
-                                        @click="isVae = !isVae"
+                                        @click="toggleVae()"
                                         :class="isVae ? 'bg-blue-600' : 'bg-gray-200'"
                                         class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors"
                                     >
@@ -284,11 +284,10 @@
                                     name="id_categorie"
                                     class="block w-full rounded-md border-gray-300 p-2 text-sm"
                                 >
-                                    @foreach ($categories as $cat)
-                                        <option value="{{ $cat->id_categorie }}" @selected(old("id_categorie") == $cat->id_categorie)>
-                                            {{ $cat->getFullPath() }}
-                                        </option>
-                                    @endforeach
+                                    <option value="">-- Sélectionner --</option>
+                                    <template x-for="cat in filteredCategories" :key="cat.id">
+                                        <option :value="cat.id" x-text="cat.path"></option>
+                                    </template>
                                 </select>
                                 <p x-show="categoryLocked" class="mt-1 text-xs text-gray-500 italic">
                                     Catégorie verrouillée par le modèle.
@@ -403,6 +402,8 @@
             }
 
             const modelsCategory = @json($modelsCategory);
+            const bikeCategories = @json($bikeCategories->map(fn ($cat) => ["id" => $cat->id_categorie, "path" => $cat->getFullPath()])->values());
+            const eBikeCategories = @json($eBikeCategories->map(fn ($cat) => ["id" => $cat->id_categorie, "path" => $cat->getFullPath()])->values());
 
             const oldRefs = @json(old("references"));
             const initialRefs = oldRefs && Array.isArray(oldRefs) && oldRefs.length > 0 ? oldRefs.map(normalizeRef) : [];
@@ -415,8 +416,23 @@
                 selectedCategory: '{{ old("id_categorie") }}',
                 categoryLocked: false,
 
+                get filteredCategories() {
+                    return this.isVae ? eBikeCategories : bikeCategories;
+                },
+
                 init() {
                     this.applyModelCategory();
+                },
+
+                toggleVae() {
+                    this.isVae = !this.isVae;
+
+                    if (!this.categoryLocked) {
+                        const currentCatInList = this.filteredCategories.find((c) => c.id == this.selectedCategory);
+                        if (!currentCatInList) {
+                            this.selectedCategory = '';
+                        }
+                    }
                 },
 
                 applyModelCategory() {
@@ -429,13 +445,9 @@
 
                     const cat = modelsCategory[this.selectedModel] ?? null;
 
-                    console.log('Found category:', cat);
-
                     if (cat) {
                         this.selectedCategory = cat;
                         this.categoryLocked = true;
-
-                        console.log('Category locked to:', cat);
                     } else {
                         this.categoryLocked = false;
                     }

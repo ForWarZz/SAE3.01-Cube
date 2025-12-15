@@ -26,6 +26,8 @@ class BikeFormDataService
             'models' => $models,
             'modelsCategory' => $this->buildModelsCategory($models, $bikesByModel),
             'categories' => $this->getCategories(),
+            'bikeCategories' => $this->getBikeCategories(),
+            'eBikeCategories' => $this->getEBikeCategories(),
             'materials' => $this->getMaterials(),
             'vintages' => $this->getVintages(),
             'usages' => $this->getUsages(),
@@ -56,6 +58,30 @@ class BikeFormDataService
     {
         return Category::with(['parent', 'children'])
             ->whereDoesntHave('children')
+            ->get()
+            ->sortBy(fn (Category $cat) => $cat->getFullPath(), SORT_NATURAL);
+    }
+
+    public function getBikeCategories(): Collection
+    {
+        $bikeCategory = Category::find(Category::BIKE_CATEGORY_ID);
+        $bikeChildrenIds = $bikeCategory?->getAllChildrenIds() ?? [];
+
+        return Category::with(['parent', 'children'])
+            ->whereDoesntHave('children')
+            ->whereIn('id_categorie', $bikeChildrenIds)
+            ->get()
+            ->sortBy(fn (Category $cat) => $cat->getFullPath(), SORT_NATURAL);
+    }
+
+    public function getEBikeCategories(): Collection
+    {
+        $eBikeCategory = Category::find(Category::EBIKE_CATEGORY_ID);
+        $eBikeChildrenIds = $eBikeCategory?->getAllChildrenIds() ?? [];
+
+        return Category::with(['parent', 'children'])
+            ->whereDoesntHave('children')
+            ->whereIn('id_categorie', $eBikeChildrenIds)
             ->get()
             ->sortBy(fn (Category $cat) => $cat->getFullPath(), SORT_NATURAL);
     }

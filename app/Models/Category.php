@@ -14,6 +14,12 @@ use Illuminate\Support\Collection;
  */
 class Category extends Model
 {
+    public const BIKE_CATEGORY_ID = 51;
+
+    public const EBIKE_CATEGORY_ID = 36;
+
+    public const ACCESSORY_CATEGORY_ID = 1;
+
     protected $table = 'categorie';
 
     protected $primaryKey = 'id_categorie';
