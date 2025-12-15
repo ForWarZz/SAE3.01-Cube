@@ -32,10 +32,14 @@
                 {{ $currentReference->numero_reference }}
             </span>
 
-            <span class="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-gray-100 px-2 py-1 font-medium text-gray-700">
-                <x-bi-box-seam class="size-4 text-gray-500" />
-                {{ $weight }}
-            </span>
+            @if ($weight)
+                <span
+                    class="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-gray-100 px-2 py-1 font-medium text-gray-700"
+                >
+                    <x-bi-box-seam class="size-4 text-gray-500" />
+                    {{ $weight }}
+                </span>
+            @endif
 
             @if ($article->bike?->frameMaterial)
                 <span
