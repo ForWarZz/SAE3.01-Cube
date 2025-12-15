@@ -5,6 +5,7 @@ namespace App\Services\Cart;
 use App\DTOs\Cart\ShippingModeDTO;
 use App\Models\Client;
 use App\Models\Order;
+use App\Models\PaymentType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Cashier\Checkout;
@@ -111,7 +112,7 @@ class CheckoutService
                 'date_commande' => now(),
                 'id_code_promo' => $cartViewData['discountData']?->id_code_promo,
                 'pourcentage_remise' => $cartViewData['discountData']?->pourcentage_remise,
-                'id_type_paiement' => 1,
+                'id_type_paiement' => PaymentType::UNKNOWN,
             ]);
 
             // Ajouter les articles du panier à la commande
@@ -167,7 +168,7 @@ class CheckoutService
             ];
         }
 
-        return $client->checkout($lineItems, [
+        $checkout = $client->checkout($lineItems, [
             'success_url' => route('payment.success').'?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('payment.cancel'),
             'mode' => 'payment',
@@ -177,6 +178,11 @@ class CheckoutService
                 'client_id' => $order->id_client,
             ],
         ]);
+
+        $order->stripe_session_id = $checkout->asStripeCheckoutSession()->id;
+        $order->save();
+
+        return $checkout;
     }
 
     public function validateAddressForClient(Client $client, ?int $addressId): ?int

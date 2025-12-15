@@ -97,7 +97,7 @@ class OrderController extends Controller
             'statusColors' => $this->orderService->getStatusStyle($currentState->id_etat),
             'financials' => $this->orderService->calculateFinancials($order),
             'items' => $this->orderService->formatLineItems($order->items),
-            'paymentType' => $order->paymentType?->nom_type_paiement,
+            'paymentType' => $order->paymentType?->label_type_paiement,
             'shop' => $order->shop,
         ]);
     }

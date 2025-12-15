@@ -252,7 +252,7 @@
                                                 class="inline-flex items-center gap-1.5 rounded bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700"
                                             >
                                                 <x-heroicon-o-credit-card class="size-4" />
-                                                {{ $order->paymentType->label_type_paiement }}
+                                                {{ $paymentType }}
                                             </span>
                                         @endif
 

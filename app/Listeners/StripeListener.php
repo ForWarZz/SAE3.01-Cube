@@ -48,7 +48,6 @@ class StripeListener
 
                 if ($currentOrderState->id_etat !== OrderState::PAYMENT_ACCEPTED) {
                     $order->update([
-                        'stripe_session_id' => $sessionRaw['id'],
                         'date_paiement' => now(),
                         'id_type_paiement' => $paymentTypeId ?? PaymentType::UNKNOWN,
                         'cb_last4' => $last4 ?? null,

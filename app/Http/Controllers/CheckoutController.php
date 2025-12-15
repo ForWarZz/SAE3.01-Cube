@@ -72,6 +72,6 @@ class CheckoutController extends Controller
     public function cancel(Request $request)
     {
         return redirect()->route('cart.index')
-            ->with('error', 'Le paiement a été annulé. Votre panier a été conservé, vous pouvez réessayer quand vous le souhaitez.');
+            ->with('error', 'Le paiement n\'a pas été effectué. Vous pouvez réessayer de passer la commande. La commande sera supprimée prochainement.');
     }
 }
