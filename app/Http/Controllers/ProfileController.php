@@ -14,9 +14,6 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile.
-     */
     public function show(Request $request): View
     {
         return view('dashboard.profile.show', [
@@ -24,9 +21,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Display the user's profile form.
-     */
     public function edit(Request $request): View
     {
         return view('dashboard.profile.edit', [
@@ -34,21 +28,10 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $client = $request->user();
         $validated = $request->validated();
-
-        //        $validated = $request->validate([
-        //            'civilite' => ['required', 'string', 'in:Monsieur,Madame'],
-        //            'prenom_client' => ['required', 'string', 'max:255'],
-        //            'nom_client' => ['required', 'string', 'max:255'],
-        //            'email_client' => ['required', 'string', 'email', 'max:255', 'unique:client,email_client,'.$client->id_client.',id_client'],
-        //            'naissance_client' => ['required', 'date'],
-        //        ]);
 
         $client->update($validated);
 
@@ -56,9 +39,6 @@ class ProfileController extends Controller
             ->with('success', 'Profil mis à jour avec succès.');
     }
 
-    /**
-     * Update the user's password.
-     */
     public function updatePassword(Request $request): RedirectResponse
     {
         $client = $request->user();
@@ -101,10 +81,6 @@ class ProfileController extends Controller
             ->with('success', 'Mot de passe modifié avec succès.');
     }
 
-    /**
-     * Delete the user's account (GDPR compliance).
-     * Anonymise le compte si des commandes existent, sinon le supprime.
-     */
     public function destroy(Request $request, GdprService $gdprService): RedirectResponse
     {
         $client = $request->user();
@@ -126,8 +102,11 @@ class ProfileController extends Controller
             ]);
         }
 
-        // Use GDPR service to delete or anonymize client data
-        $result = $gdprService->deleteOrAnonymizeClient($client);
+        $client->load([
+            'addresses',
+        ]);
+
+        $message = $gdprService->deleteOrAnonymizeClient($client);
 
         // Logout
         Auth::logout();
@@ -136,7 +115,7 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login')
-            ->with('success', $result['message']);
+            ->with('success', $message);
     }
 
     /**

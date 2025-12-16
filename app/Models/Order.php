@@ -94,7 +94,8 @@ class Order extends Model
 
     public function client(): BelongsTo
     {
-        return $this->belongsTo(Client::class, 'id_client', 'id_client');
+        return $this->belongsTo(Client::class, 'id_client', 'id_client')
+            ->withTrashed();
     }
 
     public function discountCode(): BelongsTo

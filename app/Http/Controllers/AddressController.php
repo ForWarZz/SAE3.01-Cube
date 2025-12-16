@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddressCreateRequest;
 use App\Http\Requests\AddressUpdateRequest;
 use App\Models\Address;
-use App\Models\City;
+use App\Services\Commercial\AddressService;
 use App\Services\GdprService;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +14,10 @@ use Illuminate\View\View;
 
 class AddressController extends Controller
 {
+    public function __construct(
+        private AddressService $addressService,
+    ) {}
+
     /**
      * Display a listing of the client's addresses.
      */
@@ -50,41 +53,7 @@ class AddressController extends Controller
         $client = Auth::user();
         $validated = $request->validated();
 
-        //        // Find or create the city
-        //        $ville = City::firstOrCreate(
-        //            ['cp_ville' => $validated['code_postal'], 'nom_ville' => $validated['nom_ville']],
-        //            ['cp_ville' => $validated['code_postal'], 'nom_ville' => $validated['nom_ville'], 'pays_ville' => 'France']
-        //        );
-
-        try {
-            $ville = City::firstOrCreate(
-                [
-                    'cp_ville' => $validated['code_postal'],
-                    'nom_ville' => $validated['nom_ville'],
-                ],
-                [
-                    'pays_ville' => 'France',
-                ]
-            );
-        } catch (QueryException $e) {
-            $ville = City::where('cp_ville', $validated['code_postal'])
-                ->where('nom_ville', $validated['nom_ville'])
-                ->firstOrFail();
-        }
-        Address::create([
-            'id_client' => $client->id_client,
-            'id_ville' => $ville->id_ville,
-            'alias_adresse' => $validated['alias_adresse'],
-            'nom_adresse' => $validated['nom_adresse'],
-            'prenom_adresse' => $validated['prenom_adresse'],
-            'telephone_adresse' => $validated['telephone_adresse'],
-            'tel_mobile_adresse' => $validated['tel_mobile_adresse'] ?? null,
-            'societe_adresse' => $validated['societe_adresse'] ?? null,
-            'tva_adresse' => $validated['tva_adresse'] ?? null,
-            'num_voie_adresse' => $validated['num_voie_adresse'],
-            'rue_adresse' => $validated['rue_adresse'],
-            'complement_adresse' => $validated['complement_adresse'] ?? null,
-        ]);
+        $this->addressService->createAddress($client->id_client, $validated);
 
         // Si un paramètre intended existe, rediriger vers cette URL
         $intended = $request->input('intended');
@@ -112,7 +81,7 @@ class AddressController extends Controller
         ]);
     }
 
-    public function update(AddressUpdateRequest $request, Address $adresse): RedirectResponse
+    public function update(AddressUpdateRequest $request, Address $adresse, GdprService $gdprService): RedirectResponse
     {
         $client = Auth::user();
 
@@ -121,57 +90,23 @@ class AddressController extends Controller
         }
 
         $validated = $request->validated();
-
-        try {
-            $ville = City::firstOrCreate(
-                [
-                    'cp_ville' => $validated['code_postal'],
-                    'nom_ville' => $validated['nom_ville'],
-                ],
-                [
-                    'pays_ville' => 'France',
-                ]
-            );
-        } catch (QueryException $e) {
-            $ville = City::where('cp_ville', $validated['code_postal'])
-                ->where('nom_ville', $validated['nom_ville'])
-                ->firstOrFail();
-        }
-
-        $adresse->update([
-            'id_ville' => $ville->id_ville,
-            'alias_adresse' => $validated['alias_adresse'],
-            'nom_adresse' => $validated['nom_adresse'],
-            'prenom_adresse' => $validated['prenom_adresse'],
-            'telephone_adresse' => $validated['telephone_adresse'],
-            'tel_mobile_adresse' => $validated['tel_mobile_adresse'] ?? null,
-            'societe_adresse' => $validated['societe_adresse'] ?? null,
-            'tva_adresse' => $validated['tva_adresse'] ?? null,
-            'num_voie_adresse' => $validated['num_voie_adresse'],
-            'rue_adresse' => $validated['rue_adresse'],
-            'complement_adresse' => $validated['complement_adresse'] ?? null,
-        ]);
+        $result = $gdprService->updateOrReplaceAddress($adresse, $validated);
 
         return redirect()->route('dashboard.addresses.index')
-            ->with('success', 'Adresse modifiée avec succès.');
+            ->with('success', $result['message']);
     }
 
-    /**
-     * Remove the specified address from storage.
-     * RGPD: Anonymise l'adresse si elle est liée à une commande, sinon la supprime.
-     */
     public function destroy(Request $request, Address $adresse, GdprService $gdprService): RedirectResponse
     {
         $client = Auth::user();
 
-        // Ensure the address belongs to the logged-in client
         if ($adresse->id_client !== $client->id_client) {
             abort(403);
         }
 
-        $result = $gdprService->deleteOrAnonymizeAddress($adresse);
+        $message = $gdprService->deleteOrSoftDelete($adresse);
 
         return redirect()->route('dashboard.addresses.index')
-            ->with('success', $result['message']);
+            ->with('success', $message);
     }
 }

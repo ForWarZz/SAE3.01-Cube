@@ -6,24 +6,10 @@ use App\Models\Address;
 use App\Models\Client;
 use App\Models\Order;
 use App\Models\OrderLine;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use App\Services\Commercial\AddressService;
 
 class GdprService
 {
-    private const ANONYMIZED_ADDRESS_DATA = [
-        'alias_adresse' => 'Adresse supprimée',
-        'nom_adresse' => 'ANONYME',
-        'prenom_adresse' => 'Utilisateur',
-        'num_voie_adresse' => '0',
-        'rue_adresse' => 'Données supprimées',
-        'complement_adresse' => null,
-        'telephone_adresse' => '0000000000',
-        'tel_mobile_adresse' => null,
-        'societe_adresse' => null,
-        'tva_adresse' => null,
-    ];
-
     private const ANONYMIZED_CLIENT_DATA = [
         'nom_client' => 'ANONYME',
         'prenom_client' => 'Utilisateur',
@@ -35,10 +21,14 @@ class GdprService
         'stripe_id' => null,
     ];
 
-    public function isAddressLinkedToOrder(Address $adresse): bool
+    public function __construct(
+        private readonly AddressService $addressService,
+    ) {}
+
+    public function isAddressLinkedToOrder(Address $address): bool
     {
-        return Order::where('id_adresse_facturation', $adresse->id_adresse)
-            ->orWhere('id_adresse_livraison', $adresse->id_adresse)
+        return Order::where('id_adresse_facturation', $address->id_adresse)
+            ->orWhere('id_adresse_livraison', $address->id_adresse)
             ->exists();
     }
 
@@ -47,172 +37,53 @@ class GdprService
         return $client->orders()->exists();
     }
 
-    /**
-     * @return array{deleted: bool, anonymized: bool, message: string}
-     *
-     * @throws \Exception
-     */
-    public function deleteOrAnonymizeAddress(Address $adresse): array
+    public function deleteOrSoftDelete(Address $address): string
     {
-        if ($this->isAddressLinkedToOrder($adresse)) {
-            return $this->anonymizeAddress($adresse);
+        if ($this->isAddressLinkedToOrder($address)) {
+            $address->delete();
+
+            return 'L\'adresse a été archivée car elle est liée à une commande (conservation légale pour comptabilité).';
         }
 
-        return $this->deleteAddress($adresse);
+        $address->forceDelete();
+
+        return 'L\'adresse a été supprimée avec succès.';
     }
 
-    /**
-     * @return array{deleted: bool, anonymized: bool, message: string}
-     *
-     * @throws \Exception
-     */
-    public function anonymizeAddress(Address $adresse): array
+    public function deleteOrAnonymizeClient(Client $client): string
     {
-        try {
-            $adresse->update(self::ANONYMIZED_ADDRESS_DATA);
-            $adresse->delete(); // Soft delete
-
-            Log::info('RGPD: Adresse anonymisée', [
-                'id_adresse' => $adresse->id_adresse,
-                'id_client' => $adresse->id_client,
-            ]);
-
-            return [
-                'deleted' => false,
-                'anonymized' => true,
-                'message' => 'L\'adresse a été anonymisée car elle est liée à une commande (conservation légale).',
-            ];
-        } catch (\Exception $e) {
-            Log::error('RGPD: Erreur lors de l\'anonymisation de l\'adresse', [
-                'id_adresse' => $adresse->id_adresse,
-                'error' => $e->getMessage(),
-            ]);
-
-            throw $e;
-        }
-    }
-
-    /**
-     * @return array{deleted: bool, anonymized: bool, message: string}
-     *
-     * @throws \Exception
-     */
-    public function deleteAddress(Address $adresse): array
-    {
-        try {
-            $addressId = $adresse->id_adresse;
-            $clientId = $adresse->id_client;
-
-            $adresse->forceDelete();
-
-            Log::info('RGPD: Adresse supprimée', [
-                'id_adresse' => $addressId,
-                'id_client' => $clientId,
-            ]);
-
-            return [
-                'deleted' => true,
-                'anonymized' => false,
-                'message' => 'L\'adresse a été supprimée avec succès.',
-            ];
-        } catch (\Exception $e) {
-            Log::error('RGPD: Erreur lors de la suppression de l\'adresse', [
-                'id_adresse' => $adresse->id_adresse,
-                'error' => $e->getMessage(),
-            ]);
-
-            throw $e;
-        }
-    }
-
-    /**
-     * @return array{deleted: bool, anonymized: bool, message: string}
-     *
-     * @throws \Throwable
-     */
-    public function deleteOrAnonymizeClient(Client $client): array
-    {
-        return DB::transaction(function () use ($client) {
-            if ($this->clientHasOrders($client)) {
-                return $this->anonymizeClient($client);
+        if ($this->clientHasOrders($client)) {
+            foreach ($client->addresses as $address) {
+                $this->deleteOrSoftDelete($address);
             }
 
-            return $this->deleteClient($client);
-        });
-    }
-
-    /**
-     * @return array{deleted: bool, anonymized: bool, message: string}
-     *
-     * @throws \Exception
-     */
-    public function anonymizeClient(Client $client): array
-    {
-        try {
-            // Anonymiser toutes les adresses du client
-            foreach ($client->addresses as $adresse) {
-                $this->anonymizeAddress($adresse);
-            }
-
-            // Générer un email anonyme unique
             $anonymizedData = self::ANONYMIZED_CLIENT_DATA;
             $anonymizedData['email_client'] = 'anonyme_'.$client->id_client.'_'.time().'@deleted.local';
 
-            // Anonymiser le client
             $client->update($anonymizedData);
-
-            Log::info('RGPD: Client anonymisé', [
-                'id_client' => $client->id_client,
-            ]);
-
-            return [
-                'deleted' => false,
-                'anonymized' => true,
-                'message' => 'Votre compte a été anonymisé. Vos données personnelles ont été supprimées mais l\'historique des commandes est conservé pour des raisons légales.',
-            ];
-        } catch (\Exception $e) {
-            Log::error('RGPD: Erreur lors de l\'anonymisation du client', [
-                'id_client' => $client->id_client,
-                'error' => $e->getMessage(),
-            ]);
-
-            throw $e;
-        }
-    }
-
-    /**
-     * @return array{deleted: bool, anonymized: bool, message: string}
-     *
-     * @throws \Exception
-     */
-    public function deleteClient(Client $client): array
-    {
-        try {
-            $clientId = $client->id_client;
-
-            // Supprimer toutes les adresses
-            $client->addresses()->delete();
-
-            // Supprimer le client
             $client->delete();
 
-            Log::info('RGPD: Client supprimé', [
-                'id_client' => $clientId,
-            ]);
-
-            return [
-                'deleted' => true,
-                'anonymized' => false,
-                'message' => 'Votre compte et toutes vos données ont été supprimés conformément au RGPD.',
-            ];
-        } catch (\Exception $e) {
-            Log::error('RGPD: Erreur lors de la suppression du client', [
-                'id_client' => $client->id_client,
-                'error' => $e->getMessage(),
-            ]);
-
-            throw $e;
+            return 'Votre compte a été anonymisé. Vos données personnelles ont été supprimées mais l\'historique des commandes est conservé pour des raisons légales.';
         }
+
+        $client->addresses()->delete();
+        $client->delete();
+
+        return 'Votre compte et toutes vos données ont été supprimés conformément au RGPD.';
+    }
+
+    public function updateOrReplaceAddress(Address $address, array $validatedData): Address
+    {
+        if ($this->isAddressLinkedToOrder($address)) {
+            $newAddress = $this->addressService->createAddress($address->id_client, $validatedData);
+            $address->delete();
+
+            return $newAddress;
+        }
+
+        $address->update($validatedData);
+
+        return $address->fresh();
     }
 
     /**
