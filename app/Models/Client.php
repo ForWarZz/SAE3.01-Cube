@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
@@ -21,7 +22,7 @@ use Laravel\Cashier\Billable;
  */
 class Client extends Authenticatable
 {
-    use Billable, Notifiable;
+    use Billable, Notifiable, SoftDeletes;
 
     protected $table = 'client';
 
