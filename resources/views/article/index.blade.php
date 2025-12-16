@@ -2,7 +2,6 @@
     <div class="px-24 py-12">
         <x-breadcrumb :breadcrumbs="$breadcrumbs" />
 
-        {{-- Page title & sort --}}
         <div class="mb-10 flex items-start justify-between">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900">{{ $pageTitle ?? "Nos produits" }}</h1>
@@ -34,7 +33,6 @@
                 <x-filter-bar :filterOptions="$filterOptions" :activeFilters="$activeFilters" :sortBy="$sortBy" />
             @endif
 
-            {{-- Products grid --}}
             <div class="flex-1">
                 @if ($articles->count() > 0)
                     <div class="grid grid-cols-4 gap-6">

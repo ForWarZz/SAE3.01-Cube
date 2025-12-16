@@ -39,22 +39,10 @@ class BikeCreateRequest extends FormRequest
             'id_millesime' => ['required', 'integer'],
             'id_usage' => ['required', 'integer'],
             'is_vae' => ['required', 'boolean'],
-
-            'references' => ['nullable', 'array'],
-            'references.*.numero_reference' => ['required', 'integer', 'min:0', 'distinct', 'unique:reference_article,numero_reference'],
-            'references.*.id_cadre_velo' => ['required', 'integer'],
-            'references.*.id_couleur' => ['required', 'integer'],
-            'references.*.sizes' => ['required', 'array', 'min:1'],
-            'references.*.images' => ['nullable', 'array', 'max:5'],
-            'references.*.images.*' => ['image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ];
 
         if ($isVae) {
-            $rules['references.*.id_batterie'] = ['required', 'integer', 'exists:batterie,id_batterie'];
             $rules['id_type_vae'] = ['required', 'integer', 'exists:type_vae,id_type_vae'];
-        } else {
-            $rules['references.*.id_batterie'] = ['nullable', 'integer'];
-            $rules['id_type_vae'] = ['nullable', 'integer'];
         }
 
         return $rules;
@@ -116,32 +104,9 @@ class BikeCreateRequest extends FormRequest
             'is_vae.required' => 'Veuillez indiquer si c\'est un vélo électrique.',
             'is_vae.boolean' => 'La valeur VAE doit être vrai ou faux.',
 
-            'references.*.id_batterie.required' => 'La batterie est obligatoire pour chaque référence de vélo électrique.',
-            'references.*.id_batterie.integer' => 'L\'identifiant de la batterie doit être valide.',
-            'references.*.id_batterie.exists' => 'La batterie sélectionnée n\'existe pas.',
-
             'id_type_vae.required' => 'Le type de VAE est obligatoire pour les vélos électriques.',
             'id_type_vae.integer' => 'L\'identifiant du type de VAE doit être valide.',
             'id_type_vae.exists' => 'Le type de VAE sélectionné n\'existe pas.',
-
-            'references.*.numero_reference.unique' => 'Le numéro de référence :input est déjà utilisé.',
-            'references.*.numero_reference.integer' => 'Le numéro de référence doit être un entier.',
-            'references.*.numero_reference.min' => 'Le numéro de référence doit être positif.',
-            'references.*.numero_reference.distinct' => 'Les numéros de référence doivent être uniques parmi les références soumises.',
-            'references.*.numero_reference.required' => 'Le numéro de référence est obligatoire pour chaque référence.',
-
-            'references.*.images.array' => 'Les images doivent être un tableau.',
-            'references.*.images.max' => 'Vous ne pouvez pas ajouter plus de 5 images par référence.',
-            'references.*.images.*.image' => 'Le fichier doit être une image.',
-            'references.*.images.*.mimes' => 'L\'image doit être au format JPEG, PNG, JPG ou WebP.',
-            'references.*.images.*.max' => 'L\'image ne doit pas dépasser 2 Mo.',
         ];
-    }
-
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'references' => $this->input('references', []),
-        ]);
     }
 }

@@ -22,36 +22,11 @@ class CommercialBikeService
             ->paginate($perPage);
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function createBike(array $validated, array $referenceImages = []): int
+    public function createBike(array $validated): int
     {
-        DB::beginTransaction();
+        $modelId = $this->resolveModelId($validated);
 
-        try {
-            $modelId = $this->resolveModelId($validated);
-
-            $articleId = $this->createBikeArticle($validated, $modelId);
-
-            foreach ($validated['references'] as $idx => $refData) {
-                $images = $referenceImages[$idx] ?? [];
-                $this->referenceService->createReference(
-                    $articleId,
-                    $refData,
-                    $validated['is_vae'] ?? false,
-                    $images
-                );
-            }
-
-            DB::commit();
-
-            return $articleId;
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        return $this->createBikeArticle($validated, $modelId);
     }
 
     /**
@@ -62,8 +37,6 @@ class CommercialBikeService
         DB::beginTransaction();
 
         try {
-            $bike->load(['references', 'article']);
-
             $ids = $bike->references->pluck('id_reference')->toArray();
             ArticleReference::whereIn('id_reference', $ids)->delete();
 

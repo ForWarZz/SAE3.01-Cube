@@ -171,21 +171,6 @@
                             </div>
 
                             <div class="ml-4 flex space-x-2">
-{{--                                <button--}}
-{{--                                    @click="editingRef = {{--}}
-{{--                                        json_encode([--}}
-{{--                                            "id_reference" => $reference->id_reference,--}}
-{{--                                            "id_cadre_velo" => $reference->id_cadre_velo,--}}
-{{--                                            "id_couleur" => $reference->id_couleur,--}}
-{{--                                            "id_batterie" => $reference->ebike?->id_batterie,--}}
-{{--                                            "sizes" => $reference->availableSizes->pluck("id_taille")->toArray(),--}}
-{{--                                        ])--}}
-{{--                                    }}; showEditRefModal = true"--}}
-{{--                                    class="rounded bg-yellow-100 px-3 py-1 text-yellow-700 hover:bg-yellow-200"--}}
-{{--                                    title="Modifier"--}}
-{{--                                >--}}
-{{--                                    <x-heroicon-o-pencil class="h-4 w-4" />--}}
-                                </button>
                                 <form action="{{ route("commercial.bikes.references.destroy", [$bike, $reference]) }}" method="POST">
                                     @csrf
                                     @method("DELETE")

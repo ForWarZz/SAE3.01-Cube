@@ -1,7 +1,6 @@
 <x-app-layout>
     <div class="py-12">
         <div class="mx-auto max-w-4xl sm:px-6 lg:px-8">
-            <!-- Info Message for Google OAuth -->
             @if (session("info"))
                 <div class="relative mb-6 rounded border border-blue-400 bg-blue-100 px-4 py-3 text-blue-700">
                     {{ session("info") }}

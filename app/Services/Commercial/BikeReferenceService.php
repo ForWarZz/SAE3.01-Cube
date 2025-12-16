@@ -7,13 +7,12 @@ use App\Models\BikeReference;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use phpseclib3\Exception\FileNotFoundException;
 
 class BikeReferenceService
 {
     /**
      * @param  array<UploadedFile>  $images
-     *
-     * @throws \Exception
      */
     public function createReference(int $articleId, array $refData, bool $isVae, array $images = []): int
     {
@@ -29,7 +28,7 @@ class BikeReferenceService
         $referenceId = $refResult->id_ref;
 
         $this->attachSizes($referenceId, $refData['sizes'] ?? []);
-        $this->storeImages($referenceId, $images);
+        $this->storeImages($articleId, $referenceId, $images);
 
         return $referenceId;
     }
@@ -38,6 +37,7 @@ class BikeReferenceService
      * @param  array<UploadedFile>  $images
      *
      * @throws \Exception
+     * @throws \Throwable
      */
     public function addReferenceToExistingBike(Bike $bike, array $validated, array $images = []): int
     {
@@ -100,25 +100,15 @@ class BikeReferenceService
         }
     }
 
-    /**
-     * @throws \Exception
-     */
     public function deleteImage(BikeReference $reference, string $imageName): void
     {
         $imagePath = $reference->getImagePathFromName($imageName);
 
         if (! Storage::disk('public')->exists($imagePath)) {
-            throw new \Exception('Image introuvable.');
+            throw new FileNotFoundException('L\'image spécifiée est introuvable.');
         }
 
         Storage::disk('public')->delete($imagePath);
-    }
-
-    public function canDeleteReference(Bike $bike, BikeReference $reference): bool
-    {
-        return $bike->references()
-            ->where('id_reference', '!=', $reference->id_reference)
-            ->count() >= 1;
     }
 
     public function canAddImages(BikeReference $reference, int $newImagesCount): bool
@@ -146,13 +136,13 @@ class BikeReferenceService
     /**
      * @param  array<UploadedFile>  $images
      */
-    private function storeImages(int $referenceId, array $images): void
+    private function storeImages(int $articleId, int $referenceId, array $images): void
     {
         if (empty($images)) {
             return;
         }
 
-        $storagePath = "articles/references/{$referenceId}";
+        $storagePath = "articles/$articleId/$referenceId";
 
         foreach ($images as $index => $image) {
             $filename = ($index + 1).'.'.$image->getClientOriginalExtension();

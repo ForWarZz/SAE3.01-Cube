@@ -123,132 +123,6 @@
                                 rows="4"
                             />
                         </div>
-
-                        <div class="rounded-lg bg-white p-6 shadow-sm">
-                            <div class="mb-4 flex items-center justify-between border-b pb-3">
-                                <h2 class="text-base font-semibold text-gray-900">Déclinaisons</h2>
-                                <button type="button" @click="addRef()" class="text-sm font-medium text-blue-600 hover:text-blue-800">
-                                    + Ajouter
-                                </button>
-                            </div>
-
-                            <div class="space-y-4">
-                                <template x-for="(ref, idx) in refs" :key="idx">
-                                    <div class="relative rounded border border-gray-200 bg-gray-50 p-4">
-                                        <button type="button" @click="removeRef(idx)" class="absolute top-2 right-2">
-                                            <x-heroicon-o-trash class="size-5 text-red-500 hover:text-red-700" />
-                                        </button>
-
-                                        <div class="mt-3 grid grid-cols-2 gap-4">
-                                            <div>
-                                                <label class="mb-1 block text-xs font-medium text-gray-600">Cadre *</label>
-                                                <select
-                                                    :name="`references[${idx}][id_cadre_velo]`"
-                                                    x-model="ref.id_cadre_velo"
-                                                    class="block w-full rounded-md border-gray-300 p-2 text-sm"
-                                                >
-                                                    <option value="">-- Choisir --</option>
-                                                    @foreach ($frames as $frame)
-                                                        <option value="{{ $frame->id_cadre_velo }}">
-                                                            {{ $frame->label_cadre_velo }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <label class="mb-1 block text-xs font-medium text-gray-600">Couleur *</label>
-                                                <select
-                                                    :name="`references[${idx}][id_couleur]`"
-                                                    x-model="ref.id_couleur"
-                                                    class="block w-full rounded-md border-gray-300 p-2 text-sm"
-                                                >
-                                                    <option value="">-- Choisir --</option>
-                                                    @foreach ($colors as $color)
-                                                        <option value="{{ $color->id_couleur }}">{{ $color->label_couleur }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div x-show="isVae" x-transition class="mt-3">
-                                            <label class="mb-1 block text-xs font-medium text-yellow-700">Batterie *</label>
-                                            <select
-                                                :name="`references[${idx}][id_batterie]`"
-                                                x-model="ref.id_batterie"
-                                                class="block w-full rounded-md border-gray-300 p-2 text-sm"
-                                            >
-                                                <option value="">-- Choisir --</option>
-                                                @foreach ($batteries as $battery)
-                                                    <option value="{{ $battery->id_batterie }}">{{ $battery->label_batterie }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-
-                                        <div class="mt-3">
-                                            <label class="mb-2 block text-xs font-medium text-gray-600">Tailles *</label>
-                                            <div class="flex flex-wrap gap-2">
-                                                @foreach ($sizes as $size)
-                                                    <label
-                                                        class="cursor-pointer rounded border bg-white px-3 py-1 text-sm hover:bg-gray-50 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50 has-[:checked]:text-blue-600"
-                                                    >
-                                                        <input
-                                                            type="checkbox"
-                                                            :name="`references[${idx}][sizes][]`"
-                                                            x-model="ref.sizes"
-                                                            :value="'{{ $size->id_taille }}'"
-                                                            class="sr-only"
-                                                        />
-                                                        {{ $size->nom_taille }}
-                                                    </label>
-                                                @endforeach
-                                            </div>
-                                        </div>
-
-                                        <div class="mt-3">
-                                            <label class="mb-1 block text-xs font-medium text-gray-600">Numéro de référence *</label>
-                                            <input
-                                                type="text"
-                                                :name="`references[${idx}][numero_reference]`"
-                                                x-model="ref.numero_reference"
-                                                placeholder="Ex : 123456"
-                                                class="block w-full rounded-md border border-gray-300 p-2 text-sm"
-                                                required
-                                            />
-                                        </div>
-
-                                        <div class="mt-3">
-                                            <label class="mb-1 block text-xs font-medium text-gray-600">
-                                                Images (max. 5, 2 Mo chacune)
-                                            </label>
-                                            <div class="flex flex-col gap-2">
-                                                <input
-                                                    type="file"
-                                                    :name="`references[${idx}][images][]`"
-                                                    accept="image/jpeg,image/png,image/jpg,image/webp"
-                                                    multiple
-                                                    @change="handleImageUpload($event, idx)"
-                                                    class="block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-blue-700 hover:file:bg-blue-100"
-                                                />
-                                                <div
-                                                    x-show="ref.imagePreviews && ref.imagePreviews.length > 0"
-                                                    class="mt-2 flex flex-wrap gap-2"
-                                                >
-                                                    <template x-for="(preview, imgIdx) in ref.imagePreviews" :key="imgIdx">
-                                                        <div class="relative">
-                                                            <img
-                                                                :src="preview"
-                                                                class="h-16 w-16 rounded border border-gray-200 object-cover"
-                                                            />
-                                                        </div>
-                                                    </template>
-                                                </div>
-                                                <p class="text-xs text-gray-400">Formats acceptés : JPEG, PNG, WebP</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="space-y-6">
@@ -375,43 +249,13 @@
 
     <script>
         function bikeForm() {
-            function createEmptyRow() {
-                return {
-                    id_cadre_velo: '',
-                    id_couleur: '',
-                    id_batterie: '',
-                    sizes: [],
-                    numero_reference: '',
-                    imagePreviews: [],
-                };
-            }
-
-            function normalizeRef(ref) {
-                if (typeof ref !== 'object' || ref === null) {
-                    return createEmptyRow();
-                }
-
-                return {
-                    id_cadre_velo: ref.id_cadre_velo ?? '',
-                    id_couleur: ref.id_couleur ?? '',
-                    id_batterie: ref.id_batterie ?? '',
-                    sizes: Array.isArray(ref.sizes) ? ref.sizes.map(String) : [],
-                    numero_reference: ref.numero_reference ?? '',
-                    imagePreviews: [],
-                };
-            }
-
             const modelsCategory = @json($modelsCategory);
             const bikeCategories = @json($bikeCategories->map(fn ($cat) => ["id" => $cat->id_categorie, "path" => $cat->getFullPath()])->values());
             const eBikeCategories = @json($eBikeCategories->map(fn ($cat) => ["id" => $cat->id_categorie, "path" => $cat->getFullPath()])->values());
 
-            const oldRefs = @json(old("references"));
-            const initialRefs = oldRefs && Array.isArray(oldRefs) && oldRefs.length > 0 ? oldRefs.map(normalizeRef) : [];
-
             return {
                 modelChoice: '{{ old("model_choice", "existing") }}',
                 isVae: {{ old("is_vae", 0) == 1 ? "true" : "false" }},
-                refs: initialRefs,
                 selectedModel: '{{ old("id_modele_velo") }}',
                 selectedCategory: '{{ old("id_categorie") }}',
                 categoryLocked: false,
@@ -450,41 +294,6 @@
                         this.categoryLocked = true;
                     } else {
                         this.categoryLocked = false;
-                    }
-                },
-
-                addRef() {
-                    this.refs.push(createEmptyRow());
-                },
-
-                removeRef(idx) {
-                    this.refs.splice(idx, 1);
-                },
-
-                handleImageUpload(event, idx) {
-                    const files = event.target.files;
-                    this.refs[idx].imagePreviews = [];
-
-                    if (files.length > 5) {
-                        alert('Vous ne pouvez pas ajouter plus de 5 images par référence.');
-                        event.target.value = '';
-                        return;
-                    }
-
-                    for (let i = 0; i < files.length; i++) {
-                        const file = files[i];
-                        if (file.size > 2 * 1024 * 1024) {
-                            alert(`L'image "${file.name}" dépasse 2 Mo.`);
-                            event.target.value = '';
-                            this.refs[idx].imagePreviews = [];
-                            return;
-                        }
-
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            this.refs[idx].imagePreviews.push(e.target.result);
-                        };
-                        reader.readAsDataURL(file);
                     }
                 },
 

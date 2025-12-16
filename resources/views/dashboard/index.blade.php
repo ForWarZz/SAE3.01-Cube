@@ -8,7 +8,6 @@
                     </h1>
 
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        <!-- Mes adresses -->
                         <a
                             href="{{ route("dashboard.addresses.index") }}"
                             class="block rounded-lg border border-gray-200 bg-gray-50 p-6 transition-colors hover:bg-gray-100"
@@ -35,7 +34,6 @@
                             </div>
                         </a>
 
-                        <!-- Mes commandes -->
                         <a
                             href="{{ route("dashboard.orders.index") }}"
                             class="block rounded-lg border border-gray-200 bg-gray-50 p-6 transition-colors hover:bg-gray-100"
@@ -56,7 +54,6 @@
                             </div>
                         </a>
 
-                        <!-- Mon profil -->
                         <a
                             href="{{ route("dashboard.profile.show") }}"
                             class="block rounded-lg border border-gray-200 bg-gray-50 p-6 transition-colors hover:bg-gray-100"
@@ -77,7 +74,6 @@
                             </div>
                         </a>
 
-                        <!-- Mes vélos enregistrés -->
                         <div class="block cursor-not-allowed rounded-lg border border-gray-200 bg-gray-50 p-6 opacity-50">
                             <div class="flex items-center">
                                 <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,7 +91,6 @@
                             </div>
                         </div>
 
-                        <!-- Demandes de service -->
                         <div class="block cursor-not-allowed rounded-lg border border-gray-200 bg-gray-50 p-6 opacity-50">
                             <div class="flex items-center">
                                 <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,7 +115,6 @@
                         </div>
                     </div>
 
-                    <!-- Logout button -->
                     <div class="mt-8 border-t border-gray-200 pt-6">
                         <form method="POST" action="{{ route("logout") }}">
                             @csrf

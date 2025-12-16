@@ -160,13 +160,11 @@
                     return;
                 }
 
-                // Reset fields
                 document.getElementById('num_voie_adresse').value = '';
                 document.getElementById('rue_adresse').value = '';
                 document.getElementById('code_postal').value = '';
                 document.getElementById('nom_ville').value = '';
 
-                // Parse address components
                 for (const component of place.address_components) {
                     const type = component.types[0];
 

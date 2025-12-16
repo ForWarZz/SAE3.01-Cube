@@ -73,7 +73,6 @@
                 </div>
             </div>
 
-            <!-- Change Password -->
             @if (! $client->google_id)
                 <div class="overflow-hidden rounded-lg bg-white shadow-sm">
                     <div class="p-6">
@@ -130,7 +129,6 @@
                 </div>
             @endif
 
-            <!-- Delete Account (GDPR) -->
             <div class="overflow-hidden border-2 border-red-200 bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     <x-flash-message key="delete_error" />
@@ -173,7 +171,6 @@
                 </div>
             </div>
 
-            <!-- Back to Dashboard -->
             <div class="flex justify-center">
                 <a href="{{ route("dashboard.index") }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">
                     &larr; Retour au tableau de bord
@@ -182,7 +179,6 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
     <div id="deleteModal" class="fixed inset-0 z-50 flex hidden h-full w-full items-center justify-center overflow-y-auto bg-black/75">
         <div class="w-md rounded-md border bg-white p-5 shadow-lg">
             <h3 class="mb-4 text-lg font-medium text-gray-900">Confirmer la suppression</h3>

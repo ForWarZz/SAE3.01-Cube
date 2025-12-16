@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ str_replace("_", "-", app()->getLocale()) }}">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,15 +28,6 @@
         <div class="flex min-h-screen flex-col">
             <x-nav-bar />
 
-            {{-- <!-- Page Heading --> --}}
-            {{-- @if (isset($header)) --}}
-            {{-- <header class="bg-white dark:bg-gray-800 shadow"> --}}
-            {{-- <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8"> --}}
-            {{-- {{ $header }} --}}
-            {{-- </div> --}}
-            {{-- </header> --}}
-            {{-- @endif --}}
-
             <main class="flex flex-1 flex-col">
                 {{ $slot }}
             </main>
@@ -45,6 +36,7 @@
         <x-shop-selector-modal />
     </body>
 
+    {{-- Tarte au citron.js => Cookies --}}
     {{-- <script src="{{ asset("tarteaucitron/tarteaucitron.min.js") }}"></script> --}}
     {{-- <script type="text/javascript"> --}}
     {{-- tarteaucitron.init({ --}}

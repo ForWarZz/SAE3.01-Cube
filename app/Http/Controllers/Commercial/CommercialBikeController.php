@@ -38,15 +38,8 @@ class CommercialBikeController extends Controller
     {
         $validated = $request->validated();
 
-        $referenceImages = [];
-        foreach ($validated['references'] as $idx => $refData) {
-            if ($request->hasFile("references.{$idx}.images")) {
-                $referenceImages[$idx] = $request->file("references.{$idx}.images");
-            }
-        }
-
         try {
-            $this->bikeService->createBike($validated, $referenceImages);
+            $this->bikeService->createBike($validated);
 
             return redirect()
                 ->route('commercial.bikes.index')
@@ -152,6 +145,7 @@ class CommercialBikeController extends Controller
     public function destroy(Bike $bike)
     {
         try {
+            $bike->load(['references', 'article']);
             $this->bikeService->deleteBike($bike);
 
             return redirect()
