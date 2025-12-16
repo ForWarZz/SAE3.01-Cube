@@ -25,7 +25,7 @@ class CartApplyDiscountRequest extends FormRequest
             'discount_code' => [
                 'required',
                 'string',
-                'exists:code_promo,label_code_promo,est_actif,1',
+                'exists:code_promo,label_code_promo',
             ],
         ];
     }

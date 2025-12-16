@@ -43,9 +43,7 @@ class CartService
 
     public function applyDiscountCode(string $code): bool
     {
-        $discountCode = DiscountCode::where('label_code_promo', $code)
-            ->where('est_actif', true)
-            ->first();
+        $discountCode = DiscountCode::firstWhere('label_code_promo', $code);
 
         if (! $discountCode) {
             return false;
