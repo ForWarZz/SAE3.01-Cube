@@ -79,6 +79,7 @@ class ArticleController extends Controller
     public function showByRef(Article $article, ArticleReference $reference)
     {
         $article->load([
+            'bike',
             'bike.bikeModel',
             'bike.vintage',
             'bike.frameMaterial',

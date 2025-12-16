@@ -115,9 +115,4 @@ class Article extends Model
     //
     //        return array_map(fn ($f) => Storage::url($f), $files);
     //    }
-
-    public function isBike(): bool
-    {
-        return $this->bike()->exists();
-    }
 }

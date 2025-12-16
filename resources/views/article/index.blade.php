@@ -39,7 +39,7 @@
                 @if ($articles->count() > 0)
                     <div class="grid grid-cols-4 gap-6">
                         @foreach ($articles as $article)
-                            <x-article-card :article="$article" />
+                            <x-article-card :article="$article" :is-bike="$article->bike" />
                         @endforeach
                     </div>
 

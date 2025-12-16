@@ -55,7 +55,7 @@ class BikeService
     private function getCompatibleAccessories(Bike $bike): Collection
     {
         return $bike->compatibleAccessories()
-            ->with('article')
+            ->with(['article', 'article.category'])
             ->get();
     }
 

@@ -130,7 +130,7 @@ class ArticleService
             'breadcrumbs' => $this->breadCrumbService->prepareBreadcrumbsForArticle($article),
         ];
 
-        if ($article->isBike()) {
+        if ($article->bike) {
             $bikeData = $this->bikeService->prepareBikeData($reference->bikeReference);
 
             return array_merge($base, $bikeData);
