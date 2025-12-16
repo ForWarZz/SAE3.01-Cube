@@ -37,7 +37,7 @@ class ArticleService
 
         $query = Article::query()
 //            ->whereHas('bike')
-            ->with(['bike.bikeModel', 'category', 'accessory']);
+            ->with(['bike.bikeModel', 'bike.references', 'category', 'accessory']);
 
         $keywords = explode(' ', trim($search));
         $keywords = array_filter($keywords);
@@ -79,7 +79,7 @@ class ArticleService
     {
         $baseQuery = Article::whereHas('bike', function ($q) use ($model) {
             $q->where('id_modele_velo', $model->id_modele_velo);
-        })->with(['bike.bikeModel', 'category']);
+        })->with(['bike.bikeModel', 'bike.references', 'category']);
 
         return $this->finalizeQuery($baseQuery, $request);
     }
@@ -97,7 +97,7 @@ class ArticleService
     {
         $baseQuery = Article::query()
             ->whereIn('id_categorie', $category->getAllChildrenIds())
-            ->with(['bike.bikeModel', 'category', 'accessory']);
+            ->with(['bike.bikeModel', 'bike.references', 'category', 'accessory']);
         $this->filterEngineService->setContext(['category' => $category]);
 
         return $this->finalizeQuery($baseQuery, $request);
@@ -123,7 +123,7 @@ class ArticleService
             'resume' => $article->resumer_article,
 
             'similarArticles' => $article->similar()
-                ->with(['bike.bikeModel', 'category'])
+                ->with(['bike.bikeModel', 'bike.references', 'category', 'accessory'])
                 ->get(),
 
             'isBike' => false,
@@ -222,11 +222,15 @@ class ArticleService
     {
         $sizeList = $reference->availableSizes;
 
-        return $sizeList->map(function ($size) use ($reference) {
+        // Pré-charger toutes les disponibilités magasin en une seule requête
+        $allShopAvailabilities = $reference->shopAvailabilities()
+            ->get()
+            ->groupBy('pivot.id_taille');
+
+        return $sizeList->map(function ($size) use ($allShopAvailabilities) {
             $availableOnline = $size->pivot->dispo_en_ligne;
-            $storeStatuses = $reference->shopAvailabilities()
-                ->where('id_taille', $size->id_taille)
-                ->pluck('statut');
+            $storeStatuses = $allShopAvailabilities->get($size->id_taille, collect())
+                ->pluck('pivot.statut');
 
             if ($storeStatuses->contains(ShopAvailability::STATUS_IN_STOCK)) {
                 $shopStatus = 'in_stock';

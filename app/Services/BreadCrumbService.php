@@ -33,7 +33,9 @@ class BreadCrumbService
 
     public function prepareBreadcrumbsByModel(BikeModel $model): array
     {
-        $category = $model->bikes->first()?->category;
+        // Charger seulement le premier vélo avec sa catégorie au lieu de tous les vélos
+        $bike = $model->bikes()->with('category')->first();
+        $category = $bike?->category;
         $breadcrumbs = $this->prepareBreadcrumbs($category);
 
         $breadcrumbs[] = [

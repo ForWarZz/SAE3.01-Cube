@@ -60,7 +60,7 @@ class Category extends Model
     public function getAllChildrenIds(?Collection $allCategories = null): array
     {
         if (is_null($allCategories)) {
-            $allCategories = Category::all();
+            $allCategories = Category::all(['id_categorie', 'id_categorie_parent']);
         }
 
         $ids = [$this->id_categorie];

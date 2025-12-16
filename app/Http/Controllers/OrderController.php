@@ -78,6 +78,7 @@ class OrderController extends Controller
 
         $order->load([
             'items.reference.bikeReference.article.bike.bikeModel',
+            'items.reference.bikeReference.article.category',
             'items.reference.bikeReference.color',
             'items.reference.accessory.article.category',
             'items.size',

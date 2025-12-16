@@ -79,12 +79,11 @@ class ArticleController extends Controller
     public function showByRef(Article $article, ArticleReference $reference)
     {
         $article->load([
-            'bike',
             'bike.bikeModel',
             'bike.vintage',
             'bike.frameMaterial',
-            'bike.usage',
-            'accessory',
+            'bike.characteristics',
+            'accessory.characteristics',
             'characteristics.characteristicType',
             'category',
         ]);
@@ -94,8 +93,8 @@ class ArticleController extends Controller
             'bikeReference.color',
             'bikeReference.frame',
             'bikeReference.ebike.battery',
-            'bikeReference.baseReference.availableSizes',
             'availableSizes',
+            'shopAvailabilities',
         ]);
 
         $data = $this->articleService->prepareViewData($article, $reference);

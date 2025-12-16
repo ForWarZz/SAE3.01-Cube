@@ -26,7 +26,12 @@ class BikeService
         $variants = $this->bikeVariantService->getVariants($currentReference);
         $geometryData = $this->buildGeometryData($bike->bikeModel);
 
-        $weight = $bike->characteristics
+        // Utiliser les caractéristiques pré-chargées si disponibles
+        $characteristics = $bike->relationLoaded('characteristics')
+            ? $bike->characteristics
+            : $bike->characteristics()->get();
+
+        $weight = $characteristics
             ->firstWhere('id_caracteristique', Bike::WEIGHT_CHARACTERISTIC_ID)
             ?->pivot->valeur_caracteristique ?? null;
 

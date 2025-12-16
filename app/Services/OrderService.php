@@ -51,10 +51,10 @@ class OrderService
             $ref = $baseReference->bikeReference ?? $baseReference->accessory;
             $article = $ref->article;
 
-            $isBike = $baseReference->bikeReference;
+            $isBike = $baseReference->bikeReference !== null;
             $subtitle = $isBike
-                ? ($articleParent->bike?->bikeModel->nom_modele_velo ?? 'Vélo')
-                : ($articleParent->category->nom_categorie ?? 'Accessoire');
+                ? ($article->bike?->bikeModel?->nom_modele_velo ?? 'Vélo')
+                : ($article->category?->nom_categorie ?? 'Accessoire');
 
             $image = $ref->getCoverUrl();
 
