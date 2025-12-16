@@ -10,14 +10,14 @@ abstract class AbstractFilter implements ArticleFilter
 {
     protected string $key;
 
-    public function key(): string
-    {
-        return $this->key;
-    }
-
     public function values(Request $request): array
     {
         return (array) $request->input($this->key(), []);
+    }
+
+    public function key(): string
+    {
+        return $this->key;
     }
 
     /**

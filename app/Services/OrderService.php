@@ -49,6 +49,19 @@ class OrderService
         );
     }
 
+    public function getStatusStyle(int $stateId): StatusStyleDTO
+    {
+        return match ($stateId) {
+            OrderState::PENDING_PAYMENT => new StatusStyleDTO(bg: 'bg-yellow-100', text: 'text-yellow-800'),
+            OrderState::PAYMENT_ACCEPTED => new StatusStyleDTO(bg: 'bg-green-100', text: 'text-green-800'),
+            OrderState::SHIPPED => new StatusStyleDTO(bg: 'bg-blue-100', text: 'text-blue-800'),
+            OrderState::DELIVERED => new StatusStyleDTO(bg: 'bg-indigo-100', text: 'text-indigo-800'),
+            OrderState::CANCELLED => new StatusStyleDTO(bg: 'bg-red-100', text: 'text-red-800'),
+            OrderState::RETURNED => new StatusStyleDTO(bg: 'bg-purple-100', text: 'text-purple-800'),
+            default => new StatusStyleDTO(bg: 'bg-gray-100', text: 'text-gray-800'),
+        };
+    }
+
     /**
      * @return Collection<int, OrderLineItemDTO>
      */
@@ -79,18 +92,5 @@ class OrderService
                 articleId: $ref->id_article,
             );
         });
-    }
-
-    public function getStatusStyle(int $stateId): StatusStyleDTO
-    {
-        return match ($stateId) {
-            OrderState::PENDING_PAYMENT => new StatusStyleDTO(bg: 'bg-yellow-100', text: 'text-yellow-800'),
-            OrderState::PAYMENT_ACCEPTED => new StatusStyleDTO(bg: 'bg-green-100', text: 'text-green-800'),
-            OrderState::SHIPPED => new StatusStyleDTO(bg: 'bg-blue-100', text: 'text-blue-800'),
-            OrderState::DELIVERED => new StatusStyleDTO(bg: 'bg-indigo-100', text: 'text-indigo-800'),
-            OrderState::CANCELLED => new StatusStyleDTO(bg: 'bg-red-100', text: 'text-red-800'),
-            OrderState::RETURNED => new StatusStyleDTO(bg: 'bg-purple-100', text: 'text-purple-800'),
-            default => new StatusStyleDTO(bg: 'bg-gray-100', text: 'text-gray-800'),
-        };
     }
 }

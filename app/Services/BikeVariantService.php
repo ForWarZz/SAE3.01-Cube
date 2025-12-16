@@ -8,22 +8,6 @@ use Illuminate\Support\Collection;
 
 class BikeVariantService
 {
-    private function findVariant(Collection $variants, array $criteria): ?BikeReference
-    {
-        /** @var ?BikeReference $variant */
-        $variant = $variants->first(function (BikeReference $ref) use ($criteria): bool {
-            foreach ($criteria as $field => $expected) {
-                if ($expected !== null && $ref->{$field} != $expected) {
-                    return false;
-                }
-            }
-
-            return true;
-        });
-
-        return $variant;
-    }
-
     public function getVariants(BikeReference $currentReference): Collection
     {
         return BikeReference::where('id_article', $currentReference->id_article)
@@ -65,6 +49,22 @@ class BikeVariantService
                     active: $currentReference->id_cadre_velo == $frame->id_cadre_velo,
                 );
             });
+    }
+
+    private function findVariant(Collection $variants, array $criteria): ?BikeReference
+    {
+        /** @var ?BikeReference $variant */
+        $variant = $variants->first(function (BikeReference $ref) use ($criteria): bool {
+            foreach ($criteria as $field => $expected) {
+                if ($expected !== null && $ref->{$field} != $expected) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        return $variant;
     }
 
     /**

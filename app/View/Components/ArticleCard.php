@@ -14,8 +14,7 @@ class ArticleCard extends Component
      */
     public function __construct(
         public readonly Article $article
-    )
-    {
+    ) {
         //
     }
 

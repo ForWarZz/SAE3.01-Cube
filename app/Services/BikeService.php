@@ -56,16 +56,6 @@ class BikeService
     }
 
     /**
-     * @return Collection<Accessory>
-     */
-    private function getCompatibleAccessories(Bike $bike): Collection
-    {
-        return $bike->compatibleAccessories()
-            ->with(['article', 'article.category'])
-            ->get();
-    }
-
-    /**
      * Build geometry data for bike model
      *
      * @return array{headers: Collection, rows: Collection<int, GeometryRowDTO>}
@@ -93,5 +83,15 @@ class BikeService
             });
 
         return ['headers' => $headers, 'rows' => $rows];
+    }
+
+    /**
+     * @return Collection<Accessory>
+     */
+    private function getCompatibleAccessories(Bike $bike): Collection
+    {
+        return $bike->compatibleAccessories()
+            ->with(['article', 'article.category'])
+            ->get();
     }
 }

@@ -12,14 +12,6 @@ class CartSessionManager
 
     private const CHECKOUT_KEY = 'checkout';
 
-    /**
-     * @return array<string, array{reference_id: int, size_id: int, quantity: int}>
-     */
-    public function getItems(): array
-    {
-        return Session::get(self::CART_KEY, []);
-    }
-
     public function addItem(int $referenceId, int $sizeId, int $quantity = 1): void
     {
         $cart = $this->getItems();
@@ -36,6 +28,19 @@ class CartSessionManager
         }
 
         Session::put(self::CART_KEY, $cart);
+    }
+
+    /**
+     * @return array<string, array{reference_id: int, size_id: int, quantity: int}>
+     */
+    public function getItems(): array
+    {
+        return Session::get(self::CART_KEY, []);
+    }
+
+    private function makeKey(int $referenceId, int $sizeId): string
+    {
+        return $referenceId.'_'.$sizeId;
     }
 
     public function updateQuantity(int $referenceId, int $sizeId, int $quantity): void
@@ -64,11 +69,6 @@ class CartSessionManager
         }
     }
 
-    public function clearCart(): void
-    {
-        Session::forget(self::CART_KEY);
-    }
-
     public function isEmpty(): bool
     {
         return empty($this->getItems());
@@ -82,11 +82,6 @@ class CartSessionManager
     public function setDiscountCodeId(int $discountCodeId): void
     {
         Session::put(self::DISCOUNT_KEY, $discountCodeId);
-    }
-
-    public function clearDiscountCode(): void
-    {
-        Session::forget(self::DISCOUNT_KEY);
     }
 
     /**
@@ -106,11 +101,6 @@ class CartSessionManager
         ]);
     }
 
-    public function clearCheckout(): void
-    {
-        Session::forget(self::CHECKOUT_KEY);
-    }
-
     public function clearAll(): void
     {
         $this->clearCart();
@@ -118,8 +108,18 @@ class CartSessionManager
         $this->clearCheckout();
     }
 
-    private function makeKey(int $referenceId, int $sizeId): string
+    public function clearCart(): void
     {
-        return $referenceId.'_'.$sizeId;
+        Session::forget(self::CART_KEY);
+    }
+
+    public function clearDiscountCode(): void
+    {
+        Session::forget(self::DISCOUNT_KEY);
+    }
+
+    public function clearCheckout(): void
+    {
+        Session::forget(self::CHECKOUT_KEY);
     }
 }

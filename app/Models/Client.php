@@ -24,11 +24,11 @@ class Client extends Authenticatable
 {
     use Billable, Notifiable, SoftDeletes;
 
+    public $timestamps = false;
+
     protected $table = 'client';
 
     protected $primaryKey = 'id_client';
-
-    public $timestamps = false;
 
     protected $fillable = [
         'nom_client',

@@ -24,11 +24,11 @@ class Bike extends Model
 {
     public const WEIGHT_CHARACTERISTIC_ID = 22;
 
+    public $timestamps = false;
+
     protected $table = 'velo';
 
     protected $primaryKey = 'id_article';
-
-    public $timestamps = false;
 
     protected $fillable = [
         'id_article',

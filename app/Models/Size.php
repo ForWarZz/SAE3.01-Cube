@@ -12,11 +12,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Size extends Model
 {
+    public $timestamps = false;
+
     protected $table = 'taille';
 
     protected $primaryKey = 'id_taille';
-
-    public $timestamps = false;
 
     protected $fillable = [
         'id_taille',

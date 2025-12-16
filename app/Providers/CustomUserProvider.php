@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
-use App\Models\Client;
 use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
 class CustomUserProvider extends EloquentUserProvider
@@ -13,19 +15,17 @@ class CustomUserProvider extends EloquentUserProvider
      * Retrieve a user by their unique identifier.
      *
      * @param  mixed  $identifier
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return Builder|Builder[]|Collection|Model
      */
-    public function retrieveById($identifier)
+    public function retrieveById($identifier): Model|Collection|Builder|array
     {
         return $this->createModel()->newQuery()->find($identifier);
     }
 
     /**
      * Retrieve a user by the given credentials.
-     *
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function retrieveByCredentials(array $credentials)
+    public function retrieveByCredentials(array $credentials): ?Authenticatable
     {
         $model = $this->createModel();
 
@@ -43,25 +43,11 @@ class CustomUserProvider extends EloquentUserProvider
 
     /**
      * Validate a user against the given credentials.
-     *
-     * @return bool
      */
-    public function validateCredentials(Authenticatable $user, array $credentials)
+    public function validateCredentials(Authenticatable $user, array $credentials): bool
     {
         $plain = $credentials['password'];
 
         return Hash::check($plain, $user->getAuthPassword());
-    }
-
-    /**
-     * Update the "remember me" token for the given user in storage.
-     *
-     * @param  string  $token
-     * @return void
-     */
-    public function updateRememberToken(Authenticatable $user, $token)
-    {
-        // Le modèle Client n'a pas de remember_token
-        // On peut l'ajouter plus tard si nécessaire
     }
 }

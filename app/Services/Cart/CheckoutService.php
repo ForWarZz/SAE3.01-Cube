@@ -6,9 +6,11 @@ use App\DTOs\Cart\CheckoutDataDTO;
 use App\Models\Client;
 use App\Models\Order;
 use App\Models\PaymentType;
+use DomainException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Cashier\Checkout;
+use Throwable;
 
 class CheckoutService
 {
@@ -16,20 +18,6 @@ class CheckoutService
         protected readonly CartService $cartService,
         protected readonly CartSessionManager $session,
     ) {}
-
-    public function getCheckoutData(): CheckoutDataDTO
-    {
-        $sessionData = $this->session->getCheckoutData();
-
-        $shippingModeId = $sessionData['shipping_mode_id'] ?? null;
-        $shippingMode = $shippingModeId ? $this->cartService->findShippingMode($shippingModeId) : null;
-
-        return new CheckoutDataDTO(
-            billing_address_id: $sessionData['billing_address_id'] ?? null,
-            delivery_address_id: $sessionData['delivery_address_id'] ?? null,
-            shipping_mode: $shippingMode,
-        );
-    }
 
     public function updateCheckout(?int $billingAddressId, ?int $deliveryAddressId, ?int $shippingModeId): void
     {
@@ -68,23 +56,27 @@ class CheckoutService
         ];
     }
 
-    public function isReadyForPayment(): bool
+    public function getCheckoutData(): CheckoutDataDTO
     {
-        $checkoutData = $this->getCheckoutData();
+        $sessionData = $this->session->getCheckoutData();
 
-        return ! $this->cartService->isEmpty()
-            && $checkoutData->billing_address_id !== null
-            && $checkoutData->delivery_address_id !== null
-            && $checkoutData->shipping_mode !== null;
+        $shippingModeId = $sessionData['shipping_mode_id'] ?? null;
+        $shippingMode = $shippingModeId ? $this->cartService->findShippingMode($shippingModeId) : null;
+
+        return new CheckoutDataDTO(
+            billing_address_id: $sessionData['billing_address_id'] ?? null,
+            delivery_address_id: $sessionData['delivery_address_id'] ?? null,
+            shipping_mode: $shippingMode,
+        );
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function createOrder(Client $client): Order
     {
         if (! $this->isReadyForPayment()) {
-            throw new \DomainException('Checkout incomplet : adresses ou mode de livraison manquant.');
+            throw new DomainException('Checkout incomplet : adresses ou mode de livraison manquant.');
         }
 
         $checkoutData = $this->getCheckoutData();
@@ -116,6 +108,25 @@ class CheckoutService
 
             return $order;
         });
+    }
+
+    public function isReadyForPayment(): bool
+    {
+        $checkoutData = $this->getCheckoutData();
+
+        return ! $this->cartService->isEmpty()
+            && $checkoutData->billing_address_id !== null
+            && $checkoutData->delivery_address_id !== null
+            && $checkoutData->shipping_mode !== null;
+    }
+
+    private function generateOrderNumber(): string
+    {
+        do {
+            $code = Str::upper(Str::random(9));
+        } while (Order::where('num_commande', $code)->exists());
+
+        return $code;
     }
 
     public function initStripeCheckoutSession(Order $order): Checkout
@@ -200,14 +211,5 @@ class CheckoutService
         $mode = $this->cartService->findShippingMode($shippingModeId);
 
         return $mode ? $shippingModeId : null;
-    }
-
-    private function generateOrderNumber(): string
-    {
-        do {
-            $code = Str::upper(Str::random(9));
-        } while (Order::where('num_commande', $code)->exists());
-
-        return $code;
     }
 }

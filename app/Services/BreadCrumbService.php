@@ -12,6 +12,24 @@ class BreadCrumbService
     /**
      * @return BreadcrumbDTO[]
      */
+    public function prepareBreadcrumbsByModel(BikeModel $model): array
+    {
+        // Charger seulement le premier vélo avec sa catégorie au lieu de tous les vélos
+        $bike = $model->bikes()->with('category')->first();
+        $category = $bike?->category;
+        $breadcrumbs = $this->prepareBreadcrumbs($category);
+
+        $breadcrumbs[] = new BreadcrumbDTO(
+            label: $model->nom_modele_velo,
+            url: null,
+        );
+
+        return $breadcrumbs;
+    }
+
+    /**
+     * @return BreadcrumbDTO[]
+     */
     public function prepareBreadcrumbs(Category $category): array
     {
         $breadcrumbs = [
@@ -35,22 +53,9 @@ class BreadCrumbService
         return $breadcrumbs;
     }
 
-    /**
-     * @return BreadcrumbDTO[]
-     */
-    public function prepareBreadcrumbsByModel(BikeModel $model): array
+    private function buildCategoryUrl(Category $category): string
     {
-        // Charger seulement le premier vélo avec sa catégorie au lieu de tous les vélos
-        $bike = $model->bikes()->with('category')->first();
-        $category = $bike?->category;
-        $breadcrumbs = $this->prepareBreadcrumbs($category);
-
-        $breadcrumbs[] = new BreadcrumbDTO(
-            label: $model->nom_modele_velo,
-            url: null,
-        );
-
-        return $breadcrumbs;
+        return route('articles.by-category', ['category' => $category->id_categorie]);
     }
 
     /**
@@ -73,10 +78,5 @@ class BreadCrumbService
         );
 
         return $breadcrumbs;
-    }
-
-    private function buildCategoryUrl(Category $category): string
-    {
-        return route('articles.by-category', ['category' => $category->id_categorie]);
     }
 }

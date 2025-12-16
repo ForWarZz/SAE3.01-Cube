@@ -39,19 +39,35 @@ class BikeFormDataService
         ];
     }
 
-    public function getReferenceFormData(): array
-    {
-        return [
-            'frames' => $this->getFrames(),
-            'colors' => $this->getColors(),
-            'sizes' => $this->getSizes(),
-            'batteries' => $this->getBatteries(),
-        ];
-    }
-
     public function getModels(): Collection
     {
         return BikeModel::orderBy('nom_modele_velo')->get();
+    }
+
+    /**
+     * @return Collection<int, Bike>
+     */
+    private function getBikesByModel(): Collection
+    {
+        return Bike::with('category')
+            ->get()
+            ->keyBy('id_modele_velo');
+    }
+
+    /**
+     * @param  Collection<int, BikeModel>  $models
+     * @param  Collection<int, Bike>  $bikesByModel
+     */
+    private function buildModelsCategory(Collection $models, Collection $bikesByModel): Collection
+    {
+        return $models->mapWithKeys(function (BikeModel $bikeModel) use ($bikesByModel) {
+            /** @var Bike|null $bike */
+            $bike = $bikesByModel->get($bikeModel->id_modele_velo);
+
+            return [
+                $bikeModel->id_modele_velo => $bike?->category?->id_categorie,
+            ];
+        });
     }
 
     public function getCategories(): Collection
@@ -126,29 +142,13 @@ class BikeFormDataService
         return EBikeType::all();
     }
 
-    /**
-     * @return Collection<int, Bike>
-     */
-    private function getBikesByModel(): Collection
+    public function getReferenceFormData(): array
     {
-        return Bike::with('category')
-            ->get()
-            ->keyBy('id_modele_velo');
-    }
-
-    /**
-     * @param  Collection<int, BikeModel>  $models
-     * @param  Collection<int, Bike>  $bikesByModel
-     */
-    private function buildModelsCategory(Collection $models, Collection $bikesByModel): Collection
-    {
-        return $models->mapWithKeys(function (BikeModel $bikeModel) use ($bikesByModel) {
-            /** @var Bike|null $bike */
-            $bike = $bikesByModel->get($bikeModel->id_modele_velo);
-
-            return [
-                $bikeModel->id_modele_velo => $bike?->category?->id_categorie,
-            ];
-        });
+        return [
+            'frames' => $this->getFrames(),
+            'colors' => $this->getColors(),
+            'sizes' => $this->getSizes(),
+            'batteries' => $this->getBatteries(),
+        ];
     }
 }

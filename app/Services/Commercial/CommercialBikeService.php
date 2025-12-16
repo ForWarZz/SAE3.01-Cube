@@ -31,6 +31,39 @@ class CommercialBikeService
         return $this->createBikeArticle($validated, $modelId);
     }
 
+    private function resolveModelId(array $validated): int
+    {
+        if ($validated['model_choice'] === 'new') {
+            $bikeModel = BikeModel::firstOrCreate([
+                'nom_modele_velo' => $validated['new_model_name'],
+            ]);
+
+            return $bikeModel->id_modele_velo;
+        }
+
+        return $validated['id_modele_velo'];
+    }
+
+    private function createBikeArticle(array $validated, int $modelId): int
+    {
+        $result = DB::selectOne('SELECT fn_create_bike(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) as id_article', [
+            $validated['is_vae'] ?? false,
+            $validated['nom_article'],
+            $validated['description_article'],
+            $validated['resumer_article'],
+            $validated['prix_article'],
+            $validated['pourcentage_remise'] ?? 0,
+            $validated['id_categorie'],
+            $modelId,
+            $validated['id_materiau_cadre'],
+            $validated['id_millesime'],
+            $validated['id_usage'],
+            $validated['id_type_vae'],
+        ]);
+
+        return $result->id_article;
+    }
+
     /**
      * @throws Throwable
      */
@@ -90,38 +123,5 @@ class CommercialBikeService
     public function isVae(Bike $bike): bool
     {
         return $bike->ebike !== null;
-    }
-
-    private function resolveModelId(array $validated): int
-    {
-        if ($validated['model_choice'] === 'new') {
-            $bikeModel = BikeModel::firstOrCreate([
-                'nom_modele_velo' => $validated['new_model_name'],
-            ]);
-
-            return $bikeModel->id_modele_velo;
-        }
-
-        return $validated['id_modele_velo'];
-    }
-
-    private function createBikeArticle(array $validated, int $modelId): int
-    {
-        $result = DB::selectOne('SELECT fn_create_bike(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) as id_article', [
-            $validated['is_vae'] ?? false,
-            $validated['nom_article'],
-            $validated['description_article'],
-            $validated['resumer_article'],
-            $validated['prix_article'],
-            $validated['pourcentage_remise'] ?? 0,
-            $validated['id_categorie'],
-            $modelId,
-            $validated['id_materiau_cadre'],
-            $validated['id_millesime'],
-            $validated['id_usage'],
-            $validated['id_type_vae'],
-        ]);
-
-        return $result->id_article;
     }
 }

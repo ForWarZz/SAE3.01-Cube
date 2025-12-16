@@ -2,12 +2,14 @@
 
 namespace App\DTOs\Order;
 
+use DateTimeInterface;
+
 class OrderSummaryDTO
 {
     public function __construct(
         public int $id,
         public string $number,
-        public \DateTimeInterface $date,
+        public DateTimeInterface $date,
         public ?string $tracking,
         public string $statusLabel,
         public StatusStyleDTO $statusColors,

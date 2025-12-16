@@ -29,11 +29,6 @@ class CartService
         $this->session->updateQuantity($referenceId, $sizeId, $quantity);
     }
 
-    public function removeItem(int $referenceId, int $sizeId): void
-    {
-        $this->session->removeItem($referenceId, $sizeId);
-    }
-
     public function clear(): void
     {
         $this->session->clearCart();
@@ -62,15 +57,11 @@ class CartService
         $this->session->clearDiscountCode();
     }
 
-    public function getAppliedDiscountCode(): ?DiscountCode
+    public function findShippingMode(int $id): ?ShippingModeDTO
     {
-        $discountId = $this->session->getDiscountCodeId();
+        $modes = $this->getAvailableShippingModes();
 
-        if (! $discountId) {
-            return null;
-        }
-
-        return DiscountCode::find($discountId);
+        return $modes->first(fn (ShippingModeDTO $mode) => $mode->id === $id);
     }
 
     /**
@@ -99,13 +90,6 @@ class CartService
                     price: $price,
                 );
             });
-    }
-
-    public function findShippingMode(int $id): ?ShippingModeDTO
-    {
-        $modes = $this->getAvailableShippingModes();
-
-        return $modes->first(fn (ShippingModeDTO $mode) => $mode->id === $id);
     }
 
     /**
@@ -219,5 +203,21 @@ class CartService
             count: $cartItems->count(),
             hasBikes: $hasBikes,
         );
+    }
+
+    public function removeItem(int $referenceId, int $sizeId): void
+    {
+        $this->session->removeItem($referenceId, $sizeId);
+    }
+
+    public function getAppliedDiscountCode(): ?DiscountCode
+    {
+        $discountId = $this->session->getDiscountCodeId();
+
+        if (! $discountId) {
+            return null;
+        }
+
+        return DiscountCode::find($discountId);
     }
 }

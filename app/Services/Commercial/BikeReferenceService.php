@@ -4,6 +4,7 @@ namespace App\Services\Commercial;
 
 use App\Models\Bike;
 use App\Models\BikeReference;
+use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -12,28 +13,6 @@ use Throwable;
 
 class BikeReferenceService
 {
-    /**
-     * @param  array<UploadedFile>  $images
-     */
-    public function createReference(int $articleId, array $refData, bool $isVae, array $images = []): int
-    {
-        $refResult = DB::selectOne('SELECT fn_add_bike_reference(?, ?, ?, ?, ?, ?) as id_ref', [
-            $isVae,
-            $refData['numero_reference'],
-            $articleId,
-            $refData['id_cadre_velo'],
-            $refData['id_couleur'],
-            $refData['id_batterie'] ?? null,
-        ]);
-
-        $referenceId = $refResult->id_ref;
-
-        $this->attachSizes($referenceId, $refData['sizes'] ?? []);
-        $this->storeImages($articleId, $referenceId, $images);
-
-        return $referenceId;
-    }
-
     /**
      * @param  array<UploadedFile>  $images
      *
@@ -63,9 +42,58 @@ class BikeReferenceService
 
             return $referenceId;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             throw $e;
+        }
+    }
+
+    /**
+     * @param  array<UploadedFile>  $images
+     */
+    public function createReference(int $articleId, array $refData, bool $isVae, array $images = []): int
+    {
+        $refResult = DB::selectOne('SELECT fn_add_bike_reference(?, ?, ?, ?, ?, ?) as id_ref', [
+            $isVae,
+            $refData['numero_reference'],
+            $articleId,
+            $refData['id_cadre_velo'],
+            $refData['id_couleur'],
+            $refData['id_batterie'] ?? null,
+        ]);
+
+        $referenceId = $refResult->id_ref;
+
+        $this->attachSizes($referenceId, $refData['sizes'] ?? []);
+        $this->storeImages($articleId, $referenceId, $images);
+
+        return $referenceId;
+    }
+
+    private function attachSizes(int $referenceId, array $sizes): void
+    {
+        if (empty($sizes)) {
+            return;
+        }
+
+        $bikeRef = BikeReference::find($referenceId);
+        $bikeRef->availableSizes()->attach($sizes, ['dispo_en_ligne' => true]);
+    }
+
+    /**
+     * @param  array<UploadedFile>  $images
+     */
+    private function storeImages(int $articleId, int $referenceId, array $images, int $existingCount = 0): void
+    {
+        if (empty($images)) {
+            return;
+        }
+
+        $storagePath = "articles/$articleId/$referenceId";
+
+        foreach ($images as $index => $image) {
+            $filename = ($existingCount + $index + 1).'.'.$image->getClientOriginalExtension();
+            $image->storeAs($storagePath, $filename, 'public');
         }
     }
 
@@ -82,7 +110,7 @@ class BikeReferenceService
 
             DB::commit();
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             throw $e;
         }
@@ -120,32 +148,5 @@ class BikeReferenceService
     public function getExistingImagesCount(BikeReference $reference): int
     {
         return count($reference->getImageFiles());
-    }
-
-    private function attachSizes(int $referenceId, array $sizes): void
-    {
-        if (empty($sizes)) {
-            return;
-        }
-
-        $bikeRef = BikeReference::find($referenceId);
-        $bikeRef->availableSizes()->attach($sizes, ['dispo_en_ligne' => true]);
-    }
-
-    /**
-     * @param  array<UploadedFile>  $images
-     */
-    private function storeImages(int $articleId, int $referenceId, array $images, int $existingCount = 0): void
-    {
-        if (empty($images)) {
-            return;
-        }
-
-        $storagePath = "articles/$articleId/$referenceId";
-
-        foreach ($images as $index => $image) {
-            $filename = ($existingCount + $index + 1).'.'.$image->getClientOriginalExtension();
-            $image->storeAs($storagePath, $filename, 'public');
-        }
     }
 }

@@ -37,7 +37,7 @@ class GoogleAuthController extends Controller
 
             if ($client) {
                 // Update Google ID if it wasn't set before
-                if (!$client->google_id) {
+                if (! $client->google_id) {
                     $client->google_id = $googleUser->getId();
                     $client->save();
                 }
@@ -62,7 +62,7 @@ class GoogleAuthController extends Controller
 
             // Log the user in
             Auth::login($client); // Login without remember me
-            
+
             // Regenerate session
             request()->session()->regenerate();
 
@@ -71,18 +71,21 @@ class GoogleAuthController extends Controller
             $client->save();
 
             // If this is a newly created account, redirect to profile to complete information
-            Log::info('Google OAuth - Is new account: ' . ($isNewAccount ? 'YES' : 'NO'));
-            
+            Log::info('Google OAuth - Is new account: '.($isNewAccount ? 'YES' : 'NO'));
+
             if ($isNewAccount) {
                 Log::info('Redirecting to profile.edit');
+
                 return redirect()->route('dashboard.profile.edit');
             }
 
             Log::info('Redirecting to dashboard.index');
+
             return redirect()->route('dashboard.index')
                 ->with('success', 'Connexion réussie avec Google !');
         } catch (\Exception $e) {
-            Log::error('Google OAuth Error: ' . $e->getMessage());
+            Log::error('Google OAuth Error: '.$e->getMessage());
+
             return redirect()->route('login')
                 ->with('error', 'Erreur lors de la connexion avec Google. Veuillez réessayer.');
         }

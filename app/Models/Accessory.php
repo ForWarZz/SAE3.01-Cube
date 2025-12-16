@@ -22,11 +22,11 @@ class Accessory extends Model
 {
     public const WEIGHT_CHARACTERISTIC_ID = 31;
 
+    public $timestamps = false;
+
     protected $table = 'accessoire';
 
     protected $primaryKey = 'id_article';
-
-    public $timestamps = false;
 
     protected $fillable = [
         'id_article',
@@ -113,13 +113,6 @@ class Accessory extends Model
         return Storage::url($this->getImageFiles()[0]);
     }
 
-    public function getImagesUrls(bool $is360 = false): array
-    {
-        $files = $this->getImageFiles($is360);
-
-        return array_map(fn ($f) => Storage::url($f), $files);
-    }
-
     public function getImageFiles(bool $is360 = false): array
     {
         $directory = $this->getStorageDirectory();
@@ -134,6 +127,13 @@ class Accessory extends Model
     public function getStorageDirectory(): string
     {
         return "articles/$this->id_article/$this->id_reference/";
+    }
+
+    public function getImagesUrls(bool $is360 = false): array
+    {
+        $files = $this->getImageFiles($is360);
+
+        return array_map(fn ($f) => Storage::url($f), $files);
     }
 
     public function getImagePathFromName(string $imageName): string

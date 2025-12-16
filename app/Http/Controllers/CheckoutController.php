@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Services\Cart\CartSessionManager;
 use App\Services\Cart\CheckoutService;
+use DomainException;
 use Illuminate\Http\Request;
+use Throwable;
 
 class CheckoutController extends Controller
 {
@@ -23,12 +25,12 @@ class CheckoutController extends Controller
 
             return redirect()->to($checkoutData->url);
 
-        } catch (\DomainException $e) {
+        } catch (DomainException $e) {
             return redirect()
                 ->route('cart.index')
                 ->with('error', $e->getMessage());
 
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             report($e);
 
             return redirect()

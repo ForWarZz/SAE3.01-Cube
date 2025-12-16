@@ -76,6 +76,80 @@ class ArticleService
      *     sortOptions: array
      * }
      */
+    private function finalizeQuery($baseQuery, Request $request): array
+    {
+        $perPage = config('article.per_page');
+
+        $sortBy = $request->input('sortBy');
+        $filtersSelected = $this->filterEngineService->retrieveSelectedFilters($request);
+
+        $query = $this->filterEngineService->apply($baseQuery, $filtersSelected);
+        $filterOptions = $this->filterEngineService->getFilterOptions($baseQuery);
+
+        $this->applySorting($query, $sortBy);
+        $articles = $query
+            ->paginate($perPage)
+            ->appends($request->except('page'));
+
+        return [
+            'articles' => $articles,
+            'activeFilters' => $filtersSelected,
+            'filterOptions' => $filterOptions,
+            'sortBy' => $sortBy,
+            'sortOptions' => $this->getSortOptions(),
+        ];
+    }
+
+    private function applySorting($query, $sortBy): void
+    {
+        switch ($sortBy) {
+            case 'price_asc':
+                $query->orderBy('prix_article', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('prix_article', 'desc');
+                break;
+            case 'reference_asc':
+                $query->orderBy('id_article', 'asc');
+                break;
+            case 'reference_desc':
+                $query->orderBy('id_article', 'desc');
+                break;
+            case 'selling_desc':
+                $query->orderBy('nombre_vente_article', 'desc');
+                break;
+            case 'name_desc':
+                $query->orderBy('nom_article', 'desc');
+                break;
+            case 'name_asc':
+            default:
+                $query->orderBy('nom_article', 'asc');
+                break;
+        }
+    }
+
+    private function getSortOptions(): array
+    {
+        return [
+            'name_asc' => 'Nom (A-Z)',
+            'name_desc' => 'Nom (Z-A)',
+            'price_asc' => 'Prix (croissant)',
+            'price_desc' => 'Prix (décroissant)',
+            'selling_desc' => 'Meilleures ventes (décroissant)',
+            'reference_asc' => 'Référence (croissant)',
+            'reference_desc' => 'Référence (décroissant)',
+        ];
+    }
+
+    /**
+     * @return array{
+     *     articles: LengthAwarePaginator,
+     *     activeFilters: array,
+     *     filterOptions: array,
+     *     sortBy: string,
+     *     sortOptions: array
+     * }
+     */
     public function listByModel(BikeModel $model, Request $request): array
     {
         $baseQuery = Article::whereHas('bike', function ($q) use ($model) {
@@ -140,80 +214,6 @@ class ArticleService
         $accessoryData = $this->accessoryService->prepareAccessoryData($article->accessory);
 
         return array_merge($base, $accessoryData);
-    }
-
-    /**
-     * @return array{
-     *     articles: LengthAwarePaginator,
-     *     activeFilters: array,
-     *     filterOptions: array,
-     *     sortBy: string,
-     *     sortOptions: array
-     * }
-     */
-    private function finalizeQuery($baseQuery, Request $request): array
-    {
-        $perPage = config('article.per_page');
-
-        $sortBy = $request->input('sortBy');
-        $filtersSelected = $this->filterEngineService->retrieveSelectedFilters($request);
-
-        $query = $this->filterEngineService->apply($baseQuery, $filtersSelected);
-        $filterOptions = $this->filterEngineService->getFilterOptions($baseQuery);
-
-        $this->applySorting($query, $sortBy);
-        $articles = $query
-            ->paginate($perPage)
-            ->appends($request->except('page'));
-
-        return [
-            'articles' => $articles,
-            'activeFilters' => $filtersSelected,
-            'filterOptions' => $filterOptions,
-            'sortBy' => $sortBy,
-            'sortOptions' => $this->getSortOptions(),
-        ];
-    }
-
-    private function applySorting($query, $sortBy): void
-    {
-        switch ($sortBy) {
-            case 'price_asc':
-                $query->orderBy('prix_article', 'asc');
-                break;
-            case 'price_desc':
-                $query->orderBy('prix_article', 'desc');
-                break;
-            case 'reference_asc':
-                $query->orderBy('id_article', 'asc');
-                break;
-            case 'reference_desc':
-                $query->orderBy('id_article', 'desc');
-                break;
-            case 'selling_desc':
-                $query->orderBy('nombre_vente_article', 'desc');
-                break;
-            case 'name_desc':
-                $query->orderBy('nom_article', 'desc');
-                break;
-            case 'name_asc':
-            default:
-                $query->orderBy('nom_article', 'asc');
-                break;
-        }
-    }
-
-    private function getSortOptions(): array
-    {
-        return [
-            'name_asc' => 'Nom (A-Z)',
-            'name_desc' => 'Nom (Z-A)',
-            'price_asc' => 'Prix (croissant)',
-            'price_desc' => 'Prix (décroissant)',
-            'selling_desc' => 'Meilleures ventes (décroissant)',
-            'reference_asc' => 'Référence (croissant)',
-            'reference_desc' => 'Référence (décroissant)',
-        ];
     }
 
     /**
