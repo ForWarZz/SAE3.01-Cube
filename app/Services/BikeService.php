@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOs\Article\GeometryRowDTO;
 use App\Models\Accessory;
 use App\Models\Bike;
 use App\Models\BikeModel;
@@ -67,7 +68,7 @@ class BikeService
     /**
      * Build geometry data for bike model
      *
-     * @return array{headers: Collection, rows: Collection}
+     * @return array{headers: Collection, rows: Collection<int, GeometryRowDTO>}
      */
     private function buildGeometryData(BikeModel $bikeModel): array
     {
@@ -85,10 +86,10 @@ class BikeService
                     return $geo ? $geo->valeur_carac : '-';
                 });
 
-                return [
-                    'label' => $label,
-                    'values' => $values,
-                ];
+                return new GeometryRowDTO(
+                    label: $label,
+                    values: $values,
+                );
             });
 
         return ['headers' => $headers, 'rows' => $rows];

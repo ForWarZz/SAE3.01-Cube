@@ -2,6 +2,7 @@
 
 namespace App\Filters;
 
+use App\DTOs\Filter\FilterOptionDTO;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -25,10 +26,10 @@ class DiscountFilter extends AbstractFilter
             return $options;
         }
 
-        $options->push([
-            'id' => 'in_discount',
-            'label' => 'En promotion',
-        ]);
+        $options->push(new FilterOptionDTO(
+            id: 'in_discount',
+            label: 'En promotion',
+        ));
 
         return $options;
     }

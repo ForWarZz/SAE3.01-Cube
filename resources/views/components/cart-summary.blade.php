@@ -11,25 +11,25 @@
     <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <div class="flex justify-between text-sm text-gray-700">
             <span>Panier</span>
-            <span>{{ number_format($summaryData["subtotal"], 2, ",", " ") }} €</span>
+            <span>{{ number_format($summaryData->subtotal, 2, ",", " ") }} €</span>
         </div>
 
         <div class="flex justify-between text-sm text-gray-700">
             <span>Frais de livraison</span>
-            <span class="{{ $summaryData["shipping"] > 0 ? "text-red-500" : "" }} font-medium">
-                {{ number_format($summaryData["shipping"], 2, ",", " ") }} €
+            <span class="{{ $summaryData->shipping > 0 ? "text-red-500" : "" }} font-medium">
+                {{ number_format($summaryData->shipping, 2, ",", " ") }} €
             </span>
         </div>
 
         <div class="flex justify-between text-sm text-gray-700">
             <span>Taxes incluses</span>
-            <span>{{ number_format($summaryData["tax"], 2, ",", " ") }} €</span>
+            <span>{{ number_format($summaryData->tax, 2, ",", " ") }} €</span>
         </div>
 
         @if ($discountData)
             <div class="flex justify-between text-sm font-medium text-green-700">
                 <span>Remise ({{ $discountData->pourcentage_remise }}%)</span>
-                <span>-{{ number_format($summaryData["discount"], 2, ",", " ") }} €</span>
+                <span>-{{ number_format($summaryData->discount, 2, ",", " ") }} €</span>
             </div>
         @endif
 
@@ -37,7 +37,7 @@
 
         <div class="flex justify-between text-lg font-bold text-gray-900">
             <span>Total TTC</span>
-            <span>{{ number_format($summaryData["total"], 2, ",", " ") }} €</span>
+            <span>{{ number_format($summaryData->total, 2, ",", " ") }} €</span>
         </div>
 
         @if (! $isCheckout)

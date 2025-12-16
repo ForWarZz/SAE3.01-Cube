@@ -2,6 +2,9 @@
 
 namespace App\Services\Cart;
 
+use App\DTOs\Cart\CartItemDTO;
+use App\DTOs\Cart\CartSummaryDTO;
+use App\DTOs\Cart\CartViewDataDTO;
 use App\DTOs\Cart\ShippingModeDTO;
 use App\Models\Article;
 use App\Models\ArticleReference;
@@ -110,22 +113,30 @@ class CartService
      */
     public function getCartViewData(?float $shippingPrice = null): array
     {
+        return $this->getCartData($shippingPrice)->toViewData();
+    }
+
+    /**
+     * Retourne les données du panier sous forme de DTO typé
+     */
+    public function getCartData(?float $shippingPrice = null): CartViewDataDTO
+    {
         $sessionItems = $this->session->getItems();
 
         if (empty($sessionItems)) {
-            return [
-                'cartData' => [],
-                'summaryData' => [
-                    'subtotal' => 0,
-                    'discount' => 0,
-                    'shipping' => 0,
-                    'tax' => 0,
-                    'total' => 0,
-                ],
-                'discountData' => null,
-                'count' => 0,
-                'hasBikes' => false,
-            ];
+            return new CartViewDataDTO(
+                items: collect(),
+                summary: new CartSummaryDTO(
+                    subtotal: 0,
+                    discount: 0,
+                    shipping: 0,
+                    tax: 0,
+                    total: 0,
+                ),
+                discountCode: null,
+                count: 0,
+                hasBikes: false,
+            );
         }
 
         // Charger toutes les références et tailles en une seule requête
@@ -140,7 +151,7 @@ class CartService
 
         $sizes = Size::whereIn('id_taille', $sizeIds)->get()->keyBy('id_taille');
 
-        $cartData = [];
+        $cartItems = collect();
         $subtotal = 0;
         $hasBikes = false;
 
@@ -158,22 +169,22 @@ class CartService
             /** @var Article $article */
             $article = $reference->bikeReference->article ?? $reference->accessory->article;
 
-            $cartData[] = [
-                'reference' => $reference->bikeReference ?? $reference->accessory,
-                'img_url' => $article->getCoverUrl($reference->id_reference),
-                'size' => $size,
-                'quantity' => $sessionItem['quantity'],
-                'article' => $article,
-                'price_per_unit' => $article->getDiscountedPrice(),
-                'real_price' => $article->prix_article,
-                'has_discount' => $article->hasDiscount(),
-                'discount_percent' => $article->pourcentage_remise,
-                'color' => $reference->bikeReference?->color?->label_couleur,
-                'article_url' => route('articles.show', [
+            $cartItems->push(new CartItemDTO(
+                reference: $reference->bikeReference ?? $reference->accessory,
+                img_url: $article->getCoverUrl($reference->id_reference),
+                size: $size,
+                quantity: $sessionItem['quantity'],
+                article: $article,
+                price_per_unit: $article->getDiscountedPrice(),
+                real_price: $article->prix_article,
+                has_discount: $article->hasDiscount(),
+                discount_percent: $article->pourcentage_remise,
+                color: $reference->bikeReference?->color?->label_couleur,
+                article_url: route('articles.show', [
                     'reference' => $reference->id_reference,
                     'article' => $article->id_article,
                 ]),
-            ];
+            ));
 
             $subtotal += $article->getDiscountedPrice() * $sessionItem['quantity'];
 
@@ -195,18 +206,18 @@ class CartService
         $totalTTC = $subtotal - $discountAmount + $shippingPrice;
         $tax = $totalTTC - ($totalTTC / 1.20);
 
-        return [
-            'cartData' => $cartData,
-            'summaryData' => [
-                'subtotal' => $subtotal,
-                'discount' => $discountAmount,
-                'shipping' => $shippingPrice,
-                'tax' => $tax,
-                'total' => $totalTTC,
-            ],
-            'discountData' => $discountCode,
-            'count' => count($cartData),
-            'hasBikes' => $hasBikes,
-        ];
+        return new CartViewDataDTO(
+            items: $cartItems,
+            summary: new CartSummaryDTO(
+                subtotal: $subtotal,
+                discount: $discountAmount,
+                shipping: $shippingPrice,
+                tax: $tax,
+                total: $totalTTC,
+            ),
+            discountCode: $discountCode,
+            count: $cartItems->count(),
+            hasBikes: $hasBikes,
+        );
     }
 }

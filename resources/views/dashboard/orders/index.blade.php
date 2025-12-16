@@ -44,7 +44,7 @@
                                                 <div class="flex items-center gap-3">
                                                     <h3 class="font-bold text-gray-900">#{{ $order->number }}</h3>
                                                     <span
-                                                        class="{{ $order->statusColors["bg"] }} {{ $order->statusColors["text"] }} inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+                                                        class="{{ $order->statusColors->bg }} {{ $order->statusColors->text }} inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
                                                     >
                                                         {{ $order->statusLabel }}
                                                     </span>

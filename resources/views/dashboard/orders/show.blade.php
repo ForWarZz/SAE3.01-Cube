@@ -23,7 +23,7 @@
                         <div class="mb-2 flex items-center gap-3">
                             <h1 class="text-2xl font-bold text-gray-900">Commande #{{ $order->num_commande }}</h1>
                             <span
-                                class="{{ $statusColors["bg"] }} {{ $statusColors["text"] }} inline-flex items-center rounded-full px-3 py-1 text-sm font-medium"
+                                class="{{ $statusColors->bg }} {{ $statusColors->text }} inline-flex items-center rounded-full px-3 py-1 text-sm font-medium"
                             >
                                 {{ $statusName }}
                             </span>

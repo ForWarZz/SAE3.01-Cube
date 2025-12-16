@@ -2,6 +2,7 @@
 
 namespace App\Filters;
 
+use App\DTOs\Filter\FilterOptionDTO;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -19,11 +20,14 @@ abstract class AbstractFilter implements ArticleFilter
         return (array) $request->input($this->key(), []);
     }
 
+    /**
+     * @return Collection<int, FilterOptionDTO>
+     */
     protected function format(Collection $collection, string $idField, string $labelField): Collection
     {
-        return $collection->map(fn ($item) => [
-            'id' => (string) $item->$idField,
-            'label' => $item->$labelField,
-        ]);
+        return $collection->map(fn ($item) => new FilterOptionDTO(
+            id: (string) $item->$idField,
+            label: $item->$labelField,
+        ));
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Services\Cart;
 
-use App\DTOs\Cart\ShippingModeDTO;
+use App\DTOs\Cart\CheckoutDataDTO;
 use App\Models\Client;
 use App\Models\Order;
 use App\Models\PaymentType;
@@ -17,25 +17,18 @@ class CheckoutService
         protected readonly CartSessionManager $session,
     ) {}
 
-    /**
-     * @return array{
-     *     billing_address_id: ?int,
-     *     delivery_address_id: ?int,
-     *     shipping_mode: ?ShippingModeDTO
-     * }
-     */
-    public function getCheckoutData(): array
+    public function getCheckoutData(): CheckoutDataDTO
     {
         $sessionData = $this->session->getCheckoutData();
 
         $shippingModeId = $sessionData['shipping_mode_id'] ?? null;
         $shippingMode = $shippingModeId ? $this->cartService->findShippingMode($shippingModeId) : null;
 
-        return [
-            'billing_address_id' => $sessionData['billing_address_id'] ?? null,
-            'delivery_address_id' => $sessionData['delivery_address_id'] ?? null,
-            'shipping_mode' => $shippingMode,
-        ];
+        return new CheckoutDataDTO(
+            billing_address_id: $sessionData['billing_address_id'] ?? null,
+            delivery_address_id: $sessionData['delivery_address_id'] ?? null,
+            shipping_mode: $shippingMode,
+        );
     }
 
     public function updateCheckout(?int $billingAddressId, ?int $deliveryAddressId, ?int $shippingModeId): void
@@ -51,25 +44,21 @@ class CheckoutService
     public function getCheckoutViewData(Client $client): array
     {
         $checkoutData = $this->getCheckoutData();
-        $shippingPrice = $checkoutData['shipping_mode']?->price ?? 0;
+        $shippingPrice = $checkoutData->shipping_mode?->price ?? 0;
 
         // Récupérer les données du panier avec le prix de livraison sélectionné
         $cartViewData = $this->cartService->getCartViewData($shippingPrice);
 
         $shippingModes = $this->cartService->getAvailableShippingModes(
-            $cartViewData['summaryData']['subtotal'],
+            $cartViewData['summaryData']->subtotal,
             $cartViewData['hasBikes']
         );
 
         return [
             'addresses' => $client->addresses()->with('city')->get(),
-            'deliveryModes' => $shippingModes->map(fn (ShippingModeDTO $mode) => $mode->toArray())->toArray(),
-            'selectedShippingId' => $checkoutData['shipping_mode']?->id,
-            'orderData' => [
-                'billing_address_id' => $checkoutData['billing_address_id'],
-                'delivery_address_id' => $checkoutData['delivery_address_id'],
-                'shipping_mode' => $checkoutData['shipping_mode']?->toArray(),
-            ],
+            'deliveryModes' => $shippingModes,
+            'selectedShippingId' => $checkoutData->shipping_mode?->id,
+            'orderData' => $checkoutData,
             // Données du panier pour les vues
             'cartData' => $cartViewData['cartData'],
             'summaryData' => $cartViewData['summaryData'],
@@ -84,9 +73,9 @@ class CheckoutService
         $checkoutData = $this->getCheckoutData();
 
         return ! $this->cartService->isEmpty()
-            && $checkoutData['billing_address_id'] !== null
-            && $checkoutData['delivery_address_id'] !== null
-            && $checkoutData['shipping_mode'] !== null;
+            && $checkoutData->billing_address_id !== null
+            && $checkoutData->delivery_address_id !== null
+            && $checkoutData->shipping_mode !== null;
     }
 
     /**
@@ -99,16 +88,16 @@ class CheckoutService
         }
 
         $checkoutData = $this->getCheckoutData();
-        $cartViewData = $this->cartService->getCartViewData($checkoutData['shipping_mode']->price);
+        $cartViewData = $this->cartService->getCartViewData($checkoutData->shipping_mode->price);
 
         return DB::transaction(function () use ($checkoutData, $cartViewData, $client) {
             $order = Order::create([
                 'id_client' => $client->id_client,
-                'id_adresse_facturation' => $checkoutData['billing_address_id'],
-                'id_adresse_livraison' => $checkoutData['delivery_address_id'],
-                'id_moyen_livraison' => $checkoutData['shipping_mode']->id,
+                'id_adresse_facturation' => $checkoutData->billing_address_id,
+                'id_adresse_livraison' => $checkoutData->delivery_address_id,
+                'id_moyen_livraison' => $checkoutData->shipping_mode->id,
                 'num_commande' => $this->generateOrderNumber(),
-                'frais_livraison' => $checkoutData['shipping_mode']->price,
+                'frais_livraison' => $checkoutData->shipping_mode->price,
                 'date_commande' => now(),
                 'id_code_promo' => $cartViewData['discountData']?->id_code_promo,
                 'pourcentage_remise' => $cartViewData['discountData']?->pourcentage_remise,
@@ -118,10 +107,10 @@ class CheckoutService
             // Ajouter les articles du panier à la commande
             foreach ($cartViewData['cartData'] as $item) {
                 $order->items()->create([
-                    'id_reference' => $item['reference']->id_reference,
-                    'quantite_ligne' => $item['quantity'],
-                    'prix_unit_ligne' => $item['price_per_unit'],
-                    'id_taille' => $item['size']->id_taille,
+                    'id_reference' => $item->reference->id_reference,
+                    'quantite_ligne' => $item->quantity,
+                    'prix_unit_ligne' => $item->price_per_unit,
+                    'id_taille' => $item->size->id_taille,
                 ]);
             }
 

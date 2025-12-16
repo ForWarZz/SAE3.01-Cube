@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOs\Article\SizeOptionDTO;
 use App\Models\Article;
 use App\Models\ArticleReference;
 use App\Models\BikeModel;
@@ -217,6 +218,8 @@ class ArticleService
 
     /**
      * Build size options for current reference
+     *
+     * @return Collection<int, SizeOptionDTO>
      */
     private function buildSizeOptions(ArticleReference $reference): Collection
     {
@@ -233,20 +236,20 @@ class ArticleService
                 ->pluck('pivot.statut');
 
             if ($storeStatuses->contains(ShopAvailability::STATUS_IN_STOCK)) {
-                $shopStatus = 'in_stock';
+                $shopStatus = SizeOptionDTO::SHOP_STATUS_IN_STOCK;
             } elseif ($storeStatuses->contains(ShopAvailability::STATUS_ORDERABLE)) {
-                $shopStatus = 'orderable';
+                $shopStatus = SizeOptionDTO::SHOP_STATUS_ORDERABLE;
             } else {
-                $shopStatus = 'unavailable';
+                $shopStatus = SizeOptionDTO::SHOP_STATUS_UNAVAILABLE;
             }
 
-            return [
-                'id' => $size->id_taille,
-                'label' => $size->nom_taille,
-                'availableOnline' => $availableOnline,
-                'shopStatus' => $shopStatus,
-                'disabled' => ! $availableOnline && $shopStatus === 'unavailable',
-            ];
+            return new SizeOptionDTO(
+                id: $size->id_taille,
+                label: $size->nom_taille,
+                availableOnline: $availableOnline,
+                shopStatus: $shopStatus,
+                disabled: ! $availableOnline && $shopStatus === SizeOptionDTO::SHOP_STATUS_UNAVAILABLE,
+            );
         });
     }
 }

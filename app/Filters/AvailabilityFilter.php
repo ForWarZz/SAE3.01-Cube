@@ -2,6 +2,7 @@
 
 namespace App\Filters;
 
+use App\DTOs\Filter\FilterOptionDTO;
 use App\Models\ShopAvailability;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -52,7 +53,7 @@ class AvailabilityFilter extends AbstractFilter
             ->exists();
 
         if ($hasOnline) {
-            $options[] = ['id' => 'online', 'label' => 'Disponible en ligne'];
+            $options->push(new FilterOptionDTO(id: 'online', label: 'Disponible en ligne'));
         }
 
         // Check in stock
@@ -64,7 +65,7 @@ class AvailabilityFilter extends AbstractFilter
             ->exists();
 
         if ($hasStock) {
-            $options[] = ['id' => 'in_stock', 'label' => 'En stock magasin'];
+            $options->push(new FilterOptionDTO(id: 'in_stock', label: 'En stock magasin'));
         }
 
         // Check orderable
@@ -76,7 +77,7 @@ class AvailabilityFilter extends AbstractFilter
             ->exists();
 
         if ($hasOrderable) {
-            $options[] = ['id' => 'orderable', 'label' => 'Commandable en magasin'];
+            $options->push(new FilterOptionDTO(id: 'orderable', label: 'Commandable en magasin'));
         }
 
         return $options;
