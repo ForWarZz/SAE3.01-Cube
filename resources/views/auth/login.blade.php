@@ -45,6 +45,12 @@
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
 
+                <div class="flex items-center justify-between">
+                    <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:text-blue-700">
+                        Mot de passe oublié ?
+                    </a>
+                </div>
+
                 <button
                     class="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >

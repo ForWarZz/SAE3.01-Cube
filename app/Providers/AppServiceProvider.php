@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Auth\Passwords\PasswordBrokerManager;
 use App\Models\Client;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
@@ -14,7 +15,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Extend the password broker manager to use our custom implementation
+        $this->app->extend('auth.password', function ($service, $app) {
+            return new PasswordBrokerManager($app);
+        });
     }
 
     /**
