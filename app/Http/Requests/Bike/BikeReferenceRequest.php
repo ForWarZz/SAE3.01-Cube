@@ -43,8 +43,6 @@ class BikeReferenceRequest extends FormRequest
 
         if ($isVae) {
             $rules['id_batterie'] = 'required|integer|exists:batterie,id_batterie';
-        } else {
-            $rules['id_batterie'] = 'nullable|integer|exists:batterie,id_batterie';
         }
 
         return $rules;

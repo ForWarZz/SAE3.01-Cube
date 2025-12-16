@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CommercialAuthController extends Controller
 {
-    public function showLoginForm()
+    public function index()
     {
         return view('auth.commercial-login');
     }
@@ -32,11 +32,6 @@ class CommercialAuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('home');
-    }
-
-    public function viewReferences()
-    {
-        return view('commercial.references');
     }
 
     public function viewStats()

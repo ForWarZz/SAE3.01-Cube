@@ -13,9 +13,11 @@ class BikeFrameMaterial extends Model
     public $timestamps = false;
 
     protected $table = 'materiau_cadre_velo';
+
     protected $primaryKey = 'id_materiau_cadre';
+
     protected $fillable = [
         'id_materiau_cadre',
-        'label_materiau_cadre'
+        'label_materiau_cadre',
     ];
 }

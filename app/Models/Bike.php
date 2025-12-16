@@ -51,6 +51,7 @@ class Bike extends Model
 
     protected static function booted(): void
     {
+        // Permet de filtrer au cas ou le l'article ait été supprimé via un soft delete, pour ne pas apparaitre dans les listes...
         static::addGlobalScope('active_article', function ($builder) {
             $builder->whereHas('article');
         });

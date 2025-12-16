@@ -5,9 +5,11 @@ namespace App\Services\Commercial;
 use App\Models\ArticleReference;
 use App\Models\Bike;
 use App\Models\BikeModel;
+use Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 class CommercialBikeService
 {
@@ -30,7 +32,7 @@ class CommercialBikeService
     }
 
     /**
-     * @throws \Exception
+     * @throws Throwable
      */
     public function deleteBike(Bike $bike): void
     {
@@ -44,7 +46,7 @@ class CommercialBikeService
 
             DB::commit();
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             throw $e;
         }

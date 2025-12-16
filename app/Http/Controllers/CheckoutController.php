@@ -10,8 +10,8 @@ use Illuminate\Http\Request;
 class CheckoutController extends Controller
 {
     public function __construct(
-        protected readonly CheckoutService $checkoutService,
-        protected readonly CartSessionManager $cartSession,
+        private readonly CheckoutService $checkoutService,
+        private readonly CartSessionManager $cartSession,
     ) {}
 
     public function checkout()

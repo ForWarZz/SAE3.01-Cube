@@ -20,7 +20,6 @@ class ShopAvailability extends Model
         'statut',
     ];
 
-    // Enumérations des status possibles
     const STATUS_IN_STOCK = 'En Stock';
 
     const STATUS_ORDERABLE = 'Commandable';

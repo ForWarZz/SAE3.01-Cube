@@ -11,13 +11,15 @@ use App\Models\BikeReference;
 use App\Services\Commercial\BikeFormDataService;
 use App\Services\Commercial\BikeReferenceService;
 use App\Services\Commercial\CommercialBikeService;
+use Exception;
+use Throwable;
 
 class CommercialBikeController extends Controller
 {
     public function __construct(
-        protected CommercialBikeService $bikeService,
-        protected BikeReferenceService $referenceService,
-        protected BikeFormDataService $formDataService,
+        private readonly CommercialBikeService $bikeService,
+        private readonly BikeReferenceService $referenceService,
+        private readonly BikeFormDataService $formDataService,
     ) {}
 
     public function index()
@@ -45,7 +47,7 @@ class CommercialBikeController extends Controller
                 ->route('commercial.bikes.index')
                 ->with('success', 'Vélo créé avec succès.');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return back()
                 ->withInput()
                 ->withErrors(['error' => $e->getMessage()]);
@@ -80,7 +82,7 @@ class CommercialBikeController extends Controller
 
             return back()->with('success', 'Référence ajoutée avec succès.');
 
-        } catch (\Exception $e) {
+        } catch (Throwable $e) {
             return back()
                 ->withInput()
                 ->withErrors(['error' => 'Erreur lors de l\'ajout de la référence : '.$e->getMessage()]);
@@ -100,7 +102,7 @@ class CommercialBikeController extends Controller
 
             return back()->with('success', 'La référence a été supprimée.');
 
-        } catch (\Exception $e) {
+        } catch (Throwable $e) {
             return back()->withErrors(['error' => 'Erreur lors de la suppression : '.$e->getMessage()]);
         }
     }
@@ -137,7 +139,7 @@ class CommercialBikeController extends Controller
 
             return back()->with('success', 'Image supprimée avec succès.');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return back()->withErrors(['error' => 'Erreur lors de la suppression de l\'image : '.$e->getMessage()]);
         }
     }
@@ -151,9 +153,7 @@ class CommercialBikeController extends Controller
             return redirect()
                 ->route('commercial.bikes.index')
                 ->with('success', 'Vélo supprimé avec succès.');
-
-        } catch (\Exception $e) {
-
+        } catch (Throwable $e) {
             return back()
                 ->withErrors(['error' => 'Erreur lors de la suppression : '.$e->getMessage()]);
         }

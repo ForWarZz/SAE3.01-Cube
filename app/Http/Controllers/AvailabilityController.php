@@ -7,12 +7,9 @@ use Illuminate\Http\Request;
 
 class AvailabilityController extends Controller
 {
-    protected AvailabilityService $service;
-
-    public function __construct(AvailabilityService $service)
-    {
-        $this->service = $service;
-    }
+    public function __construct(
+        private readonly AvailabilityService $service
+    ) {}
 
     public function show(Request $request, $referenceId)
     {

@@ -103,19 +103,8 @@ class Client extends Authenticatable
         return $this->hasMany(Address::class, 'id_client', 'id_client');
     }
 
-    // TODO: Uncomment when model is created
-    // public function serviceRequests(): HasMany
-    // {
-    //     return $this->hasMany('App\Models\DemandeServiceClient', 'id_client', 'id_client');
-    // }
-
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class, 'id_client', 'id_client');
     }
-    //
-    //    public function registeredBikes(): HasMany
-    //    {
-    //        return $this->hasMany('App\Models\VeloEnregistre', 'id_client', 'id_client');
-    //    }
 }

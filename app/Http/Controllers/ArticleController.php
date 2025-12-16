@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\BreadcrumbDTO;
 use App\Models\Article;
 use App\Models\ArticleReference;
 use App\Models\BikeModel;
@@ -13,8 +14,8 @@ use Illuminate\Http\Request;
 class ArticleController extends Controller
 {
     public function __construct(
-        protected ArticleService $articleService,
-        protected BreadCrumbService $breadCrumbService,
+        private readonly ArticleService $articleService,
+        private readonly BreadCrumbService $breadCrumbService,
     ) {}
 
     public function search(Request $request)
@@ -26,8 +27,14 @@ class ArticleController extends Controller
             'search' => $search,
             'pageTitle' => 'Résultats de recherche : '.$search,
             'breadcrumbs' => [
-                ['label' => 'Accueil', 'url' => route('home')],
-                ['label' => 'Recherche', 'url' => null],
+                new BreadcrumbDTO(
+                    label: 'Accueil',
+                    url: route('home'),
+                ),
+                new BreadcrumbDTO(
+                    label: 'Recherche',
+                    url: null,
+                ),
             ],
             ...$data,
         ]);
