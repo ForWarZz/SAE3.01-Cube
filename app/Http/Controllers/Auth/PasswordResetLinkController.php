@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -29,16 +30,28 @@ class PasswordResetLinkController extends Controller
             'email' => ['required', 'email'],
         ]);
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
+        // Check if the email exists in our client table
+        $client = Client::where('email_client', $request->email)->first();
+
+        if (!$client) {
+            return back()->withInput($request->only('email'))
+                ->withErrors(['email' => 'Aucun compte n\'est associé à cette adresse email.']);
+        }
+
+        // Check if user registered via Google OAuth (no password to reset)
+        if ($client->google_id && !$client->hash_mdp_client) {
+            return back()->withInput($request->only('email'))
+                ->withErrors(['email' => 'Ce compte utilise la connexion Google. Veuillez vous connecter avec Google.']);
+        }
+
+        // Send the password reset link using the email_client field
         $status = Password::sendResetLink(
-            $request->only('email')
+            ['email_client' => $request->email]
         );
 
         return $status == Password::RESET_LINK_SENT
-                    ? back()->with('status', __($status))
-                    : back()->withInput($request->only('email'))
-                            ->withErrors(['email' => __($status)]);
+            ? back()->with('status', 'Un lien de réinitialisation a été envoyé à votre adresse email.')
+            : back()->withInput($request->only('email'))
+                ->withErrors(['email' => 'Impossible d\'envoyer le lien de réinitialisation. Veuillez réessayer.']);
     }
 }

@@ -93,6 +93,14 @@ class Client extends Authenticatable
         return $this->email_client;
     }
 
+    /**
+     * Route notifications for the mail channel.
+     */
+    public function routeNotificationForMail(): string
+    {
+        return $this->email_client;
+    }
+
     public function stripeEmail(): ?string
     {
         return $this->email_client;
