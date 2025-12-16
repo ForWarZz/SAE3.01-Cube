@@ -31,8 +31,8 @@
                             class="w-full rounded-lg border-gray-300 bg-gray-50 px-4 py-3 focus:ring-2 focus:ring-blue-200"
                         >
                             <option value="">Sélectionnez</option>
-                            <option value="M" {{ old("civilite") === "M" ? "selected" : "" }}>Monsieur</option>
-                            <option value="F" {{ old("civilite") === "F" ? "selected" : "" }}>Madame</option>
+                            <option value="Monsieur" @selected(old("civilite") == "Monsieur")>Monsieur</option>
+                            <option value="Madame" @selected(old("civilite") == "Madame")>Madame</option>
                         </select>
                         <x-input-error :messages="$errors->get('civilite')" class="mt-2" />
                     </div>

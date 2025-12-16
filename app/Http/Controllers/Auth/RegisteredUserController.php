@@ -32,19 +32,17 @@ class RegisteredUserController extends Controller
         $validated = $request->validated();
 
         $client = Client::create([
-            'civilite' => $validated['civilite'] === 'M' ? 'Monsieur' : 'Madame',
+            'civilite' => $validated['civilite'],
             'nom_client' => $validated['nom_client'],
             'prenom_client' => $validated['prenom_client'],
             'email_client' => $validated['email'],
             'naissance_client' => $validated['naissance_client'],
             'hash_mdp_client' => Hash::make($validated['password']),
+            'date_der_connexion' => now(),
         ]);
 
         event(new Registered($client));
         Auth::login($client);
-
-        $client->date_der_connexion = now();
-        $client->save();
 
         return redirect()->route('dashboard.index');
     }

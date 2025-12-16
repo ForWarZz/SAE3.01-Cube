@@ -22,7 +22,7 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'civilite' => ['required', 'string', 'in:M,F'],
+            'civilite' => ['required', 'string', 'in:Monsieur,Madame'],
             'nom_client' => ['required', 'string', 'max:255'],
             'prenom_client' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:client,email_client'],
@@ -46,7 +46,7 @@ class RegisterRequest extends FormRequest
         return [
             'civilite.required' => 'La civilité est obligatoire.',
             'civilite.string' => 'La civilité doit être une chaîne de caractères.',
-            'civilite.in' => 'La civilité doit être "M" ou "F".',
+            'civilite.in' => 'La civilité doit être "Monsieur" ou "Madame".',
 
             'nom_client.required' => 'Le nom est obligatoire.',
             'nom_client.string' => 'Le nom doit être une chaîne de caractères.',

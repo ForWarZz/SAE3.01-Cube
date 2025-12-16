@@ -40,12 +40,8 @@
                                     required
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 >
-                                    <option value="Monsieur" {{ old("civilite", $client->civilite) == "Monsieur" ? "selected" : "" }}>
-                                        Monsieur
-                                    </option>
-                                    <option value="Madame" {{ old("civilite", $client->civilite) == "Madame" ? "selected" : "" }}>
-                                        Madame
-                                    </option>
+                                    <option value="Monsieur" @selected(old("civilite") == "Monsieur")>Monsieur</option>
+                                    <option value="Madame" @selected(old("civilite") == "Madame")>Madame</option>
                                 </select>
                                 @error("civilite")
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
