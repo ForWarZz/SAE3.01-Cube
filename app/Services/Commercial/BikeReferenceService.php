@@ -8,6 +8,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use phpseclib3\Exception\FileNotFoundException;
+use Throwable;
 
 class BikeReferenceService
 {
@@ -36,8 +37,7 @@ class BikeReferenceService
     /**
      * @param  array<UploadedFile>  $images
      *
-     * @throws \Exception
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function addReferenceToExistingBike(Bike $bike, array $validated, array $images = []): int
     {
@@ -69,6 +69,9 @@ class BikeReferenceService
         }
     }
 
+    /**
+     * @throws Throwable
+     */
     public function deleteReference(BikeReference $reference): void
     {
         DB::beginTransaction();
@@ -91,13 +94,9 @@ class BikeReferenceService
     public function addImagesToReference(BikeReference $reference, array $images): void
     {
         $existingFiles = $reference->getImageFiles();
-        $directory = $reference->getStorageDirectory();
         $existingCount = count($existingFiles);
 
-        foreach ($images as $index => $image) {
-            $filename = ($existingCount + $index + 1).'.'.$image->getClientOriginalExtension();
-            $image->storeAs($directory, $filename, 'public');
-        }
+        $this->storeImages($reference->id_article, $reference->id_reference, $images, $existingCount);
     }
 
     public function deleteImage(BikeReference $reference, string $imageName): void
@@ -136,7 +135,7 @@ class BikeReferenceService
     /**
      * @param  array<UploadedFile>  $images
      */
-    private function storeImages(int $articleId, int $referenceId, array $images): void
+    private function storeImages(int $articleId, int $referenceId, array $images, int $existingCount = 0): void
     {
         if (empty($images)) {
             return;
@@ -145,7 +144,7 @@ class BikeReferenceService
         $storagePath = "articles/$articleId/$referenceId";
 
         foreach ($images as $index => $image) {
-            $filename = ($index + 1).'.'.$image->getClientOriginalExtension();
+            $filename = ($existingCount + $index + 1).'.'.$image->getClientOriginalExtension();
             $image->storeAs($storagePath, $filename, 'public');
         }
     }
