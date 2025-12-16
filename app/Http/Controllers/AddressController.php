@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AddressCreateRequest;
-use App\Http\Requests\AddressUpdateRequest;
+use App\Http\Requests\Account\Address\AddressCreateRequest;
+use App\Http\Requests\Account\Address\AddressUpdateRequest;
 use App\Models\Address;
 use App\Services\Commercial\AddressService;
 use App\Services\GdprService;

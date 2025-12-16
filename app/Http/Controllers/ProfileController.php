@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\Client;
+use App\Http\Requests\Account\AccountDeleteRequest;
+use App\Http\Requests\Account\PasswordUpdateRequest;
+use App\Http\Requests\Account\ProfileUpdateRequest;
 use App\Services\GdprService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -39,89 +39,47 @@ class ProfileController extends Controller
             ->with('success', 'Profil mis à jour avec succès.');
     }
 
-    public function updatePassword(Request $request): RedirectResponse
+    public function updatePassword(PasswordUpdateRequest $request): RedirectResponse
     {
         $client = $request->user();
 
-        // Google OAuth users cannot change password
         if ($client->google_id) {
-            return back()->withErrors(['password' => 'Vous êtes connecté avec Google. Gérez votre mot de passe via votre compte Google.']);
+            return back()->withErrors([
+                'password' => 'Vous êtes connecté avec Google. Gérez votre mot de passe via votre compte Google.',
+            ]);
         }
 
-        $validated = $request->validate([
-            'current_password' => ['required', 'string'],
-            'password' => [
-                'required',
-                'confirmed',
-                'string',
-                'min:12',
-                'regex:/[a-z]/',      // au moins une minuscule
-                'regex:/[A-Z]/',      // au moins une majuscule
-                'regex:/[0-9]/',      // au moins un chiffre
-                'regex:/[@$!%*?&#]/', // au moins un caractère spécial
-            ],
-        ], [
-            'current_password.required' => 'Le mot de passe actuel est obligatoire.',
-            'password.required' => 'Le nouveau mot de passe est obligatoire.',
-            'password.min' => 'Le mot de passe doit contenir au moins 12 caractères.',
-            'password.confirmed' => 'Les deux mots de passe ne correspondent pas.',
-            'password.regex' => 'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial (@$!%*?&#).',
-        ]);
-
-        // Check if current password is correct
-        if (! Hash::check($validated['current_password'], $client->hash_mdp_client)) {
-            return back()->withErrors(['current_password' => 'Le mot de passe actuel est incorrect.']);
+        if (! $request->validateCurrentPassword()) {
+            return back()->withErrors([
+                'current_password' => 'Le mot de passe actuel est incorrect.',
+            ]);
         }
 
         $client->update([
-            'hash_mdp_client' => Hash::make($validated['password']),
+            'hash_mdp_client' => Hash::make($request->password),
         ]);
 
         return redirect()->route('dashboard.profile.show')
             ->with('success', 'Mot de passe modifié avec succès.');
     }
 
-    public function destroy(Request $request, GdprService $gdprService): RedirectResponse
+    public function destroy(AccountDeleteRequest $request, GdprService $gdprService): RedirectResponse
     {
         $client = $request->user();
 
-        // For Google OAuth users, skip password verification
-        if (! $client->google_id) {
-            $request->validate([
-                'password' => ['required', 'string'],
-                'confirmation' => ['required', 'accepted'],
-            ]);
-
-            // Verify password
-            if (! Hash::check($request->password, $client->hash_mdp_client)) {
-                return back()->with('delete_error', 'Le mot de passe est incorrect.');
-            }
-        } else {
-            $request->validate([
-                'confirmation' => ['required', 'accepted'],
-            ]);
+        if (! $client->google_id && ! $request->validateCurrentPassword($client)) {
+            return back()->withErrors(['password' => 'Le mot de passe est incorrect.']);
         }
-
-        $client->load([
-            'addresses',
-        ]);
 
         $message = $gdprService->deleteOrAnonymizeClient($client);
 
-        // Logout
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')
-            ->with('success', $message);
+        return redirect()->route('login')->with('success', $message);
     }
 
-    /**
-     * Export user's personal data (GDPR right of access).
-     * Exporte toutes les données personnelles du client au format JSON.
-     */
     public function exportData(Request $request, GdprService $gdprService)
     {
         $client = $request->user();
