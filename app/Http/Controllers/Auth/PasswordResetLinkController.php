@@ -26,7 +26,7 @@ class PasswordResetLinkController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'email' => ['required', 'email'],
         ]);
 
@@ -44,10 +44,7 @@ class PasswordResetLinkController extends Controller
                 ->withErrors(['email' => 'Ce compte utilise la connexion Google. Veuillez vous connecter avec Google.']);
         }
 
-        // Send the password reset link using the email_client field
-        $status = Password::sendResetLink(
-            ['email_client' => $request->email]
-        );
+        $status = Password::sendResetLink($validated);
 
         return $status == Password::RESET_LINK_SENT
             ? back()->with('status', 'Un lien de réinitialisation a été envoyé à votre adresse email.')

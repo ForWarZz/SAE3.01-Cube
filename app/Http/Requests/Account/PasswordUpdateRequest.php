@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Account;
 
+use App\Rules\StrongPassword;
 use Hash;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -21,11 +22,7 @@ class PasswordUpdateRequest extends FormRequest
                 'required',
                 'string',
                 'confirmed',
-                'min:12',
-                'regex:/[a-z]/',
-                'regex:/[A-Z]/',
-                'regex:/[0-9]/',
-                'regex:/[@$!%*?&#]/',
+                new StrongPassword,
             ],
         ];
     }
@@ -37,7 +34,6 @@ class PasswordUpdateRequest extends FormRequest
             'password.required' => 'Le nouveau mot de passe est obligatoire.',
             'password.min' => 'Le mot de passe doit contenir au moins 12 caractères.',
             'password.confirmed' => 'Les deux mots de passe ne correspondent pas.',
-            'password.regex' => 'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial (@$!%*?&#).',
         ];
     }
 
