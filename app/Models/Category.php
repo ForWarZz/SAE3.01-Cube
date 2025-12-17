@@ -90,6 +90,8 @@ class Category extends Model
         $ancestors = [];
         $currentCategory = $this;
 
+        $currentCategory->load(['parent']);
+
         while ($currentCategory->parent) {
             $ancestors[] = $currentCategory->parent;
             $currentCategory = $currentCategory->parent;

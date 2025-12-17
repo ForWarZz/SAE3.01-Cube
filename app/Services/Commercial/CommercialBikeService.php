@@ -97,7 +97,7 @@ class CommercialBikeService
             'references.frame',
             'references.color',
             'references.availableSizes',
-            'ebikeReferences.battery',
+            'references.ebike.battery',
             'ebike',
         ]);
     }
