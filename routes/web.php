@@ -99,17 +99,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [CheckoutController::class, 'checkout'])->name('process');
         Route::get('/succes', [CheckoutController::class, 'success'])->name('success');
         Route::get('/erreur', [CheckoutController::class, 'cancel'])->name('cancel');
+
+        Route::post('/checkout/', [CheckoutController::class, 'checkout'])->name('checkout');
     });
 });
-
-Route::post('/paiement/checkout/', [CheckoutController::class, 'checkout'])
-    ->name('payment.checkout')
-    ->middleware('auth');
-
-Route::get('/paiement/succes', [CheckoutController::class, 'success'])
-    ->name('payment.success');
-Route::get('/paiement/erreur', [CheckoutController::class, 'cancel'])
-    ->name('payment.cancel');
 
 Route::prefix('commercial')->name('commercial.')->group(function () {
     Route::middleware('guest:commercial')->group(function () {
@@ -151,8 +144,11 @@ Route::prefix('commercial')->name('commercial.')->group(function () {
     });
 });
 
-Route::get('/shops', [ShopController::class, 'index'])->name('shops.index');
-Route::post('/shop/select', [ShopController::class, 'select'])->name('shop.select');
-Route::get('/availability/{reference}', [AvailabilityController::class, 'show'])->name('availability.show');
+Route::prefix('/magasins')->name('shops')->group(function () {
+    Route::get('/', [ShopController::class, 'index'])->name('index');
+    Route::post('/', [ShopController::class, 'select'])->name('select');
+
+    Route::get('/disponibilite/{reference}', [AvailabilityController::class, 'show'])->name('availability.show');
+});
 
 require __DIR__.'/auth.php';

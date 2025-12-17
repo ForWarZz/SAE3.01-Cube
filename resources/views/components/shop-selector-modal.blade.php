@@ -288,11 +288,14 @@
             },
 
             buildShopsUrl() {
+                let url = '/magasins';
+
                 if (this.showAvailability && this.referenceId) {
                     const params = this.sizeId ? `?size=${this.sizeId}` : '';
-                    return `/availability/${this.referenceId}${params}`;
+                    url += `/disponibilite/${this.referenceId}${params}`;
                 }
-                return '/shops';
+
+                return url;
             },
 
             matchesSearchQuery(item, query) {
@@ -394,7 +397,7 @@
             async selectShop(shop) {
                 try {
                     const token = document.querySelector('meta[name="csrf-token"]')?.content;
-                    const res = await fetch('/shop/select', {
+                    const res = await fetch('/magasin', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -429,7 +432,7 @@
 
         try {
             const token = document.querySelector('meta[name="csrf-token"]')?.content;
-            const res = await fetch('/shop/select', {
+            const res = await fetch('/magasin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
