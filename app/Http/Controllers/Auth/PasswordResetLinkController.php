@@ -33,13 +33,13 @@ class PasswordResetLinkController extends Controller
         // Check if the email exists in our client table
         $client = Client::where('email_client', $request->email)->first();
 
-        if (!$client) {
+        if (! $client) {
             return back()->withInput($request->only('email'))
                 ->withErrors(['email' => 'Aucun compte n\'est associé à cette adresse email.']);
         }
 
         // Check if user registered via Google OAuth (no password to reset)
-        if ($client->google_id && !$client->hash_mdp_client) {
+        if ($client->google_id && ! $client->hash_mdp_client) {
             return back()->withInput($request->only('email'))
                 ->withErrors(['email' => 'Ce compte utilise la connexion Google. Veuillez vous connecter avec Google.']);
         }
