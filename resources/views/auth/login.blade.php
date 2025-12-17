@@ -34,12 +34,16 @@
                         Mot de passe
                         <span class="text-red-600">*</span>
                     </label>
+
                     <input
                         type="password"
                         name="password"
                         class="mt-1 w-full rounded-lg border-gray-300 bg-gray-50 px-4 py-3 focus:bg-white focus:ring-2 focus:ring-blue-200"
                         required
                     />
+                    <p class="mt-1 text-xs text-gray-500">
+                        Minimum 12 caractères avec majuscule, minuscule, chiffre et caractère spécial (@$!%*?&#)
+                    </p>
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
 
