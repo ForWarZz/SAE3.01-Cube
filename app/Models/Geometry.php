@@ -12,11 +12,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Geometry extends Model
 {
-    protected $table = 'de_geometrie';
-
     public $incrementing = false;
 
     public $timestamps = false;
+
+    protected $table = 'de_geometrie';
 
     protected $fillable = [
         'id_geo',

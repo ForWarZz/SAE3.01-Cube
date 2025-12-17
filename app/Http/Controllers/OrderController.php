@@ -11,9 +11,9 @@ use App\Services\OrderService;
 class OrderController extends Controller
 {
     public function __construct(
-        protected readonly CartService $cartService,
-        protected readonly CheckoutService $checkoutService,
-        protected readonly OrderService $orderService,
+        private readonly CartService $cartService,
+        private readonly CheckoutService $checkoutService,
+        private readonly OrderService $orderService,
     ) {}
 
     public function updateOrder(OrderUpdateRequest $request)

@@ -14,8 +14,8 @@ use App\Services\Cart\CheckoutService;
 class CartController extends Controller
 {
     public function __construct(
-        protected readonly CartService $cartService,
-        protected readonly CheckoutService $checkoutService,
+        private readonly CartService $cartService,
+        private readonly CheckoutService $checkoutService,
     ) {}
 
     public function addToCart(CartAddRequest $request)

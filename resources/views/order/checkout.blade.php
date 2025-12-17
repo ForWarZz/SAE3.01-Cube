@@ -9,8 +9,8 @@
             $defaultId = $addresses->isEmpty() ? "null" : $addresses->first()->id_adresse;
             $newAddressRoute = route("dashboard.addresses.create", ["intended" => route("cart.checkout")]);
 
-            $savedBillingId = $orderData["billing_address_id"] ?? $defaultId;
-            $savedDeliveryId = $orderData["delivery_address_id"] ?? $defaultId;
+            $savedBillingId = $orderData->billing_address_id ?? $defaultId;
+            $savedDeliveryId = $orderData->delivery_address_id ?? $defaultId;
             $savedShippingId = $selectedShippingId ?? "null";
             $sameAddressDefault = $savedBillingId === $savedDeliveryId ? "true" : "false";
         @endphp
@@ -109,27 +109,27 @@
                             <div class="grid grid-cols-3 gap-4">
                                 @foreach ($deliveryModes as $mode)
                                     <label
-                                        class="{{ $selectedShippingId == $mode["id"] ? "border-blue-600 bg-blue-50" : "border-gray-200 bg-white hover:border-gray-300" }} relative flex cursor-pointer flex-col justify-between rounded-lg border p-4 transition"
+                                        class="{{ $selectedShippingId == $mode->id ? "border-blue-600 bg-blue-50" : "border-gray-200 bg-white hover:border-gray-300" }} relative flex cursor-pointer flex-col justify-between rounded-lg border p-4 transition"
                                     >
                                         <input
                                             type="radio"
                                             name="shipping_id"
-                                            value="{{ $mode["id"] }}"
-                                            {{ $selectedShippingId == $mode["id"] ? "checked" : "" }}
-                                            @change="shippingId = {{ $mode["id"] }}; $event.target.form.submit()"
+                                            value="{{ $mode->id }}"
+                                            {{ $selectedShippingId == $mode->id ? "checked" : "" }}
+                                            @change="shippingId = {{ $mode->id }}; $event.target.form.submit()"
                                             class="sr-only"
                                         />
 
                                         <div class="flex items-start justify-between">
                                             <div class="text-sm">
-                                                <h3 class="font-bold text-gray-900">{{ $mode["name"] }}</h3>
+                                                <h3 class="font-bold text-gray-900">{{ $mode->name }}</h3>
                                                 <p class="mt-2 font-medium text-gray-900">
-                                                    {{ number_format($mode["price"], 2, ",", " ") }} €
+                                                    {{ number_format($mode->price, 2, ",", " ") }} €
                                                 </p>
                                             </div>
 
                                             <div class="ml-4">
-                                                @if ($selectedShippingId == $mode["id"])
+                                                @if ($selectedShippingId == $mode->id)
                                                     <div
                                                         class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-white"
                                                     >

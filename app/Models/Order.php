@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -18,14 +19,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id_moyen_livraison
  * @property int $id_client
  * @property string $num_commande
- * @property \Carbon\Carbon $date_commande
+ * @property Carbon $date_commande
  * @property string|null $num_suivi_commande
  * @property float $frais_livraison
  * @property int|null $id_code_promo
  * @property float|null $pourcentage_remise
  * @property string|null $stripe_session_id
  * @property string|null $cb_last4
- * @property \Carbon\Carbon|null $date_paiement
+ * @property Carbon|null $date_paiement
  */
 class Order extends Model
 {

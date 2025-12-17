@@ -22,11 +22,11 @@
                     <input
                         type="checkbox"
                         name="{{ $name }}[]"
-                        value="{{ $item["id"] }}"
-                        {{ in_array($item["id"], $selected) ? "checked" : "" }}
+                        value="{{ $item->id }}"
+                        {{ in_array($item->id, $selected) ? "checked" : "" }}
                         class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
-                    <span class="text-sm text-gray-600">{{ $item["label"] }}</span>
+                    <span class="text-sm text-gray-600">{{ $item->label }}</span>
                 </label>
             @endforeach
         </div>

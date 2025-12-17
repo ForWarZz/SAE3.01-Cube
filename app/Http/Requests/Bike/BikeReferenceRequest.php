@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Bike;
 
 use App\Models\Bike;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BikeReferenceRequest extends FormRequest
@@ -18,7 +19,7 @@ class BikeReferenceRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -43,8 +44,6 @@ class BikeReferenceRequest extends FormRequest
 
         if ($isVae) {
             $rules['id_batterie'] = 'required|integer|exists:batterie,id_batterie';
-        } else {
-            $rules['id_batterie'] = 'nullable|integer|exists:batterie,id_batterie';
         }
 
         return $rules;

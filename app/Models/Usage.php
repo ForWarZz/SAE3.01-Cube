@@ -13,9 +13,11 @@ class Usage extends Model
     public $timestamps = false;
 
     protected $table = 'usage_velo';
+
     protected $primaryKey = 'id_usage';
+
     protected $fillable = [
         'id_usage',
-        'label_usage'
+        'label_usage',
     ];
 }

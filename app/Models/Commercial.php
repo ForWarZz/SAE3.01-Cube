@@ -21,11 +21,11 @@ class Commercial extends Authenticatable
 
     public const DIRECTOR_ROLE = 'DIRECTOR';
 
+    public $timestamps = false;
+
     protected $table = 'commercial';
 
     protected $primaryKey = 'id_commercial';
-
-    public $timestamps = false;
 
     protected $fillable = [
         'nom_commercial',

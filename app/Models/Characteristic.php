@@ -16,12 +16,13 @@ class Characteristic extends Model
     public $timestamps = false;
 
     protected $table = 'caracteristique';
+
     protected $primaryKey = 'id_caracteristique';
 
     protected $fillable = [
         'id_caracteristique',
         'id_type_carac',
-        'nom_caracteristique'
+        'nom_caracteristique',
     ];
 
     public function characteristicType(): BelongsTo

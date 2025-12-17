@@ -24,11 +24,11 @@ class Bike extends Model
 {
     public const WEIGHT_CHARACTERISTIC_ID = 22;
 
+    public $timestamps = false;
+
     protected $table = 'velo';
 
     protected $primaryKey = 'id_article';
-
-    public $timestamps = false;
 
     protected $fillable = [
         'id_article',
@@ -51,6 +51,7 @@ class Bike extends Model
 
     protected static function booted(): void
     {
+        // Permet de filtrer au cas ou le l'article ait été supprimé via un soft delete, pour ne pas apparaitre dans les listes...
         static::addGlobalScope('active_article', function ($builder) {
             $builder->whereHas('article');
         });

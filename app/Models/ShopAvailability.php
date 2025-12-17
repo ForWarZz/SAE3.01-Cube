@@ -7,11 +7,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ShopAvailability extends Model
 {
+    const STATUS_IN_STOCK = 'En Stock';
+
+    const STATUS_ORDERABLE = 'Commandable';
+
+    const STATUS_UNAVAILABLE = 'Indisponible';
+
     public $timestamps = false;
 
-    protected $table = 'dispo_magasin';
-
     public $incrementing = false;
+
+    protected $table = 'dispo_magasin';
 
     protected $fillable = [
         'id_reference',
@@ -19,13 +25,6 @@ class ShopAvailability extends Model
         'id_magasin',
         'statut',
     ];
-
-    // Enumérations des status possibles
-    const STATUS_IN_STOCK = 'En Stock';
-
-    const STATUS_ORDERABLE = 'Commandable';
-
-    const STATUS_UNAVAILABLE = 'Indisponible';
 
     public function reference(): BelongsTo
     {

@@ -10,12 +10,14 @@ use Illuminate\Database\Eloquent\Model;
  */
 class GeometryCharacteristic extends Model
 {
-    protected $table = 'caracteristique_geometrie';
-    protected $primaryKey = 'id_carac_geo';
     public $timestamps = false;
 
+    protected $table = 'caracteristique_geometrie';
+
+    protected $primaryKey = 'id_carac_geo';
+
     protected $fillable = [
-        "id_carac_geo",
-        "label_carac_geo",
+        'id_carac_geo',
+        'label_carac_geo',
     ];
 }

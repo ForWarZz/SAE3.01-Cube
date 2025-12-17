@@ -24,11 +24,11 @@ class Client extends Authenticatable
 {
     use Billable, Notifiable, SoftDeletes;
 
+    public $timestamps = false;
+
     protected $table = 'client';
 
     protected $primaryKey = 'id_client';
-
-    public $timestamps = false;
 
     protected $fillable = [
         'nom_client',
@@ -111,19 +111,8 @@ class Client extends Authenticatable
         return $this->hasMany(Address::class, 'id_client', 'id_client');
     }
 
-    // TODO: Uncomment when model is created
-    // public function serviceRequests(): HasMany
-    // {
-    //     return $this->hasMany('App\Models\DemandeServiceClient', 'id_client', 'id_client');
-    // }
-
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class, 'id_client', 'id_client');
     }
-    //
-    //    public function registeredBikes(): HasMany
-    //    {
-    //        return $this->hasMany('App\Models\VeloEnregistre', 'id_client', 'id_client');
-    //    }
 }

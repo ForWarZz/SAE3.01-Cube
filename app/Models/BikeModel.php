@@ -12,8 +12,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class BikeModel extends Model
 {
     protected $table = 'modele_velo';
+
     protected $primaryKey = 'id_modele_velo';
+
     public $timestamps = false;
+
     protected $fillable = ['nom_modele_velo'];
 
     public function bikes(): HasMany

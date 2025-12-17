@@ -28,17 +28,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $client = $request->user();
-        $validated = $request->validated();
-
-        $client->update($validated);
-
-        return redirect()->route('dashboard.profile.show')
-            ->with('success', 'Profil mis à jour avec succès.');
-    }
-
     public function updatePassword(PasswordUpdateRequest $request): RedirectResponse
     {
         $client = $request->user();
@@ -61,6 +50,17 @@ class ProfileController extends Controller
 
         return redirect()->route('dashboard.profile.show')
             ->with('success', 'Mot de passe modifié avec succès.');
+    }
+
+    public function update(ProfileUpdateRequest $request): RedirectResponse
+    {
+        $client = $request->user();
+        $validated = $request->validated();
+
+        $client->update($validated);
+
+        return redirect()->route('dashboard.profile.show')
+            ->with('success', 'Profil mis à jour avec succès.');
     }
 
     public function destroy(AccountDeleteRequest $request, GdprService $gdprService): RedirectResponse

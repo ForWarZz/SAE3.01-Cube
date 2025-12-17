@@ -23,10 +23,10 @@
                     @foreach ($geometries as $row)
                         <tr class="transition-colors hover:bg-gray-50">
                             <td class="bg-gray-50/50 px-6 py-4 text-sm font-medium whitespace-nowrap text-gray-900">
-                                {{ $row["label"] }}
+                                {{ $row->label }}
                             </td>
 
-                            @foreach ($row["values"] as $value)
+                            @foreach ($row->values as $value)
                                 <td class="px-6 py-4 text-center text-sm whitespace-nowrap text-gray-500">
                                     {{ $value }}
                                 </td>

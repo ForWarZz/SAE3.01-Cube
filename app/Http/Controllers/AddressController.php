@@ -15,7 +15,7 @@ use Illuminate\View\View;
 class AddressController extends Controller
 {
     public function __construct(
-        private AddressService $addressService,
+        private readonly AddressService $addressService,
     ) {}
 
     /**

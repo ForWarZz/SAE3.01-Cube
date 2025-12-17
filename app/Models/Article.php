@@ -23,11 +23,11 @@ class Article extends Model
 {
     use SoftDeletes;
 
+    public $timestamps = false;
+
     protected $table = 'article';
 
     protected $primaryKey = 'id_article';
-
-    public $timestamps = false;
 
     protected $fillable = [
         'id_article',
@@ -40,11 +40,6 @@ class Article extends Model
         'pourcentage_remise',
     ];
 
-    public function hasDiscount(): bool
-    {
-        return $this->pourcentage_remise > 0;
-    }
-
     public function getDiscountedPrice(): float
     {
         if ($this->hasDiscount() > 0) {
@@ -52,6 +47,11 @@ class Article extends Model
         }
 
         return $this->prix_article;
+    }
+
+    public function hasDiscount(): bool
+    {
+        return $this->pourcentage_remise > 0;
     }
 
     public function accessory(): BelongsTo

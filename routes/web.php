@@ -113,7 +113,7 @@ Route::get('/paiement/erreur', [CheckoutController::class, 'cancel'])
 
 Route::prefix('commercial')->name('commercial.')->group(function () {
     Route::middleware('guest:commercial')->group(function () {
-        Route::get('/login', [CommercialAuthController::class, 'showLoginForm'])->name('login');
+        Route::get('/login', [CommercialAuthController::class, 'index'])->name('login');
         Route::post('/login', [CommercialAuthController::class, 'login'])->name('login.submit');
     });
 

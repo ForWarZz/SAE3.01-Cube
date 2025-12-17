@@ -25,31 +25,6 @@ class GdprService
         private readonly AddressService $addressService,
     ) {}
 
-    public function isAddressLinkedToOrder(Address $address): bool
-    {
-        return Order::where('id_adresse_facturation', $address->id_adresse)
-            ->orWhere('id_adresse_livraison', $address->id_adresse)
-            ->exists();
-    }
-
-    public function clientHasOrders(Client $client): bool
-    {
-        return $client->orders()->exists();
-    }
-
-    public function deleteOrSoftDelete(Address $address): string
-    {
-        if ($this->isAddressLinkedToOrder($address)) {
-            $address->delete();
-
-            return 'L\'adresse a été archivée car elle est liée à une commande (conservation légale pour comptabilité).';
-        }
-
-        $address->forceDelete();
-
-        return 'L\'adresse a été supprimée avec succès.';
-    }
-
     public function deleteOrAnonymizeClient(Client $client): string
     {
         if ($this->clientHasOrders($client)) {
@@ -70,6 +45,31 @@ class GdprService
         $client->delete();
 
         return 'Votre compte et toutes vos données ont été supprimés conformément au RGPD.';
+    }
+
+    public function clientHasOrders(Client $client): bool
+    {
+        return $client->orders()->exists();
+    }
+
+    public function deleteOrSoftDelete(Address $address): string
+    {
+        if ($this->isAddressLinkedToOrder($address)) {
+            $address->delete();
+
+            return 'L\'adresse a été archivée car elle est liée à une commande (conservation légale pour comptabilité).';
+        }
+
+        $address->forceDelete();
+
+        return 'L\'adresse a été supprimée avec succès.';
+    }
+
+    public function isAddressLinkedToOrder(Address $address): bool
+    {
+        return Order::where('id_adresse_facturation', $address->id_adresse)
+            ->orWhere('id_adresse_livraison', $address->id_adresse)
+            ->exists();
     }
 
     public function updateOrReplaceAddress(Address $address, array $validatedData): Address

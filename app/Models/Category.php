@@ -20,11 +20,11 @@ class Category extends Model
 
     public const ACCESSORY_CATEGORY_ID = 1;
 
+    public $timestamps = false;
+
     protected $table = 'categorie';
 
     protected $primaryKey = 'id_categorie';
-
-    public $timestamps = false;
 
     protected $fillable = [
         'id_categorie_parent',
@@ -41,17 +41,17 @@ class Category extends Model
         return $this->belongsTo(Category::class, 'id_categorie_parent', 'id_categorie');
     }
 
-    public function children(): HasMany
-    {
-        return $this->hasMany(Category::class, 'id_categorie_parent', 'id_categorie');
-    }
-
     public function childrenRecursive(): HasMany
     {
         return $this->children()->with([
             'childrenRecursive',
             'articles.bike.bikeModel',
         ]);
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(Category::class, 'id_categorie_parent', 'id_categorie');
     }
 
     /**
@@ -73,6 +73,15 @@ class Category extends Model
         return $ids;
     }
 
+    public function getFullPath(): string
+    {
+        $parents = $this->getAncestors();
+        $noms = array_map(fn ($cat) => $cat->nom_categorie, $parents);
+        $noms[] = $this->nom_categorie;
+
+        return implode(' > ', $noms);
+    }
+
     /**
      * @return Category[]
      */
@@ -87,14 +96,5 @@ class Category extends Model
         }
 
         return array_reverse($ancestors);
-    }
-
-    public function getFullPath(): string
-    {
-        $parents = $this->getAncestors();
-        $noms = array_map(fn ($cat) => $cat->nom_categorie, $parents);
-        $noms[] = $this->nom_categorie;
-
-        return implode(' > ', $noms);
     }
 }
