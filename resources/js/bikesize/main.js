@@ -13,17 +13,8 @@ function setBorder(element, isError){
 };
 
 validateBut.addEventListener('click', (e) => {
-    if (height.value.trim() === "") {
-        setBorder(height, true);
-    } else {
-        setBorder(height, false);
-    }
-
-    if (stepLength.value.trim() === "") {
-        setBorder(stepLength, true);
-    } else {
-        setBorder(stepLength, false);
-    }
+    setBorder(height, height.value.trim() === "");
+    setBorder(stepLength, stepLength.value.trim() === "");
     
     if (height.value.trim() !== "" && stepLength.value.trim() !== "") {
         
