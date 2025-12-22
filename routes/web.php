@@ -5,6 +5,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\Commercial\CommercialAccessoryController;
 use App\Http\Controllers\Commercial\CommercialAuthController;
 use App\Http\Controllers\Commercial\CommercialBikeController;
 use App\Http\Controllers\Commercial\CommercialCategoryController;
@@ -111,7 +112,6 @@ Route::prefix('commercial')->name('commercial.')->group(function () {
     });
 
     Route::post('/logout', [CommercialAuthController::class, 'logout'])->name('logout');
-    Route::get('/references', [CommercialAuthController::class, 'viewReferences'])->name('references');
 
     Route::middleware('auth:commercial')->group(function () {
         Route::get('/dashboard', function () {
@@ -138,6 +138,12 @@ Route::prefix('commercial')->name('commercial.')->group(function () {
             // Gestion des images des références
             Route::post('/{bike}/references/{reference}/images', [CommercialBikeController::class, 'addReferenceImages'])->name('references.images.store');
             Route::delete('/{bike}/references/{reference}/images/{imageName}', [CommercialBikeController::class, 'deleteReferenceImage'])->name('references.images.destroy');
+        });
+
+        Route::prefix('/accessoires')->name('accessories.')->group(function () {
+            Route::get('/', [CommercialAccessoryController::class, 'index'])->name('index');
+            Route::get('/{accessory}/modifier', [CommercialAccessoryController::class, 'edit'])->name('edit');
+            Route::put('/{accessory}', [CommercialAccessoryController::class, 'update'])->name('update');
         });
 
         Route::get('/stats', [CommercialAuthController::class, 'viewStats'])->name('stats');

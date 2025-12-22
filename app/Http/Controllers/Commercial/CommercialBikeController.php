@@ -8,9 +8,9 @@ use App\Http\Requests\Bike\BikeReferenceImageRequest;
 use App\Http\Requests\Bike\BikeReferenceRequest;
 use App\Models\Bike;
 use App\Models\BikeReference;
-use App\Services\Commercial\BikeFormDataService;
-use App\Services\Commercial\BikeReferenceService;
-use App\Services\Commercial\CommercialBikeService;
+use App\Services\Commercial\Bike\BikeFormDataService;
+use App\Services\Commercial\Bike\BikeReferenceService;
+use App\Services\Commercial\Bike\CommercialBikeService;
 use Exception;
 use Throwable;
 

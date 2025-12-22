@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Commercial;
+namespace App\Services\Commercial\Bike;
 
 use App\Models\Bike;
 use App\Models\BikeReference;

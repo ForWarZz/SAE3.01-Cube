@@ -47,6 +47,14 @@
                         Vélos
                     </a>
 
+                    <a
+                        href="{{ route("commercial.accessories.index") }}"
+                        class="flex items-center rounded-md px-4 py-2 text-gray-300 hover:bg-slate-700 hover:text-white"
+                    >
+                        <x-heroicon-o-cog class="mr-3 h-6 w-6" />
+                        Accessoires
+                    </a>
+
                     @if ($isDirector)
                         <a
                             href="{{ route("commercial.stats") }}"
