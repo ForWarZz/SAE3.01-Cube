@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class CommercialAccessoryService
 {
@@ -33,17 +34,31 @@ class CommercialAccessoryService
             ->sortBy(fn (Category $cat) => $cat->getFullPath(), SORT_NATURAL);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function updateAccessory(Accessory $accessory, array $validated): void
     {
-        DB::select('CALL update_accessoire(?, ?, ?, ?, ?, ?, ?, ?)', [
-            $accessory->id_article,
-            $validated['nom_article'],
-            $validated['description_article'],
-            $validated['resumer_article'],
-            $validated['prix_article'],
-            $validated['pourcentage_remise'],
-            $validated['id_categorie'],
-            $validated['id_matiere_accessoire'],
-        ]);
+        try {
+            DB::beginTransaction();
+
+            DB::select('CALL update_accessoire(?, ?, ?, ?, ?, ?, ?, ?)', [
+                $accessory->id_article,
+                $validated['nom_article'],
+                $validated['description_article'],
+                $validated['resumer_article'],
+                $validated['prix_article'],
+                $validated['pourcentage_remise'],
+                $validated['id_categorie'],
+                $validated['id_matiere_accessoire'],
+            ]);
+
+            $accessory->availableSizes()->sync($validated['sizes']);
+
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 }

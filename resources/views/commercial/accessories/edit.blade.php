@@ -34,7 +34,7 @@
                     </div>
                 @endif
 
-                <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                <div class="grid grid-cols-3 gap-6">
                     <div class="space-y-6 lg:col-span-2">
                         <div class="rounded-lg bg-white p-6 shadow-sm">
                             <h2 class="mb-4 border-b pb-2 text-base font-semibold text-gray-900">Informations générales</h2>
@@ -66,6 +66,24 @@
                                 required
                                 rows="4"
                             />
+                        </div>
+
+                        <div class="rounded-lg bg-white p-6 shadow-sm">
+                            <h2 class="mb-4 border-b pb-2 text-base font-semibold text-gray-900">Tailles disponible</h2>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach ($sizes as $size)
+                                    <label class="flex items-center space-x-1">
+                                        <input
+                                            type="checkbox"
+                                            name="sizes[]"
+                                            @checked(in_array($size->id_taille, old("sizes", $accessorySizes)))
+                                            value="{{ $size->id_taille }}"
+                                            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        />
+                                        <span class="text-sm">{{ $size->nom_taille }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
 

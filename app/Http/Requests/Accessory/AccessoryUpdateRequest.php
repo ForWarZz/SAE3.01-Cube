@@ -24,6 +24,9 @@ class AccessoryUpdateRequest extends FormRequest
             'id_categorie' => ['required', 'integer', 'exists:categorie,id_categorie'],
 
             'id_matiere_accessoire' => ['required', 'integer', 'exists:matiere_accessoire,id_matiere_accessoire'],
+
+            'sizes' => ['required', 'array', 'min:1'],
+            'sizes.*' => ['integer', 'exists:taille,id_taille'],
         ];
     }
 
@@ -56,6 +59,12 @@ class AccessoryUpdateRequest extends FormRequest
             'id_matiere_accessoire.required' => 'La matière est obligatoire.',
             'id_matiere_accessoire.integer' => "L'identifiant de la matière doit être un entier.",
             'id_matiere_accessoire.exists' => "La matière spécifiée n'existe pas.",
+
+            'sizes.required' => 'Les tailles sont obligatoires.',
+            'sizes.array' => 'Les tailles doivent être un tableau.',
+            'sizes.min' => 'Au moins une taille doit être sélectionnée.',
+            'sizes.*.integer' => 'Chaque identifiant de taille doit être un entier.',
+            'sizes.*.exists' => "Une des tailles sélectionnées n'existe pas.",
         ];
     }
 }
