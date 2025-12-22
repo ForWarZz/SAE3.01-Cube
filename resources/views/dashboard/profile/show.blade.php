@@ -218,7 +218,9 @@
                         <div class="space-y-4">
                             <div class="bg-green-50 border border-green-200 rounded-lg p-4">
                                 <p class="text-sm text-green-800">
-                                    L'authentification à deux facteurs est activée depuis le {{ $client->two_factor_confirmed_at->format('d/m/Y à H:i') }}.
+                                    L'authentification à deux facteurs est activée depuis le
+                                    <x-date-local :date="$client->two_factor_confirmed_at" />
+                                    .
                                 </p>
                             </div>
 
