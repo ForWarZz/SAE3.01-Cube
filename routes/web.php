@@ -82,6 +82,14 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
         Route::put('/mot-de-passe', [ProfileController::class, 'updatePassword'])->name('password');
         Route::get('/export-donnees', [ProfileController::class, 'exportData'])->name('export');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+
+        Route::prefix('2fa')->name('two-factor.')->group(function () {
+            Route::post('/enable', [\App\Http\Controllers\TwoFactorController::class, 'enable'])->name('enable');
+            Route::post('/confirm', [\App\Http\Controllers\TwoFactorController::class, 'confirm'])->name('confirm');
+            Route::delete('/disable', [\App\Http\Controllers\TwoFactorController::class, 'disable'])->name('disable');
+            Route::get('/recovery-codes', [\App\Http\Controllers\TwoFactorController::class, 'showRecoveryCodes'])->name('recovery-codes');
+            Route::post('/recovery-codes/regenerate', [\App\Http\Controllers\TwoFactorController::class, 'regenerateRecoveryCodes'])->name('recovery-codes.regenerate');
+        });
     });
 
     Route::prefix('commandes')->name('orders.')->group(function () {

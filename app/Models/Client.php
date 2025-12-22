@@ -19,6 +19,11 @@ use Laravel\Cashier\Billable;
  * @property string $hash_mdp_client
  * @property Carbon $date_der_connexion
  * @property string|null $stripe_id
+ * @property string $date_der_connexion
+ * @property string|null $google_id
+ * @property string|null $two_factor_secret
+ * @property string|null $two_factor_recovery_codes
+ * @property \DateTime|null $two_factor_confirmed_at
  */
 class Client extends Authenticatable
 {
@@ -45,6 +50,7 @@ class Client extends Authenticatable
     protected $casts = [
         'naissance_client' => 'date',
         'date_der_connexion' => 'datetime',
+        'two_factor_confirmed_at' => 'datetime',
     ];
 
     /**
@@ -54,6 +60,8 @@ class Client extends Authenticatable
      */
     protected $hidden = [
         'hash_mdp_client',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
     ];
 
     /**
