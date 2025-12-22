@@ -47,8 +47,8 @@
                                         <span class="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800">Nouveau</span>
                                     @endif
                                 </td>
-                                <td class="px-4 py-3 text-gray-600">{{ $bike->bikeModel->nom_modele_velo ?? "-" }}</td>
-                                <td class="px-4 py-3 text-gray-600">{{ $bike->category->nom_categorie ?? "-" }}</td>
+                                <td class="px-4 py-3 text-gray-600">{{ $bike->bikeModel->nom_modele_velo }}</td>
+                                <td class="px-4 py-3 text-gray-600">{{ $bike->category->nom_categorie }}</td>
                                 <td class="px-4 py-3">
                                     @if ($bike->article && $bike->article->hasDiscount())
                                         <span class="text-gray-400 line-through">{{ number_format($bike->prix_article, 2) }} €</span>
@@ -68,7 +68,7 @@
                                         <span class="text-gray-400">-</span>
                                     @endif
                                 </td>
-                                <td class="px-4 py-3 text-gray-600">{{ $bike->vintage->millesime_velo ?? "-" }}</td>
+                                <td class="px-4 py-3 text-gray-600">{{ $bike->vintage->millesime_velo }}</td>
                                 <td class="px-4 py-3">
                                     <span class="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-800">
                                         {{ $bike->references->count() }} réf.

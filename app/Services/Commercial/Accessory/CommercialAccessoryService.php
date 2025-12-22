@@ -6,12 +6,16 @@ use App\Models\Accessory;
 use App\Models\Category;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class CommercialAccessoryService
 {
     public function getPaginatedAccessories($perPage = 10): LengthAwarePaginator
     {
-        return Accessory::paginate($perPage);
+        return Accessory::with([
+            'category',
+            'material',
+        ])->paginate($perPage);
     }
 
     /**
@@ -31,6 +35,15 @@ class CommercialAccessoryService
 
     public function updateAccessory(Accessory $accessory, array $validated): void
     {
-        $accessory->update($validated);
+        DB::select('CALL update_accessoire(?, ?, ?, ?, ?, ?, ?, ?)', [
+            $accessory->id_article,
+            $validated['nom_article'],
+            $validated['description_article'],
+            $validated['resumer_article'],
+            $validated['prix_article'],
+            $validated['pourcentage_remise'],
+            $validated['id_categorie'],
+            $validated['id_matiere_accessoire'],
+        ]);
     }
 }

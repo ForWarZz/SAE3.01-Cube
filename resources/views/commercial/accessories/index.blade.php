@@ -21,6 +21,7 @@
                         <tr>
                             <th class="px-4 py-3">ID</th>
                             <th class="px-4 py-3">Nom</th>
+                            <th class="px-4 py-3">Matière</th>
                             <th class="px-4 py-3">Catégorie</th>
                             <th class="px-4 py-3">Prix</th>
                             <th class="px-4 py-3">Promo</th>
@@ -34,7 +35,8 @@
                                 <td class="px-4 py-3 font-bold text-gray-700">
                                     {{ $accessory->nom_article }}
                                 </td>
-                                <td class="px-4 py-3 text-gray-600">{{ $accessory->category->nom_categorie ?? "-" }}</td>
+                                <td class="px-4 py-3 text-gray-600">{{ $accessory->material->nom_matiere_accessoire }}</td>
+                                <td class="px-4 py-3 text-gray-600">{{ $accessory->category->nom_categorie }}</td>
                                 <td class="px-4 py-3">
                                     @if ($accessory->article && $accessory->article->hasDiscount())
                                         <span class="text-gray-400 line-through">{{ number_format($accessory->prix_article, 2) }} €</span>

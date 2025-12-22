@@ -22,6 +22,8 @@ class AccessoryUpdateRequest extends FormRequest
             'pourcentage_remise' => ['nullable', 'integer', 'min:0', 'max:100'],
 
             'id_categorie' => ['required', 'integer', 'exists:categorie,id_categorie'],
+
+            'id_matiere_accessoire' => ['required', 'integer', 'exists:matiere_accessoire,id_matiere_accessoire'],
         ];
     }
 
@@ -50,6 +52,10 @@ class AccessoryUpdateRequest extends FormRequest
             'id_categorie.required' => 'La catégorie est obligatoire.',
             'id_categorie.integer' => "L'identifiant de la catégorie doit être un entier.",
             'id_categorie.exists' => "La catégorie spécifiée n'existe pas.",
+
+            'id_matiere_accessoire.required' => 'La matière est obligatoire.',
+            'id_matiere_accessoire.integer' => "L'identifiant de la matière doit être un entier.",
+            'id_matiere_accessoire.exists' => "La matière spécifiée n'existe pas.",
         ];
     }
 }

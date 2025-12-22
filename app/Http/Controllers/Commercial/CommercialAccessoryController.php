@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Commercial;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Accessory\AccessoryUpdateRequest;
 use App\Models\Accessory;
+use App\Models\AccessoryMaterial;
 use App\Services\Commercial\Accessory\CommercialAccessoryService;
 
 class CommercialAccessoryController extends Controller
@@ -24,16 +25,13 @@ class CommercialAccessoryController extends Controller
 
     public function edit(Accessory $accessory)
     {
-        $accessory->load([
-            'article',
-            'category',
-        ]);
-
         $availableCategories = $this->accessoryService->getAccessoryCategories();
+        $accessoryMaterials = AccessoryMaterial::all();
 
         return view('commercial.accessories.edit', [
             'accessory' => $accessory,
             'categories' => $availableCategories,
+            'accessoryMaterials' => $accessoryMaterials,
         ]);
     }
 

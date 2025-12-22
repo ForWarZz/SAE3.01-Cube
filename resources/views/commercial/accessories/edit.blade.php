@@ -87,6 +87,20 @@
                                     @endforeach
                                 </select>
                             </div>
+
+                            <div class="mb-4">
+                                <label class="mb-1 block text-sm font-medium text-gray-700">Matière *</label>
+                                <select name="id_matiere_accessoire" class="block w-full rounded-md border-gray-300 p-2 text-sm">
+                                    @foreach ($accessoryMaterials as $material)
+                                        <option
+                                            value="{{ $material->id_matiere_accessoire }}"
+                                            @selected(old("id_matiere_accessoire", $accessory->id_matiere_accessoire) == $material->id_matiere_accessoire)
+                                        >
+                                            {{ $material->nom_matiere_accessoire }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
 
                         <div class="rounded-lg bg-white p-6 shadow-sm">
