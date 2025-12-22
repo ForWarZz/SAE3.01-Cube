@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PasswordRequiredRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -72,15 +73,8 @@ class TwoFactorController extends Controller
         ]);
     }
 
-    /**
-     * Disable two-factor authentication
-     */
-    public function disable(Request $request)
+    public function disable(PasswordRequiredRequest $request)
     {
-        $request->validate([
-            'password' => 'required|string',
-        ]);
-
         $user = Auth::user();
 
         // If user has Google OAuth, don't require password
@@ -104,9 +98,6 @@ class TwoFactorController extends Controller
         ]);
     }
 
-    /**
-     * Show recovery codes
-     */
     public function showRecoveryCodes()
     {
         $user = Auth::user();
@@ -126,15 +117,8 @@ class TwoFactorController extends Controller
         ]);
     }
 
-    /**
-     * Regenerate recovery codes
-     */
-    public function regenerateRecoveryCodes(Request $request)
+    public function regenerateRecoveryCodes(PasswordRequiredRequest $request)
     {
-        $request->validate([
-            'password' => 'required|string',
-        ]);
-
         $user = Auth::user();
 
         if (! $user->two_factor_confirmed_at) {
@@ -164,9 +148,6 @@ class TwoFactorController extends Controller
         ]);
     }
 
-    /**
-     * Generate QR code URL
-     */
     protected function getQrCodeUrl($user, $secret)
     {
         $appName = config('app.name');
@@ -179,9 +160,6 @@ class TwoFactorController extends Controller
         );
     }
 
-    /**
-     * Generate recovery codes
-     */
     protected function generateRecoveryCodes()
     {
         return Collection::times(8, function () {

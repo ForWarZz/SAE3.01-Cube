@@ -87,7 +87,9 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
         Route::prefix('2fa')->name('two-factor.')->group(function () {
             Route::post('/enable', [TwoFactorController::class, 'enable'])->name('enable');
             Route::post('/confirm', [TwoFactorController::class, 'confirm'])->name('confirm');
-            Route::delete('/disable', [TwoFactorController::class, 'disable'])->name('disable');
+
+            Route::patch('/disable', [TwoFactorController::class, 'disable'])->name('disable');
+
             Route::get('/recovery-codes', [TwoFactorController::class, 'showRecoveryCodes'])->name('recovery-codes');
             Route::post('/recovery-codes/regenerate', [TwoFactorController::class, 'regenerateRecoveryCodes'])->name('recovery-codes.regenerate');
         });
