@@ -34,6 +34,8 @@
         </div>
 
         <x-shop-selector-modal />
+
+        <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
     </body>
 
     {{-- Tarte au citron.js => Cookies --}}

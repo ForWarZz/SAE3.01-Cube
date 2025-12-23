@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\BotManController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Commercial\CommercialAccessoryController;
@@ -167,5 +168,7 @@ Route::prefix('/magasins')->name('shops')->group(function () {
 
     Route::get('/disponibilite/{reference}', [AvailabilityController::class, 'show'])->name('availability.show');
 });
+
+Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);
 
 require __DIR__.'/auth.php';
