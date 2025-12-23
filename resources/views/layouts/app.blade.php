@@ -35,6 +35,31 @@
 
         <x-shop-selector-modal />
 
+        <script>
+            var botmanWidget = {
+                chatServer: '/botman',
+                frameEndpoint: '/botman/chat',
+
+                title: 'Assistant Cube',
+
+                mainColor: '#4f46e5',
+                bubbleBackground: '#4f46e5',
+
+                headerTextColor: '#ffffff',
+
+                aboutText: 'Powered by Cube AI',
+                introMessage:
+                    "👋 <b>Bonjour !</b><br>Je suis l'IA de Cube Bikes.<br>Une question sur un vélo ou besoin d'aide sur le site ?",
+                placeholderText: 'Posez votre question...',
+
+                displayMessageTime: true,
+                desktopHeight: 500,
+                desktopWidth: 370,
+                mobileHeight: '100%',
+                mobileWidth: '100%',
+            };
+        </script>
+
         <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
     </body>
 
