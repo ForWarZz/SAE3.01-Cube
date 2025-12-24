@@ -19,6 +19,7 @@ class BotManController extends Controller
         $botman = app('botman');
 
         $botman->fallback(function (BotMan $bot) use ($request) {
+            $bot->typesAndWaits(2);
             $message = $bot->getMessage()->getText();
             $pageType = $request->input('page_type', 'general');
             $contextId = $request->input('context_id');
