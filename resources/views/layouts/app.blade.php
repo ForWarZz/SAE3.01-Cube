@@ -1,3 +1,25 @@
+@props([
+    "article",
+    "currentCategory",
+])
+
+@php
+    $pageType = "general";
+    $contextId = "";
+
+    if (request()->routeIs("articles.show-reference") && isset($article)) {
+        $pageType = "article-reference";
+        $contextId = $article->id_article;
+    } elseif (request()->routeIs("articles.by-category") && isset($currentCategory)) {
+        $pageType = "category";
+        $contextId = $currentCategory->id_categorie;
+    } elseif (request()->routeIs("cart.index")) {
+        $pageType = "cart";
+    } elseif (request()->routeIs("checkout.index")) {
+        $pageType = "checkout";
+    }
+@endphp
+
 <!DOCTYPE html>
 <html lang="{{ str_replace("_", "-", app()->getLocale()) }}">
     <head>
@@ -37,7 +59,7 @@
 
         <script>
             var botmanWidget = {
-                chatServer: '/botman',
+                chatServer: '/botman?page_type={{ $pageType }}&context_id={{ $contextId }}',
                 frameEndpoint: '/botman/chat',
 
                 title: 'Assistant Cube',
@@ -58,6 +80,9 @@
                 mobileHeight: '100%',
                 mobileWidth: '100%',
             };
+
+            console.log('LOADED BOTMAN WIDGET');
+            console.log(botmanWidget);
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>

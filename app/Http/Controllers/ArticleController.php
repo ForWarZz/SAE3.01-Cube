@@ -60,6 +60,7 @@ class ArticleController extends Controller
         return view('article.index', [
             'pageTitle' => $category->nom_categorie,
             'breadcrumbs' => $breadcrumbs,
+            'currentCategory' => $category,
             ...$data,
         ]);
     }
