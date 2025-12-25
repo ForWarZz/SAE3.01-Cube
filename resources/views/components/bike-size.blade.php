@@ -1,5 +1,5 @@
 <div class="my-12 rounded-lg border border-gray-200 bg-gray-50 p-8 shadow-sm">
-    <div class="flex flex-col gap-8 md:flex-row">
+    <div class="flex flex-row gap-8">
         <div class="md:w-1/3">
             <h2 class="mb-2 text-2xl font-bold text-gray-900">Calculateur de taille</h2>
             <p class="text-sm text-gray-600">
@@ -13,8 +13,8 @@
             </div>
         </div>
 
-        <div class="flex flex-col justify-center gap-6 md:w-2/3">
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div class="flex w-2/3 flex-col justify-center gap-6">
+            <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label for="user-height" class="mb-1 block text-sm font-medium text-gray-700">Votre taille (cm)</label>
                     <x-form-input
@@ -49,10 +49,7 @@
                 Calculer ma taille idéale
             </button>
 
-            <div
-                id="size-result-container"
-                class="animate-fade-in mt-2 hidden rounded-md border-l-4 border-green-500 bg-white p-4 shadow-sm"
-            >
+            <div id="size-result-container" class="animate-fade-in mt-2 hidden rounded-md bg-white p-4 shadow-sm">
                 <p class="text-sm font-semibold text-gray-500">Taille de vélo recommandée :</p>
                 <p class="text-xl font-bold text-gray-900" id="size-result-text"></p>
             </div>
