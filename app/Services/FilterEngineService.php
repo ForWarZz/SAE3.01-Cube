@@ -26,18 +26,18 @@ class FilterEngineService
      * }
      */
     private array $filterClasses = [
-        VintageFilter::class,
-        FrameFilter::class,
-        ColorFilter::class,
-        UsageFilter::class,
-        MaterialFilter::class,
-        BikeModelFilter::class,
-        DiscountFilter::class,
-        AvailabilityFilter::class,
-        PriceFilter::class,
-        CategoryFilter::class,
-        AccessoryMaterialFilter::class,
-        SizeFilter::class,
+        //        VintageFilter::class,
+        //        FrameFilter::class,
+        //        ColorFilter::class,
+        //        UsageFilter::class,
+        //        MaterialFilter::class,
+        //        BikeModelFilter::class,
+        //        DiscountFilter::class,
+        //        AvailabilityFilter::class,
+        //        PriceFilter::class,
+        //        CategoryFilter::class,
+        //        AccessoryMaterialFilter::class,
+        //        SizeFilter::class,
     ];
 
     /**

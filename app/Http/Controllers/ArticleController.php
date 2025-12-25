@@ -90,8 +90,8 @@ class ArticleController extends Controller
             'bike.bikeModel',
             'bike.vintage',
             'bike.frameMaterial',
-            'bike.characteristics',
-            'accessory.characteristics',
+            'bike',
+            'accessory',
             'characteristics.characteristicType',
             'category',
         ]);

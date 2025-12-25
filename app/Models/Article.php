@@ -90,14 +90,14 @@ class Article extends Model
             return Storage::url("articles/$this->id_article/$referenceId/1.jpg");
         }
 
-        $bikeRef = BikeReference::where('id_article', $this->id_article)->first();
-        if ($bikeRef) {
-            return Storage::url("articles/$this->id_article/$bikeRef->id_reference/1.jpg");
+        if ($this->relationLoaded('bike') && $this->bike && $this->bike->references->isNotEmpty()) {
+            $refId = $this->bike->references->first()->id_reference;
+
+            return Storage::url("articles/$this->id_article/$refId/1.jpg");
         }
 
-        $accessory = Accessory::where('id_article', $this->id_article)->first();
-        if ($accessory && $accessory->id_reference) {
-            return Storage::url("articles/$this->id_article/$accessory->id_reference/1.jpg");
+        if ($this->accessory) {
+            return Storage::url("articles/$this->id_article/{$this->accessory->id_reference}/1.jpg");
         }
 
         return Storage::url("articles/$this->id_article/default/1.jpg");

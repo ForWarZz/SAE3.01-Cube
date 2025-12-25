@@ -38,7 +38,7 @@
                 </p>
             @else
                 <p class="mb-3 text-sm text-gray-500">
-                    {{ $article->category->nom_categorie ?? "Accessoire" }}
+                    {{ $article->category->nom_categorie }}
                 </p>
             @endif
 

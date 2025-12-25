@@ -10,28 +10,29 @@
     >
         <span>{{ $category->nom_categorie }}</span>
 
-        @if (($category->childrenRecursive->isNotEmpty() || $category->articles->isNotEmpty()) && $n > 0)
+        @if (($category->children->isNotEmpty() || $category->articles->isNotEmpty()) && $n > 0)
             <x-bi-chevron-right />
-        @elseif (($category->childrenRecursive->isNotEmpty() || $category->articles->isNotEmpty()) && $n === 0)
+        @elseif (($category->children->isNotEmpty() || $category->articles->isNotEmpty()) && $n === 0)
             <x-bi-chevron-down class="ml-2 size-3" />
         @endif
     </a>
 
-    @if ($category->childrenRecursive->isNotEmpty())
+    @if ($category->children->isNotEmpty())
         <ul
             class="{{ $n === 0 ? "top-full left-0 mt-0" : "top-0 left-full -ml-1" }} absolute z-50 hidden min-w-[220px] rounded-lg border border-gray-100 bg-white py-2 shadow-xl"
         >
-            @foreach ($category->childrenRecursive as $child)
+            @foreach ($category->children as $child)
                 <x-category-item :category="$child" :n="$n + 1" />
             @endforeach
         </ul>
     @elseif ($category->articles->isNotEmpty())
         @php
             $modelList = collect();
+
             foreach ($category->articles as $article) {
-                if (! is_null($article->bike)) {
-                    $model = $article->bike->bikeModel;
-                    if (! $modelList->contains("id_modele_velo", $model->id_modele_velo)) {
+                foreach ($article->bikes as $bike) {
+                    $model = $bike->model;
+                    if ($model && ! $modelList->contains("id_modele_velo", $model->id_modele_velo)) {
                         $modelList->push($model);
                     }
                 }

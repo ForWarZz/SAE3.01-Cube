@@ -54,19 +54,17 @@ class Category extends Model
         return $this->hasMany(Category::class, 'id_categorie_parent', 'id_categorie');
     }
 
-    /**
-     * @return int[]
-     */
     public function getAllChildrenIds(?Collection $allCategories = null): array
     {
-        if (is_null($allCategories)) {
-            $allCategories = Category::all(['id_categorie', 'id_categorie_parent']);
+        if ($allCategories === null) {
+            $allCategories = cache()->remember('categories.list', 3600, function () {
+                return Category::all(['id_categorie', 'id_categorie_parent']);
+            });
         }
 
         $ids = [$this->id_categorie];
-        $children = $allCategories->where('id_categorie_parent', $this->id_categorie);
 
-        foreach ($children as $child) {
+        foreach ($allCategories->where('id_categorie_parent', $this->id_categorie) as $child) {
             $ids = array_merge($ids, $child->getAllChildrenIds($allCategories));
         }
 
