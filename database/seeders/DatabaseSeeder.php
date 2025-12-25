@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Commercial;
+use App\Models\StaffUser;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Commercial::create([
-            'nom_commercial' => 'Jean',
-            'prenom_commercial' => 'Marc',
-            'email_commercial' => 'jean.marc@cube.fr',
-            'hash_mdp_commercial' => bcrypt('password123'),
-        ]);
+        //        StaffUser::create([
+        //            'nom_commercial' => 'Jean',
+        //            'prenom_commercial' => 'Marc',
+        //            'email_commercial' => 'jean.marc@cube.fr',
+        //            'hash_mdp_commercial' => bcrypt('password123'),
+        //        ]);
     }
 }

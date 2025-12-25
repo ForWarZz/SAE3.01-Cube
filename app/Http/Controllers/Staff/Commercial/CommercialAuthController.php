@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Commercial;
+namespace App\Http\Controllers\Staff\Commercial;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Models\Commercial;
+use App\Models\StaffUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +18,7 @@ class CommercialAuthController extends Controller
 
     public function login(LoginRequest $request): RedirectResponse
     {
-        $request->attributes->set('guard', 'commercial');
+        $request->attributes->set('guard', 'staff');
         $request->authenticate();
         $request->session()->regenerate();
 
@@ -27,7 +27,7 @@ class CommercialAuthController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::guard('commercial')->logout();
+        Auth::guard('staff')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
@@ -36,12 +36,12 @@ class CommercialAuthController extends Controller
 
     public function viewStats()
     {
-        $commercial = Auth::guard('commercial')->user();
+        $staffUser = Auth::guard('staff')->user();
 
-        if ($commercial->role != Commercial::DIRECTOR_ROLE) {
+        if ($staffUser->role != StaffUser::COMMERCIAL_DIRECTOR_ROLE) {
             abort(403, 'Accès non autorisé aux statistiques. Réservé aux directeurs commerciaux.');
         }
 
-        return view('commercial.stats');
+        return view('staff.commercial.stats');
     }
 }

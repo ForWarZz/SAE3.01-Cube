@@ -1,4 +1,4 @@
-<x-commercial-layout>
+<x-staff-layout>
     <div x-data="bikeForm()" x-effect="onModelChoiceChange()" class="min-h-screen bg-gray-50 pb-12">
         <form action="{{ route("commercial.bikes.store") }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -308,4 +308,4 @@
             };
         }
     </script>
-</x-commercial-layout>
+</x-staff-layout>

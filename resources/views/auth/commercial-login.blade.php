@@ -9,7 +9,7 @@
                 <p class="text-sm text-gray-600">Accédez à votre espace commercial</p>
             </div>
 
-            <form method="POST" action="{{ route("commercial.login.submit") }}" class="space-y-6">
+            <form method="POST" action="{{ route("staff.login.submit") }}" class="space-y-6">
                 @csrf
 
                 <div>

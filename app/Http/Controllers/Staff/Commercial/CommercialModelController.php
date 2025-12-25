@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Commercial;
+namespace App\Http\Controllers\Staff\Commercial;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Bike\BikeModelCreateRequest;
@@ -12,7 +12,7 @@ class CommercialModelController extends Controller
     {
         $models = BikeModel::orderBy('id_modele_velo', 'desc')->paginate(10);
 
-        return view('commercial.models', compact('models'));
+        return view('staff.commercial.models', compact('models'));
     }
 
     public function store(BikeModelCreateRequest $request)

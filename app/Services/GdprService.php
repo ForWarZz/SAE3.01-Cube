@@ -138,4 +138,17 @@ class GdprService
             'export_date' => now()->format('Y-m-d H:i:s'),
         ];
     }
+
+    public function anonymizeClientsBeforeDate($beforeDate): int
+    {
+        $clients = Client::where('date_der_connexion', '<', $beforeDate)->get();
+        $anonymizedCount = 0;
+
+        foreach ($clients as $client) {
+            $this->deleteOrAnonymizeClient($client);
+            $anonymizedCount++;
+        }
+
+        return $anonymizedCount;
+    }
 }

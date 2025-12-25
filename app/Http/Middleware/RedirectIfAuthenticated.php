@@ -20,7 +20,7 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                if ($guard === 'commercial') {
+                if ($guard === 'staff') {
                     return redirect()->route('commercial.dashboard');
                 }
 

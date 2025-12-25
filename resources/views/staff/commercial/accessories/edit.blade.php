@@ -1,4 +1,4 @@
-<x-commercial-layout>
+<x-staff-layout>
     <div class="min-h-screen bg-gray-50 pb-12">
         <form action="{{ route("commercial.accessories.update", $accessory) }}" method="POST">
             @csrf
@@ -149,4 +149,4 @@
             </div>
         </form>
     </div>
-</x-commercial-layout>
+</x-staff-layout>

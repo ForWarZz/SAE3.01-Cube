@@ -1,4 +1,4 @@
-<x-commercial-layout>
+<x-staff-layout>
     <div x-data="{ showModal: false }">
         <div class="mb-6 flex items-center justify-between">
             <h1 class="text-3xl font-bold text-gray-800">Gestion des Accessoires</h1>
@@ -79,4 +79,4 @@
             </div>
         </div>
     </div>
-</x-commercial-layout>
+</x-staff-layout>

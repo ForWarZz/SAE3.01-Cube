@@ -5,15 +5,16 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\Commercial\CommercialAccessoryController;
-use App\Http\Controllers\Commercial\CommercialAuthController;
-use App\Http\Controllers\Commercial\CommercialBikeController;
-use App\Http\Controllers\Commercial\CommercialCategoryController;
-use App\Http\Controllers\Commercial\CommercialModelController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\Staff\Commercial\CommercialAccessoryController;
+use App\Http\Controllers\Staff\Commercial\CommercialAuthController;
+use App\Http\Controllers\Staff\Commercial\CommercialBikeController;
+use App\Http\Controllers\Staff\Commercial\CommercialCategoryController;
+use App\Http\Controllers\Staff\Commercial\CommercialModelController;
+use App\Http\Controllers\Staff\DPO\DPOController;
 use App\Http\Controllers\TwoFactorController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
@@ -116,48 +117,55 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::prefix('commercial')->name('commercial.')->group(function () {
-    Route::middleware('guest:commercial')->group(function () {
-        Route::get('/login', [CommercialAuthController::class, 'index'])->name('login');
-        Route::post('/login', [CommercialAuthController::class, 'login'])->name('login.submit');
+Route::prefix('staff')->group(function () {
+    Route::middleware('guest:staff')->group(function () {
+        Route::get('/login', [CommercialAuthController::class, 'index'])->name('staff.login');
+        Route::post('/login', [CommercialAuthController::class, 'login'])->name('staff.login.submit');
     });
 
-    Route::post('/logout', [CommercialAuthController::class, 'logout'])->name('logout');
+    Route::post('/logout', [CommercialAuthController::class, 'logout'])->name('staff.logout');
 
-    Route::middleware('auth:commercial')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('commercial.dashboard');
-        })->name('dashboard');
+    Route::middleware('auth:staff')->group(function () {
+        Route::prefix('commercial')->name('commercial.')->group(function () {
+            Route::get('/dashboard', function () {
+                return view('staff.commercial.dashboard');
+            })->name('dashboard');
 
-        Route::get('/categories', [CommercialCategoryController::class, 'index'])->name('categories.index');
-        Route::post('/categories', [CommercialCategoryController::class, 'store'])->name('categories.store');
-        Route::get('/modeles', [CommercialModelController::class, 'index'])->name('models.index');
-        Route::post('/modeles', [CommercialModelController::class, 'store'])->name('models.store');
+            Route::get('/categories', [CommercialCategoryController::class, 'index'])->name('categories.index');
+            Route::post('/categories', [CommercialCategoryController::class, 'store'])->name('categories.store');
+            Route::get('/modeles', [CommercialModelController::class, 'index'])->name('models.index');
+            Route::post('/modeles', [CommercialModelController::class, 'store'])->name('models.store');
 
-        // Gestion des vélos
-        Route::prefix('/velos')->name('bikes.')->group(function () {
-            Route::get('/', [CommercialBikeController::class, 'index'])->name('index');
-            Route::get('/nouveau', [CommercialBikeController::class, 'create'])->name('create');
-            Route::post('/', [CommercialBikeController::class, 'store'])->name('store');
-            Route::get('/{bike}', [CommercialBikeController::class, 'show'])->name('show');
-            Route::delete('/{bike}', [CommercialBikeController::class, 'destroy'])->name('destroy');
+            // Gestion des vélos
+            Route::prefix('/velos')->name('bikes.')->group(function () {
+                Route::get('/', [CommercialBikeController::class, 'index'])->name('index');
+                Route::get('/nouveau', [CommercialBikeController::class, 'create'])->name('create');
+                Route::post('/', [CommercialBikeController::class, 'store'])->name('store');
+                Route::get('/{bike}', [CommercialBikeController::class, 'show'])->name('show');
+                Route::delete('/{bike}', [CommercialBikeController::class, 'destroy'])->name('destroy');
 
-            // Gestion des références
-            Route::post('/{bike}/references', [CommercialBikeController::class, 'addReference'])->name('references.store');
-            Route::delete('/{bike}/references/{reference}', [CommercialBikeController::class, 'deleteReference'])->name('references.destroy');
+                // Gestion des références
+                Route::post('/{bike}/references', [CommercialBikeController::class, 'addReference'])->name('references.store');
+                Route::delete('/{bike}/references/{reference}', [CommercialBikeController::class, 'deleteReference'])->name('references.destroy');
 
-            // Gestion des images des références
-            Route::post('/{bike}/references/{reference}/images', [CommercialBikeController::class, 'addReferenceImages'])->name('references.images.store');
-            Route::delete('/{bike}/references/{reference}/images/{imageName}', [CommercialBikeController::class, 'deleteReferenceImage'])->name('references.images.destroy');
+                // Gestion des images des références
+                Route::post('/{bike}/references/{reference}/images', [CommercialBikeController::class, 'addReferenceImages'])->name('references.images.store');
+                Route::delete('/{bike}/references/{reference}/images/{imageName}', [CommercialBikeController::class, 'deleteReferenceImage'])->name('references.images.destroy');
+            });
+
+            Route::prefix('/accessoires')->name('accessories.')->group(function () {
+                Route::get('/', [CommercialAccessoryController::class, 'index'])->name('index');
+                Route::get('/{accessory}/modifier', [CommercialAccessoryController::class, 'edit'])->name('edit');
+                Route::put('/{accessory}', [CommercialAccessoryController::class, 'update'])->name('update');
+            });
+
+            Route::get('/stats', [CommercialAuthController::class, 'viewStats'])->name('stats');
         });
 
-        Route::prefix('/accessoires')->name('accessories.')->group(function () {
-            Route::get('/', [CommercialAccessoryController::class, 'index'])->name('index');
-            Route::get('/{accessory}/modifier', [CommercialAccessoryController::class, 'edit'])->name('edit');
-            Route::put('/{accessory}', [CommercialAccessoryController::class, 'update'])->name('update');
+        Route::prefix('dpo')->name('dpo.')->group(function () {
+            Route::get('/', [DPOController::class, 'index'])->name('index');
+            Route::post('anonymiser-client', [DPOController::class, 'anonymizeClient'])->name('anonymize-client');
         });
-
-        Route::get('/stats', [CommercialAuthController::class, 'viewStats'])->name('stats');
     });
 });
 

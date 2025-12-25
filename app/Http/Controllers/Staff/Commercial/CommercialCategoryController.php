@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Commercial;
+namespace App\Http\Controllers\Staff\Commercial;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
@@ -17,7 +17,7 @@ class CommercialCategoryController extends Controller
             return $cat->getFullPath();
         }, SORT_NATURAL | SORT_FLAG_CASE);
 
-        return view('commercial.categories', compact('categories', 'allCategories'));
+        return view('staff.commercial.categories', compact('categories', 'allCategories'));
     }
 
     public function store(Request $request)

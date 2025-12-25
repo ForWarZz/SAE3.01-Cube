@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Commercial;
+namespace App\Http\Controllers\Staff\Commercial;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Accessory\AccessoryUpdateRequest;
@@ -19,7 +19,7 @@ class CommercialAccessoryController extends Controller
     {
         $accessories = $this->accessoryService->getPaginatedAccessories();
 
-        return view('commercial.accessories.index', [
+        return view('staff.commercial.accessories.index', [
             'accessories' => $accessories,
         ]);
     }
@@ -30,7 +30,7 @@ class CommercialAccessoryController extends Controller
         $accessoryMaterials = AccessoryMaterial::all();
         $sizes = Size::all();
 
-        return view('commercial.accessories.edit', [
+        return view('staff.commercial.accessories.edit', [
             'accessory' => $accessory,
             'categories' => $availableCategories,
             'accessoryMaterials' => $accessoryMaterials,

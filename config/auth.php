@@ -40,9 +40,9 @@ return [
             'driver' => 'session',
             'provider' => 'clients',
         ],
-        'commercial' => [
+        'staff' => [
             'driver' => 'session',
-            'provider' => 'commercials',
+            'provider' => 'staffs',
         ],
     ],
 
@@ -68,9 +68,9 @@ return [
             'driver' => 'custom_eloquent',
             'model' => App\Models\Client::class,
         ],
-        'commercials' => [
+        'staffs' => [
             'driver' => 'custom_eloquent',
-            'model' => App\Models\Commercial::class,
+            'model' => App\Models\StaffUser::class,
         ],
     ],
 

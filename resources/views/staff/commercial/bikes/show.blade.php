@@ -1,4 +1,4 @@
-<x-commercial-layout>
+<x-staff-layout>
     <div
         x-data="{
             showAddRefModal: false,
@@ -479,4 +479,4 @@
             </div>
         </div>
     </div>
-</x-commercial-layout>
+</x-staff-layout>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Commercial;
+namespace App\Http\Controllers\Staff\Commercial;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Bike\BikeCreateRequest;
@@ -26,14 +26,14 @@ class CommercialBikeController extends Controller
     {
         $bikes = $this->bikeService->getPaginatedBikes();
 
-        return view('commercial.bikes.index', compact('bikes'));
+        return view('staff.commercial.bikes.index', compact('bikes'));
     }
 
     public function create()
     {
         $formData = $this->formDataService->getCreateFormData();
 
-        return view('commercial.bikes.create', $formData);
+        return view('staff.commercial.bikes.create', $formData);
     }
 
     public function store(BikeCreateRequest $request)
@@ -62,7 +62,7 @@ class CommercialBikeController extends Controller
 
         $referenceFormData = $this->formDataService->getReferenceFormData();
 
-        return view('commercial.bikes.show', array_merge(
+        return view('staff.commercial.bikes.show', array_merge(
             compact('bike', 'referenceImages', 'isVae'),
             $referenceFormData
         ));
