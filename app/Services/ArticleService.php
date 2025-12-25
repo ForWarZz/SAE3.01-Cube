@@ -221,7 +221,7 @@ class ArticleService
      *
      * @return Collection<int, SizeOptionDTO>
      */
-    private function buildSizeOptions(ArticleReference $reference): Collection
+    public function buildSizeOptions(ArticleReference $reference): Collection
     {
         $sizeList = $reference->availableSizes;
 

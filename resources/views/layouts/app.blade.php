@@ -1,3 +1,27 @@
+@props([
+    "reference",
+    "currentCategory",
+])
+
+@php
+    $pageType = "general";
+    $contextId = "";
+
+    if (request()->routeIs("articles.show-reference") && isset($reference)) {
+        $pageType = "article-reference";
+        $contextId = $reference->id_reference;
+    } elseif (request()->routeIs("articles.by-category") && isset($currentCategory)) {
+        $pageType = "category";
+        $contextId = $currentCategory->id_categorie;
+    } elseif (request()->routeIs("cart.index")) {
+        $pageType = "cart";
+    } elseif (request()->routeIs("checkout.index")) {
+        $pageType = "checkout";
+    } elseif (request()->routeIs("dashboard.*")) {
+        $pageType = "profile";
+    }
+@endphp
+
 <!DOCTYPE html>
 <html lang="{{ str_replace("_", "-", app()->getLocale()) }}">
     <head>
@@ -34,6 +58,36 @@
         </div>
 
         <x-shop-selector-modal />
+
+        <script>
+            var botmanWidget = {
+                chatServer: '/botman?page_type={{ $pageType }}&context_id={{ $contextId }}',
+                frameEndpoint: '/botman/chat',
+
+                title: 'Assistant Cube',
+
+                mainColor: '#4f46e5',
+                bubbleBackground: '#4f46e5',
+
+                headerTextColor: '#ffffff',
+
+                aboutText: 'Powered by Cube AI',
+                introMessage:
+                    "👋 <b>Bonjour !</b><br>Je suis l'IA de Cube Bikes.<br>Une question sur un vélo ou besoin d'aide sur le site ?",
+                placeholderText: 'Posez votre question...',
+
+                displayMessageTime: true,
+                desktopHeight: 500,
+                desktopWidth: 370,
+                mobileHeight: '100%',
+                mobileWidth: '100%',
+            };
+
+            console.log('LOADED BOTMAN WIDGET');
+            console.log(botmanWidget);
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
     </body>
 
     {{-- Tarte au citron.js => Cookies --}}

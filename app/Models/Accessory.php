@@ -140,4 +140,18 @@ class Accessory extends Model
     {
         return $this->getStorageDirectory().$imageName;
     }
+
+    public function hasDiscount(): bool
+    {
+        return $this->pourcentage_remise > 0;
+    }
+
+    public function getDiscountedPrice(): float
+    {
+        if ($this->hasDiscount() > 0) {
+            return round($this->prix_article * (1 - $this->pourcentage_remise / 100), 2);
+        }
+
+        return $this->prix_article;
+    }
 }
