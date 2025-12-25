@@ -13,7 +13,7 @@ class CubeAssistantService
             $systemPrompt = $this->buildSystemPrompt();
             $situationalContext = $this->getSituationalContext($pageType, $contextId);
 
-            $result = Gemini::generativeModel(model: 'gemini-2.0-flash-lite')
+            $result = Gemini::generativeModel(model: 'gemini-2.0-flash')
                 ->generateContent([
                     'SYSTÈME : '.$systemPrompt,
                     'CONTEXTE SITUATIONNEL : '.$situationalContext,
