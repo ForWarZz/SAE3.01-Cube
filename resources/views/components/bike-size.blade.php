@@ -3,11 +3,13 @@
         <div class="md:w-1/3">
             <h2 class="mb-2 text-2xl font-bold text-gray-900">Calculateur de taille</h2>
             <p class="text-sm text-gray-600">
-                Vous hésitez entre deux tailles ? Renseignez vos mensurations ci-contre pour obtenir notre recommandation personnalisée basée sur la géométrie de ce vélo.
+                Vous hésitez entre deux tailles ? Renseignez vos mensurations ci-contre pour obtenir notre recommandation personnalisée
+                basée sur la géométrie de ce vélo.
             </p>
-            
+
             <div class="mt-4 rounded bg-blue-50 p-3 text-xs text-blue-700">
-                <strong>Astuce :</strong> Pour l'entrejambe, mesurez du sol jusqu'au périnée, pieds nus et légèrement écartés.
+                <strong>Astuce :</strong>
+                Pour l'entrejambe, mesurez du sol jusqu'au périnée, pieds nus et légèrement écartés.
             </div>
         </div>
 
@@ -15,43 +17,47 @@
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                     <label for="user-height" class="mb-1 block text-sm font-medium text-gray-700">Votre taille (cm)</label>
-                    <input 
-                        type="number" 
-                        id="user-height" 
-                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
+                    <x-form-input
+                        type="number"
+                        id="user-height"
+                        name="user-height"
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Taille..."
-                        min="100" 
+                        min="100"
                         max="250"
-                    >
+                    />
                 </div>
 
                 <div>
                     <label for="user-inseam" class="mb-1 block text-sm font-medium text-gray-700">Entrejambe (cm)</label>
-                    <input 
-                        type="number" 
-                        id="user-inseam" 
-                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
+                    <x-form-input
+                        type="number"
+                        id="user-inseam"
+                        name="user-inseam"
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Entrejambe..."
-                        min="40" 
+                        min="40"
                         max="120"
-                    >
+                    />
                 </div>
             </div>
 
-            <button 
+            <button
                 id="calculate-size-btn"
-                class="w-full rounded bg-gray-900 px-4 py-2 font-bold text-white hover:bg-gray-800 transition md:w-auto md:self-start"
+                class="w-full rounded bg-gray-900 px-4 py-2 font-bold text-white transition hover:bg-gray-800 md:w-auto md:self-start"
             >
                 Calculer ma taille idéale
             </button>
 
-            <div id="size-result-container" class="hidden animate-fade-in mt-2 rounded-md border-l-4 border-green-500 bg-white p-4 shadow-sm">
+            <div
+                id="size-result-container"
+                class="animate-fade-in mt-2 hidden rounded-md border-l-4 border-green-500 bg-white p-4 shadow-sm"
+            >
                 <p class="text-sm font-semibold text-gray-500">Taille de vélo recommandée :</p>
-                <p class="text-xl font-bold text-gray-900" id="size-result-text">
-                    </p>
+                <p class="text-xl font-bold text-gray-900" id="size-result-text"></p>
             </div>
         </div>
     </div>
 </div>
 
-@vite(['resources/js/bikesize/main.js'])
+@vite(["resources/js/bikesize/main.js"])
