@@ -17,6 +17,8 @@
         $pageType = "cart";
     } elseif (request()->routeIs("checkout.index")) {
         $pageType = "checkout";
+    } elseif (request()->routeIs("dashboard.*")) {
+        $pageType = "profile";
     }
 @endphp
 
