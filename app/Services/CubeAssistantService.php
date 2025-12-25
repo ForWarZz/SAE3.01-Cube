@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\ArticleReference;
 use App\Models\Bike;
 use App\Models\BikeReference;
+use App\Models\Category;
 use App\Models\Characteristic;
 use Gemini\Laravel\Facades\Gemini;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -111,6 +112,7 @@ class CubeAssistantService
     {
         return match ($pageType) {
             'article-reference' => $this->buildArticleReferencePayload($contextId),
+            'category' => $this->buildCategoryPayload($contextId),
             'cart' => $this->buildCartPayload(),
             'checkout' => $this->buildCheckoutPayload(),
             default => $this->buildGeneralPayload(),
@@ -248,5 +250,25 @@ class CubeAssistantService
             'situational_context' => json_decode($situationalContext, true),
             'user_message' => $userMessage,
         ]);
+    }
+
+    private function buildCategoryPayload(int $categoryId): array
+    {
+        $category = Category::find($categoryId);
+
+        if (! $category) {
+            return ['error' => 'Category not found'];
+        }
+
+        return [
+            'type' => 'category',
+            'id' => $categoryId,
+            'message' => "Utilisateur navigue dans la catégorie : {$category->nom_categorie}.
+                Une liste d'article est affichée selon les filtres, tries, recherches appliqué.
+                Il est également possible qu'aucun article ne soit affiché.",
+            'payload' => [
+                'category_name' => $category->nom_categorie,
+            ],
+        ];
     }
 }
