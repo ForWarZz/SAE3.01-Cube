@@ -29,7 +29,7 @@
     </script>
 @endif
 
-<x-app-layout :article="$article">
+<x-app-layout :reference="$currentReference">
     <div class="px-36 py-12">
         <x-breadcrumb :breadcrumbs="$breadcrumbs" />
 

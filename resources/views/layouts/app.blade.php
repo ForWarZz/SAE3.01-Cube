@@ -1,5 +1,5 @@
 @props([
-    "article",
+    "reference",
     "currentCategory",
 ])
 
@@ -7,9 +7,9 @@
     $pageType = "general";
     $contextId = "";
 
-    if (request()->routeIs("articles.show-reference") && isset($article)) {
+    if (request()->routeIs("articles.show-reference") && isset($reference)) {
         $pageType = "article-reference";
-        $contextId = $article->id_article;
+        $contextId = $reference->id_reference;
     } elseif (request()->routeIs("articles.by-category") && isset($currentCategory)) {
         $pageType = "category";
         $contextId = $currentCategory->id_categorie;
