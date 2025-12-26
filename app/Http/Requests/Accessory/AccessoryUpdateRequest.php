@@ -27,6 +27,8 @@ class AccessoryUpdateRequest extends FormRequest
 
             'sizes' => ['required', 'array', 'min:1'],
             'sizes.*' => ['integer', 'exists:taille,id_taille'],
+
+            'poids_article' => ['required', 'numeric', 'min:0.1'],
         ];
     }
 
@@ -65,6 +67,10 @@ class AccessoryUpdateRequest extends FormRequest
             'sizes.min' => 'Au moins une taille doit être sélectionnée.',
             'sizes.*.integer' => 'Chaque identifiant de taille doit être un entier.',
             'sizes.*.exists' => "Une des tailles sélectionnées n'existe pas.",
+
+            'poids_article.required' => "Le poids de l'article est obligatoire.",
+            'poids_article.numeric' => "Le poids de l'article doit être un nombre.",
+            'poids_article.min' => "Le poids de l'article doit être au moins de 0.1 kg.",
         ];
     }
 }
