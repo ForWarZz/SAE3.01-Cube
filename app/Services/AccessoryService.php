@@ -20,7 +20,6 @@ class AccessoryService
             'geometrySizes' => collect(),
 
             'compatibleAccessories' => collect(),
-            'weight' => 0,
             'images' => $accessory->getImagesUrls(),
         ];
     }

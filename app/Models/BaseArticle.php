@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string $resumer_article
  * @property int $nombre_vente_article
  * @property int pourcentage_remise
+ * @property float $poids_article
  */
 class BaseArticle extends Model
 {
@@ -35,6 +36,7 @@ class BaseArticle extends Model
         'resumer_article',
         'nombre_vente_article',
         'pourcentage_remise',
+        'poids_article',
     ];
 
     public function getDiscountedPrice(): float

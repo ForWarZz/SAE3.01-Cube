@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $description_article
  * @property string $resumer_article
  * @property Carbon|null $date_ajout
+ * @property int $nombre_vente_article
+ * @property float $poids_article
  */
 class Bike extends BaseArticle
 {
@@ -36,6 +38,7 @@ class Bike extends BaseArticle
         'resumer_article',
         'date_ajout',
         'nombre_vente_article',
+        'poids_article',
     ];
 
     protected $casts = [

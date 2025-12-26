@@ -227,6 +227,8 @@ class ArticleService
 
             'isBike' => false,
             'breadcrumbs' => $this->breadCrumbService->prepareBreadcrumbs($article->category),
+
+            'weight' => $article->poids_article,
         ];
 
         if ($article->bike) {

@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Storage;
  * @property string $description_article
  * @property string $resumer_article
  * @property int $numero_reference
+ * @property int $pourcentage_remise
+ * @property int $nombre_vente_article
+ * @property float $poids_article
  */
 class Accessory extends BaseArticle
 {
@@ -33,6 +36,9 @@ class Accessory extends BaseArticle
         'description_article',
         'resumer_article',
         'numero_reference',
+        'pourcentage_remise',
+        'nombre_vente_article',
+        'poids_article',
     ];
 
     protected static function booted(): void

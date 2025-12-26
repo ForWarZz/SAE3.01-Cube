@@ -32,8 +32,6 @@ class BikeService
             'geometries' => $geometryData['rows'],
             'geometrySizes' => $geometryData['headers'],
 
-            'weight' => 20,
-
             'compatibleAccessories' => $bike->compatibleAccessories,
             'images' => $bikeReference->getImagesUrls(),
         ];
