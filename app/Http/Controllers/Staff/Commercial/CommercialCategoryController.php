@@ -11,9 +11,9 @@ class CommercialCategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('parent')->orderBy('id_categorie', 'desc')->paginate(10);
-        $allCategories = Category::all();
-        $allCategories = $allCategories->sortBy(function ($cat) {
+        $categories = Category::with('parent.parentRecursive')->orderBy('id_categorie', 'desc')->paginate(10);
+        $allCategories = Category::with('parentRecursive')->get();
+        $allCategories = $allCategories->sortBy(function (Category $cat) {
             return $cat->getFullPath();
         }, SORT_NATURAL | SORT_FLAG_CASE);
 
