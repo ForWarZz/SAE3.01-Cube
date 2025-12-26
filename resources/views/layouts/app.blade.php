@@ -66,25 +66,22 @@
 
                 title: 'Assistant Cube',
 
-                mainColor: '#4f46e5',
+                mainColor: '#111827',
                 bubbleBackground: '#4f46e5',
-
                 headerTextColor: '#ffffff',
 
-                aboutText: 'Powered by Cube AI',
+                aboutText: '',
                 introMessage:
-                    "👋 <b>Bonjour !</b><br>Je suis l'IA de Cube Bikes.<br>Une question sur un vélo ou besoin d'aide sur le site ?",
-                placeholderText: 'Posez votre question...',
+                    "👋 <b>Bonjour !</b><br>Je suis l'assistant Cube.<br>Je peux vous aider à trouver un vélo ou répondre à vos questions.",
+                placeholderText: 'Écrivez votre message...',
 
-                displayMessageTime: true,
-                desktopHeight: 500,
-                desktopWidth: 370,
+                desktopHeight: 600,
+                desktopWidth: 400,
                 mobileHeight: '100%',
                 mobileWidth: '100%',
             };
 
-            console.log('LOADED BOTMAN WIDGET');
-            console.log(botmanWidget);
+            console.log('LOADED BOTMAN WIDGET WITH CUSTOM CSS');
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
