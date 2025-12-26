@@ -2,7 +2,6 @@
 
 namespace App\Filters;
 
-use App\Models\Bike;
 use App\Models\Vintage;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -20,10 +19,15 @@ class VintageFilter extends AbstractFilter
 
     public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
+        $vintages = Vintage::select('millesime.*')
+            ->join('velo', 'millesime.id_millesime', '=', 'velo.id_millesime')
+            ->whereIn('velo.id_article', $articleIds)
+            ->distinct()
+            ->orderBy('millesime.millesime_velo', 'desc')
+            ->get();
+
         return $this->format(
-            Vintage::whereIn('id_millesime',
-                Bike::whereIn('id_article', $articleIds)->pluck('id_millesime')
-            )->get(),
+            $vintages,
             'id_millesime',
             'millesime_velo'
         );

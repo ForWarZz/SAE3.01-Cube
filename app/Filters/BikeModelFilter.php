@@ -2,7 +2,6 @@
 
 namespace App\Filters;
 
-use App\Models\Bike;
 use App\Models\BikeModel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -20,10 +19,15 @@ class BikeModelFilter extends AbstractFilter
 
     public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
+        $models = BikeModel::select('modele_velo.*')
+            ->join('velo', 'modele_velo.id_modele_velo', '=', 'velo.id_modele_velo')
+            ->whereIn('velo.id_article', $articleIds)
+            ->distinct()
+            ->orderBy('modele_velo.nom_modele_velo')
+            ->get();
+
         return $this->format(
-            BikeModel::whereIn('id_modele_velo',
-                Bike::whereIn('id_article', $articleIds)->pluck('id_modele_velo')
-            )->get(),
+            $models,
             'id_modele_velo',
             'nom_modele_velo'
         );
