@@ -178,8 +178,9 @@ class ArticleService
         return $this->finalizeQuery($baseQuery, $request);
     }
 
-    public function prepareViewData(Article $article, ArticleReference $reference): array
+    public function prepareViewData(ArticleReference $reference): array
     {
+        $article = $reference->article;
         $sizeOptions = $this->buildSizeOptions($reference);
 
         $base = [
@@ -197,16 +198,18 @@ class ArticleService
             'description' => $article->description_article,
             'resume' => $article->resumer_article,
 
-            'similarArticles' => $article->similar()
-                ->with(['bike.bikeModel', 'bike.references', 'category', 'accessory'])
-                ->get(),
+            'similarArticles' => $article->similar,
 
             'isBike' => false,
             'breadcrumbs' => $this->breadCrumbService->prepareBreadcrumbsForArticle($article),
         ];
 
         if ($article->bike) {
-            $bikeData = $this->bikeService->prepareBikeData($reference->bikeReference);
+            // Passer le bike et la bikeReference déjà chargés par le controller
+            $bike = $article->bike;
+            $bikeReference = $reference->bikeReference;
+
+            $bikeData = $this->bikeService->prepareBikeData($bike, $bikeReference);
 
             return array_merge($base, $bikeData);
         }
@@ -225,9 +228,7 @@ class ArticleService
     {
         $sizeList = $reference->availableSizes;
 
-        // Pré-charger toutes les disponibilités magasin en une seule requête
-        $allShopAvailabilities = $reference->shopAvailabilities()
-            ->get()
+        $allShopAvailabilities = $reference->shopAvailabilities
             ->groupBy('pivot.id_taille');
 
         return $sizeList->map(function ($size) use ($allShopAvailabilities) {

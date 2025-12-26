@@ -20,7 +20,7 @@
                     <span class="font-medium text-blue-600">Électrique</span>
                 @endif
             @elseif ($article->accessory)
-                <span class="font-medium text-gray-600">{{ $article->category->nom_categorie ?? "Accessoire" }}</span>
+                <span class="font-medium text-gray-600">{{ $article->category->nom_categorie }}</span>
             @endif
         </div>
 

@@ -71,7 +71,6 @@ class ArticleController extends Controller
             $defaultReference = $article->bike->references()->orderBy('id_reference')->firstOrFail();
 
             return redirect()->route('articles.show-reference', [
-                'article' => $article->id_article,
                 'reference' => $defaultReference->id_reference,
             ]);
         }
@@ -79,33 +78,15 @@ class ArticleController extends Controller
         $article->load('accessory');
 
         return redirect()->route('articles.show-reference', [
-            'article' => $article->id_article,
             'reference' => $article->accessory->id_reference,
         ]);
     }
 
-    public function showByRef(Article $article, ArticleReference $reference)
+    public function showByRef(int $referenceId)
     {
-        $article->load([
-            'bike.bikeModel',
-            'bike.vintage',
-            'bike.frameMaterial',
-            'bike',
-            'accessory',
-            'characteristics.characteristicType',
-            'category',
-        ]);
+        $reference = ArticleReference::withFullRelations()->findOrFail($referenceId);
 
-        $reference->load([
-            'bikeReference.bike.bikeModel',
-            'bikeReference.color',
-            'bikeReference.frame',
-            'bikeReference.ebike.battery',
-            'availableSizes',
-            'shopAvailabilities',
-        ]);
-
-        $data = $this->articleService->prepareViewData($article, $reference);
+        $data = $this->articleService->prepareViewData($reference);
 
         return view('article.show', $data);
     }

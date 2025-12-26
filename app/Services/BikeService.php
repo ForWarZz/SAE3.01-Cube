@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\DTOs\Article\GeometryRowDTO;
-use App\Models\Accessory;
 use App\Models\Bike;
 use App\Models\BikeModel;
 use App\Models\BikeReference;
@@ -15,43 +14,28 @@ class BikeService
         protected BikeVariantService $bikeVariantService,
     ) {}
 
-    public function prepareBikeData(BikeReference $currentReference): array
+    // Maintenant on reçoit explicitement le Bike et la BikeReference (pré-chargés en amont)
+    public function prepareBikeData(Bike $bike, BikeReference $bikeReference): array
     {
-        $currentReference->bike->bikeModel->load([
-            'geometries.characteristic',
-            'geometries.size',
-        ]);
-
-        $bike = $currentReference->bike;
-
-        $variants = $this->bikeVariantService->getVariants($currentReference);
+        $variants = $bike->references;
         $geometryData = $this->buildGeometryData($bike->bikeModel);
-
-        // Utiliser les caractéristiques pré-chargées si disponibles
-        $characteristics = $bike->relationLoaded('characteristics')
-            ? $bike->characteristics
-            : $bike->characteristics()->get();
-
-        $weight = $characteristics
-            ->firstWhere('id_caracteristique', Bike::WEIGHT_CHARACTERISTIC_ID)
-            ?->pivot->valeur_caracteristique ?? null;
 
         return [
             'isBike' => true,
-            'currentReference' => $currentReference,
+            'currentReference' => $bikeReference,
             'bike' => $bike,
 
-            'frameOptions' => $this->bikeVariantService->buildFrameOptions($variants, $currentReference),
-            'colorOptions' => $this->bikeVariantService->buildColorOptions($variants, $currentReference),
-            'batteryOptions' => $this->bikeVariantService->buildBatteryOptions($variants, $currentReference),
+            'frameOptions' => $this->bikeVariantService->buildFrameOptions($variants, $bikeReference),
+            'colorOptions' => $this->bikeVariantService->buildColorOptions($variants, $bikeReference),
+            'batteryOptions' => $this->bikeVariantService->buildBatteryOptions($variants, $bikeReference),
 
             'geometries' => $geometryData['rows'],
             'geometrySizes' => $geometryData['headers'],
 
-            'weight' => $weight,
+            'weight' => 20,
 
-            'compatibleAccessories' => $this->getCompatibleAccessories($bike),
-            'images' => $currentReference->getImagesUrls(),
+            'compatibleAccessories' => $bike->compatibleAccessories,
+            'images' => $bikeReference->getImagesUrls(),
         ];
     }
 
@@ -83,15 +67,5 @@ class BikeService
             });
 
         return ['headers' => $headers, 'rows' => $rows];
-    }
-
-    /**
-     * @return Collection<Accessory>
-     */
-    private function getCompatibleAccessories(Bike $bike): Collection
-    {
-        return $bike->compatibleAccessories()
-            ->with(['article', 'article.category', 'article.accessory'])
-            ->get();
     }
 }

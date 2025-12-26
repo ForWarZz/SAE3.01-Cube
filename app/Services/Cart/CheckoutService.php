@@ -136,12 +136,12 @@ class CheckoutService
 
         // Eager load les relations pour éviter les requêtes N+1
         $order->load([
-            'items.reference.bikeReference.article',
-            'items.reference.accessory.article',
+            'items.reference.article',
+            'items.reference.accessory',
         ]);
 
         foreach ($order->items as $item) {
-            $article = $item->reference->bikeReference?->article ?? $item->reference->accessory?->article;
+            $article = $item->reference->article;
             $prixUnitaire = $item->prix_unit_ligne;
 
             if ($order->pourcentage_remise > 0) {
