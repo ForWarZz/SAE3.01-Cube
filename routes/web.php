@@ -32,12 +32,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $bikeCategoryId = Category::firstWhere('nom_categorie', 'Vélos')->id_categorie;
-    $accessoryCategoryId = Category::firstWhere('nom_categorie', 'Accessoires')->id_categorie;
-
     return view('index', [
-        'bikeCategoryId' => $bikeCategoryId,
-        'accessoryCategoryId' => $accessoryCategoryId,
+        'bikeCategoryId' => Category::BIKE_CATEGORY_ID,
+        'accessoryCategoryId' => Category::ACCESSORY_CATEGORY_ID,
     ]);
 })->name('home');
 

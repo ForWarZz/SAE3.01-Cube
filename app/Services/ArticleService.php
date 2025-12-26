@@ -183,6 +183,31 @@ class ArticleService
         $article = $reference->article;
         $sizeOptions = $this->buildSizeOptions($reference);
 
+        if ($article->bike) {
+            $reference->loadMissing([
+                'article.bike.bikeModel.geometries.characteristic',
+                'article.bike.bikeModel.geometries.size',
+
+                'article.bike.vintage',
+                'article.bike.usage',
+                'article.bike.frameMaterial',
+
+                'article.bike.references.frame',
+                'article.bike.references.color',
+                'article.bike.references.ebike.battery',
+
+                'article.bike.compatibleAccessories.category',
+
+                'bikeReference.color',
+                'bikeReference.frame',
+                'bikeReference.ebike.battery',
+            ]);
+        } else {
+            $reference->loadMissing([
+                'article.accessory',
+            ]);
+        }
+
         $base = [
             'article' => $article,
             'sizeOptions' => $sizeOptions,

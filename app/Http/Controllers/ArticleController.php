@@ -87,32 +87,15 @@ class ArticleController extends Controller
         $reference = ArticleReference::with([
             'article.characteristics.characteristicType',
 
-            'article.bike.bikeModel.geometries.characteristic',
-            'article.bike.bikeModel.geometries.size',
-
-            'article.bike.vintage',
-            'article.bike.usage',
-            'article.bike.frameMaterial',
-
-            'article.bike.references.frame',
-            'article.bike.references.color',
-            'article.bike.references.ebike.battery',
-
             'article.similar.bike.references',
             'article.similar.accessory',
             'article.similar.category',
-
-            'article.bike.compatibleAccessories.category',
-
-            'bikeReference.color',
-            'bikeReference.frame',
-            'bikeReference.ebike.battery',
 
             'availableSizes',
             'shopAvailabilities',
 
             'article.category.parentRecursive',
-            'article.accessory',
+            'article.bike',
         ])->findOrFail($referenceId);
 
         $data = $this->articleService->prepareViewData($reference);
