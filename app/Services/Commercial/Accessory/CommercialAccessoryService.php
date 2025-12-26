@@ -27,7 +27,7 @@ class CommercialAccessoryService
         $accessoryCategory = Category::find(Category::ACCESSORY_CATEGORY_ID);
         $accessoryChildrenIds = $accessoryCategory?->getAllChildrenIds() ?? [];
 
-        return Category::with(['parent', 'children'])
+        return Category::with(['parentRecursive', 'children'])
             ->whereDoesntHave('children')
             ->whereIn('id_categorie', $accessoryChildrenIds)
             ->get()
