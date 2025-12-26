@@ -220,7 +220,7 @@
                             <div class="mb-4">
                                 <x-form-input
                                     type="number"
-                                    name="poids_velo"
+                                    name="poids_article"
                                     label="Poids du vélo (kg)"
                                     :value="old('poids_velo')"
                                     placeholder="Ex: 12,5"
