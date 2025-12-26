@@ -84,7 +84,22 @@ class ArticleController extends Controller
 
     public function showByRef(int $referenceId)
     {
-        $reference = ArticleReference::findOrFail($referenceId);
+        $reference = ArticleReference::with([
+            'article.characteristics.characteristicType',
+
+            'article.bike.bikeModel.geometries.characteristic',
+            'article.bike.bikeModel.geometries.size',
+
+            'article.bike.references.frame',
+            'article.bike.references.color',
+            'article.bike.references.ebike.battery',
+
+            'article.similar.bike.references',
+            'article.similar.accessory',
+            'article.similar.category',
+
+            'article.bike.compatibleAccessories.category',
+        ])->findOrFail($referenceId);
 
         $data = $this->articleService->prepareViewData($reference);
 
