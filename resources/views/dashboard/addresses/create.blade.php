@@ -12,59 +12,83 @@
                             <input type="hidden" name="intended" value="{{ $intended }}" />
                         @endif
 
-                        <!-- Alias -->
                         <x-form-input name="alias_adresse" label="Alias (ex: Ma maison, Bureau)" placeholder="Ma maison" />
 
-                        <!-- Société (optionnel) -->
                         <x-form-input name="societe_adresse" label="Société (optionnel)" placeholder="Nom de l'entreprise" />
 
-                        <!-- Numéro TVA (optionnel) -->
                         <x-form-input name="tva_adresse" label="Numéro de TVA (optionnel)" placeholder="FR12345678901" />
 
-                        <!-- Prénom -->
                         <x-form-input name="prenom_adresse" label="Prénom" :value="$client->prenom_client" required />
 
-                        <!-- Nom -->
                         <x-form-input name="nom_adresse" label="Nom" :value="$client->nom_client" required />
 
-                        <!-- Téléphone -->
                         <x-form-input type="tel" name="telephone_adresse" label="Téléphone" placeholder="04 50 10 25 21" required />
 
-                        <!-- Téléphone mobile (optionnel) -->
-                        <x-form-input
-                            type="tel"
-                            name="tel_mobile_adresse"
-                            label="Téléphone mobile (optionnel)"
-                            placeholder="06 12 34 56 78"
-                        />
+                        <x-form-input type="tel" name="tel_mobile_adresse" label="Téléphone mobile" placeholder="06 12 34 56 78" />
 
-                        <!-- Google Places Autocomplete -->
-                        <x-form-input
-                            name="address_autocomplete"
-                            id="address_autocomplete"
-                            label="Rechercher une adresse"
-                            placeholder="Commencez à taper votre adresse..."
-                            wrapperClass="mb-4"
-                        />
+                        <div class="mb-4">
+                            <div id="google-cookie-alert" class="mb-2 hidden rounded-md border border-yellow-200 bg-yellow-50 p-4">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                            <path
+                                                fill-rule="evenodd"
+                                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                                clip-rule="evenodd"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h3 class="text-sm font-medium text-yellow-800">Autocomplétion désactivée</h3>
+                                        <div class="mt-2 text-sm text-yellow-700">
+                                            <p>
+                                                Vous avez refusé le cookie Google Maps. La recherche automatique d'adresse est donc bloquée.
+                                            </p>
+                                            <p class="mt-2">
+                                                Vous pouvez soit
+                                                <button
+                                                    type="button"
+                                                    onclick="tarteaucitron.userInterface.openPanel()"
+                                                    class="font-bold underline hover:text-yellow-900"
+                                                >
+                                                    activer le cookie Google Places
+                                                </button>
+                                                pour gagner du temps, soit remplir les champs manuellement ci-dessous.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- Numéro de voie -->
+                            <x-form-input
+                                name="address_autocomplete"
+                                id="address_autocomplete"
+                                label="Rechercher une adresse"
+                                placeholder="Commencez à taper votre adresse..."
+                            />
+                        </div>
+
                         <x-form-input name="num_voie_adresse" label="Numéro de voie" placeholder="12" required />
 
-                        <!-- Rue -->
                         <x-form-input name="rue_adresse" label="Rue" placeholder="Rue de la Paix" required />
 
-                        <!-- Complément d'adresse -->
                         <x-form-input
                             name="complement_adresse"
                             label="Complément d'adresse (optionnel)"
                             placeholder="Appartement 5, Bâtiment B"
                         />
 
-                        <!-- Code postal -->
-                        <x-form-input name="code_postal" label="Code postal" placeholder="75001" required readonly />
+                        <x-form-input name="code_postal" id="code_postal" label="Code postal" placeholder="75001" required readonly />
 
-                        <!-- City -->
-                        <x-form-input name="nom_ville" label="Ville" placeholder="Paris" required readonly wrapperClass="mb-6" />
+                        <x-form-input
+                            name="nom_ville"
+                            id="nom_ville"
+                            label="Ville"
+                            placeholder="Paris"
+                            required
+                            readonly
+                            wrapperClass="mb-6"
+                        />
 
                         <div class="flex items-center justify-between">
                             <a
@@ -86,11 +110,10 @@
         </div>
     </div>
 
-    <!-- Google Places API -->
     <script>
         window.initAutocomplete = function () {
             const input = document.getElementById('address_autocomplete');
-            if (!input) return;
+            if (!input || input.disabled || !window.google) return;
 
             const options = {
                 componentRestrictions: { country: 'fr' },
@@ -102,21 +125,15 @@
 
             autocomplete.addListener('place_changed', function () {
                 const place = autocomplete.getPlace();
+                if (!place.address_components) return;
 
-                if (!place.address_components) {
-                    return;
-                }
-
-                // Reset fields
                 document.getElementById('num_voie_adresse').value = '';
                 document.getElementById('rue_adresse').value = '';
                 document.getElementById('code_postal').value = '';
                 document.getElementById('nom_ville').value = '';
 
-                // Parse address components
                 for (const component of place.address_components) {
                     const type = component.types[0];
-
                     switch (type) {
                         case 'street_number':
                             document.getElementById('num_voie_adresse').value = component.long_name;
@@ -137,32 +154,15 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('address-form');
-
-            form.addEventListener('submit', function () {
-                function cleanPhoneNumber(phoneInput) {
-                    if (phoneInput && phoneInput.value) {
-                        phoneInput.value = phoneInput.value.replace(/[^\d+]/g, '');
-                    }
-                }
-
-                const telephoneAdresse = document.getElementById('telephone_adresse');
-                const telMobileAdresse = document.getElementById('tel_mobile_adresse');
-
-                cleanPhoneNumber(telephoneAdresse);
-                cleanPhoneNumber(telMobileAdresse);
-            });
+            if (form) {
+                form.addEventListener('submit', function () {
+                    const clean = (el) => {
+                        if (el && el.value) el.value = el.value.replace(/[^\d+]/g, '');
+                    };
+                    clean(document.getElementById('telephone_adresse'));
+                    clean(document.getElementById('tel_mobile_adresse'));
+                });
+            }
         });
     </script>
-
-    @if (config("services.google.places_api_key"))
-        <script
-            src="https://maps.googleapis.com/maps/api/js?key={{ config("services.google.places_api_key") }}&libraries=places&callback=initAutocomplete"
-            async
-            defer
-        ></script>
-    @else
-        <script>
-            console.error('Google Places API Key is missing. Please add GOOGLE_PLACES_API_KEY to your .env file.');
-        </script>
-    @endif
 </x-app-layout>
