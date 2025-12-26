@@ -42,6 +42,13 @@ class Bike extends BaseArticle
         'date_ajout' => 'datetime',
     ];
 
+    protected static function booted(): void
+    {
+        static::addGlobalScope('active_article', function ($builder) {
+            $builder->whereHas('article');
+        });
+    }
+
     public function isNew(): bool
     {
         if (! $this->date_ajout) {

@@ -35,17 +35,17 @@ class Accessory extends BaseArticle
         'numero_reference',
     ];
 
-    //    protected static function booted(): void
-    //    {
-    //        static::addGlobalScope('active_article', function ($builder) {
-    //            $builder->whereHas('article');
-    //        });
-    //    }
+    protected static function booted(): void
+    {
+        static::addGlobalScope('active_article', function ($builder) {
+            $builder->whereHas('article');
+        });
+    }
 
-    //    public function article(): BelongsTo
-    //    {
-    //        return $this->belongsTo(Article::class, 'id_article', 'id_article');
-    //    }
+    public function article(): BelongsTo
+    {
+        return $this->belongsTo(Article::class, 'id_article', 'id_article');
+    }
 
     public function baseReference(): BelongsTo
     {
