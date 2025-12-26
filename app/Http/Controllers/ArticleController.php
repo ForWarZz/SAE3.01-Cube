@@ -90,6 +90,10 @@ class ArticleController extends Controller
             'article.bike.bikeModel.geometries.characteristic',
             'article.bike.bikeModel.geometries.size',
 
+            'article.bike.vintage',
+            'article.bike.usage',
+            'article.bike.frameMaterial',
+
             'article.bike.references.frame',
             'article.bike.references.color',
             'article.bike.references.ebike.battery',
@@ -99,6 +103,13 @@ class ArticleController extends Controller
             'article.similar.category',
 
             'article.bike.compatibleAccessories.category',
+
+            'bikeReference.color',
+            'bikeReference.frame',
+            'bikeReference.ebike.battery',
+
+            'availableSizes',
+            'shopAvailabilities',
         ])->findOrFail($referenceId);
 
         $data = $this->articleService->prepareViewData($reference);

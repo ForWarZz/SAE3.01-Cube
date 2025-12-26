@@ -16,7 +16,7 @@
             @if ($article->bike)
                 <span>{{ $article->bike->bikeModel->nom_modele_velo }}</span>
 
-                @if ($article->bike->ebike)
+                @if ($currentReference->ebike)
                     <span class="font-medium text-blue-600">Électrique</span>
                 @endif
             @elseif ($article->accessory)
