@@ -110,6 +110,9 @@ class ArticleController extends Controller
 
             'availableSizes',
             'shopAvailabilities',
+
+            'article.category.parentRecursive',
+            'article.accessory',
         ])->findOrFail($referenceId);
 
         $data = $this->articleService->prepareViewData($reference);

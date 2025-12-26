@@ -201,7 +201,7 @@ class ArticleService
             'similarArticles' => $article->similar,
 
             'isBike' => false,
-            'breadcrumbs' => [],
+            'breadcrumbs' => $this->breadCrumbService->prepareBreadcrumbs($article->category),
         ];
 
         if ($article->bike) {
