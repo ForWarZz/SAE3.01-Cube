@@ -70,9 +70,9 @@ class CartService
     public function getAvailableShippingModes(?float $subtotal = null, ?bool $hasBikes = null): Collection
     {
         if ($subtotal === null || $hasBikes === null) {
-            $cartData = $this->getCartViewData(0);
-            $subtotal = $cartData['summaryData']->subtotal;
-            $hasBikes = $cartData['hasBikes'];
+            $cartData = $this->getCartData(0);
+            $subtotal = $cartData->summary->subtotal;
+            $hasBikes = $cartData->hasBikes;
         }
 
         $deliveryPrice = $subtotal >= 50 ? 0 : 6;
@@ -91,17 +91,6 @@ class CartService
             });
     }
 
-    /**
-     * Retourne les données du panier dans le format attendu par les vues Blade
-     */
-    public function getCartViewData(?float $shippingPrice = null): array
-    {
-        return $this->getCartData($shippingPrice)->toViewData();
-    }
-
-    /**
-     * Retourne les données du panier sous forme de DTO typé
-     */
     public function getCartData(?float $shippingPrice = null): CartViewDataDTO
     {
         $sessionItems = $this->session->getItems();
@@ -127,6 +116,12 @@ class CartService
         $sizeIds = array_column($sessionItems, 'size_id');
 
         $references = ArticleReference::whereIn('id_reference', $referenceIds)
+            ->with([
+                'article',
+
+                'bikeReference.color',
+                'accessory',
+            ])
             ->get()
             ->keyBy('id_reference');
 
@@ -160,7 +155,7 @@ class CartService
                 real_price: $article->prix_article,
                 has_discount: $article->hasDiscount(),
                 discount_percent: $article->pourcentage_remise,
-                color: $reference->variant()?->color?->label_couleur,
+                color: $reference->bikeReference?->color->label_couleur,
                 article_url: route('articles.show', [
                     'reference' => $reference->id_reference,
                     'article' => $article->id_article,

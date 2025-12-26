@@ -48,7 +48,7 @@ class CartController extends Controller
     {
         $this->checkoutService->clearCheckout();
 
-        return view('cart.index', $this->cartService->getCartViewData());
+        return view('cart.index', $this->cartService->getCartData()->toViewData());
     }
 
     public function updateQuantity(CartUpdateQuantityRequest $request)
