@@ -292,17 +292,9 @@ class CubeAssistantService
     private function loadArticleReference(int $referenceId): ArticleReference
     {
         return ArticleReference::with([
-            'accessory.article.characteristics.characteristicType',
-            'accessory.article.similar',
-            'accessory.material',
-            'accessory.shopAvailabilities',
-
-            'bikeReference.bike',
-
-            'bikeReference.shopAvailabilities',
-            'bikeReference.availableSizes',
-        ])
-            ->findOrFail($referenceId);
+            'article.characteristics.characteristicType',
+            'article.similar',
+        ])->findOrFail($referenceId);
     }
 
     private function extractCharacteristics(Article $article): array
