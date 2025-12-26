@@ -77,17 +77,22 @@ class OrderController extends Controller
         }
 
         $order->load([
-            'items.reference.bikeReference.article.bike.bikeModel',
-            'items.reference.bikeReference.article.category',
+            'items.reference.article.category',
+
+            'items.reference.article.bike.bikeModel',
+
             'items.reference.bikeReference.color',
-            'items.reference.accessory.article.category',
+            'items.reference.accessory',
+
             'items.size',
-            'billingAddress.city',
-            'deliveryAddress.city',
-            'shippingMode',
-            'states',
+
             'paymentType',
+            'shippingMode',
             'shop.city',
+            'states',
+
+            'deliveryAddress.city',
+            'billingAddress.city',
         ]);
 
         $currentState = $order->currentState();

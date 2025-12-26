@@ -70,7 +70,7 @@ class OrderService
         return $items->map(function (OrderLine $item) {
             $baseReference = $item->reference;
             $ref = $baseReference->variant();
-            $article = $baseReference->getArticle();
+            $article = $baseReference->article;
 
             $isBike = $baseReference->isBike();
             $subtitle = $isBike
