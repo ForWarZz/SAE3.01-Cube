@@ -19,7 +19,7 @@ class CommercialBikeService
 
     public function getPaginatedBikes(int $perPage = 10): LengthAwarePaginator
     {
-        return Bike::with(['bikeModel', 'category', 'frameMaterial', 'vintage', 'usage', 'article', 'references'])
+        return Bike::with(['bikeModel', 'category', 'vintage', 'references'])
             ->orderBy('id_article', 'desc')
             ->paginate($perPage);
     }
