@@ -26,7 +26,7 @@ class CartController extends Controller
             sizeId: $validated['size_id']
         );
 
-        $reference = ArticleReference::withFullRelations()->findOrFail($validated['reference_id']);
+        $reference = ArticleReference::findOrFail($validated['reference_id']);
         $size = Size::findOrFail($validated['size_id']);
 
         $article = $reference->article;

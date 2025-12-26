@@ -2,7 +2,7 @@
 
 namespace App\View\Components;
 
-use App\Models\Article;
+use App\Models\BaseArticle;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -13,7 +13,7 @@ class ArticleCard extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public readonly Article $article
+        public readonly BaseArticle $article
     ) {
         //
     }

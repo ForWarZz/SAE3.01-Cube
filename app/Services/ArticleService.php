@@ -201,11 +201,10 @@ class ArticleService
             'similarArticles' => $article->similar,
 
             'isBike' => false,
-            'breadcrumbs' => $this->breadCrumbService->prepareBreadcrumbsForArticle($article),
+            'breadcrumbs' => [],
         ];
 
         if ($article->bike) {
-            // Passer le bike et la bikeReference déjà chargés par le controller
             $bike = $article->bike;
             $bikeReference = $reference->bikeReference;
 

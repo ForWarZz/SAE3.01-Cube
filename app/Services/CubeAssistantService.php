@@ -292,21 +292,20 @@ class CubeAssistantService
     private function loadArticleReference(int $referenceId): ArticleReference
     {
         // Utiliser le scope centralisé pour s'assurer que les relations principales sont eager-loaded
-        return ArticleReference::withFullRelations()
-            ->with([
-                // Relations complémentaires spécifiques au CubeAssistant
-                'accessory.article.characteristics.characteristicType',
-                'accessory.article.similar',
-                'accessory.material',
-                'accessory.shopAvailabilities',
+        return ArticleReference::with([
+            // Relations complémentaires spécifiques au CubeAssistant
+            'accessory.article.characteristics.characteristicType',
+            'accessory.article.similar',
+            'accessory.material',
+            'accessory.shopAvailabilities',
 
-                // S'assurer que la relation bikeReference.bike est présente
-                'bikeReference.bike',
+            // S'assurer que la relation bikeReference.bike est présente
+            'bikeReference.bike',
 
-                // Garantir les tailles et disponibilités sur la bikeReference
-                'bikeReference.shopAvailabilities',
-                'bikeReference.availableSizes',
-            ])
+            // Garantir les tailles et disponibilités sur la bikeReference
+            'bikeReference.shopAvailabilities',
+            'bikeReference.availableSizes',
+        ])
             ->findOrFail($referenceId);
     }
 

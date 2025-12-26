@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Storage;
@@ -18,15 +17,11 @@ use Illuminate\Support\Facades\Storage;
  * @property string $resumer_article
  * @property int $numero_reference
  */
-class Accessory extends Model
+class Accessory extends BaseArticle
 {
     public const WEIGHT_CHARACTERISTIC_ID = 31;
 
-    public $timestamps = false;
-
     protected $table = 'accessoire';
-
-    protected $primaryKey = 'id_article';
 
     protected $fillable = [
         'id_article',
@@ -40,17 +35,17 @@ class Accessory extends Model
         'numero_reference',
     ];
 
-    protected static function booted(): void
-    {
-        static::addGlobalScope('active_article', function ($builder) {
-            $builder->whereHas('article');
-        });
-    }
+    //    protected static function booted(): void
+    //    {
+    //        static::addGlobalScope('active_article', function ($builder) {
+    //            $builder->whereHas('article');
+    //        });
+    //    }
 
-    public function article(): BelongsTo
-    {
-        return $this->belongsTo(Article::class, 'id_article', 'id_article');
-    }
+    //    public function article(): BelongsTo
+    //    {
+    //        return $this->belongsTo(Article::class, 'id_article', 'id_article');
+    //    }
 
     public function baseReference(): BelongsTo
     {
@@ -60,26 +55,6 @@ class Accessory extends Model
     public function material(): BelongsTo
     {
         return $this->belongsTo(AccessoryMaterial::class, 'id_matiere_accessoire', 'id_matiere_accessoire');
-    }
-
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(Category::class, 'id_categorie', 'id_categorie');
-    }
-
-    public function characteristics(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            Characteristic::class,
-            'caracterise',
-            'id_article',
-            'id_caracteristique'
-        )->withPivot('valeur_caracteristique');
-    }
-
-    public function similar(): BelongsToMany
-    {
-        return $this->belongsToMany(Article::class, 'similaire', 'id_article_simil', 'id_article');
     }
 
     public function availableSizes(): BelongsToMany
@@ -102,7 +77,7 @@ class Accessory extends Model
         )->withPivot(['id_taille', 'statut']);
     }
 
-    public function getCoverUrl(): string
+    public function getCoverUrl($referenceId = null): string
     {
         $files = $this->getImageFiles();
 
@@ -139,19 +114,5 @@ class Accessory extends Model
     public function getImagePathFromName(string $imageName): string
     {
         return $this->getStorageDirectory().$imageName;
-    }
-
-    public function hasDiscount(): bool
-    {
-        return $this->pourcentage_remise > 0;
-    }
-
-    public function getDiscountedPrice(): float
-    {
-        if ($this->hasDiscount() > 0) {
-            return round($this->prix_article * (1 - $this->pourcentage_remise / 100), 2);
-        }
-
-        return $this->prix_article;
     }
 }

@@ -50,19 +50,17 @@
                                 <td class="px-4 py-3 text-gray-600">{{ $bike->bikeModel->nom_modele_velo }}</td>
                                 <td class="px-4 py-3 text-gray-600">{{ $bike->category->nom_categorie }}</td>
                                 <td class="px-4 py-3">
-                                    @if ($bike->article && $bike->article->hasDiscount())
+                                    @if ($bike->hasDiscount())
                                         <span class="text-gray-400 line-through">{{ number_format($bike->prix_article, 2) }} €</span>
-                                        <span class="font-bold text-green-600">
-                                            {{ number_format($bike->article->getDiscountedPrice(), 2) }} €
-                                        </span>
+                                        <span class="font-bold text-green-600">{{ number_format($bike->getDiscountedPrice(), 2) }} €</span>
                                     @else
                                         {{ number_format($bike->prix_article, 2) }} €
                                     @endif
                                 </td>
                                 <td class="px-4 py-3">
-                                    @if ($bike->article && $bike->article->pourcentage_remise > 0)
+                                    @if ($bike->pourcentage_remise > 0)
                                         <span class="rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-800">
-                                            -{{ $bike->article->pourcentage_remise }}%
+                                            -{{ $bike->pourcentage_remise }}%
                                         </span>
                                     @else
                                         <span class="text-gray-400">-</span>

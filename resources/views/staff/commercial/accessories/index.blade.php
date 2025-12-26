@@ -38,19 +38,19 @@
                                 <td class="px-4 py-3 text-gray-600">{{ $accessory->material->nom_matiere_accessoire }}</td>
                                 <td class="px-4 py-3 text-gray-600">{{ $accessory->category->nom_categorie }}</td>
                                 <td class="px-4 py-3">
-                                    @if ($accessory->article && $accessory->article->hasDiscount())
+                                    @if ($accessory->hasDiscount())
                                         <span class="text-gray-400 line-through">{{ number_format($accessory->prix_article, 2) }} €</span>
                                         <span class="font-bold text-green-600">
-                                            {{ number_format($accessory->article->getDiscountedPrice(), 2) }} €
+                                            {{ number_format($accessory->getDiscountedPrice(), 2) }} €
                                         </span>
                                     @else
                                         {{ number_format($accessory->prix_article, 2) }} €
                                     @endif
                                 </td>
                                 <td class="px-4 py-3">
-                                    @if ($accessory->article && $accessory->article->pourcentage_remise > 0)
+                                    @if ($accessory->pourcentage_remise > 0)
                                         <span class="rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-800">
-                                            -{{ $accessory->article->pourcentage_remise }}%
+                                            -{{ $accessory->pourcentage_remise }}%
                                         </span>
                                     @else
                                         <span class="text-gray-400">-</span>

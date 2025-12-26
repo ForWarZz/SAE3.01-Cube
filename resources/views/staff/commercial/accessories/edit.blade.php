@@ -139,7 +139,7 @@
                                 type="number"
                                 name="pourcentage_remise"
                                 label="Remise (%)"
-                                :value="old('pourcentage_remise', $accessory->article->pourcentage_remise ?? 0)"
+                                :value="old('pourcentage_remise', $accessory->pourcentage_remise ?? 0)"
                                 min="0"
                                 max="100"
                             />

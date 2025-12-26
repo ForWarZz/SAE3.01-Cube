@@ -84,7 +84,7 @@ class ArticleController extends Controller
 
     public function showByRef(int $referenceId)
     {
-        $reference = ArticleReference::withFullRelations()->findOrFail($referenceId);
+        $reference = ArticleReference::findOrFail($referenceId);
 
         $data = $this->articleService->prepareViewData($reference);
 

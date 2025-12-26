@@ -72,41 +72,41 @@ class ArticleReference extends Model
         )->withPivot(['id_taille', 'statut']);
     }
 
-    public function scopeWithFullRelations(Builder $query): Builder
-    {
-        return $query->with([
-            'article',
-            'article.category',
-            'article.characteristics.characteristicType',
-            'article.accessory',
-
-            'article.similar',
-            'article.similar.category',
-            'article.similar.bike.bikeModel',
-            'article.similar.bike.references',
-            'article.similar.accessory',
-
-            // disponibilité / tailles
-            'availableSizes',
-            'shopAvailabilities',
-
-            // vélo et modèle + géométrie (pour tableau géométrie) — charger le bike principal
-            'article.bike',
-            'article.bike.bikeModel:id_modele_velo,nom_modele_velo',
-            'article.bike.bikeModel.geometries',
-            'article.bike.bikeModel.geometries.characteristic',
-            'article.bike.bikeModel.geometries.size',
-
-            // références/variants du bike (uniquement colonnes nécessaires) et leurs petites sous-relations
-            'article.bike.references',
-            'article.bike.references.color:id_couleur,label_couleur,hex',
-            'article.bike.references.frame:id_cadre_velo,label_cadre_velo',
-            'article.bike.references.ebike:id_reference,id_batterie',
-            'article.bike.references.ebike.battery:id_batterie,label_batterie',
-
-            // accessoires compatibles — charger léger
-            'article.bike.compatibleAccessories.article.accessory',
-            'article.bike.compatibleAccessories.article.category',
-        ]);
-    }
+    //    public function scopeWithFullRelations(Builder $query): Builder
+    //    {
+    //        return $query->with([
+    //            'article',
+    //            'article.category',
+    //            'article.characteristics.characteristicType',
+    //            'article.accessory',
+    //
+    //            'article.similar',
+    //            'article.similar.category',
+    //            'article.similar.bike.bikeModel',
+    //            'article.similar.bike.references',
+    //            'article.similar.accessory',
+    //
+    //            // disponibilité / tailles
+    //            'availableSizes',
+    //            'shopAvailabilities',
+    //
+    //            // vélo et modèle + géométrie (pour tableau géométrie) — charger le bike principal
+    //            'article.bike',
+    //            'article.bike.bikeModel:id_modele_velo,nom_modele_velo',
+    //            'article.bike.bikeModel.geometries',
+    //            'article.bike.bikeModel.geometries.characteristic',
+    //            'article.bike.bikeModel.geometries.size',
+    //
+    //            // références/variants du bike (uniquement colonnes nécessaires) et leurs petites sous-relations
+    //            'article.bike.references',
+    //            'article.bike.references.color:id_couleur,label_couleur,hex',
+    //            'article.bike.references.frame:id_cadre_velo,label_cadre_velo',
+    //            'article.bike.references.ebike:id_reference,id_batterie',
+    //            'article.bike.references.ebike.battery:id_batterie,label_batterie',
+    //
+    //            // accessoires compatibles — charger léger
+    //            'article.bike.compatibleAccessories.article.accessory',
+    //            'article.bike.compatibleAccessories.article.category',
+    //        ]);
+    //    }
 }

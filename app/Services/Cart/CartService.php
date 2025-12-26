@@ -69,10 +69,9 @@ class CartService
      */
     public function getAvailableShippingModes(?float $subtotal = null, ?bool $hasBikes = null): Collection
     {
-        // Calculer si non fourni
         if ($subtotal === null || $hasBikes === null) {
             $cartData = $this->getCartViewData(0);
-            $subtotal = $cartData['summaryData']['subtotal'];
+            $subtotal = $cartData['summaryData']->subtotal;
             $hasBikes = $cartData['hasBikes'];
         }
 
@@ -127,8 +126,7 @@ class CartService
         $referenceIds = array_column($sessionItems, 'reference_id');
         $sizeIds = array_column($sessionItems, 'size_id');
 
-        $references = ArticleReference::withFullRelations()
-            ->whereIn('id_reference', $referenceIds)
+        $references = ArticleReference::whereIn('id_reference', $referenceIds)
             ->get()
             ->keyBy('id_reference');
 
