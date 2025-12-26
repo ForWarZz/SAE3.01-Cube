@@ -2,6 +2,7 @@
 
 namespace App\Filters;
 
+use App\Models\Article;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -37,23 +38,48 @@ class CategoryFilter extends AbstractFilter
         }
 
         $currentCategory = $context['category'];
+        $currentId = $currentCategory->id_categorie;
 
-        $directChildren = Category::where('id_categorie_parent', $currentCategory->id_categorie)->get();
+        $activeLeafIds = Article::whereIn('id_article', $articleIds)
+            ->distinct()
+            ->pluck('id_categorie')
+            ->toArray();
 
-        $validChildren = $directChildren->filter(function ($child) use ($articleIds) {
-            $ids = collect([$child->id_categorie])
-                ->merge($child->getAllChildrenIds())
-                ->toArray();
+        if (empty($activeLeafIds)) {
+            return collect();
+        }
 
-            return Category::whereIn('id_categorie', $ids)
-                ->whereHas('articles', function ($q) use ($articleIds) {
-                    $q->whereIn('id_article', $articleIds);
-                })
-                ->exists();
-        })->values();
+        $activeCategories = Category::with('parentRecursive')
+            ->whereIn('id_categorie', $activeLeafIds)
+            ->get();
+
+        $validChildIds = [];
+
+        foreach ($activeCategories as $cat) {
+            $iterator = $cat;
+
+            while ($iterator) {
+                if ($iterator->id_categorie_parent == $currentId) {
+                    $validChildIds[] = $iterator->id_categorie;
+                    break;
+                }
+
+                if (! $iterator->parentRecursive || $iterator->id_categorie == $currentId) {
+                    break;
+                }
+
+                $iterator = $iterator->parentRecursive;
+            }
+        }
+
+        $validChildIds = array_unique($validChildIds);
+
+        if (empty($validChildIds)) {
+            return collect();
+        }
 
         return $this->format(
-            $validChildren,
+            Category::whereIn('id_categorie', $validChildIds)->orderBy('nom_categorie')->get(),
             'id_categorie',
             'nom_categorie'
         );
