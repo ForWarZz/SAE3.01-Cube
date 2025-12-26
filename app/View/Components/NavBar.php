@@ -23,7 +23,7 @@ class NavBar extends Component
         protected CartSessionManager $cartSession,
     ) {
         $allCategories = Category::select('id_categorie', 'id_categorie_parent', 'nom_categorie')
-            ->orderBy('id_categorie', 'asc')
+            ->orderBy('id_categorie', 'desc')
             ->get();
 
         $modelsByCategoryId = DB::table('modele_velo')
