@@ -93,12 +93,11 @@ class CommercialBikeService
             'frameMaterial',
             'vintage',
             'usage',
-            'article',
+
             'references.frame',
             'references.color',
             'references.availableSizes',
             'references.ebike.battery',
-            'ebike',
         ]);
     }
 

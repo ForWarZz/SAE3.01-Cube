@@ -51,6 +51,11 @@ class Bike extends BaseArticle
         return $this->date_ajout->greaterThan(Carbon::now()->subMonths(6));
     }
 
+    public function article(): BelongsTo
+    {
+        return $this->belongsTo(Article::class, 'id_article', 'id_article');
+    }
+
     public function references(): HasMany
     {
         return $this->hasMany(BikeReference::class, 'id_article', 'id_article');
