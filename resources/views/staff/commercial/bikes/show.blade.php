@@ -72,6 +72,16 @@
                         @endif
                     </p>
                 </div>
+                <div>
+                    <span class="text-sm text-gray-500">Poids</span>
+                    <p class="font-medium">
+                        @if ($bike->poids_article < 1)
+                            {{ $bike->poids_article * 1000 }} g
+                        @else
+                            {{ number_format($bike->poids_article, 2, ",", " ") }} kg
+                        @endif
+                    </p>
+                </div>
             </div>
 
             <div class="mt-4">

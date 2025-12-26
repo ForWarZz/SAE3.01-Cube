@@ -216,6 +216,18 @@
                                     @endforeach
                                 </select>
                             </div>
+
+                            <div class="mb-4">
+                                <x-form-input
+                                    type="number"
+                                    name="poids_velo"
+                                    label="Poids du vélo (kg)"
+                                    :value="old('poids_velo')"
+                                    placeholder="Ex: 12,5"
+                                    step="0.1"
+                                    min="0"
+                                />
+                            </div>
                         </div>
 
                         <div class="rounded-lg bg-white p-6 shadow-sm">
