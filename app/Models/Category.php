@@ -60,11 +60,7 @@ class Category extends Model
 
     public function getAllChildrenIds(): array
     {
-        // On commence avec l'ID courant
         $ids = [$this->id_categorie];
-
-        // On charge les enfants récursivement s'ils ne le sont pas déjà
-        // (loadMissing est intelligent et ne fait rien si c'est déjà chargé)
         $this->loadMissing('childrenRecursive');
 
         foreach ($this->childrenRecursive as $child) {
@@ -76,35 +72,29 @@ class Category extends Model
 
     public function getFullPath(): string
     {
-        // Plus besoin de map, on peut itérer directement sur le tableau d'objets
         $noms = [];
         $ancestors = $this->getAncestors();
 
         foreach ($ancestors as $cat) {
             $noms[] = $cat->nom_categorie;
         }
+
         $noms[] = $this->nom_categorie;
 
         return implode(' > ', $noms);
     }
 
     /**
-     * ✅ OPTIMISATION 3 : getAncestors sans boucle SQL
-     * Utilise la relation parentRecursive pour éviter le N+1
-     *
      * @return Category[]
      */
     public function getAncestors(): array
     {
         $ancestors = [];
-
-        // On charge toute la chaîne de parents en 1 seule requête SQL
         $this->loadMissing('parentRecursive');
 
         $current = $this->parentRecursive;
 
         while ($current) {
-            // On ajoute au début du tableau pour avoir l'ordre [Grand-père, Père]
             array_unshift($ancestors, $current);
             $current = $current->parentRecursive;
         }
