@@ -18,10 +18,8 @@ class VintageFilter extends AbstractFilter
         }
     }
 
-    public function options(Builder $baseQuery, array $context = []): Collection
+    public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
-        $articleIds = $baseQuery->pluck('id_article');
-
         return $this->format(
             Vintage::whereIn('id_millesime',
                 Bike::whereIn('id_article', $articleIds)->pluck('id_millesime')

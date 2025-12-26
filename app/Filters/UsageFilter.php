@@ -18,10 +18,8 @@ class UsageFilter extends AbstractFilter
         }
     }
 
-    public function options(Builder $baseQuery, array $context = []): Collection
+    public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
-        $articleIds = $baseQuery->pluck('id_article');
-
         return $this->format(
             Usage::whereIn('id_usage',
                 Bike::whereIn('id_article', $articleIds)->pluck('id_usage')

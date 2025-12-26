@@ -18,10 +18,8 @@ class FrameFilter extends AbstractFilter
         }
     }
 
-    public function options(Builder $baseQuery, array $context = []): Collection
+    public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
-        $articleIds = $baseQuery->pluck('id_article');
-
         return $this->format(
             BikeFrame::whereIn('id_cadre_velo',
                 BikeReference::whereIn('id_article', $articleIds)->pluck('id_cadre_velo')

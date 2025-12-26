@@ -26,18 +26,18 @@ class FilterEngineService
      * }
      */
     private array $filterClasses = [
-        //        VintageFilter::class,
-        //        FrameFilter::class,
-        //        ColorFilter::class,
-        //        UsageFilter::class,
-        //        MaterialFilter::class,
-        //        BikeModelFilter::class,
-        //        DiscountFilter::class,
-        //        AvailabilityFilter::class,
-        //        PriceFilter::class,
-        //        CategoryFilter::class,
-        //        AccessoryMaterialFilter::class,
-        //        SizeFilter::class,
+        VintageFilter::class,
+        FrameFilter::class,
+        ColorFilter::class,
+        UsageFilter::class,
+        MaterialFilter::class,
+        BikeModelFilter::class,
+        DiscountFilter::class,
+        AvailabilityFilter::class,
+        PriceFilter::class,
+        CategoryFilter::class,
+        AccessoryMaterialFilter::class,
+        SizeFilter::class,
     ];
 
     /**
@@ -82,9 +82,10 @@ class FilterEngineService
     public function getFilterOptions(Builder $query): array
     {
         $opts = [];
+        $articleIds = $query->pluck('id_article')->toArray();
 
         foreach ($this->filters as $filter) {
-            $opts[$filter->key()] = $filter->options((clone $query), $this->context);
+            $opts[$filter->key()] = $filter->options((clone $query), $articleIds, $this->context);
         }
 
         return $opts;

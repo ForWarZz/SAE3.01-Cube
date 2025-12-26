@@ -25,7 +25,7 @@ class PriceFilter extends AbstractFilter
         }
     }
 
-    public function options(Builder $baseQuery, array $context = []): Collection
+    public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
         $minPrice = Article::min('prix_article');
         $maxPrice = Article::max('prix_article');

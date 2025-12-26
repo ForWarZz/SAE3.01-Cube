@@ -39,7 +39,7 @@ class AvailabilityFilter extends AbstractFilter
         });
     }
 
-    public function options(Builder $baseQuery, array $context = []): Collection
+    public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
         $options = collect();
 

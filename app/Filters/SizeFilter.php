@@ -26,10 +26,8 @@ class SizeFilter extends AbstractFilter
         });
     }
 
-    public function options(Builder $baseQuery, array $context = []): Collection
+    public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
-        $articleIds = $baseQuery->pluck('id_article');
-
         $availableSizes = Size::query()
             ->whereHas('references', function ($q) use ($articleIds) {
                 $q->whereHas('bikeReference', fn ($b) => $b->whereIn('id_article', $articleIds))

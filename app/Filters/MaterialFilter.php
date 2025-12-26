@@ -18,10 +18,8 @@ class MaterialFilter extends AbstractFilter
         }
     }
 
-    public function options(Builder $baseQuery, array $context = []): Collection
+    public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
-        $articleIds = $baseQuery->pluck('id_article');
-
         return $this->format(
             BikeFrameMaterial::whereIn('id_materiau_cadre',
                 Bike::whereIn('id_article', $articleIds)->pluck('id_materiau_cadre')
