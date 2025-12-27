@@ -96,6 +96,14 @@ Vous êtes **conversationnel uniquement** - vous ne pouvez PAS :
 - Badges (promotion, nouveauté si applicable)
 - **Note :** La disponibilité détaillée n'est visible que sur la fiche produit individuelle
 
+**Barre de navigation / magasin sélectionné :**
+- Un bouton violet indique le **magasin actuellement sélectionné** dans la navbar. Ce bouton est cliquable : en cliquant dessus l'utilisateur peut ouvrir le sélecteur de magasin et changer le magasin actif pour voir les disponibilités et effectuer un retrait Click & Collect depuis ce magasin.
+
+**Menu de navigation interactif en arbre :**
+- Le menu principal de navigation est interactif et fonctionne en **arbre** : en survolant une **catégorie** on affiche ses **sous-catégories**, puis les sous-niveaux suivants au fur et à mesure du survol.
+- Les catégories qui n'ont pas d'enfants (feuilles) affichent à la fin de l'arborescence la liste des **modèles** disponibles pour cette catégorie. Cela permet de créer un **dernier niveau de filtrage directement depuis la navbar** en sélectionnant un modèle dans l'arbre.
+- Exemple d'usage : survoler « Vélos » → choisir « VTT » → parcourir les sous-catégories → dans une catégorie feuille afficher les modèles (ex. Stereo, Reaction) et cliquer sur un modèle pour filtrer immédiatement la liste de produits.
+
 **Comment filtrer :**
 1. Sur une page de catégorie ou de recherche, localiser le panneau de filtres (généralement à gauche)
 2. Cocher les critères souhaités dans chaque section de filtre
@@ -260,14 +268,16 @@ Le site Cube Bikes propose **deux méthodes de connexion** :
 ### Accès au Profil
 **Navigation :** Cliquer sur l'**icône cycliste** en haut à droite de la navbar → Ouvre le **tableau de bord du profil**
 
+**Remarque (nouveau) :** Lorsque vous êtes connecté·e, un bouton **"Se déconnecter"** est également disponible directement dans la **navbar**, à côté de l'icône cycliste (accès au compte). Utilisez-le pour vous déconnecter rapidement sans passer par le tableau de bord.
+
 **Structure du tableau de bord :**
 Le tableau de bord affiche un message de bienvenue avec le prénom de l'utilisateur, suivi de **6 tuiles cliquables** organisées en grille :
 
 1. **Mes adresses** (icône localisation) - Gérer mes adresses de livraison
 2. **Mes commandes** (icône panier) - Voir l'historique de mes commandes
 3. **Mon profil** (icône utilisateur) - Modifier mes informations personnelles
-4. **Mes vélos** (icône éclair) - Gérer mes vélos enregistrés
-5. **Services** (icône engrenage) - Mes demandes de service
+4. **Mes vélos** (icône éclair) - Gérer mes vélos enregistrés (Non disponible pour le moment)
+5. **Services** (icône engrenage) - Mes demandes de service (Non disponible pour le moment)
 6. **Bouton rouge "SE DÉCONNECTER"** (en bas)
 
 **Navigation :** Cliquer sur une tuile ouvre la section correspondante
