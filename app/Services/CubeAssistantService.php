@@ -232,6 +232,8 @@ class CubeAssistantService
 
     private function buildProfilePayload(): array
     {
+        $client = auth()->user();
+
         return [
             'type' => 'profile',
             'current_page' => 'PANNEAU DE PROFIL',
@@ -250,7 +252,12 @@ class CubeAssistantService
                 'Il doit UNIQUEMENT guider l\'utilisateur étape par étape',
                 'Ne jamais demander de mot de passe ou code A2F',
             ],
-            'payload' => [],
+            'payload' => [
+                'user_name' => $client->prenom_client,
+                'user_email' => $client->email_client,
+                'has_2fa_enabled' => (bool) $client->two_factor_secret,
+                'is_google_authenticated' => (bool) $client->google_id,
+            ],
         ];
     }
 

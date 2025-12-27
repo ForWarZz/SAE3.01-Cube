@@ -258,9 +258,23 @@ Le site Cube Bikes propose **deux méthodes de connexion** :
 - Connexion rapide et sécurisée
 
 ### Accès au Profil
-**Navigation :** Icône cycliste (navbar) → Panneau de profil
+**Navigation :** Cliquer sur l'**icône cycliste** en haut à droite de la navbar → Ouvre le **tableau de bord du profil**
+
+**Structure du tableau de bord :**
+Le tableau de bord affiche un message de bienvenue avec le prénom de l'utilisateur, suivi de **6 tuiles cliquables** organisées en grille :
+
+1. **Mes adresses** (icône localisation) - Gérer mes adresses de livraison
+2. **Mes commandes** (icône panier) - Voir l'historique de mes commandes
+3. **Mon profil** (icône utilisateur) - Modifier mes informations personnelles
+4. **Mes vélos** (icône éclair) - Gérer mes vélos enregistrés
+5. **Services** (icône engrenage) - Mes demandes de service
+6. **Bouton rouge "SE DÉCONNECTER"** (en bas)
+
+**Navigation :** Cliquer sur une tuile ouvre la section correspondante
 
 ### Modification du Profil
+**Accès :** Tableau de bord → Tuile **"Mon profil"**
+
 **Bouton "Modifier"** (haut de page) → formulaire pré-rempli
 - Champs : prénom, nom, email, téléphone
 - Validation des champs obligatoires
@@ -268,9 +282,9 @@ Le site Cube Bikes propose **deux méthodes de connexion** :
 
 ### Changement de Mot de Passe
 
-**⚠️ IMPORTANT : Disponible UNIQUEMENT pour les comptes créés avec email/mot de passe**
+**Accès :** Tableau de bord → Tuile **"Mon profil"** → Section "Changement de mot de passe"
 
-**Section dédiée** sous le bouton "Modifier"
+**⚠️ IMPORTANT : Disponible UNIQUEMENT pour les comptes créés avec email/mot de passe**
 
 **Champs obligatoires :**
 - Mot de passe actuel
@@ -299,6 +313,8 @@ Le site Cube Bikes propose **deux méthodes de connexion** :
 
 ### Authentification à Deux Facteurs (A2F)
 
+**Accès :** Tableau de bord → Tuile **"Mon profil"** → Section "Authentification à deux facteurs"
+
 **Activation (2 étapes) :**
 
 **Étape 1 - Scanner le QR**
@@ -323,7 +339,7 @@ Le site Cube Bikes propose **deux méthodes de connexion** :
 
 ### Consultation des Commandes
 
-**Accès :** Tuile "Commandes" depuis panneau profil
+**Accès :** Tableau de bord → Tuile **"Mes commandes"**
 
 **Liste des commandes (cartes) :**
 - Statut (Préparation, Expédiée, Livrée, Annulée)
@@ -344,7 +360,7 @@ Le site Cube Bikes propose **deux méthodes de connexion** :
 
 ### Gestion des Adresses
 
-**Accès :** Tuile "Adresses" depuis panneau profil
+**Accès :** Tableau de bord → Tuile **"Mes adresses"**
 
 **Créer une adresse :**
 - Bouton violet "Nouvelle adresse" (haut droite)
@@ -369,13 +385,15 @@ Le site Cube Bikes propose **deux méthodes de connexion** :
 - **Supprimer** → confirmation requise → suppression/anonymisation
 
 **Procédure de suppression :**
-1. Panneau profil → Tuile "Adresses"
+1. Tableau de bord → Tuile **"Mes adresses"**
 2. Repérer la carte de l'adresse
 3. Cliquer "Supprimer"
 4. Confirmer dans la fenêtre (lire info suppression/anonymisation)
 5. Message de confirmation affiché
 
 ### Suppression et Export des Données
+
+**Accès :** Tableau de bord → Tuile **"Mon profil"** → Bas de page
 
 **Suppression du compte :**
 - Section "Suppression du compte" (bas de page profil)
@@ -458,10 +476,12 @@ Le site Cube Bikes propose **deux méthodes de connexion** :
 **Réponse :**
 > Je ne peux pas effectuer cette action ici. Voici comment procéder :
 >
-> 1. Panneau de profil → Section "Authentification à deux facteurs"
-> 2. Cliquer sur "Activer la double authentification"
-> 3. Scanner le QR code avec votre app TOTP (Google Authenticator, Authy...)
-> 4. Saisir le code à 6 chiffres pour vérifier
+> 1. Cliquer sur l'icône cycliste (en haut à droite) → Tableau de bord
+> 2. Cliquer sur la tuile **"Mon profil"**
+> 3. Descendre à la section "Authentification à deux facteurs"
+> 4. Cliquer sur "Activer la double authentification"
+> 5. Scanner le QR code avec votre app TOTP (Google Authenticator, Authy...)
+> 6. Saisir le code à 6 chiffres pour vérifier
 >
 > Besoin que je détaille une étape ?
 
@@ -506,10 +526,12 @@ Le site Cube Bikes propose **deux méthodes de connexion** :
 
 **Réponse :**
 > **Si vous avez créé votre compte avec email/mot de passe :**
-> 1. Panneau de profil → Section "Changement de mot de passe"
-> 2. Saisir votre mot de passe actuel
-> 3. Saisir le nouveau mot de passe (2 fois)
-> 4. Cliquer "Modifier le mot de passe"
+> 1. Cliquer sur l'icône cycliste (en haut à droite) → Tableau de bord
+> 2. Cliquer sur la tuile **"Mon profil"**
+> 3. Section "Changement de mot de passe"
+> 4. Saisir votre mot de passe actuel
+> 5. Saisir le nouveau mot de passe (2 fois)
+> 6. Cliquer "Modifier le mot de passe"
 >
 > **Si vous vous connectez avec Google :**
 > Votre mot de passe est géré directement par Google. Pour le modifier, rendez-vous sur https://myaccount.google.com et accédez à la section Sécurité.
