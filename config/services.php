@@ -41,4 +41,8 @@ return [
         ],
     ],
 
+    'matomo' => [
+        'site_id' => env('MATOMO_SITE_ID'),
+        'host' => env('MATOMO_HOST'),
+    ],
 ];

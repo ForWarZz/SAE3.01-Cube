@@ -96,9 +96,13 @@
                 needConsent: true,
                 cookies: [],
                 js: function () {
-                    document.getElementById('google-cookie-alert').classList.add('hidden');
+                    const googleAlert = document.querySelector('#google-cookie-alert');
 
-                    const acInput = document.getElementById('address_autocomplete');
+                    if (!googleAlert) {
+                        return;
+                    }
+
+                    const acInput = document.querySelector('#address_autocomplete');
                     acInput.disabled = false;
                     acInput.classList.remove('bg-gray-100', 'cursor-not-allowed');
                     acInput.placeholder = 'Commencez à taper votre adresse...';
@@ -114,7 +118,13 @@
                     );
                 },
                 fallback: function () {
-                    document.getElementById('google-cookie-alert').classList.remove('hidden');
+                    const googleAlert = document.querySelector('#google-cookie-alert');
+
+                    if (!googleAlert) {
+                        return;
+                    }
+
+                    googleAlert.classList.remove('hidden');
 
                     const acInput = document.getElementById('address_autocomplete');
                     acInput.disabled = true;
@@ -152,8 +162,8 @@
                 readmoreLink: '',
             });
 
-            tarteaucitron.user.matomoId = 1;
-            tarteaucitron.user.matomoHost = '//ton-analytics.com/';
+            tarteaucitron.user.matomoId = {{ config("services.matomo.site_id") }};
+            tarteaucitron.user.matomoHost = '{{ config("services.matomo.url") }}';
 
             (tarteaucitron.job = tarteaucitron.job || []).push('matomo');
             (tarteaucitron.job = tarteaucitron.job || []).push('googleplaces');
