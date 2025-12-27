@@ -85,6 +85,7 @@
         <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
 
         <script src="{{ asset("tarteaucitron/tarteaucitron.min.js") }}"></script>
+
         <script type="text/javascript">
             tarteaucitron.services.googleplaces = {
                 key: 'googleplaces',
@@ -138,6 +139,7 @@
                 },
             };
         </script>
+
         <script type="text/javascript">
             tarteaucitron.init({
                 privacyUrl: '',

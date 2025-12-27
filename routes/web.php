@@ -175,5 +175,8 @@ Route::prefix('/magasins')->name('shops')->group(function () {
 });
 
 Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);
+Route::get('/botman/chat', function () {
+    return view('botman-frame');
+});
 
 require __DIR__.'/auth.php';
