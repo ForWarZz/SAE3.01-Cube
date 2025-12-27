@@ -82,86 +82,81 @@
                 mobileHeight: '100%',
                 mobileWidth: '100%',
             };
-
-            console.log('LOADED BOTMAN WIDGET');
-            console.log(botmanWidget);
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
+
+        <script src="{{ asset("tarteaucitron/tarteaucitron.min.js") }}"></script>
+        <script type="text/javascript">
+            tarteaucitron.services.googleplaces = {
+                key: 'googleplaces',
+                type: 'api',
+                name: 'Google Places (Autocomplétion)',
+                uri: 'https://policies.google.com/privacy',
+                needConsent: true,
+                cookies: [],
+                js: function () {
+                    document.getElementById('google-cookie-alert').classList.add('hidden');
+
+                    const acInput = document.getElementById('address_autocomplete');
+                    acInput.disabled = false;
+                    acInput.classList.remove('bg-gray-100', 'cursor-not-allowed');
+                    acInput.placeholder = 'Commencez à taper votre adresse...';
+
+                    ['code_postal', 'nom_ville'].forEach((id) => {
+                        const el = document.getElementById(id);
+                        el.setAttribute('readonly', 'true');
+                        el.classList.add('cursor-not-allowed', 'border-gray-200', 'bg-gray-100');
+                    });
+
+                    tarteaucitron.addScript(
+                        'https://maps.googleapis.com/maps/api/js?key={{ config("services.google.places_api_key") }}&libraries=places&callback=initAutocomplete',
+                    );
+                },
+                fallback: function () {
+                    document.getElementById('google-cookie-alert').classList.remove('hidden');
+
+                    const acInput = document.getElementById('address_autocomplete');
+                    acInput.disabled = true;
+                    acInput.classList.add('bg-gray-100', 'cursor-not-allowed');
+                    acInput.placeholder = 'Service désactivé (cookies refusés)';
+                    acInput.value = '';
+
+                    ['code_postal', 'nom_ville'].forEach((id) => {
+                        const el = document.getElementById(id);
+                        el.removeAttribute('readonly');
+                        el.classList.remove('cursor-not-allowed', 'border-gray-200', 'bg-gray-100');
+                    });
+                },
+            };
+        </script>
+        <script type="text/javascript">
+            tarteaucitron.init({
+                privacyUrl: '',
+                bodyPosition: 'bottom',
+                hashtag: '#tarteaucitron',
+                cookieName: 'tarteaucitron',
+                orientation: 'middle',
+                groupServices: false,
+                showIcon: true,
+                iconPosition: 'BottomLeft',
+                adblocker: false,
+                DenyAllCta: true,
+                AcceptAllCta: true,
+                highPrivacy: true,
+                handleBrowserDNTRequest: false,
+                removeCredit: false,
+                moreInfoLink: true,
+                useExternalCss: false,
+                useExternalJs: false,
+                readmoreLink: '',
+            });
+
+            tarteaucitron.user.matomoId = 1;
+            tarteaucitron.user.matomoHost = '//ton-analytics.com/';
+
+            (tarteaucitron.job = tarteaucitron.job || []).push('matomo');
+            (tarteaucitron.job = tarteaucitron.job || []).push('googleplaces');
+        </script>
     </body>
-
-    {{-- Tarte au citron.js => Cookies --}}
-    <script src="{{ asset("tarteaucitron/tarteaucitron.min.js") }}"></script>
-    <script type="text/javascript">
-        tarteaucitron.services.googleplaces = {
-            key: 'googleplaces',
-            type: 'api',
-            name: 'Google Places (Autocomplétion)',
-            uri: 'https://policies.google.com/privacy',
-            needConsent: true,
-            cookies: [],
-            js: function () {
-                document.getElementById('google-cookie-alert').classList.add('hidden');
-
-                const acInput = document.getElementById('address_autocomplete');
-                acInput.disabled = false;
-                acInput.classList.remove('bg-gray-100', 'cursor-not-allowed');
-                acInput.placeholder = 'Commencez à taper votre adresse...';
-
-                ['code_postal', 'nom_ville'].forEach((id) => {
-                    const el = document.getElementById(id);
-                    el.setAttribute('readonly', 'true');
-                    el.classList.add('cursor-not-allowed', 'border-gray-200', 'bg-gray-100');
-                });
-
-                tarteaucitron.addScript(
-                    'https://maps.googleapis.com/maps/api/js?key={{ config("services.google.places_api_key") }}&libraries=places&callback=initAutocomplete',
-                );
-            },
-            fallback: function () {
-                document.getElementById('google-cookie-alert').classList.remove('hidden');
-
-                const acInput = document.getElementById('address_autocomplete');
-                acInput.disabled = true;
-                acInput.classList.add('bg-gray-100', 'cursor-not-allowed');
-                acInput.placeholder = 'Service désactivé (cookies refusés)';
-                acInput.value = '';
-
-                ['code_postal', 'nom_ville'].forEach((id) => {
-                    const el = document.getElementById(id);
-                    el.removeAttribute('readonly');
-                    el.classList.remove('cursor-not-allowed', 'border-gray-200', 'bg-gray-100');
-                });
-            },
-        };
-
-        (tarteaucitron.job = tarteaucitron.job || []).push('googleplaces');
-    </script>
-    <script type="text/javascript">
-        tarteaucitron.init({
-            privacyUrl: '',
-            bodyPosition: 'bottom',
-            hashtag: '#tarteaucitron',
-            cookieName: 'tarteaucitron',
-            orientation: 'middle',
-            groupServices: false,
-            showIcon: true,
-            iconPosition: 'BottomLeft',
-            adblocker: false,
-            DenyAllCta: true,
-            AcceptAllCta: true,
-            highPrivacy: true,
-            handleBrowserDNTRequest: false,
-            removeCredit: false,
-            moreInfoLink: true,
-            useExternalCss: false,
-            useExternalJs: false,
-            readmoreLink: '',
-        });
-
-        tarteaucitron.user.matomoId = 1;
-        tarteaucitron.user.matomoHost = '//ton-analytics.com/';
-
-        (tarteaucitron.job = tarteaucitron.job || []).push('matomo');
-    </script>
 </html>
