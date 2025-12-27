@@ -8,6 +8,7 @@ use App\Models\Bike;
 use App\Models\BikeReference;
 use App\Models\Category;
 use App\Models\Characteristic;
+use App\Services\Cart\CartService;
 use Gemini\Laravel\Facades\Gemini;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
@@ -18,6 +19,10 @@ class CubeAssistantService
     private const GEMINI_MODEL = 'gemini-2.0-flash';
 
     private const SYSTEM_PROMPT_PATH = 'prompts/cube_assistant_system.txt';
+
+    public function __construct(
+        private readonly CartService $cartService
+    ) {}
 
     public function askGemini(string $message, string $pageType, ?int $contextId): string
     {
@@ -64,8 +69,6 @@ class CubeAssistantService
     {
         $context = [
             'metadata' => $this->buildMetadata($pageType, $contextId),
-            'site_capabilities' => $this->getSiteCapabilities(),
-            'instructions' => $this->getContextInstructions(),
             'payload' => $this->buildPayload($pageType, $contextId),
         ];
 
@@ -80,32 +83,6 @@ class CubeAssistantService
             'timestamp' => now()->toIso8601String(),
             'locale' => 'fr_FR',
             'currency' => 'EUR',
-        ];
-    }
-
-    private function getSiteCapabilities(): array
-    {
-        return [
-            'search' => true,
-            'filters' => [
-                'category', 'price', 'size', 'color',
-                'frame_material', 'usage', 'bike_model',
-                'vintage', 'availability', 'promotion',
-            ],
-            'click_and_collect' => true,
-            'home_delivery' => true,
-            'payment_methods' => ['CB', 'PayPal', 'ApplePay', 'GooglePay', 'Stripe'],
-        ];
-    }
-
-    private function getContextInstructions(): array
-    {
-        return [
-            'truth_source' => 'Use ONLY data in payload. If missing, respond: "Je n\'ai pas cette information pour le moment."',
-            'no_hallucination' => true,
-            'check_current_page' => 'ALWAYS check current_page and user_location before responding to avoid redirecting user to pages they are already on',
-            'format' => 'markdown',
-            'blank_line_before_lists' => true,
         ];
     }
 
@@ -165,7 +142,7 @@ class CubeAssistantService
 
     private function buildCategoryPayload(int $categoryId): array
     {
-        $category = Category::find($categoryId);
+        $category = Category::find($categoryId)->load('parentRecursive');
 
         if (! $category) {
             return ['error' => 'Category not found'];
@@ -190,13 +167,15 @@ class CubeAssistantService
             ],
             'payload' => [
                 'category_name' => $category->nom_categorie,
-                'category_description' => $category->description_categorie ?? null,
+                'category_path' => $category->getFullPath(),
             ],
         ];
     }
 
     private function buildCartPayload(): array
     {
+        $cartData = $this->cartService->getCartData();
+
         return [
             'type' => 'cart',
             'current_page' => 'PANIER',
@@ -215,13 +194,15 @@ class CubeAssistantService
                 'Connexion obligatoire pour valider le panier',
             ],
             'payload' => [
-
+                ...$cartData->toArray(),
             ],
         ];
     }
 
     private function buildCheckoutPayload(): array
     {
+        $cartData = $this->cartService->getCartData();
+
         return [
             'type' => 'checkout',
             'current_page' => 'PAGE PAIEMENT',
@@ -243,7 +224,9 @@ class CubeAssistantService
                 'NE PAS proposer de ventes additionnelles',
                 'Être concis et efficace pour ne pas ralentir la conversion',
             ],
-            'payload' => [],
+            'payload' => [
+                ...$cartData->toArray(),
+            ],
         ];
     }
 
