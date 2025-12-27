@@ -27,7 +27,7 @@ class CommercialAccessoryService
         $accessoryCategory = Category::find(Category::ACCESSORY_CATEGORY_ID);
         $accessoryChildrenIds = $accessoryCategory?->getAllChildrenIds() ?? [];
 
-        return Category::with(['parent', 'children'])
+        return Category::with(['parentRecursive', 'children'])
             ->whereDoesntHave('children')
             ->whereIn('id_categorie', $accessoryChildrenIds)
             ->get()
@@ -42,7 +42,7 @@ class CommercialAccessoryService
         try {
             DB::beginTransaction();
 
-            DB::select('CALL update_accessoire(?, ?, ?, ?, ?, ?, ?, ?)', [
+            DB::select('CALL update_accessory(?, ?, ?, ?, ?, ?, ?, ?, ?)', [
                 $accessory->id_article,
                 $validated['nom_article'],
                 $validated['description_article'],
@@ -51,6 +51,7 @@ class CommercialAccessoryService
                 $validated['pourcentage_remise'],
                 $validated['id_categorie'],
                 $validated['id_matiere_accessoire'],
+                $validated['poids_article'],
             ]);
 
             $accessory->availableSizes()->sync($validated['sizes']);

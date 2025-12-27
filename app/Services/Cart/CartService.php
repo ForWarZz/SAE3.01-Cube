@@ -69,11 +69,10 @@ class CartService
      */
     public function getAvailableShippingModes(?float $subtotal = null, ?bool $hasBikes = null): Collection
     {
-        // Calculer si non fourni
         if ($subtotal === null || $hasBikes === null) {
-            $cartData = $this->getCartViewData(0);
-            $subtotal = $cartData['summaryData']['subtotal'];
-            $hasBikes = $cartData['hasBikes'];
+            $cartData = $this->getCartData(0);
+            $subtotal = $cartData->summary->subtotal;
+            $hasBikes = $cartData->hasBikes;
         }
 
         $deliveryPrice = $subtotal >= 50 ? 0 : 6;
@@ -92,17 +91,6 @@ class CartService
             });
     }
 
-    /**
-     * Retourne les données du panier dans le format attendu par les vues Blade
-     */
-    public function getCartViewData(?float $shippingPrice = null): array
-    {
-        return $this->getCartData($shippingPrice)->toViewData();
-    }
-
-    /**
-     * Retourne les données du panier sous forme de DTO typé
-     */
     public function getCartData(?float $shippingPrice = null): CartViewDataDTO
     {
         $sessionItems = $this->session->getItems();
@@ -127,11 +115,15 @@ class CartService
         $referenceIds = array_column($sessionItems, 'reference_id');
         $sizeIds = array_column($sessionItems, 'size_id');
 
-        $references = ArticleReference::with([
-            'bikeReference.color',
-            'bikeReference.article',
-            'accessory.article',
-        ])->whereIn('id_reference', $referenceIds)->get()->keyBy('id_reference');
+        $references = ArticleReference::whereIn('id_reference', $referenceIds)
+            ->with([
+                'article',
+
+                'bikeReference.color',
+                'accessory',
+            ])
+            ->get()
+            ->keyBy('id_reference');
 
         $sizes = Size::whereIn('id_taille', $sizeIds)->get()->keyBy('id_taille');
 
@@ -151,10 +143,10 @@ class CartService
             }
 
             /** @var Article $article */
-            $article = $reference->bikeReference->article ?? $reference->accessory->article;
+            $article = $reference->article;
 
             $cartItems->push(new CartItemDTO(
-                reference: $reference->bikeReference ?? $reference->accessory,
+                reference: $reference->variant(),
                 img_url: $article->getCoverUrl($reference->id_reference),
                 size: $size,
                 quantity: $sessionItem['quantity'],
@@ -163,7 +155,7 @@ class CartService
                 real_price: $article->prix_article,
                 has_discount: $article->hasDiscount(),
                 discount_percent: $article->pourcentage_remise,
-                color: $reference->bikeReference?->color?->label_couleur,
+                color: $reference->bikeReference?->color->label_couleur,
                 article_url: route('articles.show', [
                     'reference' => $reference->id_reference,
                     'article' => $article->id_article,
@@ -172,7 +164,7 @@ class CartService
 
             $subtotal += $article->getDiscountedPrice() * $sessionItem['quantity'];
 
-            if ($reference->bikeReference) {
+            if ($reference->isBike()) {
                 $hasBikes = true;
             }
         }

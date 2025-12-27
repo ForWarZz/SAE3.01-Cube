@@ -9,14 +9,14 @@
             <x-discount-badge class="absolute top-3 left-3" :discount-percent="$article->pourcentage_remise" />
         @endif
 
-        {{-- @if ($article->bike?->isNew()) --}}
-        {{-- <span --}}
-        {{-- class="absolute top-3 right-3 z-10 flex items-center gap-1 rounded-full bg-gradient-to-r from-lime-400 to-green-500 px-3 py-1 text-xs font-bold tracking-wide text-gray-900 uppercase shadow-lg" --}}
-        {{-- > --}}
-        {{-- <x-bi-star-fill class="size-3" /> --}}
-        {{-- Nouveau --}}
-        {{-- </span> --}}
-        {{-- @endif --}}
+        @if ($isBike && $article->bike->isNew())
+            <span
+                class="absolute top-3 right-3 z-10 flex items-center gap-1 rounded-full bg-gradient-to-r from-lime-400 to-green-500 px-3 py-1 text-xs font-bold tracking-wide text-gray-900 uppercase shadow-lg"
+            >
+                <x-bi-star-fill class="size-3" />
+                Nouveau
+            </span>
+        @endif
 
         <div class="mb-6 overflow-visible">
             <img
@@ -38,7 +38,7 @@
                 </p>
             @else
                 <p class="mb-3 text-sm text-gray-500">
-                    {{ $article->category->nom_categorie ?? "Accessoire" }}
+                    {{ $article->category->nom_categorie }}
                 </p>
             @endif
 

@@ -19,7 +19,7 @@ class CommercialBikeService
 
     public function getPaginatedBikes(int $perPage = 10): LengthAwarePaginator
     {
-        return Bike::with(['bikeModel', 'category', 'frameMaterial', 'vintage', 'usage', 'article', 'references'])
+        return Bike::with(['bikeModel', 'category', 'vintage', 'references'])
             ->orderBy('id_article', 'desc')
             ->paginate($perPage);
     }
@@ -46,7 +46,7 @@ class CommercialBikeService
 
     private function createBikeArticle(array $validated, int $modelId): int
     {
-        $result = DB::selectOne('SELECT fn_create_bike(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) as id_article', [
+        $result = DB::selectOne('SELECT fn_create_bike(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) as id_article', [
             $validated['is_vae'] ?? false,
             $validated['nom_article'],
             $validated['description_article'],
@@ -59,6 +59,7 @@ class CommercialBikeService
             $validated['id_millesime'],
             $validated['id_usage'],
             $validated['id_type_vae'],
+            $validated['poids_article'],
         ]);
 
         return $result->id_article;
@@ -93,12 +94,11 @@ class CommercialBikeService
             'frameMaterial',
             'vintage',
             'usage',
-            'article',
+
             'references.frame',
             'references.color',
             'references.availableSizes',
             'references.ebike.battery',
-            'ebike',
         ]);
     }
 

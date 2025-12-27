@@ -63,12 +63,22 @@
                 <div>
                     <span class="text-sm text-gray-500">Prix</span>
                     <p class="font-medium">
-                        @if ($bike->article->hasDiscount())
+                        @if ($bike->hasDiscount())
                             <span class="text-gray-400 line-through">{{ number_format($bike->prix_article, 2) }} €</span>
-                            <span class="text-green-600">{{ number_format($bike->article->getDiscountedPrice(), 2) }} €</span>
-                            <span class="ml-1 text-sm text-red-500">(-{{ $bike->article->pourcentage_remise }}%)</span>
+                            <span class="text-green-600">{{ number_format($bike->getDiscountedPrice(), 2) }} €</span>
+                            <span class="ml-1 text-sm text-red-500">(-{{ $bike->pourcentage_remise }}%)</span>
                         @else
                             {{ number_format($bike->prix_article, 2) }} €
+                        @endif
+                    </p>
+                </div>
+                <div>
+                    <span class="text-sm text-gray-500">Poids</span>
+                    <p class="font-medium">
+                        @if ($bike->poids_article < 1)
+                            {{ $bike->poids_article * 1000 }} g
+                        @else
+                            {{ number_format($bike->poids_article, 2, ",", " ") }} kg
                         @endif
                     </p>
                 </div>

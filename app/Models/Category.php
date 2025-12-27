@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Collection;
 
 /**
  * @property int $id_categorie
@@ -36,6 +35,11 @@ class Category extends Model
         return $this->hasMany(Article::class, 'id_categorie', 'id_categorie');
     }
 
+    public function parentRecursive(): BelongsTo
+    {
+        return $this->parent()->with('parentRecursive');
+    }
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'id_categorie_parent', 'id_categorie');
@@ -43,10 +47,7 @@ class Category extends Model
 
     public function childrenRecursive(): HasMany
     {
-        return $this->children()->with([
-            'childrenRecursive',
-            'articles.bike.bikeModel',
-        ]);
+        return $this->children()->with('childrenRecursive');
     }
 
     public function children(): HasMany
@@ -54,20 +55,13 @@ class Category extends Model
         return $this->hasMany(Category::class, 'id_categorie_parent', 'id_categorie');
     }
 
-    /**
-     * @return int[]
-     */
-    public function getAllChildrenIds(?Collection $allCategories = null): array
+    public function getAllChildrenIds(): array
     {
-        if (is_null($allCategories)) {
-            $allCategories = Category::all(['id_categorie', 'id_categorie_parent']);
-        }
-
         $ids = [$this->id_categorie];
-        $children = $allCategories->where('id_categorie_parent', $this->id_categorie);
+        $this->loadMissing('childrenRecursive');
 
-        foreach ($children as $child) {
-            $ids = array_merge($ids, $child->getAllChildrenIds($allCategories));
+        foreach ($this->childrenRecursive as $child) {
+            $ids = array_merge($ids, $child->getAllChildrenIds());
         }
 
         return $ids;
@@ -75,8 +69,13 @@ class Category extends Model
 
     public function getFullPath(): string
     {
-        $parents = $this->getAncestors();
-        $noms = array_map(fn ($cat) => $cat->nom_categorie, $parents);
+        $noms = [];
+        $ancestors = $this->getAncestors();
+
+        foreach ($ancestors as $cat) {
+            $noms[] = $cat->nom_categorie;
+        }
+
         $noms[] = $this->nom_categorie;
 
         return implode(' > ', $noms);
@@ -88,15 +87,15 @@ class Category extends Model
     public function getAncestors(): array
     {
         $ancestors = [];
-        $currentCategory = $this;
+        $this->loadMissing('parentRecursive');
 
-        $currentCategory->load(['parent']);
+        $current = $this->parentRecursive;
 
-        while ($currentCategory->parent) {
-            $ancestors[] = $currentCategory->parent;
-            $currentCategory = $currentCategory->parent;
+        while ($current) {
+            array_unshift($ancestors, $current);
+            $current = $current->parentRecursive;
         }
 
-        return array_reverse($ancestors);
+        return $ancestors;
     }
 }

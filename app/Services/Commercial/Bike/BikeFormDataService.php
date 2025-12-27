@@ -72,7 +72,7 @@ class BikeFormDataService
 
     public function getCategories(): Collection
     {
-        return Category::with(['parent', 'children'])
+        return Category::with(['parentRecursive', 'children'])
             ->whereDoesntHave('children')
             ->get()
             ->sortBy(fn (Category $cat) => $cat->getFullPath(), SORT_NATURAL);
@@ -83,7 +83,7 @@ class BikeFormDataService
         $bikeCategory = Category::find(Category::BIKE_CATEGORY_ID);
         $bikeChildrenIds = $bikeCategory?->getAllChildrenIds() ?? [];
 
-        return Category::with(['parent', 'children'])
+        return Category::with(['parentRecursive', 'children'])
             ->whereDoesntHave('children')
             ->whereIn('id_categorie', $bikeChildrenIds)
             ->get()
@@ -95,7 +95,7 @@ class BikeFormDataService
         $eBikeCategory = Category::find(Category::EBIKE_CATEGORY_ID);
         $eBikeChildrenIds = $eBikeCategory?->getAllChildrenIds() ?? [];
 
-        return Category::with(['parent', 'children'])
+        return Category::with(['parentRecursive', 'children'])
             ->whereDoesntHave('children')
             ->whereIn('id_categorie', $eBikeChildrenIds)
             ->get()

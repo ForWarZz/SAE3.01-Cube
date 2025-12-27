@@ -7,6 +7,7 @@ use App\Services\Cart\CartSessionManager;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB; // Important pour la Query Builder
 use Illuminate\View\Component;
 
 class NavBar extends Component
@@ -18,27 +19,40 @@ class NavBar extends Component
 
     public int $cartItemCount = 0;
 
-    /**
-     * Create a new component instance.
-     */
     public function __construct(
         protected CartSessionManager $cartSession,
     ) {
-        $this->categories = Category::query()
-            ->with([
-                'childrenRecursive',
-                'articles.bike.bikeModel',
-            ])
+        $allCategories = Category::select('id_categorie', 'id_categorie_parent', 'nom_categorie')
             ->orderBy('id_categorie', 'desc')
-            ->whereNull('id_categorie_parent')
             ->get();
 
+        $modelsByCategoryId = DB::table('modele_velo')
+            ->join('velo', 'modele_velo.id_modele_velo', '=', 'velo.id_modele_velo')
+            ->join('article', 'velo.id_article', '=', 'article.id_article')
+            ->whereNull('article.deleted_at')
+            ->select('modele_velo.id_modele_velo', 'modele_velo.nom_modele_velo', 'article.id_categorie')
+            ->distinct()
+            ->get()
+            ->groupBy('id_categorie');
+
+        foreach ($allCategories as $cat) {
+            $cat->models = $modelsByCategoryId[$cat->id_categorie] ?? collect();
+            $cat->children = collect();
+        }
+
+        $this->categories = $this->buildTree($allCategories, null);
         $this->cartItemCount = count($this->cartSession->getItems());
     }
 
-    /**
-     * Get the view / contents that represent the component.
-     */
+    private function buildTree(Collection $cats, ?int $parentId): Collection
+    {
+        return $cats->where('id_categorie_parent', $parentId)->map(function ($cat) use ($cats) {
+            $cat->children = $this->buildTree($cats, $cat->id_categorie);
+
+            return $cat;
+        })->values();
+    }
+
     public function render(): View|Closure|string
     {
         return view('components.nav-bar', [

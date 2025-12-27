@@ -26,11 +26,12 @@ class CartController extends Controller
             sizeId: $validated['size_id']
         );
 
-        $reference = ArticleReference::with(['bikeReference.article', 'bikeReference.color', 'accessory.article'])->findOrFail($validated['reference_id']);
+        $reference = ArticleReference::findOrFail($validated['reference_id']);
         $size = Size::findOrFail($validated['size_id']);
 
-        $article = $reference->bikeReference?->article ?? $reference->accessory?->article;
-        $color = $reference->bikeReference?->color;
+        $article = $reference->article;
+        $variant = $reference->variant();
+        $color = $variant?->color ?? null;
 
         $itemData = [
             'name' => $article->nom_article ?? 'Article',
@@ -47,7 +48,7 @@ class CartController extends Controller
     {
         $this->checkoutService->clearCheckout();
 
-        return view('cart.index', $this->cartService->getCartViewData());
+        return view('cart.index', $this->cartService->getCartData()->toViewData());
     }
 
     public function updateQuantity(CartUpdateQuantityRequest $request)

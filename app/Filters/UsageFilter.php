@@ -2,7 +2,6 @@
 
 namespace App\Filters;
 
-use App\Models\Bike;
 use App\Models\Usage;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -18,14 +17,17 @@ class UsageFilter extends AbstractFilter
         }
     }
 
-    public function options(Builder $baseQuery, array $context = []): Collection
+    public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
-        $articleIds = $baseQuery->pluck('id_article');
+        $usages = Usage::select('usage_velo.*')
+            ->join('velo', 'usage_velo.id_usage', '=', 'velo.id_usage')
+            ->whereIn('velo.id_article', $articleIds)
+            ->distinct()
+            ->orderBy('usage_velo.label_usage')
+            ->get();
 
         return $this->format(
-            Usage::whereIn('id_usage',
-                Bike::whereIn('id_article', $articleIds)->pluck('id_usage')
-            )->get(),
+            $usages,
             'id_usage',
             'label_usage'
         );

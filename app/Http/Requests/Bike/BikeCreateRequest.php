@@ -40,6 +40,8 @@ class BikeCreateRequest extends FormRequest
             'id_millesime' => ['required', 'integer'],
             'id_usage' => ['required', 'integer'],
             'is_vae' => ['required', 'boolean'],
+
+            'poids_article' => ['required', 'numeric', 'min:0.1'],
         ];
 
         if ($isVae) {
@@ -108,6 +110,10 @@ class BikeCreateRequest extends FormRequest
             'id_type_vae.required' => 'Le type de VAE est obligatoire pour les vélos électriques.',
             'id_type_vae.integer' => 'L\'identifiant du type de VAE doit être valide.',
             'id_type_vae.exists' => 'Le type de VAE sélectionné n\'existe pas.',
+
+            'poids_article.required' => 'Le poids de l\'article est obligatoire.',
+            'poids_article.numeric' => 'Le poids de l\'article doit être un nombre.',
+            'poids_article.min' => 'Le poids de l\'article doit être supérieur ou égal à 0.1 kg.',
         ];
     }
 }

@@ -34,9 +34,6 @@ class CartViewDataDTO
         ];
     }
 
-    /**
-     * Pour la compatibilité avec les vues Blade existantes
-     */
     public function toViewData(): array
     {
         return [

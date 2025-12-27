@@ -119,6 +119,18 @@
                                     @endforeach
                                 </select>
                             </div>
+
+                            <div class="mb-4">
+                                <x-form-input
+                                    type="number"
+                                    name="poids_article"
+                                    label="Poids du vélo (kg)"
+                                    :value="old('poids_velo', $accessory->poids_article)"
+                                    placeholder="Ex: 12,5"
+                                    step="0.1"
+                                    min="0"
+                                />
+                            </div>
                         </div>
 
                         <div class="rounded-lg bg-white p-6 shadow-sm">
@@ -139,7 +151,7 @@
                                 type="number"
                                 name="pourcentage_remise"
                                 label="Remise (%)"
-                                :value="old('pourcentage_remise', $accessory->article->pourcentage_remise ?? 0)"
+                                :value="old('pourcentage_remise', $accessory->pourcentage_remise ?? 0)"
                                 min="0"
                                 max="100"
                             />

@@ -32,12 +32,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $bikeCategoryId = Category::firstWhere('nom_categorie', 'Vélos')->id_categorie;
-    $accessoryCategoryId = Category::firstWhere('nom_categorie', 'Accessoires')->id_categorie;
-
     return view('index', [
-        'bikeCategoryId' => $bikeCategoryId,
-        'accessoryCategoryId' => $accessoryCategoryId,
+        'bikeCategoryId' => Category::BIKE_CATEGORY_ID,
+        'accessoryCategoryId' => Category::ACCESSORY_CATEGORY_ID,
     ]);
 })->name('home');
 
@@ -48,7 +45,7 @@ Route::prefix('articles')->name('articles.')->group(function () {
     Route::get('/categories/{category}', [ArticleController::class, 'viewByCategory'])->name('by-category');
     Route::get('/modeles/{model}', [ArticleController::class, 'viewByModel'])->name('by-model');
 
-    Route::get('/{article}/{reference}', [ArticleController::class, 'showByRef'])->name('show-reference');
+    Route::get('/reference/{reference}', [ArticleController::class, 'showByRef'])->name('show-reference');
 });
 
 Route::prefix('panier')->name('cart.')->group(function () {

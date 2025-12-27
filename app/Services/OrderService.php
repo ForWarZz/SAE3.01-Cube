@@ -69,13 +69,13 @@ class OrderService
     {
         return $items->map(function (OrderLine $item) {
             $baseReference = $item->reference;
-            $ref = $baseReference->bikeReference ?? $baseReference->accessory;
-            $article = $ref->article;
+            $ref = $baseReference->variant();
+            $article = $baseReference->article;
 
-            $isBike = $baseReference->bikeReference !== null;
+            $isBike = $baseReference->isBike();
             $subtitle = $isBike
-                ? ($article->bike?->bikeModel?->nom_modele_velo ?? 'Vélo')
-                : ($article->category?->nom_categorie ?? 'Accessoire');
+                ? $article->bike?->bikeModel?->nom_modele_velo
+                : $article->category?->nom_categorie;
 
             $image = $ref->getCoverUrl();
 

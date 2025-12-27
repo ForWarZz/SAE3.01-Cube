@@ -397,7 +397,7 @@
             async selectShop(shop) {
                 try {
                     const token = document.querySelector('meta[name="csrf-token"]')?.content;
-                    const res = await fetch('/magasin', {
+                    const res = await fetch('/magasins', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -432,7 +432,7 @@
 
         try {
             const token = document.querySelector('meta[name="csrf-token"]')?.content;
-            const res = await fetch('/magasin', {
+            const res = await fetch('/magasins', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

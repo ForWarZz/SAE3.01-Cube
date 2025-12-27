@@ -178,9 +178,35 @@ class ArticleService
         return $this->finalizeQuery($baseQuery, $request);
     }
 
-    public function prepareViewData(Article $article, ArticleReference $reference): array
+    public function prepareViewData(ArticleReference $reference): array
     {
+        $article = $reference->article;
         $sizeOptions = $this->buildSizeOptions($reference);
+
+        if ($article->bike) {
+            $reference->loadMissing([
+                'article.bike.bikeModel.geometries.characteristic',
+                'article.bike.bikeModel.geometries.size',
+
+                'article.bike.vintage',
+                'article.bike.usage',
+                'article.bike.frameMaterial',
+
+                'article.bike.references.frame',
+                'article.bike.references.color',
+                'article.bike.references.ebike.battery',
+
+                'article.bike.compatibleAccessories.category',
+
+                'bikeReference.color',
+                'bikeReference.frame',
+                'bikeReference.ebike.battery',
+            ]);
+        } else {
+            $reference->loadMissing([
+                'article.accessory',
+            ]);
+        }
 
         $base = [
             'article' => $article,
@@ -197,16 +223,19 @@ class ArticleService
             'description' => $article->description_article,
             'resume' => $article->resumer_article,
 
-            'similarArticles' => $article->similar()
-                ->with(['bike.bikeModel', 'bike.references', 'category', 'accessory'])
-                ->get(),
+            'similarArticles' => $article->similar,
 
             'isBike' => false,
-            'breadcrumbs' => $this->breadCrumbService->prepareBreadcrumbsForArticle($article),
+            'breadcrumbs' => $this->breadCrumbService->prepareBreadcrumbs($article->category),
+
+            'weight' => $article->poids_article,
         ];
 
         if ($article->bike) {
-            $bikeData = $this->bikeService->prepareBikeData($reference->bikeReference);
+            $bike = $article->bike;
+            $bikeReference = $reference->bikeReference;
+
+            $bikeData = $this->bikeService->prepareBikeData($bike, $bikeReference);
 
             return array_merge($base, $bikeData);
         }
@@ -225,9 +254,7 @@ class ArticleService
     {
         $sizeList = $reference->availableSizes;
 
-        // Pré-charger toutes les disponibilités magasin en une seule requête
-        $allShopAvailabilities = $reference->shopAvailabilities()
-            ->get()
+        $allShopAvailabilities = $reference->shopAvailabilities
             ->groupBy('pivot.id_taille');
 
         return $sizeList->map(function ($size) use ($allShopAvailabilities) {

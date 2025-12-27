@@ -2,7 +2,6 @@
 
 namespace App\Filters;
 
-use App\Models\BikeReference;
 use App\Models\Color;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -18,14 +17,17 @@ class ColorFilter extends AbstractFilter
         }
     }
 
-    public function options(Builder $baseQuery, array $context = []): Collection
+    public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
-        $articleIds = $baseQuery->pluck('id_article');
+        $colors = Color::select('couleur.*')
+            ->join('reference_velo', 'couleur.id_couleur', '=', 'reference_velo.id_couleur')
+            ->whereIn('reference_velo.id_article', $articleIds)
+            ->distinct()
+            ->orderBy('couleur.label_couleur')
+            ->get();
 
         return $this->format(
-            Color::whereIn('id_couleur',
-                BikeReference::whereIn('id_article', $articleIds)->pluck('id_couleur')
-            )->get(),
+            $colors,
             'id_couleur',
             'label_couleur'
         );

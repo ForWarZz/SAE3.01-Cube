@@ -125,7 +125,7 @@ class GdprService
                     'montant_livraison' => $order->frais_livraison,
                     'pourcentage_remise' => $order->pourcentage_remise,
                     'articles' => $order->items->map(function (OrderLine $item) {
-                        $article = $item->reference->bikeReference->article ?? $item->reference->accessory->article;
+                        $article = $item->reference->article;
 
                         return [
                             'produit' => $article->nom_article,

@@ -3,7 +3,6 @@
 namespace App\Filters;
 
 use App\Models\BikeFrame;
-use App\Models\BikeReference;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -18,14 +17,17 @@ class FrameFilter extends AbstractFilter
         }
     }
 
-    public function options(Builder $baseQuery, array $context = []): Collection
+    public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
-        $articleIds = $baseQuery->pluck('id_article');
+        $frames = BikeFrame::select('cadre_velo.*')
+            ->join('reference_velo', 'cadre_velo.id_cadre_velo', '=', 'reference_velo.id_cadre_velo')
+            ->whereIn('reference_velo.id_article', $articleIds)
+            ->distinct()
+            ->orderBy('cadre_velo.label_cadre_velo')
+            ->get();
 
         return $this->format(
-            BikeFrame::whereIn('id_cadre_velo',
-                BikeReference::whereIn('id_article', $articleIds)->pluck('id_cadre_velo')
-            )->get(),
+            $frames,
             'id_cadre_velo',
             'label_cadre_velo'
         );

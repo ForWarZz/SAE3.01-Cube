@@ -19,15 +19,13 @@ class AccessoryMaterialFilter extends AbstractFilter
         $query->whereHas('accessory', fn ($q) => $q->whereIn('id_matiere_accessoire', $values));
     }
 
-    public function options(Builder $baseQuery, array $context = []): Collection
+    public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
-        $availableMaterials = $baseQuery->with('accessory')
-            ->get()
-            ->pluck('accessory.id_matiere_accessoire')
-            ->unique()
-            ->toArray();
-
-        $materials = AccessoryMaterial::whereIn('id_matiere_accessoire', $availableMaterials)
+        $materials = AccessoryMaterial::select('matiere_accessoire.*')
+            ->join('accessoire', 'matiere_accessoire.id_matiere_accessoire', '=', 'accessoire.id_matiere_accessoire')
+            ->whereIn('accessoire.id_article', $articleIds)
+            ->distinct()
+            ->orderBy('matiere_accessoire.nom_matiere_accessoire')
             ->get();
 
         return $this->format(

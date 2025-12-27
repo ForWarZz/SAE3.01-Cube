@@ -35,11 +35,11 @@ class CheckoutService
         $shippingPrice = $checkoutData->shipping_mode?->price ?? 0;
 
         // Récupérer les données du panier avec le prix de livraison sélectionné
-        $cartViewData = $this->cartService->getCartViewData($shippingPrice);
+        $cartData = $this->cartService->getCartData($shippingPrice);
 
         $shippingModes = $this->cartService->getAvailableShippingModes(
-            $cartViewData['summaryData']->subtotal,
-            $cartViewData['hasBikes']
+            $cartData->summary->subtotal,
+            $cartData->hasBikes
         );
 
         return [
@@ -47,12 +47,8 @@ class CheckoutService
             'deliveryModes' => $shippingModes,
             'selectedShippingId' => $checkoutData->shipping_mode?->id,
             'orderData' => $checkoutData,
-            // Données du panier pour les vues
-            'cartData' => $cartViewData['cartData'],
-            'summaryData' => $cartViewData['summaryData'],
-            'discountData' => $cartViewData['discountData'],
-            'count' => $cartViewData['count'],
-            'hasBikes' => $cartViewData['hasBikes'],
+
+            ...$cartData->toViewData(),
         ];
     }
 
@@ -80,9 +76,9 @@ class CheckoutService
         }
 
         $checkoutData = $this->getCheckoutData();
-        $cartViewData = $this->cartService->getCartViewData($checkoutData->shipping_mode->price);
+        $cartData = $this->cartService->getCartData($checkoutData->shipping_mode->price);
 
-        return DB::transaction(function () use ($checkoutData, $cartViewData, $client) {
+        return DB::transaction(function () use ($checkoutData, $cartData, $client) {
             $order = Order::create([
                 'id_client' => $client->id_client,
                 'id_adresse_facturation' => $checkoutData->billing_address_id,
@@ -91,13 +87,13 @@ class CheckoutService
                 'num_commande' => $this->generateOrderNumber(),
                 'frais_livraison' => $checkoutData->shipping_mode->price,
                 'date_commande' => now(),
-                'id_code_promo' => $cartViewData['discountData']?->id_code_promo,
-                'pourcentage_remise' => $cartViewData['discountData']?->pourcentage_remise,
+                'id_code_promo' => $cartData->discountCode->id_code_promo,
+                'pourcentage_remise' => $cartData->discountCode->pourcentage_remise,
                 'id_type_paiement' => PaymentType::UNKNOWN,
             ]);
 
             // Ajouter les articles du panier à la commande
-            foreach ($cartViewData['cartData'] as $item) {
+            foreach ($cartData->items as $item) {
                 $order->items()->create([
                     'id_reference' => $item->reference->id_reference,
                     'quantite_ligne' => $item->quantity,
@@ -136,12 +132,12 @@ class CheckoutService
 
         // Eager load les relations pour éviter les requêtes N+1
         $order->load([
-            'items.reference.bikeReference.article',
-            'items.reference.accessory.article',
+            'items.reference.article',
+            'items.reference.accessory',
         ]);
 
         foreach ($order->items as $item) {
-            $article = $item->reference->bikeReference?->article ?? $item->reference->accessory?->article;
+            $article = $item->reference->article;
             $prixUnitaire = $item->prix_unit_ligne;
 
             if ($order->pourcentage_remise > 0) {

@@ -8,17 +8,6 @@ use Illuminate\Support\Collection;
 
 class BikeVariantService
 {
-    public function getVariants(BikeReference $currentReference): Collection
-    {
-        return BikeReference::where('id_article', $currentReference->id_article)
-            ->with([
-                'color',
-                'frame',
-                'ebike.battery',
-            ])
-            ->get();
-    }
-
     /**
      * Build frame options for current reference
      *
@@ -43,7 +32,6 @@ class BikeVariantService
                 return new VariantOptionDTO(
                     label: $frame->label_cadre_velo,
                     url: route('articles.show-reference', [
-                        'article' => $currentReference->id_article,
                         'reference' => $target->id_reference,
                     ]),
                     active: $currentReference->id_cadre_velo == $frame->id_cadre_velo,
@@ -91,7 +79,6 @@ class BikeVariantService
                 return new VariantOptionDTO(
                     label: $color->label_couleur,
                     url: route('articles.show-reference', [
-                        'article' => $currentReference->id_article,
                         'reference' => $target->id_reference,
                     ]),
                     active: $currentReference->id_couleur == $color->id_couleur,
@@ -126,7 +113,6 @@ class BikeVariantService
                 return new VariantOptionDTO(
                     label: $battery->label_batterie,
                     url: route('articles.show-reference', [
-                        'article' => $currentReference->id_article,
                         'reference' => $target->id_reference,
                     ]),
                     active: $currentReference->ebike->id_batterie === $battery->id_batterie,

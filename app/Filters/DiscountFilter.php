@@ -17,7 +17,7 @@ class DiscountFilter extends AbstractFilter
         }
     }
 
-    public function options(Builder $baseQuery, array $context = []): Collection
+    public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
         $hasPromo = (clone $baseQuery)->where('pourcentage_remise', '>', 0)->exists();
         $options = collect();

@@ -27,7 +27,7 @@ class CubeAssistantService
 
             $result = Gemini::generativeModel(model: self::GEMINI_MODEL)
                 ->generateContent([
-                    "SYSTÈME : {$systemPrompt}",
+                    "SYSTEME : {$systemPrompt}",
                     "CONTEXTE SITUATIONNEL : {$situationalContext}",
                     "UTILISATEUR : {$message}",
                 ]);
@@ -125,10 +125,10 @@ class CubeAssistantService
     {
         $reference = $this->loadArticleReference($referenceId);
 
-        $isAccessory = (bool) $reference->accessory;
-        $bikeReference = $reference->bikeReference;
-        $bike = $bikeReference?->bike;
-        $article = $bikeReference?->article ?? $reference->accessory?->article;
+        $isAccessory = $reference->isAccessory();
+        $variant = $reference->variant();
+        $bike = $variant?->bike;
+        $article = $reference->article;
 
         if (! $article) {
             return ['error' => 'Article not found'];
@@ -292,19 +292,8 @@ class CubeAssistantService
     private function loadArticleReference(int $referenceId): ArticleReference
     {
         return ArticleReference::with([
-            'accessory.article.characteristics.characteristicType',
-            'accessory.article.similar',
-            'accessory.material',
-            'accessory.shopAvailabilities',
-            'bikeReference.article.characteristics.characteristicType',
-            'bikeReference.bike',
-            'bikeReference.color',
-            'bikeReference.frame',
-            'bikeReference.article.similar',
-            'bikeReference.shopAvailabilities',
-            'bikeReference.availableSizes',
-            'bikeReference.bike.compatibleAccessories',
-            'bikeReference.bike.similar',
+            'article.characteristics.characteristicType',
+            'article.similar',
         ])->findOrFail($referenceId);
     }
 

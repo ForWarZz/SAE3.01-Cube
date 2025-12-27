@@ -1,4 +1,4 @@
-<x-app-layout :currentCategory="$currentCategory">
+<x-app-layout :currentCategory="$currentCategory ?? null">
     <div class="px-24 py-12">
         <x-breadcrumb :breadcrumbs="$breadcrumbs" />
 
