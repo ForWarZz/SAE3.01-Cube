@@ -8,7 +8,6 @@ use App\Services\Cart\CartSessionManager;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
-// Important pour la Query Builder
 use Illuminate\View\Component;
 
 class NavBar extends Component
@@ -28,10 +27,10 @@ class NavBar extends Component
             ->get();
 
         $modelsByCategoryId = BikeModel::query()
+            ->select('modele_velo.id_modele_velo', 'modele_velo.nom_modele_velo', 'article.id_categorie')
             ->join('velo', 'modele_velo.id_modele_velo', '=', 'velo.id_modele_velo')
             ->join('article', 'velo.id_article', '=', 'article.id_article')
             ->whereNull('article.deleted_at')
-            ->select('modele_velo.id_modele_velo', 'modele_velo.nom_modele_velo', 'article.id_categorie')
             ->distinct()
             ->get()
             ->groupBy('id_categorie');
