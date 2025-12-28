@@ -2,12 +2,13 @@
 
 namespace App\View\Components;
 
+use App\Models\BikeModel;
 use App\Models\Category;
 use App\Services\Cart\CartSessionManager;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB; // Important pour la Query Builder
+// Important pour la Query Builder
 use Illuminate\View\Component;
 
 class NavBar extends Component
@@ -26,7 +27,7 @@ class NavBar extends Component
             ->orderBy('id_categorie', 'desc')
             ->get();
 
-        $modelsByCategoryId = DB::table('modele_velo')
+        $modelsByCategoryId = BikeModel::query()
             ->join('velo', 'modele_velo.id_modele_velo', '=', 'velo.id_modele_velo')
             ->join('article', 'velo.id_article', '=', 'article.id_article')
             ->whereNull('article.deleted_at')
