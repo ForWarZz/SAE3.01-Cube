@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 
@@ -66,6 +67,11 @@ class BaseArticle extends Model
     public function similar(): BelongsToMany
     {
         return $this->belongsToMany(Article::class, 'similaire', 'id_article_simil', 'id_article');
+    }
+
+    public function references(): HasMany
+    {
+        return $this->hasMany(ArticleReference::class, 'id_article', 'id_article');
     }
 
     public function category(): BelongsTo
