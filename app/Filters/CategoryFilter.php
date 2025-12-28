@@ -33,7 +33,7 @@ class CategoryFilter extends AbstractFilter
 
     public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
-        if (! isset($context['category'])) {
+        if (! isset($context['category']) || empty($articleIds)) {
             return collect();
         }
 

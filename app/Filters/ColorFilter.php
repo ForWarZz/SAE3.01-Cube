@@ -19,6 +19,10 @@ class ColorFilter extends AbstractFilter
 
     public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
+        if (empty($articleIds)) {
+            return collect();
+        }
+
         $colors = Color::select('couleur.*')
             ->join('reference_velo', 'couleur.id_couleur', '=', 'reference_velo.id_couleur')
             ->whereIn('reference_velo.id_article', $articleIds)

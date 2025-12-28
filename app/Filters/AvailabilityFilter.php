@@ -4,6 +4,7 @@ namespace App\Filters;
 
 use App\DTOs\Filter\FilterOptionDTO;
 use App\Models\ShopAvailability;
+use App\Models\Size;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -18,60 +19,56 @@ class AvailabilityFilter extends AbstractFilter
         }
 
         $query->where(function ($q) use ($values) {
-            foreach ($values as $value) {
-                switch ($value) {
-                    case 'online':
-                        $q->orWhereHas('references.availableSizes', fn ($q2) => $q2->where('dispo_en_ligne', true));
-                        break;
+            if (in_array('online', $values)) {
+                $q->orWhereHas('references.availableSizes', fn ($q2) => $q2->where('dispo_en_ligne', true));
+            }
 
-                    case 'in_stock':
-                        $q->orWhereHas('references.shopAvailabilities', fn ($q2) => $q2->where('statut', ShopAvailability::STATUS_IN_STOCK));
-                        break;
+            $shopStatuses = [];
 
-                    case 'orderable':
-                        $q->orWhereHas('references.shopAvailabilities', fn ($q2) => $q2->where('statut', ShopAvailability::STATUS_ORDERABLE));
-                        break;
-                }
+            if (in_array('in_stock', $values)) {
+                $shopStatuses[] = ShopAvailability::STATUS_IN_STOCK;
+            }
+
+            if (in_array('orderable', $values)) {
+                $shopStatuses[] = ShopAvailability::STATUS_ORDERABLE;
+            }
+
+            if (! empty($shopStatuses)) {
+                $q->orWhereHas('references.shopAvailabilities', fn ($q2) => $q2->whereIn('statut', $shopStatuses));
             }
         });
     }
 
     public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
+        if (empty($articleIds)) {
+            return collect();
+        }
+
         $options = collect();
 
-        // Check online availability
-        $hasOnline = (clone $baseQuery)
-            ->where(function ($q) {
-                $q->whereHas('references.availableSizes');
-            })
+        $hasOnline = Size::query()
+            ->whereHas('references', fn ($q) => $q->whereIn('id_article', $articleIds)
+                ->where('dispo_en_ligne', true))
             ->exists();
 
         if ($hasOnline) {
             $options->push(new FilterOptionDTO(id: 'online', label: 'Disponible en ligne'));
         }
 
-        // Check in stock
-        $hasStock = (clone $baseQuery)
-            ->where(function ($q) {
-                $q->whereHas('references.shopAvailabilities', function ($q2) {
-                    $q2->where('statut', ShopAvailability::STATUS_IN_STOCK);
-                });
-            })
-            ->exists();
+        $existingShopStatuses = ShopAvailability::query()
+            ->select('statut')
+            ->distinct()
+            ->whereHas('reference', fn ($q) => $q->whereIn('id_article', $articleIds))
+            ->whereIn('statut', [ShopAvailability::STATUS_IN_STOCK, ShopAvailability::STATUS_ORDERABLE])
+            ->pluck('statut')
+            ->toArray();
 
-        if ($hasStock) {
+        if (in_array(ShopAvailability::STATUS_IN_STOCK, $existingShopStatuses)) {
             $options->push(new FilterOptionDTO(id: 'in_stock', label: 'En stock magasin'));
         }
 
-        // Check orderable
-        $hasOrderable = (clone $baseQuery)
-            ->where(function ($q) {
-                $q->whereHas('references.shopAvailabilities', fn ($q2) => $q2->where('statut', ShopAvailability::STATUS_ORDERABLE));
-            })
-            ->exists();
-
-        if ($hasOrderable) {
+        if (in_array(ShopAvailability::STATUS_ORDERABLE, $existingShopStatuses)) {
             $options->push(new FilterOptionDTO(id: 'orderable', label: 'Commandable en magasin'));
         }
 

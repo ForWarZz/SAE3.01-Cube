@@ -21,6 +21,10 @@ class AccessoryMaterialFilter extends AbstractFilter
 
     public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
+        if (empty($articleIds)) {
+            return collect();
+        }
+
         $materials = AccessoryMaterial::select('matiere_accessoire.*')
             ->join('accessoire', 'matiere_accessoire.id_matiere_accessoire', '=', 'accessoire.id_matiere_accessoire')
             ->whereIn('accessoire.id_article', $articleIds)

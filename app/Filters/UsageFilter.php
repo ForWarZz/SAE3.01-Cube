@@ -19,6 +19,10 @@ class UsageFilter extends AbstractFilter
 
     public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
+        if (empty($articleIds)) {
+            return collect();
+        }
+
         $usages = Usage::select('usage_velo.*')
             ->join('velo', 'usage_velo.id_usage', '=', 'velo.id_usage')
             ->whereIn('velo.id_article', $articleIds)

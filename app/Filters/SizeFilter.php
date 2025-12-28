@@ -25,6 +25,10 @@ class SizeFilter extends AbstractFilter
 
     public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
+        if (empty($articleIds)) {
+            return collect();
+        }
+
         $availableSizes = Size::query()
             ->whereHas('references', function ($q) use ($articleIds) {
                 $q->whereIn('id_article', $articleIds);

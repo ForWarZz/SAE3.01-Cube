@@ -19,6 +19,10 @@ class MaterialFilter extends AbstractFilter
 
     public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
+        if (empty($articleIds)) {
+            return collect();
+        }
+
         $materials = BikeFrameMaterial::select('materiau_cadre_velo.*')
             ->join('velo', 'materiau_cadre_velo.id_materiau_cadre', '=', 'velo.id_materiau_cadre')
             ->whereIn('velo.id_article', $articleIds)

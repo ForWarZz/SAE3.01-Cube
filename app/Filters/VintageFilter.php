@@ -19,6 +19,10 @@ class VintageFilter extends AbstractFilter
 
     public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
+        if (empty($articleIds)) {
+            return collect();
+        }
+
         $vintages = Vintage::select('millesime.*')
             ->join('velo', 'millesime.id_millesime', '=', 'velo.id_millesime')
             ->whereIn('velo.id_article', $articleIds)

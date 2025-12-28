@@ -19,6 +19,10 @@ class BikeModelFilter extends AbstractFilter
 
     public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
+        if (empty($articleIds)) {
+            return collect();
+        }
+
         $models = BikeModel::select('modele_velo.*')
             ->join('velo', 'modele_velo.id_modele_velo', '=', 'velo.id_modele_velo')
             ->whereIn('velo.id_article', $articleIds)

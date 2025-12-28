@@ -19,6 +19,10 @@ class FrameFilter extends AbstractFilter
 
     public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
+        if (empty($articleIds)) {
+            return collect();
+        }
+
         $frames = BikeFrame::select('cadre_velo.*')
             ->join('reference_velo', 'cadre_velo.id_cadre_velo', '=', 'reference_velo.id_cadre_velo')
             ->whereIn('reference_velo.id_article', $articleIds)
