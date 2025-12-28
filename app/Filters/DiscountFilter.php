@@ -3,6 +3,7 @@
 namespace App\Filters;
 
 use App\DTOs\Filter\FilterOptionDTO;
+use App\Models\Article;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -23,7 +24,7 @@ class DiscountFilter extends AbstractFilter
             return collect();
         }
 
-        $hasPromo = $baseQuery->where('pourcentage_remise', '>', 0)->exists();
+        $hasPromo = Article::whereIn('id_article', $articleIds)->where('pourcentage_remise', '>', 0)->exists();
         $options = collect();
 
         if (! $hasPromo) {
