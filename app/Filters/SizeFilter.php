@@ -17,12 +17,9 @@ class SizeFilter extends AbstractFilter
         }
 
         $query->where(function (Builder $globalQuery) use ($values) {
-            $globalQuery->whereHas('bike.references.availableSizes', function ($q) use ($values) {
+            $globalQuery->whereHas('references.availableSizes', function ($q) use ($values) {
                 $q->whereIn('taille.id_taille', $values);
-            })
-                ->orWhereHas('accessory.availableSizes', function ($q) use ($values) {
-                    $q->whereIn('taille.id_taille', $values);
-                });
+            });
         });
     }
 
@@ -30,8 +27,7 @@ class SizeFilter extends AbstractFilter
     {
         $availableSizes = Size::query()
             ->whereHas('references', function ($q) use ($articleIds) {
-                $q->whereHas('bikeReference', fn ($b) => $b->whereIn('id_article', $articleIds))
-                    ->orWhereHas('accessory', fn ($a) => $a->whereIn('id_article', $articleIds));
+                $q->whereIn('id_article', $articleIds);
             })
             ->orderBy('nom_taille')
             ->get();
