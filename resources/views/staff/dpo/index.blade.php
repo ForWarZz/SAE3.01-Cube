@@ -76,14 +76,9 @@
                     @csrf
                     <input type="hidden" name="date_threshold" value="{{ $selectedDate }}" />
 
-                    <button
-                        type="submit"
-                        class="{{ $usersCount > 0 ? "bg-red-600 hover:bg-red-700" : "cursor-not-allowed bg-gray-400" }} inline-flex items-center rounded border border-transparent px-4 py-2 text-sm font-medium text-white shadow-sm focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none"
-                        {{ $usersCount == 0 ? "disabled" : "" }}
-                    >
-                        <x-heroicon-o-trash class="mr-2 size-5" />
+                    <x-button type="submit" color="red" :disabled="$usersCount == 0" icon="heroicon-o-trash" class="!px-4 !py-2">
                         Exécuter l'anonymisation
-                    </button>
+                    </x-button>
                 </form>
             </div>
         </div>

@@ -18,13 +18,7 @@
                     <span class="rounded-full bg-green-100 px-3 py-1 text-sm text-green-800">VAE</span>
                 @endif
             </div>
-            <button
-                @click="showAddRefModal = true"
-                class="flex items-center rounded bg-blue-600 px-4 py-2 text-white shadow transition hover:bg-blue-700"
-            >
-                <x-heroicon-o-plus class="mr-2 h-5 w-5" />
-                Ajouter une référence
-            </button>
+            <x-button @click="showAddRefModal = true" icon="heroicon-o-plus">Ajouter une référence</x-button>
         </div>
 
         <x-flash-message key="success" type="success" />
@@ -142,12 +136,14 @@
                                         <span class="text-sm text-gray-500">
                                             Images ({{ count($referenceImages[$reference->id_reference]) }}/5)
                                         </span>
-                                        <button
+                                        <x-button
                                             @click="imagesRef = {{ $reference->id_reference }}; showAddImagesModal = true"
-                                            class="text-sm text-blue-600 hover:text-blue-800"
+                                            color="blue"
+                                            size="sm"
+                                            class="!px-2 !py-1"
                                         >
                                             + Ajouter des images
-                                        </button>
+                                        </x-button>
                                     </div>
                                     <div class="flex flex-wrap gap-2">
                                         @forelse ($referenceImages[$reference->id_reference] as $image)
@@ -185,14 +181,14 @@
                                     @csrf
                                     @method("DELETE")
 
-                                    <button
+                                    <x-button
                                         type="submit"
-                                        class="rounded bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
+                                        color="red"
+                                        size="sm"
                                         title="Supprimer"
                                         onclick="return confirm('Supprimer cette référence ? Cette action est irréversible.');"
-                                    >
-                                        <x-heroicon-o-trash class="h-4 w-4" />
-                                    </button>
+                                        icon="heroicon-o-trash"
+                                    />
                                 </form>
                             </div>
                         </div>
@@ -200,7 +196,7 @@
                 @empty
                     <div class="py-8 text-center text-gray-500">
                         Aucune référence pour ce vélo.
-                        <button @click="showAddRefModal = true" class="text-blue-600 hover:underline">Ajouter la première référence</button>
+                        <x-button @click="showAddRefModal = true" color="blue" variant="link">Ajouter la première référence</x-button>
                     </div>
                 @endforelse
             </div>
@@ -309,14 +305,8 @@
                     </div>
 
                     <div class="mt-6 flex justify-end space-x-3">
-                        <button
-                            type="button"
-                            @click="showAddRefModal = false"
-                            class="rounded border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
-                        >
-                            Annuler
-                        </button>
-                        <button type="submit" class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">Ajouter</button>
+                        <x-button @click="showAddRefModal = false" color="gray" size="sm" class="!px-4 !py-2">Annuler</x-button>
+                        <x-button type="submit" size="sm">Ajouter</x-button>
                     </div>
                 </form>
             </div>
@@ -476,14 +466,8 @@
                     </div>
 
                     <div class="mt-6 flex justify-end space-x-3">
-                        <button
-                            type="button"
-                            @click="showAddImagesModal = false"
-                            class="rounded border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
-                        >
-                            Annuler
-                        </button>
-                        <button type="submit" class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">Ajouter</button>
+                        <x-button @click="showAddImagesModal = false" color="gray" size="sm" class="!px-4 !py-2">Annuler</x-button>
+                        <x-button type="submit" size="sm">Ajouter</x-button>
                     </div>
                 </form>
             </div>

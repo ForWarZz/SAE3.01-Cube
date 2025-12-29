@@ -10,15 +10,8 @@
                     <p class="text-sm text-gray-500">Modifier les informations de l'accessoire</p>
                 </div>
                 <div class="flex gap-3">
-                    <a
-                        href="{{ route("commercial.bikes.index") }}"
-                        class="rounded-md border bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    >
-                        Annuler
-                    </a>
-                    <button type="submit" class="rounded-md bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700">
-                        Enregistrer
-                    </button>
+                    <x-button :href="route('commercial.bikes.index')" color="gray">Annuler</x-button>
+                    <x-button type="submit">Enregistrer</x-button>
                 </div>
             </div>
 

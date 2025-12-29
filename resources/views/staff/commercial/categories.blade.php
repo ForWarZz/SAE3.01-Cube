@@ -3,13 +3,7 @@
         <div class="mb-6 flex items-center justify-between">
             <h1 class="text-3xl font-bold text-gray-800">Gestion des Catégories</h1>
 
-            <button
-                @click="showModal = true"
-                class="flex items-center rounded bg-blue-600 px-4 py-2 text-white shadow transition hover:bg-blue-700"
-            >
-                <span class="mr-2 text-xl">+</span>
-                Nouvelle Catégorie
-            </button>
+            <x-button @click="showModal = true" icon="heroicon-o-plus">Nouvelle Catégorie</x-button>
         </div>
 
         @if (session("success"))
@@ -112,16 +106,8 @@
                     </div>
 
                     <div class="flex justify-end space-x-3">
-                        <button
-                            type="button"
-                            @click="showModal = false"
-                            class="rounded bg-gray-300 px-4 py-2 font-bold text-gray-800 hover:bg-gray-400"
-                        >
-                            Annuler
-                        </button>
-                        <button type="submit" class="rounded bg-blue-600 px-4 py-2 font-bold text-white shadow hover:bg-blue-700">
-                            Enregistrer
-                        </button>
+                        <x-button @click="showModal = false" color="gray" size="sm" class="!px-4 !py-2">Annuler</x-button>
+                        <x-button type="submit" size="sm">Enregistrer</x-button>
                     </div>
                 </form>
             </div>

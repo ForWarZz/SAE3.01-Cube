@@ -2,13 +2,7 @@
     <div x-data="{ showModal: false }">
         <div class="mb-6 flex items-center justify-between">
             <h1 class="text-3xl font-bold text-gray-800">Gestion des Vélos</h1>
-            <a
-                href="{{ route("commercial.bikes.create") }}"
-                class="flex items-center rounded bg-blue-600 px-4 py-2 text-white shadow transition hover:bg-blue-700"
-            >
-                <span class="mr-2 text-xl">+</span>
-                Nouveau Vélo
-            </a>
+            <x-button :href="route('commercial.bikes.create')" icon="heroicon-o-plus">Nouveau Vélo</x-button>
         </div>
 
         <x-flash-message key="success" type="success" />
@@ -84,7 +78,6 @@
                                         <form action="{{ route("commercial.bikes.destroy", $bike) }}" method="post">
                                             @csrf
                                             @method("DELETE")
-
                                             <button
                                                 type="submit"
                                                 class="cursor-pointer text-red-600 hover:text-red-800"
@@ -101,9 +94,9 @@
                             <tr>
                                 <td colspan="9" class="px-4 py-8 text-center text-gray-500">
                                     Aucun vélo enregistré.
-                                    <a href="{{ route("commercial.bikes.create") }}" class="text-blue-600 hover:underline">
+                                    <x-button :href="route('commercial.bikes.create')" color="blue" variant="link">
                                         Créer le premier vélo
-                                    </a>
+                                    </x-button>
                                 </td>
                             </tr>
                         @endforelse
