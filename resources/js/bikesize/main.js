@@ -1,54 +1,70 @@
-const height = document.querySelector('#user-height');
-const stepLength = document.querySelector('#user-inseam');
-const validateBut = document.querySelector('#calculate-size-btn');
-const res = document.querySelector('#size-result-text');
-const sizeList  = ["XS", "S", "M", "L", "XL"];
+const container = document.querySelector('#bike-calculator-container');
+const btn = document.querySelector('#calc-btn');
 
-function setBorder(element, isError){
-    if (isError) {
-        element.style.border = "2px solid red"; 
-    } else {
-        element.style.border = ""; 
-    }
-};
+function validateInput (input) {
+        if (!input.value) {
+            input.classList.add('border-red-500', 'ring-1', 'ring-red-500');
+            input.classList.remove('border-gray-300');
+            return false;
+        } else {
+            input.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+            input.classList.add('border-gray-300');
+            return true;
+        }
+    };
 
-validateBut.addEventListener('click', (e) => {
-    setBorder(height, height.value.trim() === "");
-    setBorder(stepLength, stepLength.value.trim() === "");
-    
-    if (height.value.trim() !== "" && stepLength.value.trim() !== "") {
-        
-        let heightNumber = parseInt(height.value, 10);
-        let stepLengthNumber = parseInt(stepLength.value, 10);
-        let ratio = stepLengthNumber / heightNumber;
-        
-        if (heightNumber < 160)
-            res.innerText = "XS"
-        else if (heightNumber < 170)
-            res.innerText = "S"
-        else if (heightNumber < 180)
-            res.innerText = "M"
-        else if (heightNumber < 190)
-            res.innerText = "L"
-        else
-            res.innerText = "XL"
+if (container && btn) {
+    const inputHeight = document.querySelector('#client-height');
+    const inputInseam = document.querySelector('#client-inseam');
+    const resultBox = document.querySelector('#result-box');
+    const resultText = document.querySelector('#result-text');
+    const resultDetails = document.querySelector('#result-details');
 
-        if (ratio < 0.44 || ratio > 0.48){
+    let sizeChart = JSON.parse(container.dataset.chart);
 
-            let index;
+    [inputHeight, inputInseam].forEach(input => {
+        input.addEventListener('input', _ => validateInput(input));
+    });
 
-            for (let i=0; i<sizeList.length; i++){
-                if (sizeList[i] === res.innerText)
-                    index = i
+    btn.addEventListener('click', () => {
+        const isHeightValid = validateInput(inputHeight);
+        const isInseamValid = validateInput(inputInseam);
+
+        if (!isHeightValid || !isInseamValid) return;
+
+        const height = parseInt(inputHeight.value);
+        const inseam = parseInt(inputInseam.value);
+
+        const matchingSizes = sizeChart.filter(size => {
+            const min = size.taille_min || 0;
+            const max = size.taille_max || 300;
+            return height >= min && height <= max;
+        });
+
+        resultBox.classList.remove('hidden');
+        resultDetails.classList.remove('hidden');
+
+        const isKid = height < 150;
+
+        if (matchingSizes.length > 0) {
+            resultBox.className = "mt-2 rounded-md border-l-4 border-green-500 bg-white p-4 shadow-sm";
+            const sizesNames = matchingSizes.map(s => s.nom_taille).join(' ou ');
+            
+            resultText.innerText = `Taille recommandée : ${sizesNames}`;
+            resultText.className = "text-xl font-bold text-green-700";
+            
+            if (isKid) {
+                resultDetails.innerText = `Basé sur votre taille (${height}cm). Pour les enfants, la taille globale prime sur l'entrejambe.`;
+            } else {
+                const theoreticalFrameSize = Math.round(inseam * 0.66);
+                resultDetails.innerText = `Basé sur votre taille (${height}cm). Votre entrejambe suggère un cadre théorique de ${theoreticalFrameSize}cm (Route/Gravel).`;
             }
 
-            if (ratio < 0.44 && res.innerText != "XS")
-                res.innerText = sizeList[index-1]
-
-            else if (ratio > 0.48 && res.innerText != "XL")
-                res.innerText = sizeList[index+1]
+        } else {
+            resultBox.className = "mt-2 rounded-md border-l-4 border-orange-500 bg-white p-4 shadow-sm";
+            resultText.innerText = "Aucune taille standard trouvée.";
+            resultText.className = "text-md font-bold text-orange-700";
+            resultDetails.innerText = "Vos mensurations semblent hors des standards habituels pour ce modèle.";
         }
-
-        res.parentElement.classList.remove('hidden');
-    }
-});
+    });
+}

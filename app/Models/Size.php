@@ -21,6 +21,8 @@ class Size extends Model
     protected $fillable = [
         'id_taille',
         'nom_taille',
+        'taille_min',
+        'taille_max'
     ];
 
     public function references(): BelongsToMany
