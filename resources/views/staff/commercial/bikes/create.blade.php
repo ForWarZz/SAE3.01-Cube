@@ -71,7 +71,7 @@
                                         name="id_modele_velo"
                                         x-model="selectedModel"
                                         @change="applyModelCategory()"
-                                        class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                     >
                                         <option value="">-- Sélectionner --</option>
                                         @foreach ($models as $model)
@@ -90,7 +90,7 @@
                                         name="new_model_name"
                                         value="{{ old("new_model_name") }}"
                                         placeholder="Nom du nouveau modèle"
-                                        class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                     />
                                 </div>
                             </div>

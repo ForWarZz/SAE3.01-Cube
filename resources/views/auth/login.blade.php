@@ -53,11 +53,9 @@
                     </a>
                 </div>
 
-                <button
-                    class="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                >
+                <x-button type="submit" size="lg" class="w-full" >
                     Se connecter
-                </button>
+                </x-button>
             </form>
 
             <div class="relative my-6">

@@ -85,10 +85,11 @@ class ProfileController extends Controller
         $client = $request->user();
         $client->load([
             'addresses.city',
-            'orders.items.reference.accessory.article',
-            'orders.items.reference.bikeReference.article.bike.bikeModel',
+            'orders.items.reference.article',
             'orders.billingAddress.city',
             'orders.deliveryAddress.city',
+            'orders.shippingMode',
+            'orders.paymentType',
         ]);
 
         $data = $gdprService->exportClientData($client);

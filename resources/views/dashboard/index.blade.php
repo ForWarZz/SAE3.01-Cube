@@ -13,7 +13,7 @@
                             class="block rounded-lg border border-gray-200 bg-gray-50 p-6 transition-colors hover:bg-gray-100"
                         >
                             <div class="flex items-center">
-                                <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
@@ -39,7 +39,7 @@
                             class="block rounded-lg border border-gray-200 bg-gray-50 p-6 transition-colors hover:bg-gray-100"
                         >
                             <div class="flex items-center">
-                                <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
@@ -59,7 +59,7 @@
                             class="block rounded-lg border border-gray-200 bg-gray-50 p-6 transition-colors hover:bg-gray-100"
                         >
                             <div class="flex items-center">
-                                <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
@@ -76,7 +76,7 @@
 
                         <div class="block cursor-not-allowed rounded-lg border border-gray-200 bg-gray-50 p-6 opacity-50">
                             <div class="flex items-center">
-                                <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
@@ -93,7 +93,7 @@
 
                         <div class="block cursor-not-allowed rounded-lg border border-gray-200 bg-gray-50 p-6 opacity-50">
                             <div class="flex items-center">
-                                <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
@@ -118,12 +118,7 @@
                     <div class="mt-8 border-t border-gray-200 pt-6">
                         <form method="POST" action="{{ route("logout") }}">
                             @csrf
-                            <button
-                                type="submit"
-                                class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out hover:bg-red-500 focus:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none active:bg-red-900"
-                            >
-                                Se déconnecter
-                            </button>
+                            <x-button type="submit" color="red" size="md">Se déconnecter</x-button>
                         </form>
                     </div>
                 </div>

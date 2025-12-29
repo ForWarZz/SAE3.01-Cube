@@ -12,22 +12,12 @@
             </ul>
 
             <div class="flex items-center gap-4">
-                <button
+                <x-button
                     type="button"
                     id="store-button"
-                    x-data
                     x-on:click="$dispatch('open-shop-modal', { showAvailability: false })"
-                    class="inline-flex items-center rounded-lg border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition duration-150 ease-in-out hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+                    icon="bi-geo-alt"
                 >
-                    <svg class="me-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
                     <span id="store-button-text">
                         @if (session("selected_shop"))
                             {{ session("selected_shop")["name"] }}
@@ -35,7 +25,7 @@
                             Choisir un magasin
                         @endif
                     </span>
-                </button>
+                </x-button>
 
                 <div class="relative">
                     <input
@@ -55,17 +45,19 @@
                 @if (! auth()->guest())
                     <!-- Logged in: Show dashboard icon and logout -->
                     <div class="flex items-center space-x-3">
-                        <a href="{{ route("dashboard.index") }}" class="transition-opacity hover:opacity-80" title="Tableau de bord">
+                        <a href="{{ route("dashboard.index") }}" class="transition-opacity hover:opacity-60" title="Tableau de bord">
                             <img src="{{ asset("resources/cyclist.svg") }}" alt="Dashboard" class="size-8" />
                         </a>
                         <form method="POST" action="{{ route("logout") }}" class="inline">
                             @csrf
-                            <button type="submit" class="text-sm text-gray-600 transition-colors hover:text-gray-900">Déconnexion</button>
+                            <button type="submit" class="cursor-pointer text-sm text-gray-600 transition-colors hover:text-gray-900">
+                                Déconnexion
+                            </button>
                         </form>
                     </div>
                 @else
                     <!-- Not logged in: Show login icon -->
-                    <a href="{{ route("login") }}" class="transition-opacity hover:opacity-80" title="Se connecter">
+                    <a href="{{ route("login") }}" class="transition-opacity hover:opacity-60" title="Se connecter">
                         <img src="{{ asset("resources/cyclist.svg") }}" alt="Login" class="size-8" />
                     </a>
                 @endif

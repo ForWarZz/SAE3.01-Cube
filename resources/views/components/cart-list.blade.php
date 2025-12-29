@@ -17,12 +17,6 @@
             Continuer mes achats
         </a>
 
-        <a
-            href="{{ route("cart.checkout") }}"
-            @disabled($count === 0)
-            class="text-md {{ $count > 0 ? "cursor-pointer bg-black hover:bg-gray-900" : "cursor-not-allowed bg-gray-300" }} rounded-md px-6 py-3 font-medium text-white shadow-sm"
-        >
-            Valider mon panier
-        </a>
+        <x-button :disabled="$count === 0" size="lg">Valider mon panier</x-button>
     </div>
 </section>

@@ -200,7 +200,7 @@
                                 <div>
                                     <p class="mb-1 text-xs font-medium tracking-wide text-gray-500 uppercase">Point de retrait</p>
                                     <address class="text-gray-900 not-italic">
-                                        <p class="flex items-center gap-1 font-bold text-indigo-600">
+                                        <p class="flex items-center gap-1 font-bold text-blue-600">
                                             <x-heroicon-o-building-storefront class="size-4" />
                                             {{ $shop->nom_magasin }}
                                         </p>

@@ -15,7 +15,7 @@
                                 Données (DPO),
                                 <strong>M. Axel BÉNARD</strong>
                                 , à l'adresse :
-                                <a href="mailto:dpo@cube.fr" class="text-indigo-600 hover:underline">dpo@cube.fr</a>
+                                <a href="mailto:dpo@cube.fr" class="text-blue-600 hover:underline">dpo@cube.fr</a>
                                 .
                             </p>
                         </section>

@@ -154,12 +154,7 @@
                         <x-input-error :messages="$errors->get('privacy_policy')" class="mt-2" />
                     </div>
 
-                    <button
-                        type="submit"
-                        class="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white shadow-md hover:bg-blue-700 hover:shadow-lg"
-                    >
-                        Créer mon compte
-                    </button>
+                    <x-button type="submit" size="lg" class="w-full">Créer un compte</x-button>
                 </form>
             </div>
 

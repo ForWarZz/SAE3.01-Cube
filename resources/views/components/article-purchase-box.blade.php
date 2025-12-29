@@ -1,4 +1,13 @@
-<div class="flex flex-col" x-data="{ selectedSize: @js($sizeOptions?->first(fn ($s) => ! $s->disabled)) }">
+<form
+    method="POST"
+    action="{{ route("cart.add") }}"
+    class="flex flex-col"
+    x-data="{ selectedSize: @js($sizeOptions?->first(fn ($s) => ! $s->disabled)) }"
+>
+    @csrf
+
+    <input type="hidden" name="reference_id" value="{{ $currentReference->id_reference }}" />
+
     <div class="mb-8">
         <div class="mb-4 flex items-center gap-2">
             @if ($article->bike?->isNew())
@@ -88,8 +97,16 @@
             </div>
         @endif
 
-        <!-- Pour voir les disponibilitées -->
-        <div class="mt-4">
+        <div class="mt-6 space-y-4">
+            <x-button
+                type="submit"
+                size="xl"
+                x-show="selectedSize && !selectedSize.disabled"
+                class="flex w-full justify-center"
+                icon="heroicon-o-shopping-cart"
+            >
+                AJOUTER AU PANIER
+            </x-button>
             <button
                 type="button"
                 x-on:click="
@@ -107,11 +124,7 @@
         </div>
     </div>
 
-    <form method="post" action="{{ route("cart.add") }}" class="flex flex-col gap-8">
-        @csrf
-
-        <input hidden type="text" name="reference_id" value="{{ $currentReference->id_reference }}" />
-
+    <div class="flex flex-col gap-8">
         @if ($article->bike)
             <div>
                 <label class="mb-3 block text-sm font-medium text-gray-900">Type de cadre</label>
@@ -189,14 +202,5 @@
                 @endforeach
             </div>
         </div>
-
-        <button
-            x-show="selectedSize && !selectedSize.disabled"
-            type="submit"
-            class="mt-6 flex cursor-pointer items-center justify-center gap-3 rounded-lg bg-black px-5 py-4 text-xl font-bold text-white transition-colors hover:bg-gray-900"
-        >
-            <x-bi-cart-plus class="size-6" />
-            <span>Ajouter au panier</span>
-        </button>
-    </form>
-</div>
+    </div>
+</form>

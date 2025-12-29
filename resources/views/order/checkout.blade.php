@@ -31,7 +31,7 @@
                             <h2 class="text-xl font-bold text-gray-900">Adresse de facturation</h2>
                             <a
                                 href="{{ $newAddressRoute }}"
-                                class="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-800"
+                                class="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
                             >
                                 + Nouvelle adresse
                             </a>
@@ -62,7 +62,7 @@
                             <h2 class="text-xl font-bold text-gray-900">Adresse de livraison</h2>
                             <a
                                 href="{{ $newAddressRoute }}"
-                                class="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-800"
+                                class="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
                             >
                                 + Nouvelle adresse
                             </a>

@@ -122,13 +122,13 @@
                         <div class="flex items-center justify-between">
                             <a
                                 href="{{ route("dashboard.addresses.index") }}"
-                                class="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+                                class="text-sm font-medium text-blue-600 hover:text-blue-800"
                             >
                                 &larr; Retour aux adresses
                             </a>
                             <button
                                 type="submit"
-                                class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out hover:bg-indigo-500 focus:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none active:bg-indigo-900"
+                                class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out hover:bg-blue-700 focus:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none active:bg-blue-900"
                             >
                                 Enregistrer les modifications
                             </button>

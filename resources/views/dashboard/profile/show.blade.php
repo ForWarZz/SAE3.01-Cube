@@ -13,12 +13,7 @@
                 <div class="p-6">
                     <div class="mb-6 flex items-center justify-between">
                         <h2 class="text-2xl font-bold text-gray-900">Mon profil</h2>
-                        <a
-                            href="{{ route("dashboard.profile.edit") }}"
-                            class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-indigo-500 focus:bg-indigo-700"
-                        >
-                            Modifier
-                        </a>
+                        <x-button href="{{ route('dashboard.profile.edit') }} ">Modifier</x-button>
                     </div>
 
                     <div class="space-y-4">
@@ -102,12 +97,7 @@
                                 />
 
                                 <div class="flex justify-end">
-                                    <button
-                                        type="submit"
-                                        class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-indigo-500 focus:bg-indigo-700"
-                                    >
-                                        Modifier le mot de passe
-                                    </button>
+                                    <x-button type="submit">Modifier le mot de passe</x-button>
                                 </div>
                             </div>
                         </form>
@@ -166,13 +156,7 @@
                                 Pour activer l'authentification à deux facteurs, scannez le code QR ci-dessous avec votre application
                                 d'authentification (Google Authenticator, Authy, Microsoft Authenticator, etc.).
                             </p>
-                            <button
-                                type="button"
-                                onclick="enable2FA()"
-                                class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-indigo-500 focus:bg-indigo-700"
-                            >
-                                Activer la double authentification
-                            </button>
+                            <x-button onclick="enable2FA()">Activer la double authentification</x-button>
                         </div>
 
                         <div id="qr-code-section" class="hidden">
@@ -196,14 +180,9 @@
                                             pattern="[0-9]{6}"
                                             required
                                             placeholder="000000"
-                                            class="flex-1 rounded-md border-gray-300 text-center text-lg tracking-widest shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            class="flex-1 rounded-md border-gray-300 text-center text-lg tracking-widest shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                         />
-                                        <button
-                                            type="submit"
-                                            class="rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-indigo-500"
-                                        >
-                                            Vérifier
-                                        </button>
+                                        <x-button type="submit">Vérifier</x-button>
                                     </div>
                                     <p id="verification-error" class="mt-2 hidden text-sm text-red-600"></p>
                                 </form>
@@ -227,13 +206,7 @@
                                     si vous perdez votre appareil.
                                 </p>
                                 <div id="recovery-codes-list" class="mb-3 grid grid-cols-2 gap-2 rounded bg-white p-3"></div>
-                                <button
-                                    type="button"
-                                    onclick="document.location.reload()"
-                                    class="w-full rounded-md bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
-                                >
-                                    J'ai sauvegardé mes codes
-                                </button>
+                                <x-button onclick="document.location.reload()">J'ai sauvegardé mes codes</x-button>
                             </div>
                         </div>
                     @else
@@ -250,17 +223,20 @@
                                 {{-- <button --}}
                                 {{-- type="button" --}}
                                 {{-- onclick="showRecoveryCodes()" --}}
-                                {{-- class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-indigo-500 focus:bg-indigo-700" --}}
+                                {{-- class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-blue-700 focus:bg-blue-700" --}}
                                 {{-- > --}}
                                 {{-- Voir les codes de récupération --}}
                                 {{-- </button> --}}
-                                <button
-                                    type="button"
-                                    onclick="document.getElementById('disable2FAModal').classList.remove('hidden')"
-                                    class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-red-500 focus:bg-red-700"
-                                >
+                                {{-- <button --}}
+                                {{-- type="button" --}}
+                                {{-- onclick="document.getElementById('disable2FAModal').classList.remove('hidden')" --}}
+                                {{-- class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-red-500 focus:bg-red-700" --}}
+                                {{-- > --}}
+                                {{-- Désactiver --}}
+                                {{-- </button> --}}
+                                <x-button onclick="document.getElementById('disable2FAModal').classList.remove('hidden')" color="red">
                                     Désactiver
-                                </button>
+                                </x-button>
                             </div>
                         </div>
                     @endif
@@ -291,26 +267,17 @@
                     </div>
 
                     <div class="flex gap-2">
-                        <button
-                            type="button"
-                            onclick="document.getElementById('deleteModal').classList.remove('hidden')"
-                            class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-red-500 focus:bg-red-700"
-                        >
+                        <x-button onclick="document.getElementById('deleteModal').classList.remove('hidden')" color="red">
                             Supprimer mon compte
-                        </button>
+                        </x-button>
 
-                        <a
-                            href="{{ route("dashboard.profile.export") }}"
-                            class="inline-flex items-center rounded-md border border-transparent bg-gray-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-gray-500 focus:bg-gray-700"
-                        >
-                            Demander mes données (RGPD)
-                        </a>
+                        <x-button href="{{ route('dashboard.profile.export') }}" color="gray">Exporter mes données (RGPD)</x-button>
                     </div>
                 </div>
             </div>
 
             <div class="flex justify-center">
-                <a href="{{ route("dashboard.index") }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">
+                <a href="{{ route("dashboard.index") }}" class="text-sm font-medium text-blue-600 hover:text-blue-800">
                     &larr; Retour au tableau de bord
                 </a>
             </div>
@@ -349,19 +316,10 @@
                     </div>
 
                     <div class="flex justify-end space-x-3">
-                        <button
-                            type="button"
-                            onclick="document.getElementById('deleteModal').classList.add('hidden')"
-                            class="inline-flex items-center rounded-md border border-transparent bg-gray-300 px-4 py-2 text-xs font-semibold tracking-widest text-gray-700 uppercase transition hover:bg-gray-400 focus:bg-gray-500"
-                        >
+                        <x-button type="button" onclick="document.getElementById('deleteModal').classList.add('hidden')" color="gray">
                             Annuler
-                        </button>
-                        <button
-                            type="submit"
-                            class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-red-500 focus:bg-red-700"
-                        >
-                            Supprimer définitivement
-                        </button>
+                        </x-button>
+                        <x-button type="submit" color="red">Supprimer définitivement</x-button>
                     </div>
                 </div>
             </form>
@@ -381,19 +339,10 @@
                     <p id="disable-error" class="hidden text-sm text-red-600"></p>
 
                     <div class="flex justify-end space-x-3">
-                        <button
-                            type="button"
-                            onclick="document.getElementById('disable2FAModal').classList.add('hidden')"
-                            class="inline-flex items-center rounded-md border border-transparent bg-gray-300 px-4 py-2 text-xs font-semibold tracking-widest text-gray-700 uppercase transition hover:bg-gray-400 focus:bg-gray-500"
-                        >
+                        <x-button type="button" onclick="document.getElementById('disable2FAModal').classList.add('hidden')" color="gray">
                             Annuler
-                        </button>
-                        <button
-                            type="submit"
-                            class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-red-500 focus:bg-red-700"
-                        >
-                            Désactiver
-                        </button>
+                        </x-button>
+                        <x-button type="submit" color="red">Désactiver</x-button>
                     </div>
                 </div>
             </form>

@@ -8,7 +8,7 @@
                             <h1 class="text-2xl font-bold text-gray-900">Mes commandes</h1>
                             <p class="mt-1 text-sm text-gray-500">Historique de vos commandes passées</p>
                         </div>
-                        <a href="{{ route("dashboard.index") }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">
+                        <a href="{{ route("dashboard.index") }}" class="text-sm font-medium text-blue-600 hover:text-blue-800">
                             &larr; Retour au tableau de bord
                         </a>
                     </div>
@@ -27,7 +27,7 @@
                             <p class="mt-1 text-sm text-gray-500">Vous n'avez pas encore passé de commande.</p>
                             <a
                                 href="{{ route("home") }}"
-                                class="mt-4 inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                                class="mt-4 inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
                             >
                                 Découvrir nos produits
                             </a>
@@ -101,7 +101,7 @@
                                     <div class="mt-4 flex justify-end border-t border-gray-100 pt-4">
                                         <a
                                             href="{{ route("dashboard.orders.show", $order->id) }}"
-                                            class="inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+                                            class="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
                                         >
                                             Voir le détail
                                             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

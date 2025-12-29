@@ -8,12 +8,7 @@
                             <h1 class="text-2xl font-bold text-gray-900">Mes adresses</h1>
                             <p class="mt-1 text-sm text-gray-500">Gérez vos adresses de livraison</p>
                         </div>
-                        <a
-                            href="{{ route("dashboard.addresses.create") }}"
-                            class="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-800"
-                        >
-                            + Nouvelle adresse
-                        </a>
+                        <x-button :href="route('dashboard.addresses.create')">Ajouter une nouvelle adresse</x-button>
                     </div>
 
                     <x-flash-message key="success" type="success" />
@@ -45,10 +40,10 @@
                                         <div class="flex gap-0.5">
                                             <a
                                                 href="{{ route("dashboard.addresses.edit", $adresse) }}"
-                                                class="rounded-md p-2 text-gray-400 transition hover:bg-indigo-50 hover:text-indigo-600"
+                                                class="rounded-md p-2 text-gray-400 transition hover:bg-blue-50 hover:text-blue-600"
                                                 title="Modifier"
                                             >
-                                                <x-heroicon-o-pencil-square class="size-5 hover:text-indigo-600" />
+                                                <x-heroicon-o-pencil-square class="size-5 hover:text-blue-600" />
                                             </a>
                                             <form
                                                 method="POST"
@@ -74,7 +69,7 @@
                     @endif
 
                     <div class="mt-6 border-t border-gray-200 pt-6">
-                        <a href="{{ route("dashboard.index") }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">
+                        <a href="{{ route("dashboard.index") }}" class="text-sm font-medium text-blue-600 hover:text-blue-800">
                             &larr; Retour au tableau de bord
                         </a>
                     </div>

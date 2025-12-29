@@ -37,7 +37,7 @@
 {{-- <div class="flex-1 min-w-0"> --}}
 {{-- <h3 class="text-sm font-semibold text-gray-900"> --}}
 {{-- @if ($hasArticle) --}}
-{{-- <a href="{{ route('articles.show', $article->id_article) }}" class="hover:text-indigo-600"> --}}
+{{-- <a href="{{ route('articles.show', $article->id_article) }}" class="hover:text-blue-600"> --}}
 {{-- {{ $article->nom_article }} --}}
 {{-- </a> --}}
 {{-- @else --}}

@@ -41,11 +41,7 @@
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
 
-                <button
-                    class="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                >
-                    Se connecter
-                </button>
+                <x-button type="submit" size="lg" class="w-full">Se connecter</x-button>
             </form>
 
             <p class="mt-6 text-center text-sm text-gray-600">

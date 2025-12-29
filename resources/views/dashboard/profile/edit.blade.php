@@ -38,7 +38,7 @@
                                     name="civilite"
                                     id="civilite"
                                     required
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                 >
                                     <option value="Monsieur" @selected(old("civilite") == "Monsieur")>Monsieur</option>
                                     <option value="Madame" @selected(old("civilite") == "Madame")>Madame</option>
@@ -82,16 +82,12 @@
                             <div class="flex items-center justify-between pt-4">
                                 <a
                                     href="{{ route("dashboard.profile.show") }}"
-                                    class="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+                                    class="text-sm font-medium text-blue-600 hover:text-blue-800"
                                 >
                                     &larr; Annuler
                                 </a>
-                                <button
-                                    type="submit"
-                                    class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-indigo-500 focus:bg-indigo-700"
-                                >
-                                    Enregistrer les modifications
-                                </button>
+
+                                <x-button type="submit">Enregistrer les modifications</x-button>
                             </div>
                         </div>
                     </form>

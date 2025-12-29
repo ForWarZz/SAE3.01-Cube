@@ -44,7 +44,7 @@
                             id="date"
                             value="{{ $selectedDate }}"
                             onchange="document.getElementById('dateFilterForm').submit()"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                         />
                         <x-input-error :messages="$errors->get('date_threshold')" class="mt-2" />
                     </div>

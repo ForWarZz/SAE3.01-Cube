@@ -53,14 +53,7 @@
                                 <form action="{{ route("cart.discount.remove") }}" method="POST">
                                     @csrf
                                     @method("DELETE")
-
-                                    <button
-                                        type="submit"
-                                        class="cursor-pointer rounded-full p-1 text-green-600 transition hover:bg-green-100 hover:text-green-800"
-                                        title="Retirer le code"
-                                    >
-                                        <x-bi-x class="size-7" />
-                                    </button>
+                                    <x-button type="submit" color="green">Retirer le code</x-button>
                                 </form>
                             </div>
                         </div>
@@ -80,13 +73,13 @@
                                 class="flex-1 rounded-md border border-gray-300 px-4 py-2"
                             />
 
-                            <button
+                            <x-button
                                 type="submit"
-                                @disabled($count === 0)
-                                class="{{ $count > 0 ? "cursor-pointer bg-black text-white hover:bg-gray-900 hover:shadow-md" : "cursor-not-allowed bg-gray-300 text-white" }} text-md rounded-md px-5 py-2 font-medium shadow-sm transition"
+                                :disabled="$count === 0"
+                                class="{{ $count > 0 ? '' : 'bg-gray-300 text-white cursor-not-allowed' }} text-md rounded-md px-5 py-2 font-medium shadow-sm transition"
                             >
                                 Appliquer
-                            </button>
+                            </x-button>
                         </form>
                     @endif
                 </section>
