@@ -77,4 +77,4 @@
     </div>
 </div>
 
-@vite(['resources/js/bikesize/main.js'])
+@vite(["resources/js/bikesize/main.js"])

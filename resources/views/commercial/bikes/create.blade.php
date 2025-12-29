@@ -120,7 +120,7 @@
                                 :value="old('description_article')"
                                 placeholder="Description détaillée..."
                                 required
-                                rows="4"
+                                rows="3z"
                             />
                         </div>
                     </div>
