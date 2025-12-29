@@ -144,7 +144,10 @@
                             </div>
 
                             <div class="mb-4">
-                                <label class="mb-1 block text-sm font-medium text-gray-700">Catégorie *</label>
+                                <label class="mb-1 block text-sm font-medium text-gray-700">
+                                    Catégorie
+                                    <span class="text-red-600">*</span>
+                                </label>
                                 <select
                                     x-model="selectedCategory"
                                     :disabled="categoryLocked"
@@ -164,7 +167,10 @@
                             </div>
 
                             <div class="mb-4">
-                                <label class="mb-1 block text-sm font-medium text-gray-700">Matériau cadre *</label>
+                                <label class="mb-1 block text-sm font-medium text-gray-700">
+                                    Matériau cadre
+                                    <span class="text-red-600">*</span>
+                                </label>
                                 <select name="id_materiau_cadre" class="block w-full rounded-md border-gray-300 p-2 text-sm">
                                     @foreach ($materials as $mat)
                                         <option
@@ -178,7 +184,10 @@
                             </div>
 
                             <div class="mb-4">
-                                <label class="mb-1 block text-sm font-medium text-gray-700">Millésime *</label>
+                                <label class="mb-1 block text-sm font-medium text-gray-700">
+                                    Millésime
+                                    <span class="text-red-600">*</span>
+                                </label>
                                 <select name="id_millesime" class="block w-full rounded-md border-gray-300 p-2 text-sm">
                                     @foreach ($vintages as $vin)
                                         <option value="{{ $vin->id_millesime }}" @selected(old("id_millesime") == $vin->id_millesime)>
@@ -189,7 +198,10 @@
                             </div>
 
                             <div class="mb-4">
-                                <label class="mb-1 block text-sm font-medium text-gray-700">Usage *</label>
+                                <label class="mb-1 block text-sm font-medium text-gray-700">
+                                    Usage
+                                    <span class="text-red-600">*</span>
+                                </label>
                                 <select name="id_usage" class="block w-full rounded-md border-gray-300 p-2 text-sm">
                                     @foreach ($usages as $use)
                                         <option value="{{ $use->id_usage }}" @selected(old("id_usage") == $use->id_usage)>
@@ -200,7 +212,10 @@
                             </div>
 
                             <div x-show="isVae">
-                                <label class="mb-1 block text-sm font-medium text-gray-700">Type VAE *</label>
+                                <label class="mb-1 block text-sm font-medium text-gray-700">
+                                    Type VAE
+                                    <span class="text-red-600">*</span>
+                                </label>
                                 <select name="id_type_vae" class="block w-full rounded-md border-gray-300 p-2 text-sm">
                                     @foreach ($eBikeTypes as $type)
                                         <option value="{{ $type->id_type_vae }}" @selected(old("id_type_vae") == $type->id_type_vae)>
@@ -217,6 +232,7 @@
                                     label="Poids du vélo (kg)"
                                     :value="old('poids_velo')"
                                     placeholder="Ex: 12,5"
+                                    required
                                     step="0.1"
                                     min="0"
                                 />

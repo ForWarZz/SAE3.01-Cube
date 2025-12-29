@@ -62,7 +62,10 @@
                         </div>
 
                         <div class="rounded-lg bg-white p-6 shadow-sm">
-                            <h2 class="mb-4 border-b pb-2 text-base font-semibold text-gray-900">Tailles disponible</h2>
+                            <h2 class="mb-4 border-b pb-2 text-base font-semibold text-gray-900">
+                                Tailles disponible
+                                <span class="text-red-600">*</span>
+                            </h2>
                             <div class="flex flex-wrap gap-2">
                                 @foreach ($sizes as $size)
                                     <label class="flex items-center space-x-1">
@@ -85,7 +88,10 @@
                             <h2 class="mb-4 text-base font-semibold text-gray-900">Configuration</h2>
 
                             <div class="mb-4">
-                                <label class="mb-1 block text-sm font-medium text-gray-700">Catégorie *</label>
+                                <label class="mb-1 block text-sm font-medium text-gray-700">
+                                    Catégorie
+                                    <span class="text-red-600">*</span>
+                                </label>
                                 <select name="id_categorie" class="block w-full rounded-md border-gray-300 p-2 text-sm">
                                     <option value="">-- Sélectionner --</option>
                                     @foreach ($categories as $cat)
@@ -100,7 +106,10 @@
                             </div>
 
                             <div class="mb-4">
-                                <label class="mb-1 block text-sm font-medium text-gray-700">Matière *</label>
+                                <label class="mb-1 block text-sm font-medium text-gray-700">
+                                    Matière
+                                    <span class="text-red-600">*</span>
+                                </label>
                                 <select name="id_matiere_accessoire" class="block w-full rounded-md border-gray-300 p-2 text-sm">
                                     @foreach ($accessoryMaterials as $material)
                                         <option
@@ -120,6 +129,7 @@
                                     label="Poids du vélo (kg)"
                                     :value="old('poids_velo', $accessory->poids_article)"
                                     placeholder="Ex: 12,5"
+                                    required
                                     step="0.1"
                                     min="0"
                                 />
