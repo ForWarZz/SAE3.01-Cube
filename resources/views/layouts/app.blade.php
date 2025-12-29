@@ -48,6 +48,7 @@
             }
         </style>
     </head>
+
     <body class="font-sans antialiased">
         <div class="flex min-h-screen flex-col">
             <x-nav-bar />
@@ -59,22 +60,30 @@
 
         <x-shop-selector-modal />
 
+        <footer class="border-t border-gray-200 bg-gray-50 text-gray-700">
+            <div class="flex flex-row justify-center gap-64 px-6 py-8">
+                <p class="text-sm text-gray-500">© {{ date("Y") }} Cube. Tous droits réservés.</p>
+
+                <nav class="flex flex-wrap items-center gap-4 text-sm font-medium text-gray-600">
+                    <a href="{{ route("legal-notices") }}" class="transition hover:text-gray-900">Mentions légales</a>
+                    <a href="{{ route("privacy-policy") }}" class="transition hover:text-gray-900">Politique de confidentialité</a>
+                    <a href="{{ route("terms-of-sale") }}" class="transition hover:text-gray-900">Condition générales de ventes</a>
+                </nav>
+            </div>
+        </footer>
+
         <script>
             var botmanWidget = {
                 chatServer: '/botman?page_type={{ $pageType }}&context_id={{ $contextId }}',
                 frameEndpoint: '/botman/chat',
-
                 title: 'Assistant Cube',
-
                 mainColor: '#111827',
                 bubbleBackground: '#4f46e5',
                 headerTextColor: '#ffffff',
-
                 aboutText: '',
                 introMessage:
                     "👋 <b>Bonjour !</b><br>Je suis l'assistant Cube.<br>Je peux vous aider à trouver un vélo ou répondre à vos questions.",
                 placeholderText: 'Écrivez votre message...',
-
                 desktopHeight: 600,
                 desktopWidth: 400,
                 mobileHeight: '100%',
