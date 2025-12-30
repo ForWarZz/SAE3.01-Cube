@@ -72,13 +72,7 @@
                 />
             </div>
 
-            <button
-                id="calc-btn"
-                type="submit"
-                class="mt-2 w-full rounded bg-gray-900 px-6 py-2.5 font-bold text-white transition hover:bg-gray-800"
-            >
-                Calculer ma taille
-            </button>
+            <x-button type="submit" size="lg" class="w-full mt-2" icon="heroicon-o-calculator">Calculer ma taille</x-button>
 
             <div id="result-box" class="mt-2 hidden rounded bg-white p-4 shadow-sm">
                 <p id="result-text" class="mt-1 pl-7 text-2xl font-bold text-gray-900">--</p>
