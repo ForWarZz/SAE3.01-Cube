@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Staff\DPO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\DPO\AnonymizeRequest;
 use App\Models\Client;
+use App\Models\Order;
 use App\Services\GdprService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -19,7 +20,16 @@ class DPOController extends Controller
         $usersCount = Client::where('date_der_connexion', '<', $selectedDate)
             ->count();
 
-        return view('staff.dpo.index', compact('usersCount', 'selectedDate'));
+        $legalDate = Carbon::now()->subYears(GdprService::EXPIRED_ORDER_YEARS);
+        $expiredOrdersCount = Order::where('date_commande', '<', $legalDate)
+            ->count();
+
+        return view('staff.dpo.index', [
+            'selectedDate' => $selectedDate,
+            'usersCount' => $usersCount,
+            'expiredOrdersCount' => $expiredOrdersCount,
+            'legalDate' => $legalDate,
+        ]);
     }
 
     public function anonymizeClient(AnonymizeRequest $request, GdprService $gdprService)
@@ -34,6 +44,17 @@ class DPOController extends Controller
             ->with([
                 'success' => "Anonymisation terminée. Nombre de clients anonymisés : $anonymizedCount.",
                 'date_threshold' => $date_threshold,
+            ]);
+    }
+
+    public function deleteExpiredOrders(GdprService $gdprService)
+    {
+        $deletedOrdersCount = $gdprService->deleteExpiredOrders();
+
+        return redirect()
+            ->route('dpo.index')
+            ->with([
+                'success' => "Suppression terminée. Nombre de commandes supprimées : $deletedOrdersCount.",
             ]);
     }
 }

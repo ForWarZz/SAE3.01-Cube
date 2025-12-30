@@ -10,6 +10,8 @@ use App\Services\Commercial\AddressService;
 
 class GdprService
 {
+    public const EXPIRED_ORDER_YEARS = 10;
+
     private const ANONYMIZED_CLIENT_DATA = [
         'nom_client' => 'ANONYME',
         'prenom_client' => 'Utilisateur',
@@ -27,7 +29,12 @@ class GdprService
 
     public function deleteOrAnonymizeClient(Client $client): string
     {
-        if ($this->clientHasOrders($client)) {
+        $orderExpirationDate = now()->subYears(GdprService::EXPIRED_ORDER_YEARS);
+        $client->orders()
+            ->where('date_commande', '<', $orderExpirationDate)
+            ->delete();
+
+        if ($client->orders()->exists()) {
             foreach ($client->addresses as $address) {
                 $this->deleteOrSoftDelete($address);
             }
@@ -38,18 +45,13 @@ class GdprService
             $client->update($anonymizedData);
             $client->delete();
 
-            return 'Votre compte a été anonymisé. Vos données personnelles ont été supprimées mais l\'historique des commandes est conservé pour des raisons légales.';
+            return 'Compte anonymisé. Les commandes de plus de 10 ans ont été purgées. Les récentes sont conservées (conservation légale pour comptabilité).';
         }
 
-        $client->addresses()->delete();
-        $client->delete();
+        $client->addresses()->forceDelete();
+        $client->forceDelete();
 
-        return 'Votre compte et toutes vos données ont été supprimés conformément au RGPD.';
-    }
-
-    public function clientHasOrders(Client $client): bool
-    {
-        return $client->orders()->exists();
+        return 'Compte supprimé définitivement (aucune donnée récente à conserver).';
     }
 
     public function deleteOrSoftDelete(Address $address): string
@@ -155,5 +157,13 @@ class GdprService
         }
 
         return $anonymizedCount;
+    }
+
+    public function deleteExpiredOrders(): int
+    {
+        $orderExpirationDate = now()->subYears(GdprService::EXPIRED_ORDER_YEARS);
+
+        return Order::where('date_commande', '<', $orderExpirationDate)
+            ->delete();
     }
 }

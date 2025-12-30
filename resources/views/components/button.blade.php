@@ -30,8 +30,8 @@
         " " .
         ($sizes[$size] ?? $sizes["md"]);
 
-    if ($attributes->get("disabled")) {
-        $classes .= " opacity-50 cursor-not-allowed bg-gray-300 border-gray-300 text-gray-500  hover:bg-gray-300";
+    if ($attributes->has("disabled")) {
+        $classes .= " opacity-50 border-gray-300";
     }
 @endphp
 

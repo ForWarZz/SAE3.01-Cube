@@ -36,6 +36,6 @@ class SizeFilter extends AbstractFilter
             ->orderBy('nom_taille')
             ->get();
 
-        return $this->format($availableSizes, 'id_taille', 'nom_taille');
+        return $this->format($availableSizes, 'id_taille', 'label');
     }
 }
