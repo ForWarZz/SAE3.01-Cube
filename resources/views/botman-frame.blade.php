@@ -102,7 +102,7 @@
                 margin-bottom: 1rem;
             }
             .visitor .msg {
-                background-color: #4f46e5 !important;
+                background-color: #2563eb !important;
                 color: white !important;
                 border-radius: 1rem 1rem 0 1rem !important;
                 padding: 0.75rem 1rem !important;
@@ -169,6 +169,10 @@
                 margin-top: 4px;
                 display: block;
                 text-align: right;
+            }
+
+            .visitor .time {
+                color: #c9ced4;
             }
         </style>
     </head>

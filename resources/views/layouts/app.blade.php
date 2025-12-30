@@ -78,11 +78,11 @@
                 frameEndpoint: '/botman/chat',
                 title: 'Assistant Cube',
                 mainColor: '#111827',
-                bubbleBackground: '#4f46e5',
+                bubbleBackground: '#2563EB',
                 headerTextColor: '#ffffff',
                 aboutText: '',
                 introMessage:
-                    "👋 <b>Bonjour !</b><br>Je suis l'assistant Cube.<br>Je peux vous aider à trouver un vélo ou répondre à vos questions.",
+                    "👋 <b>Bonjour !</b><br>Je suis l'assistant Cube.<br>Posez votre question et je ferai de mon mieux pour vous aider et pour guider.",
                 placeholderText: 'Écrivez votre message...',
                 desktopHeight: 600,
                 desktopWidth: 400,
