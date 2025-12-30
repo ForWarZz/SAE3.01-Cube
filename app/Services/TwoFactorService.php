@@ -6,6 +6,7 @@ use App\DTOs\TwoFactorResultDTO;
 use App\Exceptions\InvalidCodeException;
 use App\Exceptions\PasswordException;
 use App\Exceptions\TwoFactorException;
+use App\Models\Client;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
@@ -13,6 +14,7 @@ use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Google2FA\Google2FA;
+use Throwable;
 
 class TwoFactorService
 {
@@ -130,5 +132,48 @@ class TwoFactorService
     public function generateRecoveryCodes(): array
     {
         return Collection::times(8, fn () => Str::random(10).'-'.Str::random(10))->toArray();
+    }
+
+    /**
+     * @throws TwoFactorException
+     */
+    public function verifyTotp(Client $user, string $code): bool
+    {
+        try {
+            if (! $user->two_factor_secret) {
+                throw new TwoFactorException("La 2FA n'est pas configurée pour cet utilisateur.");
+            }
+
+            $secret = decrypt($user->two_factor_secret);
+
+            return $this->google2fa->verifyKey($secret, $code);
+        } catch (Throwable $e) {
+            throw new TwoFactorException('Erreur lors de la vérification du code TOTP.');
+        }
+    }
+
+    /**
+     * @throws TwoFactorException
+     */
+    public function useRecoveryCode(Client $user, string $code): bool
+    {
+        try {
+            if (! $user->two_factor_recovery_codes) {
+                throw new TwoFactorException('Aucun code de récupération disponible.');
+            }
+
+            $recoveryCodes = json_decode(decrypt($user->two_factor_recovery_codes), true);
+            if (! is_array($recoveryCodes) || ! in_array($code, $recoveryCodes)) {
+                return false;
+            }
+
+            $recoveryCodes = array_values(array_diff($recoveryCodes, [$code]));
+            $user->two_factor_recovery_codes = encrypt(json_encode($recoveryCodes));
+            $user->save();
+
+            return true;
+        } catch (Throwable $e) {
+            throw new TwoFactorException('Erreur lors de la vérification du code de récupération.');
+        }
     }
 }

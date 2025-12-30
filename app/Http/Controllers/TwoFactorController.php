@@ -6,8 +6,8 @@ use App\Exceptions\InvalidCodeException;
 use App\Exceptions\PasswordException;
 use App\Exceptions\TwoFactorException;
 use App\Http\Requests\PasswordRequiredRequest;
+use App\Http\Requests\TwoAuthVerifyRequest;
 use App\Services\TwoFactorService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TwoFactorController extends Controller
@@ -36,12 +36,9 @@ class TwoFactorController extends Controller
         }
     }
 
-    public function confirm(Request $request)
+    public function confirm(TwoAuthVerifyRequest $request)
     {
         $user = Auth::user();
-        $request->validate([
-            'code' => 'required|string|size:6',
-        ]);
 
         try {
             $recoveryCodes = $this->twoFactorService->confirm($user, $request->code);

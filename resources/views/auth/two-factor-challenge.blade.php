@@ -22,7 +22,7 @@
                         type="text"
                         id="code"
                         name="code"
-                        maxlength="20"
+                        minlength="6"
                         autofocus
                         required
                         placeholder="000000"
