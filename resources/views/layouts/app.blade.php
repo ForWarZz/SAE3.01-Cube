@@ -74,7 +74,7 @@
 
         <script>
             var botmanWidget = {
-                chatServer: '/botman?page_type={{ $pageType }}&context_id={{ $contextId }}',
+                chatServer: '/botman?page_type={{ $pageType }}&context_id={{ $contextId }}&page_url={{ urlencode(request()->url()) }}',
                 frameEndpoint: '/botman/chat',
                 title: 'Assistant Cube',
                 mainColor: '#111827',

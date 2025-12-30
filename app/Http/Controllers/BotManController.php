@@ -23,10 +23,11 @@ class BotManController extends Controller
             $message = $bot->getMessage()->getText();
             $pageType = $request->input('page_type', 'general');
             $contextId = $request->input('context_id');
+            $pageUrl = $request->input('page_url');
 
-            Log::info('BotMan received message: '.$message.' | page_type: '.$pageType.' | context_id: '.$contextId);
+            Log::info('BotMan received message: '.$message.' | page_type: '.$pageType.' | page_url: '.$pageUrl.' | context_id: '.$contextId);
 
-            $response = $this->assistantService->askGemini($message, $pageType, $contextId);
+            $response = $this->assistantService->askGemini($message, $pageType, $pageUrl, $contextId);
             $htmlResponse = Str::markdown($response);
 
             $bot->reply($htmlResponse);

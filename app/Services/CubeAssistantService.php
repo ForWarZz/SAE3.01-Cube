@@ -24,16 +24,16 @@ class CubeAssistantService
         private readonly CartService $cartService
     ) {}
 
-    public function askGemini(string $message, string $pageType, ?int $contextId): string
+    public function askGemini(string $message, string $pageType, string $pageUrl, ?int $contextId): string
     {
         try {
             $systemPrompt = $this->getSystemPrompt();
-            $situationalContext = $this->buildSituationalContext($pageType, $contextId);
+            $situationalContext = $this->buildSituationalContext($pageType, $pageUrl, $contextId);
 
             $result = Gemini::generativeModel(model: self::GEMINI_MODEL)
                 ->generateContent([
                     "SYSTEME : {$systemPrompt}",
-                    "CONTEXTE SITUATIONNEL : {$situationalContext}",
+                    "CONTEXTE SITUATIONNEL (JSON) : {$situationalContext}",
                     "UTILISATEUR : {$message}",
                 ]);
 
@@ -65,24 +65,23 @@ class CubeAssistantService
         return 'Désolé, le fichier de prompt système est introuvable.';
     }
 
-    private function buildSituationalContext(string $pageType, ?int $contextId): string
+    private function buildSituationalContext(string $pageType, string $pageUrl, ?int $contextId): string
     {
         $context = [
-            'metadata' => $this->buildMetadata($pageType, $contextId),
-            'payload' => $this->buildPayload($pageType, $contextId),
+            'metadata' => $this->buildMetadata($pageType, $pageUrl, $contextId),
+            'data' => $this->buildPayload($pageType, $contextId),
         ];
 
-        return json_encode($context, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        return json_encode($context, JSON_UNESCAPED_UNICODE);
     }
 
-    private function buildMetadata(string $pageType, ?int $contextId): array
+    private function buildMetadata(string $pageType, string $pageUrl, ?int $contextId): array
     {
         return [
             'page_type' => $pageType,
             'context_id' => $contextId,
+            'page_url' => $pageUrl,
             'timestamp' => now()->toIso8601String(),
-            'locale' => 'fr_FR',
-            'currency' => 'EUR',
         ];
     }
 
@@ -91,10 +90,9 @@ class CubeAssistantService
         return match ($pageType) {
             'article-reference' => $this->buildArticleReferencePayload($contextId),
             'category' => $this->buildCategoryPayload($contextId),
-            'cart' => $this->buildCartPayload(),
-            'checkout' => $this->buildCheckoutPayload(),
+            'cart', 'checkout' => $this->buildCartPayload(),
             'profile' => $this->buildProfilePayload(),
-            default => $this->buildGeneralPayload(),
+            default => [],
         };
     }
 
@@ -112,31 +110,17 @@ class CubeAssistantService
         }
 
         return [
-            'type' => 'article_reference',
-            'id' => $referenceId,
-            'current_page' => 'FICHE PRODUIT',
-            'user_location' => "L'utilisateur est actuellement sur la fiche produit détaillée de cet article. Il peut voir les photos, le prix, la description, les caractéristiques techniques et les variantes disponibles (couleurs, tailles).",
-            'available_actions' => [
-                'select_variant' => 'Sélectionner une couleur en cliquant sur la pastille de couleur',
-                'select_size' => 'Sélectionner une taille dans le menu déroulant ou les boutons',
-                'check_availability' => 'Cliquer sur le bouton "Voir les disponibilités" pour consulter les magasins',
-                'add_to_cart' => 'Cliquer sur "Ajouter au panier" après avoir sélectionné les variantes',
-                'view_accessories' => $bike ? 'Consulter l\'onglet "Accessoires compatibles"' : null,
-                'view_similar' => 'Consulter la section "Articles similaires" en bas de page',
-            ],
-            'payload' => [
-                'article_name' => $article->nom_article,
-                'price' => $article->getDiscountedPrice(),
-                'original_price' => $article->prix_article,
-                'has_discount' => $article->hasDiscount(),
-                'is_accessory' => $isAccessory,
-                'is_ebike' => (bool) $bike?->ebike,
-                'availability_online' => $reference->available_online ?? null,
-                'characteristics' => $this->extractCharacteristics($article),
-                'variants' => $bike ? $this->extractVariants($bike) : [],
-                'compatible_accessories' => $bike ? $this->extractCompatibleAccessories($bike) : [],
-                'similar_articles' => $this->extractSimilarArticles($article),
-            ],
+            'article_name' => $article->nom_article,
+            'price' => $article->getDiscountedPrice(),
+            'original_price' => $article->prix_article,
+            'has_discount' => $article->hasDiscount(),
+            'is_accessory' => $isAccessory,
+            'is_ebike' => (bool) $bike?->ebike,
+            'availability_online' => $reference->available_online ?? null,
+            'characteristics' => $this->extractCharacteristics($article),
+            'variants' => $bike ? $this->extractVariants($bike) : [],
+            'compatible_accessories' => $bike ? $this->extractCompatibleAccessories($bike) : [],
+            'similar_articles' => $this->extractSimilarArticles($article),
         ];
     }
 
@@ -149,26 +133,8 @@ class CubeAssistantService
         }
 
         return [
-            'type' => 'category',
-            'id' => $categoryId,
-            'current_page' => 'PAGE CATÉGORIE',
-            'user_location' => "L'utilisateur navigue dans la catégorie \"{$category->nom_categorie}\". Il voit une liste d'articles avec leurs vignettes, noms et prix. Il peut utiliser les filtres pour affiner sa recherche.",
-            'available_actions' => [
-                'use_filters' => 'Utiliser les filtres latéraux (prix, taille, couleur, matériau, usage, etc.)',
-                'sort_results' => 'Trier les résultats (prix croissant/décroissant, nouveautés, etc.)',
-                'click_article' => 'Cliquer sur un article pour ouvrir sa fiche produit détaillée et voir sa disponibilité',
-                'navigate_breadcrumb' => 'Utiliser le fil d\'Ariane pour remonter dans l\'arborescence',
-                'view_subcategories' => 'Explorer les sous-catégories si disponibles',
-            ],
-            'important_notes' => [
-                'La disponibilité détaillée (en ligne/magasin) n\'est PAS visible sur cette page',
-                'Pour voir la disponibilité, l\'utilisateur DOIT cliquer sur un article pour ouvrir sa fiche',
-                'Les badges "Promotion" et "Nouveauté" sont visibles sur les vignettes',
-            ],
-            'payload' => [
-                'category_name' => $category->nom_categorie,
-                'category_path' => $category->getFullPath(),
-            ],
+            'category_name' => $category->nom_categorie,
+            'category_path' => $category->getFullPath(),
         ];
     }
 
@@ -176,58 +142,7 @@ class CubeAssistantService
     {
         $cartData = $this->cartService->getCartData();
 
-        return [
-            'type' => 'cart',
-            'current_page' => 'PANIER',
-            'user_location' => "L'utilisateur est dans son panier. Il voit la liste de ses articles avec les quantités, prix unitaires et le total de la commande.",
-            'available_actions' => [
-                'modify_quantity' => 'Modifier les quantités des articles (+ ou - ou saisie directe)',
-                'remove_item' => 'Supprimer un article du panier (bouton "Supprimer")',
-                'apply_promo' => 'Appliquer un code promo dans le champ "Code promo" puis cliquer "Appliquer"',
-                'continue_shopping' => 'Continuer les achats (retour aux catégories)',
-                'checkout' => 'Cliquer sur "Valider le panier" pour passer à la commande',
-            ],
-            'important_rules' => [
-                'Livraison offerte en magasin revendeur à partir de 50€',
-                'Click & Collect OBLIGATOIRE si un vélo est dans le panier',
-                'Un seul code promo par commande',
-                'Connexion obligatoire pour valider le panier',
-            ],
-            'payload' => [
-                ...$cartData->toArray(),
-            ],
-        ];
-    }
-
-    private function buildCheckoutPayload(): array
-    {
-        $cartData = $this->cartService->getCartData();
-
-        return [
-            'type' => 'checkout',
-            'current_page' => 'PAGE PAIEMENT',
-            'user_location' => "L'utilisateur est en train de finaliser sa commande. Il saisit ses informations de livraison, choisit son mode de livraison et procède au paiement.",
-            'available_actions' => [
-                'fill_address' => 'Saisir l\'adresse de livraison',
-                'select_billing_address' => 'Saisir l\'adresse de facturation (peut être différente)',
-                'choose_delivery' => 'Choisir le mode de livraison (Livraison express, Click & Collect, Point relais)',
-                'select_payment' => 'Choisir le moyen de paiement (CB, PayPal, Apple Pay, Google Pay)',
-                'validate_order' => 'Cliquer sur "Payer" pour finaliser la commande',
-            ],
-            'important_rules' => [
-                'Click & Collect obligatoire si un vélo est dans la commande',
-                'Vérifier que l\'adresse de facturation correspond à celle de la banque',
-                'Paiement sécurisé via Stripe',
-            ],
-            'assistant_behavior' => [
-                'Aider uniquement pour problèmes techniques ou questions sur le processus',
-                'NE PAS proposer de ventes additionnelles',
-                'Être concis et efficace pour ne pas ralentir la conversion',
-            ],
-            'payload' => [
-                ...$cartData->toArray(),
-            ],
-        ];
+        return $cartData->toArray();
     }
 
     private function buildProfilePayload(): array
@@ -235,47 +150,10 @@ class CubeAssistantService
         $client = auth()->user();
 
         return [
-            'type' => 'profile',
-            'current_page' => 'PANNEAU DE PROFIL',
-            'user_location' => "L'utilisateur est sur son panneau de profil. Il peut gérer son compte, ses adresses, consulter ses commandes.",
-            'available_actions' => [
-                'edit_profile' => 'Accéder au aux informations de votre compte client en cliquant sur la tuile "Profil", puis "Modifier" pour éditer les informations personnelles',
-                'change_password' => 'Accéder au aux informations de votre compte client en cliquant sur la tuile "Profil", puis remplir le formulaire "Changer le mot de passe" (mot de passe actuel + nouveau + confirmation)',
-                'enable_2fa' => 'Accéder au aux informations de votre compte client en cliquant sur la tuile "Profil", puis activer l\'A2F via "Activer la double authentification"',
-                'view_orders' => 'Cliquer sur la tuile "Commandes" pour voir l\'historique',
-                'manage_addresses' => 'Cliquer sur la tuile "Adresses" pour gérer les adresses',
-                'delete_account' => 'Bas de page → "Supprimer mon compte" (confirmation par mot de passe requise)',
-                'export_data' => 'Cliquer sur "Exporter mes données" (format JSON)',
-            ],
-            'important_notes' => [
-                'L\'assistant NE PEUT PAS exécuter ces actions',
-                'Il doit UNIQUEMENT guider l\'utilisateur étape par étape',
-                'Ne jamais demander de mot de passe ou code A2F',
-            ],
-            'payload' => [
-                'user_name' => $client->prenom_client,
-                'user_email' => $client->email_client,
-                'has_2fa_enabled' => (bool) $client->two_factor_secret,
-                'is_google_authenticated' => (bool) $client->google_id,
-            ],
-        ];
-    }
-
-    private function buildGeneralPayload(): array
-    {
-        return [
-            'type' => 'general',
-            'current_page' => 'PAGE GÉNÉRALE',
-            'user_location' => "L'utilisateur navigue sur le site Cube Bikes. Le contexte spécifique de la page n'est pas disponible.",
-            'available_actions' => [
-                'search' => 'Utiliser la barre de recherche',
-                'browse_menu' => 'Explorer les catégories via le menu principal',
-                'access_profile' => 'Accéder au profil (icône cycliste)',
-                'access_cart' => 'Accéder au panier (icône panier)',
-            ],
-            'payload' => [
-                'message' => 'Navigation générale sur le site. Proposer une aide générale ou demander plus de précisions sur ce que recherche l\'utilisateur ou l\'endroit où l\'utilisateur se trouve.',
-            ],
+            'client_name' => $client->prenom_client,
+            'client_email' => $client->email_client,
+            'has_2fa_enabled' => (bool) $client->two_factor_confirmed_at,
+            'is_google_authenticated' => (bool) $client->google_id,
         ];
     }
 
@@ -294,6 +172,7 @@ class CubeAssistantService
                 'type' => $charac->characteristicType->nom_type_carac,
                 'value' => $charac->pivot->valeur_caracteristique,
             ])
+            ->collapse()
             ->toArray();
     }
 
