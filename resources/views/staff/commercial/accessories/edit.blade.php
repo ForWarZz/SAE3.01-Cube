@@ -76,7 +76,7 @@
                                             value="{{ $size->id_taille }}"
                                             class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                                         />
-                                        <span class="text-sm">{{ $size->nom_taille }}</span>
+                                        <span class="text-sm">{{ $size->label }}</span>
                                     </label>
                                 @endforeach
                             </div>

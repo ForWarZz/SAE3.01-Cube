@@ -125,7 +125,7 @@
                                     <div class="mt-1 flex flex-wrap gap-1">
                                         @foreach ($reference->availableSizes as $size)
                                             <span class="rounded bg-blue-50 px-2 py-0.5 text-xs text-blue-700">
-                                                {{ $size->nom_taille }}
+                                                {{ $size->label }}
                                             </span>
                                         @endforeach
                                     </div>
@@ -287,7 +287,7 @@
                                         value="{{ $size->id_taille }}"
                                         class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                                     />
-                                    <span class="text-sm">{{ $size->nom_taille }}</span>
+                                    <span class="text-sm">{{ $size->label }}</span>
                                 </label>
                             @endforeach
                         </div>

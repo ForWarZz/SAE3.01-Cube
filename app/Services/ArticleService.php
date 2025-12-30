@@ -272,7 +272,7 @@ class ArticleService
 
             return new SizeOptionDTO(
                 id: $size->id_taille,
-                label: $size->nom_taille,
+                label: $size->label,
                 availableOnline: $availableOnline,
                 shopStatus: $shopStatus,
                 disabled: ! $availableOnline && $shopStatus === SizeOptionDTO::SHOP_STATUS_UNAVAILABLE,

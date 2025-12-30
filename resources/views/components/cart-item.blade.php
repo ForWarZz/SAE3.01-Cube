@@ -21,7 +21,7 @@
             <span
                 class="inline-flex items-center gap-1 rounded-md bg-gray-50 px-2 py-1 font-medium text-gray-700 ring-1 ring-gray-500/10 ring-inset"
             >
-                Taille : {{ $cartItem->size->nom_taille }}
+                Taille : {{ $cartItem->size->label }}
             </span>
 
             @if ($cartItem->color !== null)

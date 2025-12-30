@@ -13,7 +13,7 @@
                         </th>
                         @foreach ($sizes as $size)
                             <th scope="col" class="px-6 py-3 text-center text-xs font-bold tracking-wider text-gray-700 uppercase">
-                                {{ $size->nom_taille }}
+                                {{ $size->label }}
                             </th>
                         @endforeach
                     </tr>

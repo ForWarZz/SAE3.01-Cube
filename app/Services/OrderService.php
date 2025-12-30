@@ -85,7 +85,7 @@ class OrderService
                 image: $image,
                 colorHex: $isBike ? $ref->color?->hex : null,
                 colorName: $isBike ? $ref->color?->label_couleur : null,
-                size: $item->size?->nom_taille,
+                size: $item->size?->label,
                 quantity: $item->quantite_ligne,
                 unitPrice: $item->prix_unit_ligne,
                 totalPrice: $item->prix_unit_ligne * $item->quantite_ligne,
