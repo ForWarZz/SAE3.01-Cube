@@ -24,8 +24,8 @@ class Size extends Model
     protected $fillable = [
         'id_taille',
         'nom_taille',
-        'taille_max',
         'taille_min',
+        'taille_max',
         'type_article',
     ];
 

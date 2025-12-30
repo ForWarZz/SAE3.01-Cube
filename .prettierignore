@@ -1,2 +1,4 @@
 **/*.md
 **/*.yaml
+
+/resources/views/components/bike-size.blade.php

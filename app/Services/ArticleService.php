@@ -212,6 +212,8 @@ class ArticleService
             'article' => $article,
             'sizeOptions' => $sizeOptions,
 
+            'availableSizes' => $reference->availableSizes,
+
             'realPrice' => $article->prix_article,
             'discountedPrice' => $article->getDiscountedPrice(),
             'hasDiscount' => $article->hasDiscount(),
@@ -253,7 +255,6 @@ class ArticleService
     public function buildSizeOptions(ArticleReference $reference): Collection
     {
         $sizeList = $reference->availableSizes;
-
         $allShopAvailabilities = $reference->shopAvailabilities
             ->groupBy('pivot.id_taille');
 
