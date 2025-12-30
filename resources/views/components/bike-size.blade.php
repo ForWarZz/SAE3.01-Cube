@@ -80,13 +80,9 @@
                 Calculer ma taille
             </button>
 
-            <div id="result-box" class="mt-2 hidden rounded border border-gray-200 bg-white p-4 shadow-sm transition-all duration-300">
-                <div class="flex items-center gap-2">
-                    <x-heroicon-s-check-circle class="h-5 w-5 text-green-500" />
-                    <p class="text-sm font-semibold text-gray-500">Taille recommandée :</p>
-                </div>
+            <div id="result-box" class="mt-2 hidden rounded bg-white p-4 shadow-sm">
                 <p id="result-text" class="mt-1 pl-7 text-2xl font-bold text-gray-900">--</p>
-                <p id="result-details" class="mt-1 hidden pl-7 text-sm text-gray-600"></p>
+                <p id="result-details" class="mt-1 hidden text-sm text-gray-600"></p>
             </div>
         </div>
     </div>

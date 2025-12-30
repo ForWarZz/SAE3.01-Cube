@@ -27,7 +27,7 @@ if (container) {
         const isKid = height < 150;
 
         if (matchingSizes.length > 0) {
-            resultBox.className = 'mt-2 rounded-md border-l-4 border-green-500 bg-white p-4 shadow-sm';
+            resultBox.className = 'mt-2 rounded-md border border-green-600 bg-white p-4 shadow-sm';
             const sizesNames = matchingSizes.map((s) => s.nom_taille).join(' ou ');
 
             resultText.innerText = `Taille recommandée : ${sizesNames}`;
