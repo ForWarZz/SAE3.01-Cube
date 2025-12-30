@@ -41,21 +41,14 @@
                         class="mt-1 w-full rounded-lg border-gray-300 bg-gray-50 px-4 py-3 focus:bg-white focus:ring-2 focus:ring-blue-200"
                         required
                     />
-                    <p class="mt-1 text-xs text-gray-500">
-                        Minimum 12 caractères avec majuscule, minuscule, chiffre et caractère spécial (@$!%*?&#)
-                    </p>
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:text-blue-700">
-                        Mot de passe oublié ?
-                    </a>
+                    <a href="{{ route("password.request") }}" class="text-sm text-blue-600 hover:text-blue-700">Mot de passe oublié ?</a>
                 </div>
 
-                <x-button type="submit" size="lg" class="w-full" >
-                    Se connecter
-                </x-button>
+                <x-button type="submit" size="lg" class="w-full">Se connecter</x-button>
             </form>
 
             <div class="relative my-6">
