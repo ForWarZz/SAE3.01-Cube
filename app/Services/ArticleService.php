@@ -276,7 +276,6 @@ class ArticleService
                 label: $size->label,
                 availableOnline: $availableOnline,
                 shopStatus: $shopStatus,
-                disabled: ! $availableOnline && $shopStatus === SizeOptionDTO::SHOP_STATUS_UNAVAILABLE,
             );
         });
     }

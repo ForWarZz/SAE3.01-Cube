@@ -15,7 +15,6 @@ class SizeOptionDTO
         public string $label,
         public bool $availableOnline,
         public string $shopStatus,
-        public bool $disabled,
     ) {}
 
     public function isAvailable(): bool
@@ -30,7 +29,7 @@ class SizeOptionDTO
             'label' => $this->label,
             'availableOnline' => $this->availableOnline,
             'shopStatus' => $this->shopStatus,
-            'disabled' => $this->disabled,
+            'disabled' => $this->isAvailable(),
         ];
     }
 }
