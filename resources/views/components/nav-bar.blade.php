@@ -12,12 +12,7 @@
             </ul>
 
             <div class="flex items-center gap-4">
-                <x-button
-                    type="button"
-                    id="store-button"
-                    x-on:click="$dispatch('open-shop-modal', { showAvailability: false })"
-                    icon="bi-geo-alt"
-                >
+                <x-button x-data id="store-button" x-on:click="$dispatch('open-shop-modal', { showAvailability: false })" icon="bi-geo-alt">
                     <span id="store-button-text">
                         @if (session("selected_shop"))
                             {{ session("selected_shop")["name"] }}
