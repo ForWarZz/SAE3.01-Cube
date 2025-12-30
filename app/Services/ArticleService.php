@@ -224,8 +224,6 @@ class ArticleService
     private function buildSizeOptions(ArticleReference $reference): Collection
     {
         $sizeList = $reference->availableSizes;
-
-        // Pré-charger toutes les disponibilités magasin en une seule requête
         $allShopAvailabilities = $reference->shopAvailabilities()
             ->get()
             ->groupBy('pivot.id_taille');

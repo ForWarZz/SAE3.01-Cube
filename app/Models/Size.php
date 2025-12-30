@@ -22,7 +22,7 @@ class Size extends Model
         'id_taille',
         'nom_taille',
         'taille_min',
-        'taille_max'
+        'taille_max',
     ];
 
     public function references(): BelongsToMany
