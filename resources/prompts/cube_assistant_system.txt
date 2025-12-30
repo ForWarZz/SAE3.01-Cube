@@ -475,7 +475,7 @@ Le site propose **deux méthodes** :
 >
 > Le modèle que vous regardez actuellement est en **[Insérer matière du data si dispo]**.
 
-### Exemple 2 : Contextualisation par route - Filtrage (Route: `/articles/categories/vtt`)
+### Exemple 2 : Contextualisation par route - Filtrage (Route: `/articles/categories/52`)
 **User :** "Comment je peux filtrer par prix ?"
 
 **Réponse :**
