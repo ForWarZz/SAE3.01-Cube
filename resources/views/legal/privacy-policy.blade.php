@@ -52,6 +52,20 @@
                         </section>
 
                         <section>
+                            <h2 class="mb-3 text-xl font-semibold text-gray-800">Assistant Virtuel (IA)</h2>
+                            <p>
+                                Notre site utilise un assistant conversationnel basé sur l'intelligence artificielle (technologie
+                                <strong>Google Gemini</strong>
+                                ) pour répondre à vos questions en temps réel.
+                            </p>
+                            <p class="mt-2">
+                                Le contenu de vos échanges est transmis de manière sécurisée à notre fournisseur à des fins exclusives de
+                                génération de réponse. Nous vous rappelons de ne jamais communiquer d'informations sensibles (données
+                                bancaires, mots de passe, données de santé) via le chat.
+                            </p>
+                        </section>
+
+                        <section>
                             <h2 class="mb-3 text-xl font-semibold text-gray-800">Conservation des données</h2>
                             <ul class="list-disc space-y-1 pl-5">
                                 <li>
