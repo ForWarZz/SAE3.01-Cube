@@ -9,9 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * @property int $id_taille
  * @property string $nom_taille
- * @property string $pivot
- * @property int $min_val
- * @property int $max_val
+ * @property int $taille_min
+ * @property int $taille_max
  * @property string $type_article
  */
 class Size extends Model
@@ -25,8 +24,8 @@ class Size extends Model
     protected $fillable = [
         'id_taille',
         'nom_taille',
-        'min_val',
-        'max_val',
+        'taille_max',
+        'taille_min',
         'type_article',
     ];
 
@@ -39,15 +38,15 @@ class Size extends Model
     {
         return Attribute::make(
             get: function ($value, $attributes) {
-                if (is_null($attributes['min_val'])) {
+                if (is_null($attributes['taille_min'])) {
                     return $attributes['nom_taille'];
                 }
 
-                if ($attributes['min_val'] == $attributes['max_val']) {
-                    return "{$attributes['label']} ({$attributes['min_val']} cm)";
+                if ($attributes['taille_min'] == $attributes['taille_max']) {
+                    return "{$attributes['label']} ({$attributes['taille_min']} cm)";
                 }
 
-                return "{$attributes['nom_taille']} ({$attributes['min_val']} - {$attributes['max_val']} cm)";
+                return "{$attributes['nom_taille']} ({$attributes['taille_min']} - {$attributes['taille_max']} cm)";
             }
         );
     }
