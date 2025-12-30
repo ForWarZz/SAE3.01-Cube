@@ -40,7 +40,7 @@ if (container) {
                 resultDetails.innerText = `Basé sur votre taille (${height}cm). Votre entrejambe suggère un cadre théorique de ${theoreticalFrameSize}cm (Route/Gravel).`;
             }
         } else {
-            resultBox.className = 'mt-2 rounded-md border-l-4 border-orange-500 bg-white p-4 shadow-sm';
+            resultBox.className = 'mt-2 rounded-md border border-orange-600 bg-white p-4 shadow-sm';
             resultText.innerText = 'Aucune taille standard trouvée.';
             resultText.className = 'text-md font-bold text-orange-700';
             resultDetails.innerText = 'Vos mensurations semblent hors des standards habituels pour ce modèle.';
