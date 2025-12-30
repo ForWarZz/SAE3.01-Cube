@@ -178,21 +178,21 @@ Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);
 Route::get('/botman/chat', function () {
     return view('botman-frame');
 });
-
-Route::get('/guide-utilisateur', function () {
-    return view('guide-utilisateur');
-})->name('user-guide');
+//
+// Route::get('/guide-utilisateur', function () {
+//    return view('guide-utilisateur');
+// })->name('user-guide');
 
 Route::get('/politique-confidentialite', function () {
-    return view('politique-confidentialite');
+    return view('legal.privacy-policy');
 })->name('privacy-policy');
 
 Route::get('/mentions-legales', function () {
-    return view('mentions-legales');
+    return view('legal.legal-notices');
 })->name('legal-notices');
 
 Route::get('/conditions-generales-vente', function () {
-    return view('conditions-generales-vente');
+    return view('legal.terms-of-sale');
 })->name('terms-of-sale');
 
 require __DIR__.'/auth.php';
