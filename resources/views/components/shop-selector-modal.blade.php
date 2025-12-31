@@ -224,6 +224,12 @@
 
             init() {
                 this.getUserLocation();
+
+                const storedShop = localStorage.getItem('selectedShop');
+                if (storedShop) {
+                    const shop = JSON.parse(storedShop);
+                    window.dispatchEvent(new CustomEvent('shop-selected', { detail: shop }));
+                }
             },
 
             getUserLocation() {
