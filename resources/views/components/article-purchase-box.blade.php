@@ -3,8 +3,6 @@
 @endphp
 
 <div class="flex flex-col">
-    <input type="hidden" name="reference_id" value="{{ $currentReference->id_reference }}" />
-
     <div class="mb-8">
         <div class="mb-4 flex items-center gap-2">
             @if ($article->bike?->isNew())
