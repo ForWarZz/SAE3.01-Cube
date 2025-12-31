@@ -88,6 +88,123 @@
             </div>
         </div>
 
+        <div class="mb-6 rounded-lg bg-white p-6 shadow" x-data="{ showAddCharModal: false }">
+            <div class="mb-4 flex items-center justify-between">
+                <h2 class="text-xl font-semibold text-gray-700">Caractéristiques Techniques</h2>
+                <x-button @click="showAddCharModal = true" color="blue" size="sm" icon="heroicon-o-plus">Ajouter / Modifier</x-button>
+            </div>
+
+            @if ($bike->characteristics->isEmpty())
+                <div class="py-4 text-center text-gray-500 italic">Aucune caractéristique technique renseignée pour le moment.</div>
+            @else
+                <div class="overflow-hidden rounded-lg border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Type</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                                    Caractéristique
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Valeur</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium tracking-wider text-gray-500 uppercase">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white">
+                            @foreach ($bike->characteristics->sortBy("characteristicType.nom_type_carac") as $char)
+                                <tr>
+                                    <td class="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+                                        {{ $char->characteristicType->nom_type_carac ?? "Divers" }}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-medium whitespace-nowrap text-gray-900">
+                                        {{ $char->nom_caracteristique }}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">
+                                        {{ $char->pivot->valeur_caracteristique }}
+                                    </td>
+                                    <td class="px-6 py-4 text-right text-sm font-medium whitespace-nowrap">
+                                        <form
+                                            action="{{ route("commercial.bikes.characteristics.destroy", [$bike->id_article, $char->id_caracteristique]) }}"
+                                            method="POST"
+                                            class="inline-block"
+                                        >
+                                            @csrf
+                                            @method("DELETE")
+                                            <button
+                                                type="submit"
+                                                class="text-red-600 hover:text-red-900"
+                                                onclick="return confirm('Voulez-vous vraiment retirer cette caractéristique ?');"
+                                                title="Supprimer"
+                                            >
+                                                <x-heroicon-o-trash class="h-5 w-5" />
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+
+            <div
+                x-show="showAddCharModal"
+                x-cloak
+                class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                @keydown.escape.window="showAddCharModal = false"
+            >
+                <div class="mx-4 w-full max-w-lg rounded-lg bg-white p-6 shadow-xl" @click.away="showAddCharModal = false">
+                    <div class="mb-4 flex items-center justify-between">
+                        <h3 class="text-xl font-semibold">Ajouter une caractéristique</h3>
+                        <button @click="showAddCharModal = false" class="text-gray-500 hover:text-gray-700">
+                            <x-heroicon-o-x-mark class="h-6 w-6" />
+                        </button>
+                    </div>
+
+                    <form action="{{ route("commercial.bikes.characteristics.store", $bike->id_article) }}" method="POST">
+                        @csrf
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="mb-1 block text-sm font-medium text-gray-700">Caractéristique *</label>
+                                <select
+                                    name="id_caracteristique"
+                                    required
+                                    class="w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                >
+                                    <option value="">Sélectionner...</option>
+                                    @foreach ($allCharacteristics as $typeName => $chars)
+                                        <optgroup label="{{ $typeName }}">
+                                            @foreach ($chars as $c)
+                                                <option value="{{ $c->id_caracteristique }}">
+                                                    {{ $c->nom_caracteristique }}
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="mb-1 block text-sm font-medium text-gray-700">Valeur *</label>
+                                <input
+                                    type="text"
+                                    name="valeur_caracteristique"
+                                    required
+                                    placeholder="Ex: Shimano XT, 12kg, Carbone..."
+                                    class="w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="mt-6 flex justify-end space-x-3">
+                            <x-button @click="showAddCharModal = false" color="gray" size="sm" class="!px-4 !py-2">Annuler</x-button>
+                            <x-button type="submit" size="sm">Enregistrer</x-button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="rounded-lg bg-white p-6 shadow">
             <h2 class="mb-4 text-xl font-semibold text-gray-700">
                 Références
@@ -311,125 +428,6 @@
                 </form>
             </div>
         </div>
-
-        {{-- <div --}}
-        {{-- x-show="showEditRefModal" --}}
-        {{-- x-cloak --}}
-        {{-- class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" --}}
-        {{-- @keydown.escape.window="showEditRefModal = false" --}}
-        {{-- > --}}
-        {{-- <div class="mx-4 w-full max-w-2xl rounded-lg bg-white p-6 shadow-xl" @click.away="showEditRefModal = false"> --}}
-        {{-- <div class="mb-4 flex items-center justify-between"> --}}
-        {{-- <h3 class="text-xl font-semibold">Modifier la référence</h3> --}}
-        {{-- <button @click="showEditRefModal = false" class="text-gray-500 hover:text-gray-700"> --}}
-        {{-- <x-heroicon-o-x-mark class="h-6 w-6" /> --}}
-        {{-- </button> --}}
-        {{-- </div> --}}
-
-        {{-- <div class="mb-4 rounded bg-yellow-50 p-3 text-sm text-yellow-800"> --}}
-        {{-- <strong>Note :</strong> --}}
-        {{-- La modification d'une référence créera une nouvelle référence et archivera l'ancienne. --}}
-        {{-- </div> --}}
-
-        {{-- <form --}}
-        {{-- :action="`{{ route("commercial.bikes.show", $bike) }}/references/${editingRef?.id_reference}`" --}}
-        {{-- method="POST" --}}
-        {{-- enctype="multipart/form-data" --}}
-        {{-- > --}}
-        {{-- @csrf --}}
-        {{-- @method("PUT") --}}
-
-        {{-- <div class="grid grid-cols-2 gap-4"> --}}
-        {{-- <div> --}}
-        {{-- <label class="mb-1 block text-sm font-medium text-gray-700">Cadre *</label> --}}
-        {{-- <select --}}
-        {{-- name="id_cadre_velo" --}}
-        {{-- required --}}
-        {{-- x-model="editingRef?.id_cadre_velo" --}}
-        {{-- class="w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" --}}
-        {{-- > --}}
-        {{-- <option value="">Sélectionner...</option> --}}
-        {{-- @foreach ($frames as $frame) --}}
-        {{-- <option value="{{ $frame->id_cadre_velo }}">{{ $frame->nom_cadre_velo }}</option> --}}
-        {{-- @endforeach --}}
-        {{-- </select> --}}
-        {{-- </div> --}}
-        {{--  --}}
-        {{-- <div> --}}
-        {{-- <label class="mb-1 block text-sm font-medium text-gray-700">Couleur *</label> --}}
-        {{-- <select --}}
-        {{-- name="id_couleur" --}}
-        {{-- required --}}
-        {{-- x-model="editingRef?.id_couleur" --}}
-        {{-- class="w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" --}}
-        {{-- > --}}
-        {{-- <option value="">Sélectionner...</option> --}}
-        {{-- @foreach ($colors as $color) --}}
-        {{-- <option value="{{ $color->id_couleur }}">{{ $color->nom_couleur }}</option> --}}
-        {{-- @endforeach --}}
-        {{-- </select> --}}
-        {{-- </div> --}}
-        {{--  --}}
-        {{-- @if ($isVae) --}}
-        {{-- <div> --}}
-        {{-- <label class="mb-1 block text-sm font-medium text-gray-700">Batterie *</label> --}}
-        {{-- <select --}}
-        {{-- name="id_batterie" --}}
-        {{-- required --}}
-        {{-- x-model="editingRef?.id_batterie" --}}
-        {{-- class="w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" --}}
-        {{-- > --}}
-        {{-- <option value="">Sélectionner...</option> --}}
-        {{-- @foreach ($batteries as $battery) --}}
-        {{-- <option value="{{ $battery->id_batterie }}">{{ $battery->capacite_batterie }} Wh</option> --}}
-        {{-- @endforeach --}}
-        {{-- </select> --}}
-        {{-- </div> --}}
-        {{-- @endif --}}
-        {{-- </div> --}}
-        {{--  --}}
-        {{-- <div class="mt-4"> --}}
-        {{-- <label class="mb-1 block text-sm font-medium text-gray-700">Tailles disponibles *</label> --}}
-        {{-- <div class="flex flex-wrap gap-2"> --}}
-        {{-- @foreach ($sizes as $size) --}}
-        {{-- <label class="flex items-center space-x-1"> --}}
-        {{-- <input --}}
-        {{-- type="checkbox" --}}
-        {{-- name="sizes[]" --}}
-        {{-- value="{{ $size->id_taille }}" --}}
-        {{-- x-bind:checked="editingRef?.sizes?.includes({{ $size->id_taille }})" --}}
-        {{-- class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" --}}
-        {{-- /> --}}
-        {{-- <span class="text-sm">{{ $size->nom_taille }}</span> --}}
-        {{-- </label> --}}
-        {{-- @endforeach --}}
-        {{-- </div> --}}
-        {{-- </div> --}}
-        {{--  --}}
-        {{-- <div class="mt-4"> --}}
-        {{-- <label class="mb-1 block text-sm font-medium text-gray-700">Ajouter des images supplémentaires</label> --}}
-        {{-- <input --}}
-        {{-- type="file" --}}
-        {{-- name="images[]" --}}
-        {{-- multiple --}}
-        {{-- accept="image/jpeg,image/png,image/jpg,image/webp" --}}
-        {{-- class="w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" --}}
-        {{-- /> --}}
-        {{-- </div> --}}
-
-        {{-- <div class="mt-6 flex justify-end space-x-3"> --}}
-        {{-- <button --}}
-        {{-- type="button" --}}
-        {{-- @click="showEditRefModal = false" --}}
-        {{-- class="rounded border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50" --}}
-        {{-- > --}}
-        {{-- Annuler --}}
-        {{-- </button> --}}
-        {{-- <button type="submit" class="rounded bg-yellow-600 px-4 py-2 text-white hover:bg-yellow-700">Modifier</button> --}}
-        {{-- </div> --}}
-        {{-- </form> --}}
-        {{-- </div> --}}
-        {{-- </div> --}}
 
         <div
             x-show="showAddImagesModal"

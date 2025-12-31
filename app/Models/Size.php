@@ -58,7 +58,7 @@ class Size extends Model
                 }
 
                 if ($attributes['taille_min'] == $attributes['taille_max']) {
-                    return "{$attributes['label']} ({$attributes['taille_min']} cm)";
+                    return "{$attributes['nom_taille']} ({$attributes['taille_min']} cm)";
                 }
 
                 return "{$attributes['nom_taille']} ({$attributes['taille_min']} - {$attributes['taille_max']} cm)";

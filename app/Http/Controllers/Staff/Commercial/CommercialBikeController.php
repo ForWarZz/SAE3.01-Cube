@@ -8,9 +8,11 @@ use App\Http\Requests\Bike\BikeReferenceImageRequest;
 use App\Http\Requests\Bike\BikeReferenceRequest;
 use App\Models\Bike;
 use App\Models\BikeReference;
+use App\Models\Characteristic;
 use App\Services\Commercial\Bike\BikeFormDataService;
 use App\Services\Commercial\Bike\BikeReferenceService;
 use App\Services\Commercial\Bike\CommercialBikeService;
+use Illuminate\Http\Request;
 use Exception;
 use Throwable;
 
@@ -56,16 +58,44 @@ class CommercialBikeController extends Controller
 
     public function show(Bike $bike)
     {
+        $bike->load(['characteristics.characteristicType', 'category']);
         $bike = $this->bikeService->loadBikeDetails($bike);
         $referenceImages = $this->bikeService->getReferenceImages($bike);
         $isVae = $this->bikeService->isVae($bike);
 
         $referenceFormData = $this->formDataService->getShowFormData();
 
+        $allCharacteristics = Characteristic::with('characteristicType')
+            ->get()
+            ->groupBy(function($item) {
+                return $item->characteristicType->nom_type_carac ?? 'Autre';
+            });
+
         return view('staff.commercial.bikes.show', array_merge(
-            compact('bike', 'referenceImages', 'isVae'),
+            compact('bike', 'referenceImages', 'isVae', 'allCharacteristics'),
             $referenceFormData
         ));
+    }
+
+    public function storeCharacteristic(Request $request, Bike $bike)
+    {
+        $request->validate([
+            'id_caracteristique' => 'required|exists:caracteristique,id_caracteristique',
+            'valeur_caracteristique' => 'required|string|max:255',
+        ]);
+
+        $bike->characteristics()->syncWithoutDetaching([
+            $request->id_caracteristique => ['valeur_caracteristique' => $request->valeur_caracteristique]
+        ]);
+
+        return back()->with('success', 'Caractéristique mise à jour avec succès.');
+    }
+
+    public function destroyCharacteristic(Bike $bike, $characteristicId)
+    {
+        $bike->characteristics()->detach($characteristicId);
+
+        return back()->with('success', 'Caractéristique retirée.');
     }
 
     public function addReference(BikeReferenceRequest $request, Bike $bike)

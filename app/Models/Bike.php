@@ -112,6 +112,16 @@ class Bike extends BaseArticle
         );
     }
 
+    public function characteristics(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Characteristic::class,
+            'caracterise',
+            'id_article',
+            'id_caracteristique'
+        )->withPivot('valeur_caracteristique');
+    }
+
     //    public const WEIGHT_CHARACTERISTIC_ID = 22;
     //
     //    public $timestamps = false;
