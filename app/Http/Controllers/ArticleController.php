@@ -98,7 +98,8 @@ class ArticleController extends Controller
             'article.bike',
         ])->findOrFail($referenceId);
 
-        $data = $this->articleService->prepareViewData($reference);
+        $sizeId = request()->query('size_id');
+        $data = $this->articleService->prepareViewData($reference, $sizeId);
 
         return view('article.show', $data);
     }

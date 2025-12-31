@@ -14,9 +14,11 @@ class SizeOptionDTO
 
     public function __construct(
         public int $id,
+        public string $url,
         public string $label,
         public bool $availableOnline,
         public string $shopStatus,
+        public bool $active,
     ) {
         $this->disabled = ! $this->isAvailable();
     }
@@ -30,10 +32,12 @@ class SizeOptionDTO
     {
         return [
             'id' => $this->id,
+            'url' => $this->url,
             'label' => $this->label,
             'availableOnline' => $this->availableOnline,
             'shopStatus' => $this->shopStatus,
             'disabled' => $this->disabled,
+            'active' => $this->active,
         ];
     }
 }

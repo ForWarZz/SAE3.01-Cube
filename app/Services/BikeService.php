@@ -14,7 +14,6 @@ class BikeService
         protected BikeVariantService $bikeVariantService,
     ) {}
 
-    // Maintenant on reçoit explicitement le Bike et la BikeReference (pré-chargés en amont)
     public function prepareBikeData(Bike $bike, BikeReference $bikeReference): array
     {
         $variants = $bike->references;
