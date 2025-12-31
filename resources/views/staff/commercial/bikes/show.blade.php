@@ -253,12 +253,7 @@
                                         <span class="text-sm text-gray-500">
                                             Images ({{ count($referenceImages[$reference->id_reference]) }}/5)
                                         </span>
-                                        <x-button
-                                            @click="imagesRef = {{ $reference->id_reference }}; showAddImagesModal = true"
-                                            color="blue"
-                                            size="sm"
-                                            class="!px-2 !py-1"
-                                        >
+                                        <x-button @click="imagesRef = {{ $reference->id_reference }}; showAddImagesModal = true">
                                             + Ajouter des images
                                         </x-button>
                                     </div>
@@ -298,14 +293,14 @@
                                     @csrf
                                     @method("DELETE")
 
-                                    <x-button
+                                    <button
                                         type="submit"
-                                        color="red"
-                                        size="sm"
+                                        class="rounded bg-red-100 px-3 py-1 text-red-700 hover:bg-red-200"
                                         title="Supprimer"
                                         onclick="return confirm('Supprimer cette référence ? Cette action est irréversible.');"
-                                        icon="heroicon-o-trash"
-                                    />
+                                    >
+                                        <x-heroicon-o-trash class="h-4 w-4" />
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -422,7 +417,7 @@
                     </div>
 
                     <div class="mt-6 flex justify-end space-x-3">
-                        <x-button @click="showAddRefModal = false" color="gray" size="sm" class="!px-4 !py-2">Annuler</x-button>
+                        <x-button @click="showAddRefModal = false" color="gray" size="sm">Annuler</x-button>
                         <x-button type="submit" size="sm">Ajouter</x-button>
                     </div>
                 </form>
