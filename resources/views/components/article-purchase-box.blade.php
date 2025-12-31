@@ -1,3 +1,7 @@
+@php
+    use App\DTOs\Article\SizeOptionDTO;
+@endphp
+
 <div class="flex flex-col">
     <input type="hidden" name="reference_id" value="{{ $currentReference->id_reference }}" />
 
@@ -64,25 +68,21 @@
             @endif
         </div>
 
-        @if (isset($sizeOptions))
-            <div class="mt-3 text-sm text-gray-700" x-show="selectedSize">
-                <span :class="selectedSize.availableOnline ? 'text-green-600 font-medium' : 'text-gray-400'">
-                    <span x-text="selectedSize.availableOnline ? 'Disponible en ligne' : 'Non disponible en ligne'"></span>
+        @if ($currentSize)
+            <div class="mt-3 text-sm text-gray-700">
+                <span class="{{ $currentSize->availableOnline ? "font-medium text-green-600" : "text-gray-400" }}">
+                    {{ $currentSize->availableOnline ? "Disponible en ligne" : "Non disponible en ligne" }}
                 </span>
 
                 <br />
 
-                <template x-if="selectedSize.shopStatus === 'in_stock'">
+                @if ($currentSize->shopStatus === SizeOptionDTO::SHOP_STATUS_IN_STOCK)
                     <span class="font-medium text-green-600">En stock en magasin</span>
-                </template>
-
-                <template x-if="selectedSize.shopStatus === 'orderable'">
+                @elseif ($currentSize->shopStatus === SizeOptionDTO::SHOP_STATUS_ORDERABLE)
                     <span class="font-medium text-orange-500">Commandable en magasin</span>
-                </template>
-
-                <template x-if="selectedSize.shopStatus === 'unavailable'">
+                @elseif ($currentSize->shopStatus === SizeOptionDTO::SHOP_STATUS_UNAVAILABLE)
                     <span class="text-gray-400">Indisponible en magasin</span>
-                </template>
+                @endif
             </div>
         @endif
 
@@ -91,7 +91,7 @@
                 @csrf
 
                 <input type="hidden" name="reference_id" value="{{ $currentReference->id_reference }}" />
-                <input type="hidden" name="size_id" value="{{ $currentSizeId }}" />
+                <input type="hidden" name="size_id" value="{{ $currentSize->id }}" />
 
                 <x-button
                     type="submit"
@@ -105,12 +105,12 @@
             </form>
 
             <button
-                type="button"
+                x-data
                 x-on:click="
                     $dispatch('open-shop-modal', {
                         showAvailability: true,
                         referenceId: {{ $currentReference->id_reference }},
-                        sizeId: selectedSize ? selectedSize.id : null,
+                        sizeId: {{ $currentSize->id }},
                     })
                 "
                 class="flex w-full items-center justify-center border-2 border-black bg-white px-6 py-3 font-bold text-black transition hover:bg-gray-100"

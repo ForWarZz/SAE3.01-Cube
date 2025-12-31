@@ -39,7 +39,7 @@
                 :article="$article"
                 :current-reference="$currentReference"
                 :size-options="$sizeOptions"
-                :current-size-id="$currentSizeId"
+                :current-size="$currentSize"
                 :frame-options="$frameOptions"
                 :battery-options="$batteryOptions"
                 :color-options="$colorOptions"

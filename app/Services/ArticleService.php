@@ -217,7 +217,7 @@ class ArticleService
         $base = [
             'article' => $article,
             'sizeOptions' => $sizeOptions,
-            'currentSizeId' => $sizeId,
+            'currentSize' => $sizeOptions->where('id', $sizeId)->first(),
 
             'availableSizes' => $reference->availableSizes,
 
