@@ -228,7 +228,7 @@
                 const storedShop = localStorage.getItem('selectedShop');
                 if (storedShop) {
                     const shop = JSON.parse(storedShop);
-                    window.dispatchEvent(new CustomEvent('shop-selected', { detail: shop }));
+                    this.selectShop(shop);
                 }
             },
 
@@ -425,7 +425,6 @@
 
             updateSelectedShop(shop) {
                 localStorage.setItem('selectedShop', JSON.stringify(shop));
-                window.dispatchEvent(new CustomEvent('shop-selected', { detail: shop }));
 
                 const btn = document.getElementById('store-button-text');
                 if (btn) btn.textContent = shop.name;
