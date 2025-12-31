@@ -30,7 +30,7 @@
         " " .
         ($sizes[$size] ?? $sizes["md"]);
 
-    if ($attributes->has("disabled")) {
+    if ($attributes->get("disabled")) {
         $classes .= " opacity-50 border-gray-300";
     }
 @endphp
