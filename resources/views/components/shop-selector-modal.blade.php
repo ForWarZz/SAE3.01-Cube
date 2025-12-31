@@ -207,6 +207,8 @@
 
 <script>
     function shopSelector() {
+        const selectedShop = @json(session("selected_shop"));
+
         return {
             isOpen: false,
             loading: false,
@@ -226,7 +228,8 @@
                 this.getUserLocation();
 
                 const storedShop = localStorage.getItem('selectedShop');
-                if (storedShop) {
+                if (!selectedShop && storedShop) {
+                    console.log('Restauration du magasin sélectionné depuis le localStorage');
                     const shop = JSON.parse(storedShop);
                     this.selectShop(shop);
                 }
