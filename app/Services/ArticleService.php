@@ -178,10 +178,16 @@ class ArticleService
         return $this->finalizeQuery($baseQuery, $request);
     }
 
-    public function prepareViewData(ArticleReference $reference): array
+    public function prepareViewData(ArticleReference $reference, ?int $sizeId): array
     {
         $article = $reference->article;
-        $sizeOptions = $this->buildSizeOptions($reference);
+        $sizes = $reference->availableSizes;
+
+        if (! $sizeId) {
+            $sizeId = $sizes->first()?->id_taille;
+        }
+
+        $sizeOptions = $this->buildSizeOptions($reference, $sizeId);
 
         if ($article->bike) {
             $reference->loadMissing([
@@ -211,6 +217,7 @@ class ArticleService
         $base = [
             'article' => $article,
             'sizeOptions' => $sizeOptions,
+            'currentSize' => $sizeOptions->where('id', $sizeId)->first(),
 
             'availableSizes' => $reference->availableSizes,
 
@@ -252,13 +259,13 @@ class ArticleService
      *
      * @return Collection<int, SizeOptionDTO>
      */
-    public function buildSizeOptions(ArticleReference $reference): Collection
+    public function buildSizeOptions(ArticleReference $reference, ?int $sizeId): Collection
     {
         $sizeList = $reference->availableSizes;
         $allShopAvailabilities = $reference->shopAvailabilities
             ->groupBy('pivot.id_taille');
 
-        return $sizeList->map(function ($size) use ($allShopAvailabilities) {
+        return $sizeList->map(function ($size) use ($sizeId, $reference, $allShopAvailabilities) {
             $availableOnline = $size->pivot->dispo_en_ligne;
             $storeStatuses = $allShopAvailabilities->get($size->id_taille, collect())
                 ->pluck('pivot.statut');
@@ -273,9 +280,14 @@ class ArticleService
 
             return new SizeOptionDTO(
                 id: $size->id_taille,
+                url: route('articles.show-reference', [
+                    'reference' => $reference->id_reference,
+                    'size' => $size->id_taille,
+                ]),
                 label: $size->label,
                 availableOnline: $availableOnline,
                 shopStatus: $shopStatus,
+                active: $sizeId == $size->id_taille,
             );
         });
     }
