@@ -91,15 +91,11 @@
                 <input type="hidden" name="reference_id" value="{{ $currentReference->id_reference }}" />
                 <input type="hidden" name="size_id" value="{{ $currentSize->id }}" />
 
-                <x-button
-                    type="submit"
-                    size="xl"
-                    x-show="selectedSize && !selectedSize.disabled"
-                    class="flex w-full justify-center"
-                    icon="heroicon-o-shopping-cart"
-                >
-                    AJOUTER AU PANIER
-                </x-button>
+                @if (! $currentSize->disabled)
+                    <x-button type="submit" size="xl" class="flex w-full justify-center" icon="heroicon-o-shopping-cart">
+                        AJOUTER AU PANIER
+                    </x-button>
+                @endif
             </form>
 
             <button
