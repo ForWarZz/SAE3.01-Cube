@@ -31,10 +31,7 @@ class BikeFormDataService
             'materials' => $this->getMaterials(),
             'vintages' => $this->getVintages(),
             'usages' => $this->getUsages(),
-            'frames' => $this->getFrames(),
             'colors' => $this->getColors(),
-            'sizes' => $this->getSizes(),
-            'batteries' => $this->getBatteries(),
             'eBikeTypes' => $this->getEBikeTypes(),
         ];
     }
@@ -142,7 +139,7 @@ class BikeFormDataService
         return EBikeType::all();
     }
 
-    public function getReferenceFormData(): array
+    public function getShowFormData(): array
     {
         return [
             'frames' => $this->getFrames(),

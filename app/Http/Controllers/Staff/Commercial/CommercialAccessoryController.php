@@ -28,7 +28,7 @@ class CommercialAccessoryController extends Controller
     {
         $availableCategories = $this->accessoryService->getAccessoryCategories();
         $accessoryMaterials = AccessoryMaterial::all();
-        $sizes = Size::all();
+        $sizes = Size::accessory()->get();
 
         return view('staff.commercial.accessories.edit', [
             'accessory' => $accessory,

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -15,6 +16,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Size extends Model
 {
+    public const TYPE_ACCESSORY = 'ACCESSOIRE';
+
+    public const TYPE_BIKE = 'VELO';
+
     public $timestamps = false;
 
     protected $table = 'taille';
@@ -28,6 +33,16 @@ class Size extends Model
         'taille_max',
         'type_article',
     ];
+
+    public function scopeAccessory(Builder $query): Builder
+    {
+        return $query->where('type_article', self::TYPE_ACCESSORY);
+    }
+
+    public function scopeBike(Builder $query): Builder
+    {
+        return $query->where('type_article', self::TYPE_BIKE);
+    }
 
     public function references(): BelongsToMany
     {

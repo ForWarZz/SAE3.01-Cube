@@ -60,7 +60,7 @@ class CommercialBikeController extends Controller
         $referenceImages = $this->bikeService->getReferenceImages($bike);
         $isVae = $this->bikeService->isVae($bike);
 
-        $referenceFormData = $this->formDataService->getReferenceFormData();
+        $referenceFormData = $this->formDataService->getShowFormData();
 
         return view('staff.commercial.bikes.show', array_merge(
             compact('bike', 'referenceImages', 'isVae'),
