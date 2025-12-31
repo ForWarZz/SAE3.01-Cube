@@ -88,6 +88,125 @@
             </div>
         </div>
 
+        <div class="mb-6 rounded-lg bg-white p-6 shadow" x-data="{ showAddCharModal: false }">
+            <div class="mb-4 flex items-center justify-between">
+                <h2 class="text-xl font-semibold text-gray-700">Caractéristiques Techniques</h2>
+                <x-button @click="showAddCharModal = true" color="blue" size="sm" icon="heroicon-o-plus">
+                    Ajouter / Modifier
+                </x-button>
+            </div>
+
+            @if ($bike->characteristics->isEmpty())
+                <div class="py-4 text-center text-gray-500 italic">
+                    Aucune caractéristique technique renseignée pour le moment.
+                </div>
+            @else
+                <div class="overflow-hidden rounded-lg border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Type</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Caractéristique</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Valeur</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white">
+                            @foreach ($bike->characteristics->sortBy('characteristicType.nom_type_carac') as $char)
+                                <tr>
+                                    <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                                        {{ $char->characteristicType->nom_type_carac ?? 'Divers' }}
+                                    </td>
+                                    <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
+                                        {{ $char->nom_caracteristique }}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">
+                                        {{ $char->pivot->valeur_caracteristique }}
+                                    </td>
+                                    <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                                        <form 
+                                            action="{{ route('commercial.bikes.characteristics.destroy', [$bike->id_article, $char->id_caracteristique]) }}" 
+                                            method="POST" 
+                                            class="inline-block"
+                                        >
+                                            @csrf
+                                            @method('DELETE')
+                                            <button 
+                                                type="submit" 
+                                                class="text-red-600 hover:text-red-900"
+                                                onclick="return confirm('Voulez-vous vraiment retirer cette caractéristique ?')"
+                                                title="Supprimer"
+                                            >
+                                                <x-heroicon-o-trash class="h-5 w-5" />
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+
+            <div
+                x-show="showAddCharModal"
+                x-cloak
+                class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                @keydown.escape.window="showAddCharModal = false"
+            >
+                <div class="mx-4 w-full max-w-lg rounded-lg bg-white p-6 shadow-xl" @click.away="showAddCharModal = false">
+                    <div class="mb-4 flex items-center justify-between">
+                        <h3 class="text-xl font-semibold">Ajouter une caractéristique</h3>
+                        <button @click="showAddCharModal = false" class="text-gray-500 hover:text-gray-700">
+                            <x-heroicon-o-x-mark class="h-6 w-6" />
+                        </button>
+                    </div>
+
+                    <form action="{{ route('commercial.bikes.characteristics.store', $bike->id_article) }}" method="POST">
+                        @csrf
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="mb-1 block text-sm font-medium text-gray-700">Caractéristique *</label>
+                                <select 
+                                    name="id_caracteristique" 
+                                    required
+                                    class="w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                >
+                                    <option value="">Sélectionner...</option>
+                                    @foreach ($allCharacteristics as $typeName => $chars)
+                                        <optgroup label="{{ $typeName }}">
+                                            @foreach ($chars as $c)
+                                                <option value="{{ $c->id_caracteristique }}">
+                                                    {{ $c->nom_caracteristique }}
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="mb-1 block text-sm font-medium text-gray-700">Valeur *</label>
+                                <input 
+                                    type="text" 
+                                    name="valeur_caracteristique" 
+                                    required
+                                    placeholder="Ex: Shimano XT, 12kg, Carbone..."
+                                    class="w-full rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="mt-6 flex justify-end space-x-3">
+                            <x-button @click="showAddCharModal = false" color="gray" size="sm" class="!px-4 !py-2">Annuler</x-button>
+                            <x-button type="submit" size="sm">Enregistrer</x-button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="rounded-lg bg-white p-6 shadow">
             <h2 class="mb-4 text-xl font-semibold text-gray-700">
                 Références
