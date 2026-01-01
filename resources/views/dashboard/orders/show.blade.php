@@ -247,7 +247,7 @@
                                     </address>
 
                                     <div class="flex items-center gap-3">
-                                        @if ($order->paymentType)
+                                        @if ($order->date_paiement)
                                             <span
                                                 class="inline-flex items-center gap-1.5 rounded bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700"
                                             >
