@@ -1,5 +1,5 @@
 <div class="mt-16 border-t border-gray-200 pt-12">
-    <h2 class="mb-8 text-2xl font-bold text-gray-900">Fiche technique</h2>
+    <h2 id="specs" class="mb-8 text-2xl font-bold text-gray-900">Fiche technique</h2>
 
     <div class="flex flex-col gap-4">
         @foreach ($characteristics as $type => $group)

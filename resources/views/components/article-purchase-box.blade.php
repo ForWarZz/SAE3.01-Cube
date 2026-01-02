@@ -4,7 +4,7 @@
 
 <div class="flex flex-col">
     <div class="mb-8">
-        <div class="mb-4 flex items-center gap-2">
+        <div id="article-badge-box" class="mb-4 flex items-center gap-2">
             @if ($article->bike?->isNew())
                 <span class="bg-lime-400 px-3 py-1 text-xs font-bold text-black uppercase">Nouveau</span>
             @endif
@@ -55,7 +55,7 @@
             @endif
         </div>
 
-        <div class="flex flex-col">
+        <div id="article-price-box" class="flex flex-col">
             <span class="text-3xl font-bold text-blue-600">{{ number_format($discountedPrice, 2, ",", " ") }} €</span>
 
             @if ($hasDiscount)
@@ -67,7 +67,7 @@
         </div>
 
         @if ($currentSize)
-            <div class="mt-3 text-sm text-gray-700">
+            <div id="availability-summary" class="mt-3 text-sm text-gray-700">
                 <span class="{{ $currentSize->availableOnline ? "font-medium text-green-600" : "text-gray-400" }}">
                     {{ $currentSize->availableOnline ? "Disponible en ligne" : "Non disponible en ligne" }}
                 </span>
@@ -92,13 +92,20 @@
                 <input type="hidden" name="size_id" value="{{ $currentSize->id }}" />
 
                 @if (! $currentSize->disabled)
-                    <x-button type="submit" size="xl" class="flex w-full justify-center" icon="heroicon-o-shopping-cart">
+                    <x-button
+                        id="add-to-cart-btn"
+                        type="submit"
+                        size="xl"
+                        class="flex w-full justify-center"
+                        icon="heroicon-o-shopping-cart"
+                    >
                         AJOUTER AU PANIER
                     </x-button>
                 @endif
             </form>
 
             <button
+                id="check-shop-stock-btn"
                 x-data
                 x-on:click="
                     $dispatch('open-shop-modal', {
@@ -115,7 +122,7 @@
         </div>
     </div>
 
-    <div class="flex flex-col gap-8">
+    <div id="article-configurator" class="flex flex-col gap-8">
         @if ($article->bike)
             <div>
                 <label class="mb-3 block text-sm font-medium text-gray-900">Type de cadre</label>
@@ -168,11 +175,12 @@
             </div>
         @endif
 
-        <div>
+        <div id="size-selection-area">
             <div class="mb-3 flex items-end justify-between">
                 <label class="block text-sm font-medium text-gray-900">Tailles</label>
 
                 <a
+                    id="size-guide-link"
                     x-data
                     href="#bike-calculator-container"
                     @click.prevent="document.getElementById('bike-calculator-container').scrollIntoView({ behavior: 'smooth', block: 'center' })"

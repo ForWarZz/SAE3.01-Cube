@@ -26,7 +26,7 @@
         >
             <div class="flex gap-10">
                 <div class="flex flex-2 flex-col gap-8">
-                    <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                    <section id="billing-section" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                         <div class="mb-6 flex items-center justify-between">
                             <h2 class="text-xl font-bold text-gray-900">Adresse de facturation</h2>
                             <a
@@ -53,11 +53,10 @@
                                 @endforeach
                             </div>
                         @endif
-
                         <x-input-error :messages="$errors->get('billing_address_id')" class="mt-2" />
                     </section>
 
-                    <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                    <section id="delivery-section" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                         <div class="mb-4 flex items-center justify-between">
                             <h2 class="text-xl font-bold text-gray-900">Adresse de livraison</h2>
                             <a
@@ -90,19 +89,17 @@
                                     />
                                 @endforeach
                             </div>
-
                             <input type="hidden" name="delivery_address_id" :value="deliveryId" />
                         @endif
 
                         <x-input-error :messages="$errors->get('delivery_address_id')" class="mt-2" />
                     </section>
 
-                    <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                    <section id="shipping-methods" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                         <h2 class="mb-4 text-xl font-bold text-gray-900">Mode de livraison</h2>
 
                         <form method="POST" action="{{ route("checkout.update-shipping") }}">
                             @csrf
-
                             <input type="hidden" name="billing_id" :value="billingId" />
                             <input type="hidden" name="delivery_id" :value="deliveryId" />
 
@@ -119,7 +116,6 @@
                                             @change="shippingId = {{ $mode->id }}; $event.target.form.submit()"
                                             class="sr-only"
                                         />
-
                                         <div class="flex items-start justify-between">
                                             <div class="text-sm">
                                                 <h3 class="font-bold text-gray-900">{{ $mode->name }}</h3>
@@ -127,7 +123,6 @@
                                                     {{ number_format($mode->price, 2, ",", " ") }} €
                                                 </p>
                                             </div>
-
                                             <div class="ml-4">
                                                 @if ($selectedShippingId == $mode->id)
                                                     <div
@@ -145,7 +140,6 @@
                                     </label>
                                 @endforeach
                             </div>
-
                             <x-input-error :messages="$errors->get('shipping_id')" class="mt-2" />
                         </form>
                     </section>
@@ -156,8 +150,8 @@
 
                     <form action="{{ route("payment.process") }}" method="post">
                         @csrf
-
                         <button
+                            id="submit-order-btn"
                             type="submit"
                             :disabled="!deliveryId || !billingId || !shippingId"
                             :class="(!deliveryId || !billingId || !shippingId) ? 'cursor-not-allowed bg-gray-300' : 'cursor-pointer bg-green-600 hover:bg-green-700'"

@@ -3,7 +3,7 @@
     "isBike" => false,
 ])
 
-<article class="group rounded-lg border border-gray-200 bg-white transition-shadow hover:shadow-lg">
+<article class="article-card group rounded-lg border border-gray-200 bg-white transition-shadow hover:shadow-lg">
     <a href="{{ route("articles.show", $article->id_article) }}" class="relative block p-6">
         @if ($article->hasDiscount())
             <x-discount-badge class="absolute top-3 left-3" :discount-percent="$article->pourcentage_remise" />

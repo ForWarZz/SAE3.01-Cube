@@ -3,7 +3,7 @@
         <x-breadcrumb :breadcrumbs="$breadcrumbs" />
 
         <div class="mb-10 flex items-start justify-between">
-            <div>
+            <div id="header-infos">
                 <h1 class="text-3xl font-bold text-gray-900">{{ $pageTitle ?? "Nos produits" }}</h1>
                 <p class="mt-2 text-gray-600">
                     {{ $articles->total() ?? $articles->count() }} produit{{ ($articles->total() ?? $articles->count()) > 1 ? "s" : "" }}
@@ -12,7 +12,7 @@
             </div>
 
             @if (($articles->total() ?? $articles->count()) > 0)
-                <div class="flex items-center gap-2">
+                <div id="sort-select" class="flex items-center gap-2">
                     <label for="sort" class="text-sm font-medium text-gray-700">Trier par:</label>
                     <select
                         id="sort"
@@ -64,7 +64,6 @@
             const url = new URL(window.location.href);
             url.searchParams.set(key, value);
             url.searchParams.delete('page');
-
             return url.toString();
         }
     </script>

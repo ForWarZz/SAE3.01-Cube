@@ -1,4 +1,4 @@
-<section class="flex flex-2 flex-col gap-4">
+<section id="cart-items-list" class="flex flex-2 flex-col gap-4">
     <h2 class="text-2xl font-semibold text-gray-900">Panier ({{ $count }})</h2>
 
     @if ($count <= 0)
