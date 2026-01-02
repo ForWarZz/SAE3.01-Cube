@@ -1,4 +1,9 @@
-@props(["type" => "button", "color" => "blue", "size" => "md", "icon" => null])
+@props([
+    "type" => "button",
+    "color" => "blue",
+    "size" => "md",
+    "icon" => null,
+])
 
 @php
     $colors = [
@@ -24,27 +29,32 @@
         "xl" => "size-6",
     ];
 
-    $classes =
-        "inline-flex items-center justify-center rounded-md border font-semibold tracking-widest uppercase transition cursor-pointer " .
-        ($colors[$color] ?? $colors["blue"]) .
-        " " .
-        ($sizes[$size] ?? $sizes["md"]);
+    $isDisabled = (bool) $attributes->get("disabled");
 
-    if ($attributes->get("disabled")) {
-        $classes .= " opacity-50 border-gray-300";
-    }
+    $baseClasses = "inline-flex items-center justify-center rounded-md border font-semibold tracking-widest uppercase transition";
+
+    $activeClasses = " cursor-pointer " . ($colors[$color] ?? $colors["blue"]);
+    $disabledClasses = " opacity-50 cursor-not-allowed pointer-events-none " . " border-gray-300 bg-gray-200 text-gray-500";
+
+    $classes = $baseClasses . " " . $sizes[$size];
+
+    $classes .= $isDisabled ? $disabledClasses : $activeClasses;
 @endphp
 
 @if (isset($attributes["href"]))
-    <a {{ $attributes->merge(["class" => $classes]) }}>
+    <a {{
+        $attributes->merge([
+            "class" => $classes,
+        ])
+    }}>
         @if ($icon)
-            <x-dynamic-component :component="$icon" class="mr-2 size-4" />
+            <x-dynamic-component :component="$icon" class="mr-2 {{ $iconSizeClasses[$size] }}" />
         @endif
 
         {{ $slot }}
     </a>
 @else
-    <button type="{{ $type }}" {{ $attributes->merge(["class" => $classes]) }}>
+    <button type="{{ $type }}" @disabled($isDisabled) {{ $attributes->merge(["class" => $classes]) }}>
         @if ($icon)
             <x-dynamic-component :component="$icon" class="mr-2 {{ $iconSizeClasses[$size] }}" />
         @endif
