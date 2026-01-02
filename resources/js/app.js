@@ -3,10 +3,13 @@ import './navbar/main.js';
 import './search/main.js';
 import './cart/main.js';
 
-import { driver } from 'driver.js';
 import Alpine from 'alpinejs';
+import { startTour } from './tour/main.js';
 
 window.Alpine = Alpine;
-window.driver = driver;
 
 Alpine.start();
+
+document.addEventListener('DOMContentLoaded', () => {
+    startTour();
+});
