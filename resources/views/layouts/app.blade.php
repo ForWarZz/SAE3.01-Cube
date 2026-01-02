@@ -39,9 +39,6 @@
         <link rel="preconnect" href="https://fonts.bunny.net" />
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css" />
-        <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
-
         <!-- Scripts -->
         @vite(["resources/css/app.css", "resources/js/app.js"])
 
@@ -292,7 +289,7 @@
                         },
                     ];
                 } else if (currentRoute === 'articles.show-reference') {
-                    tourKey = 'tour-article';
+                    tourKey = 'tour-seen-article';
                     steps = [
                         {
                             popover: {
@@ -571,7 +568,7 @@
                 }
 
                 if (steps.length > 0 && !localStorage.getItem(tourKey)) {
-                    const driver = window.driver.js.driver({
+                    const driver = window.driver({
                         showProgress: true,
                         animate: true,
                         nextBtnText: 'Suivant →',
