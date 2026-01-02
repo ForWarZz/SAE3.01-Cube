@@ -10,3 +10,12 @@
 * {
     scroll-behavior: smooth;
 }
+
+#botmanWidgetRoot > div {
+    pointer-events: none !important;
+}
+
+#botmanWidgetRoot > div > * {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
