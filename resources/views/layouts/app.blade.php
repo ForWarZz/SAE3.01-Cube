@@ -61,22 +61,9 @@
 
         <x-shop-selector-modal />
 
-        <footer class="border-t border-gray-200 bg-gray-50 text-gray-700">
-            <div class="flex flex-row justify-center gap-64 px-6 py-8">
-                <p class="text-sm text-gray-500">© {{ date("Y") }} Cube. Tous droits réservés.</p>
-
-                <nav class="flex flex-wrap items-center gap-4 text-sm font-medium text-gray-600">
-                    <a href="{{ route("legal-notices") }}" class="transition hover:text-gray-900">Mentions légales</a>
-                    <a href="{{ route("privacy-policy") }}" class="transition hover:text-gray-900">Politique de confidentialité</a>
-                    <a href="{{ route("terms-of-sale") }}" class="transition hover:text-gray-900">Condition générales de ventes</a>
-                </nav>
-            </div>
-        </footer>
-
         <script>
             var botmanWidget = {
                 chatServer: '/botman?page_type={{ $pageType }}&context_id={{ $contextId }}&page_url={{ urlencode(request()->url()) }}',
-                frameEndpoint: '/botman/chat',
                 title: 'Assistant Cube',
                 mainColor: '#111827',
                 bubbleBackground: '#2563EB',
@@ -179,4 +166,6 @@
             (tarteaucitron.job = tarteaucitron.job || []).push('googleplaces');
         </script>
     </body>
+
+    <x-footer />
 </html>

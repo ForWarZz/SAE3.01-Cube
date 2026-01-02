@@ -1,7 +1,7 @@
 import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
 
-export function startTour() {
+export function startTour(force = false) {
     const currentRoute = document.querySelector('meta[name="current-route"]').getAttribute('content');
     let steps = [];
     let tourKey = '';
@@ -388,23 +388,32 @@ export function startTour() {
         });
     };
 
-    setTimeout(() => {
-        const availableSteps = filterSteps(steps);
+    setTimeout(
+        () => {
+            const availableSteps = filterSteps(steps);
 
-        if (availableSteps.length > 0 && !localStorage.getItem(tourKey)) {
-            const driverObj = driver({
-                showProgress: true,
-                animate: true,
-                nextBtnText: 'Suivant →',
-                prevBtnText: '← Retour',
-                doneBtnText: "C'est compris !",
-                steps: availableSteps,
-                onDestroyed: () => {
-                    localStorage.setItem(tourKey, 'true');
-                },
-            });
+            if (availableSteps.length > 0 && (!localStorage.getItem(tourKey) || force)) {
+                const driverObj = driver({
+                    showProgress: true,
+                    animate: true,
+                    nextBtnText: 'Suivant →',
+                    prevBtnText: '← Retour',
+                    doneBtnText: "C'est compris !",
+                    steps: availableSteps,
+                    onDestroyed: () => {
+                        localStorage.setItem(tourKey, 'true');
+                    },
+                });
 
-            driverObj.drive();
-        }
-    }, 1000);
+                driverObj.drive();
+            }
+        },
+        force ? 0 : 1000,
+    );
 }
+
+window.rebootTour = () => {
+    window.scrollTo(0, 0);
+
+    startTour(true);
+};
