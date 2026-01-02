@@ -151,7 +151,7 @@
 
         <script type="text/javascript">
             tarteaucitron.init({
-                privacyUrl: '',
+                privacyUrl: '{{ route("privacy-policy") }}',
                 bodyPosition: 'bottom',
                 hashtag: '#tarteaucitron',
                 cookieName: 'tarteaucitron',
