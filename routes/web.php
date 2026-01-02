@@ -58,9 +58,6 @@ Route::prefix('panier')->name('cart.')->group(function () {
         Route::post('/', [CartController::class, 'applyDiscount'])->name('apply');
         Route::delete('/', [CartController::class, 'clearDiscount'])->name('remove');
     });
-
-    Route::get('/validation', [OrderController::class, 'checkout'])->name('checkout')
-        ->middleware('auth');
 });
 
 Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(function () {
@@ -149,7 +146,7 @@ Route::prefix('staff')->group(function () {
                 // Gestion des images des références
                 Route::post('/{bike}/references/{reference}/images', [CommercialBikeController::class, 'addReferenceImages'])->name('references.images.store');
                 Route::delete('/{bike}/references/{reference}/images/{imageName}', [CommercialBikeController::class, 'deleteReferenceImage'])->name('references.images.destroy');
-                
+
                 // Gestion des caractéristiques
                 Route::post('/{bike}/caracteristiques', [CommercialBikeController::class, 'storeCharacteristic'])->name('characteristics.store');
                 Route::delete('/{bike}/caracteristiques/{characteristic}', [CommercialBikeController::class, 'destroyCharacteristic'])->name('characteristics.destroy');

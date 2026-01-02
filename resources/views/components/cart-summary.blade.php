@@ -41,7 +41,7 @@
         </div>
 
         @if (! $isCheckout)
-            <x-button :disabled="$count === 0" size="lg" href="{{ route('cart.checkout') }}">Valider mon panier</x-button>
+            <x-button :disabled="$count === 0" size="lg" href="{{ route('checkout.index') }}">Valider mon panier</x-button>
         @endif
     </div>
 </section>

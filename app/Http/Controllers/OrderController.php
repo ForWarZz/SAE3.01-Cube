@@ -38,7 +38,7 @@ class OrderController extends Controller
 
         $this->checkoutService->updateCheckout($billingAddressId, $deliveryAddressId, $shippingModeId);
 
-        return redirect()->route('cart.checkout');
+        return redirect()->route('checkout.index');
     }
 
     public function checkout()
