@@ -9,14 +9,24 @@
 
             <span class="block h-4 w-px bg-gray-300"></span>
 
-            <button
-                onclick="window.rebootTour()"
-                type="button"
-                class="group flex cursor-pointer items-center gap-1.5 text-blue-600 transition-colors hover:text-blue-700"
-            >
-                <x-heroicon-o-arrow-path-rounded-square class="size-4 transition-transform group-hover:rotate-180" />
-                <span class="group-hover:underline">Relancer le guide</span>
-            </button>
+            <div class="flex items-center gap-4">
+                <a
+                    href="{{ route("user-guide") }}"
+                    class="group flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-bold text-blue-600 shadow-sm ring-1 ring-gray-200 transition hover:bg-blue-50 hover:ring-blue-300"
+                >
+                    <x-heroicon-o-question-mark-circle class="size-5" />
+                    <span>Centre d'aide</span>
+                </a>
+
+                <button
+                    onclick="window.rebootTour()"
+                    class="group flex cursor-pointer items-center gap-1.5 text-sm font-medium text-gray-500 transition hover:text-blue-600"
+                    title="Relancer la visite guidée"
+                >
+                    <x-heroicon-o-play class="h-4 w-4" />
+                    <span class="hidden md:inline">Guide</span>
+                </button>
+            </div>
         </nav>
     </div>
 </footer>
