@@ -11,5 +11,5 @@ window.Alpine = Alpine;
 Alpine.start();
 
 document.addEventListener('DOMContentLoaded', () => {
-    startTour();
+    // startTour();
 });
