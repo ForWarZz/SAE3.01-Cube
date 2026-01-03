@@ -87,8 +87,8 @@ class CheckoutService
                 'num_commande' => $this->generateOrderNumber(),
                 'frais_livraison' => $checkoutData->shipping_mode->price,
                 'date_commande' => now(),
-                'id_code_promo' => $cartData->discountCode->id_code_promo,
-                'pourcentage_remise' => $cartData->discountCode->pourcentage_remise,
+                'id_code_promo' => $cartData->discountCode?->id_code_promo,
+                'pourcentage_remise' => $cartData->discountCode?->pourcentage_remise,
                 'id_type_paiement' => PaymentType::UNKNOWN,
             ]);
 
