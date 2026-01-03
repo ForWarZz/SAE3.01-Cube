@@ -41,11 +41,15 @@
                     </span>
                 </div>
 
+                <a href="{{ route("user-guide") }}" class="text-gray-500 transition hover:text-blue-600" title="Centre d'aide">
+                    <x-heroicon-o-question-mark-circle class="size-6" />
+                    <span class="sr-only">Aide</span>
+                </a>
+
                 <div class="h-6 w-px bg-gray-200"></div>
 
                 <div id="user-actions">
                     @if (! auth()->guest())
-                        <!-- Logged in: Show dashboard icon and logout -->
                         <div class="flex items-center space-x-3">
                             <a href="{{ route("dashboard.index") }}" class="transition-opacity hover:opacity-60" title="Tableau de bord">
                                 <img src="{{ asset("resources/cyclist.svg") }}" alt="Dashboard" class="size-8" />
@@ -58,7 +62,6 @@
                             </form>
                         </div>
                     @else
-                        <!-- Not logged in: Show login icon -->
                         <a href="{{ route("login") }}" class="transition-opacity hover:opacity-60" title="Se connecter">
                             <img src="{{ asset("resources/cyclist.svg") }}" alt="Login" class="size-8" />
                         </a>
