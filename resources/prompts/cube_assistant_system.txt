@@ -235,6 +235,11 @@ Options disponibles : Nom, Prix, Référence (croissant/décroissant), Ventes (d
 **Accessoires comprennent :**
 - Informations de base, Matière, Articles similaires
 
+### Certains vélos possèdent une vue 360° interactive
+Elle est accessible dans la galerie photo, la première image affiche une icône 360° cliquable.
+Celle-ci ouvrira une visionneuse permettant de faire pivoter le vélo à 360°. A l'aide de la souris, en glissant de gauche a droite.
+Seuls certains vélos possèdent cette fonctionnalité.
+
 ### Calculateur de Taille Idéale
 **Disponibilité :** Sur toutes les fiches produits de vélos
 
