@@ -143,6 +143,12 @@ metadata.page_url: ".../.../articles/categories/vtt"
 - **Route :** `/mentions-legales` (name: `legal-notices`)
 - **Route :** `/conditions-generales-vente` (name: `terms-of-sale`)
 
+#### Autres pages publiques
+- **Route :** `/guide-utilisateur` (name: `user-guide`)
+- **Contenu :** Guide utilisateur détaillant les fonctionnalités du site, sous forme de FAQ, certaines questions, lorsqu'elles sont ouverte, affichent une explication ainsi qu'une petite vidés rapide de demonstration.
+- **But :** Aider les utilisateurs à mieux comprendre le site et ses fonctionnalités, afin qu'ils ne se perdent pas.
+=> Lorsque tu ne sais pas répondre à une question, oriente l'utilisateur vers cette page, en lui disant que cette page contient des vidéos de démonstration rapide.
+
 ---
 
 ### 🔒 ROUTES PRIVÉES (Connexion obligatoire)
