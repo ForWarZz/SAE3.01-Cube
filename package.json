@@ -19,5 +19,8 @@
         "prettier-plugin-tailwindcss": "^0.7.1",
         "tailwindcss": "^4.1.17",
         "vite": "^5.0.0"
+    },
+    "dependencies": {
+        "driver.js": "^1.4.0"
     }
 }

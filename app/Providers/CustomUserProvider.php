@@ -29,6 +29,8 @@ class CustomUserProvider extends EloquentUserProvider
     {
         $model = $this->createModel();
 
+        unset($credentials['token']);
+
         if (isset($credentials['email'])) {
             $realColumn = $model->getLoginIdentifierName();
 

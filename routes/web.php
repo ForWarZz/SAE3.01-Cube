@@ -180,10 +180,10 @@ Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);
 Route::get('/botman/chat', function () {
     return view('botman-frame');
 });
-//
-// Route::get('/guide-utilisateur', function () {
-//    return view('guide-utilisateur');
-// })->name('user-guide');
+
+Route::get('/guide-utilisateur', function () {
+    return view('help');
+})->name('user-guide');
 
 Route::get('/politique-confidentialite', function () {
     return view('legal.privacy-policy');

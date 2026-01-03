@@ -14,10 +14,8 @@ class BotManController extends Controller
         private readonly CubeAssistantService $assistantService
     ) {}
 
-    public function handle(Request $request)
+    public function handle(Request $request, BotMan $botman)
     {
-        $botman = app('botman');
-
         $botman->fallback(function (BotMan $bot) use ($request) {
             $bot->typesAndWaits(2);
             $message = $bot->getMessage()->getText();

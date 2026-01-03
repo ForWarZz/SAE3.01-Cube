@@ -1,4 +1,5 @@
 <div
+    id="article-image-slider"
     class="flex-1/2 flex-shrink-0"
     x-data="{
         currentImageIndex: 0,
@@ -31,7 +32,9 @@
             :src="images.length > 0 ? images[currentImageIndex] : ''"
             alt="{{ $article->nom_article }}"
             class="h-full w-full object-contain transition-transform duration-200"
-            @mousemove="images.length && (zoomed = true); updateZoom($event)"
+            @mousemove="!document.body.classList.contains('driver-active') && images.length && (zoomed = true);
+                if (!document.body.classList.contains('driver-active')) updateZoom($event)
+            "
             @mouseleave="zoomed = false"
         />
 

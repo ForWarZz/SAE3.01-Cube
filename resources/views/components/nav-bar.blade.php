@@ -5,14 +5,20 @@
                 <a href="{{ route("home") }}" class="text-2xl font-bold tracking-tight text-gray-900 uppercase transition">Cube France</a>
             </div>
 
-            <ul class="hidden items-center space-x-8 text-sm font-medium text-gray-700 lg:flex">
+            <ul id="article-categories" class="hidden items-center space-x-8 text-sm font-medium text-gray-700 lg:flex">
                 @foreach ($categories as $category)
                     <x-category-item :category="$category" :n="0" />
                 @endforeach
             </ul>
 
             <div class="flex items-center gap-4">
-                <x-button x-data id="store-button" x-on:click="$dispatch('open-shop-modal', { showAvailability: false })" icon="bi-geo-alt">
+                <x-button
+                    id="selected-shop-btn"
+                    x-data
+                    id="store-button"
+                    x-on:click="$dispatch('open-shop-modal', { showAvailability: false })"
+                    icon="bi-geo-alt"
+                >
                     <span id="store-button-text">
                         @if (session("selected_shop"))
                             {{ session("selected_shop")["name"] }}
@@ -22,7 +28,7 @@
                     </span>
                 </x-button>
 
-                <div class="relative">
+                <div id="search-bar" class="relative">
                     <input
                         type="text"
                         id="search-input"
@@ -37,27 +43,29 @@
 
                 <div class="h-6 w-px bg-gray-200"></div>
 
-                @if (! auth()->guest())
-                    <!-- Logged in: Show dashboard icon and logout -->
-                    <div class="flex items-center space-x-3">
-                        <a href="{{ route("dashboard.index") }}" class="transition-opacity hover:opacity-60" title="Tableau de bord">
-                            <img src="{{ asset("resources/cyclist.svg") }}" alt="Dashboard" class="size-8" />
+                <div id="user-actions">
+                    @if (! auth()->guest())
+                        <!-- Logged in: Show dashboard icon and logout -->
+                        <div class="flex items-center space-x-3">
+                            <a href="{{ route("dashboard.index") }}" class="transition-opacity hover:opacity-60" title="Tableau de bord">
+                                <img src="{{ asset("resources/cyclist.svg") }}" alt="Dashboard" class="size-8" />
+                            </a>
+                            <form method="POST" action="{{ route("logout") }}" class="inline">
+                                @csrf
+                                <button type="submit" class="cursor-pointer text-sm text-gray-600 transition-colors hover:text-gray-900">
+                                    Déconnexion
+                                </button>
+                            </form>
+                        </div>
+                    @else
+                        <!-- Not logged in: Show login icon -->
+                        <a href="{{ route("login") }}" class="transition-opacity hover:opacity-60" title="Se connecter">
+                            <img src="{{ asset("resources/cyclist.svg") }}" alt="Login" class="size-8" />
                         </a>
-                        <form method="POST" action="{{ route("logout") }}" class="inline">
-                            @csrf
-                            <button type="submit" class="cursor-pointer text-sm text-gray-600 transition-colors hover:text-gray-900">
-                                Déconnexion
-                            </button>
-                        </form>
-                    </div>
-                @else
-                    <!-- Not logged in: Show login icon -->
-                    <a href="{{ route("login") }}" class="transition-opacity hover:opacity-60" title="Se connecter">
-                        <img src="{{ asset("resources/cyclist.svg") }}" alt="Login" class="size-8" />
-                    </a>
-                @endif
+                    @endif
+                </div>
 
-                <a href="{{ route("cart.index") }}" class="group relative flex items-center p-2" title="Voir le panier">
+                <a id="view-cart-btn" href="{{ route("cart.index") }}" class="group relative flex items-center p-2" title="Voir le panier">
                     <x-bi-cart class="size-6 text-gray-700 transition group-hover:text-blue-600" />
 
                     @if ($cartItemCount > 0)

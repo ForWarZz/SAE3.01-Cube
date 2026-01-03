@@ -32,7 +32,7 @@
             <aside class="flex flex-1 flex-col gap-6">
                 <x-cart-summary :summary-data="$summaryData" :count="$count" :discountData="$discountData" />
 
-                <section class="flex flex-col gap-6">
+                <section id="discount-code-section" class="flex flex-col gap-6">
                     <h2 class="text-2xl font-semibold text-gray-900">Code promo</h2>
 
                     @if ($errors->has("discount_code"))

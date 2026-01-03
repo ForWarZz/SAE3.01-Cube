@@ -6,7 +6,7 @@
 
 <aside class="w-64">
     <div class="space-y-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <div class="flex items-center justify-between border-b pb-4">
+        <div id="filters-bar" class="flex items-center justify-between border-b pb-4">
             <h2 class="text-lg font-semibold text-gray-900">Filtres</h2>
             <a
                 href="{{ url()->current() . (request("search") ? "?search=" . urlencode(request("search")) : "") }}"
