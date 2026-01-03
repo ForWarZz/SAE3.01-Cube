@@ -22,11 +22,20 @@
                                 Survolez le menu principal en haut de page pour afficher les catégories (VTT, Route, Ville, Électrique...),
                                 puis cliquez sur la catégorie souhaitée.
                             </p>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/navigation.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">Exemple de navigation et de recherche</p>
+                            </div>
                         </x-faq-item>
 
                         <x-faq-item task="2" title="Comment filtrer les résultats ?" icon="heroicon-o-funnel">
                             <p class="mb-2">
-                                Dans la page catalogue, localisez le panneau latéral gauche contenant tous les filtres disponibles :
+                                Dans la page catalogue (vélos ou accessoires, peu importe), localisez le panneau latéral gauche contenant
+                                tous les filtres disponibles :
                             </p>
                             <ul class="ml-4 space-y-1 text-sm">
                                 <li>
@@ -42,6 +51,14 @@
                                     Utilisez le bouton "Réinitialiser" pour effacer tous les filtres
                                 </li>
                             </ul>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/filtres.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">Exemple de filtres d'articles</p>
+                            </div>
                         </x-faq-item>
 
                         <x-faq-item task="3" title="Où trouver mon panier ?" icon="heroicon-o-shopping-cart">
@@ -83,6 +100,14 @@
                                 Une fenêtre s'ouvre avec la liste complète des magasins. Utilisez la recherche par ville ou code postal,
                                 puis cliquez sur le magasin de votre choix pour le sélectionner.
                             </p>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/changer-magasin.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">Exemple de selection d'un magasin via la vue carte</p>
+                            </div>
                         </x-faq-item>
                     </div>
                 </div>
@@ -95,6 +120,7 @@
                                 Sur la fiche produit d'un vélo, localisez la section "Calculer ma taille idéale" située sous les options de
                                 taille.
                             </p>
+
                             <ol class="ml-4 space-y-1 text-sm">
                                 <li>1. Mesurez votre taille : debout, dos contre un mur, pieds nus</li>
                                 <li>
@@ -105,6 +131,14 @@
                                 <li>4. Cliquez sur le bouton "Calculer"</li>
                                 <li>5. Le système vous recommande la ou les tailles adaptées</li>
                             </ol>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/choisir-taille.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">Exemple d'utilisation du calculateur de taille</p>
+                            </div>
                         </x-faq-item>
 
                         <x-faq-item task="7" title="Comment utiliser la vue 360° ?" icon="heroicon-o-arrow-path">
@@ -124,6 +158,14 @@
                             <p class="mt-2 text-sm text-amber-700">
                                 Cette fonctionnalité n'est disponible que sur certains modèles de vélos.
                             </p>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/vue-360.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">Exemple d'utilisation de la vue 360°</p>
+                            </div>
                         </x-faq-item>
 
                         <x-faq-item task="8" title="Que sont les variantes d'un vélo ?" icon="heroicon-o-swatch">
@@ -147,6 +189,14 @@
                                 </li>
                             </ul>
                             <p class="mt-2 text-sm">Les variantes indisponibles apparaissent grisées et barrées.</p>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/changer-variante.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">Exemple de choix de variante sur un vélo électrique</p>
+                            </div>
                         </x-faq-item>
 
                         <x-faq-item task="9" title="Comment voir les disponibilités en magasin ?" icon="heroicon-o-map-pin">
@@ -156,6 +206,14 @@
                                 (Disponible, Commandable, Indisponible). Utilisez le champ de recherche pour filtrer par ville ou code
                                 postal. La distance depuis votre position est affichée pour chaque magasin.
                             </p>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/voir-disponibilites.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">Exemple de visualisation des disponibilités pour un vélo</p>
+                            </div>
                         </x-faq-item>
                     </div>
                 </div>
@@ -225,6 +283,14 @@
                             <p class="mt-2 text-sm text-amber-700">
                                 Un seul code promo par commande. Impossible de cumuler plusieurs codes.
                             </p>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/code-promo.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">Exemple d'application d'un code promo dans son panier</p>
+                            </div>
                         </x-faq-item>
 
                         <x-faq-item task="14" title="Comment suivre ma commande ?" icon="heroicon-o-map">
@@ -237,25 +303,18 @@
                                 <li>2. Sélectionnez "Mes commandes" dans le menu déroulant</li>
                                 <li>3. Cliquez sur la commande que vous souhaitez consulter</li>
                                 <li>4. Consultez le statut actuel et l'historique complet</li>
-                                <li>5. Téléchargez votre facture si nécessaire</li>
                             </ol>
-                            <p class="mt-2 text-sm">Statuts possibles : En préparation, Prête, Expédiée, Livrée, Annulée</p>
-                        </x-faq-item>
-
-                        <x-faq-item task="15" title="Comment modifier ou annuler ma commande ?" icon="heroicon-o-pencil-square">
-                            <ol class="ml-4 space-y-1 text-sm">
-                                <li>
-                                    1. Cliquez sur l'icône cycliste
-                                    <img src="{{ asset("resources/cyclist.svg") }}" alt="Login" class="inline size-7" />
-                                    → "Mes commandes"
-                                </li>
-                                <li>2. Cliquez sur la commande concernée</li>
-                                <li>3. Si le statut est "En préparation", les boutons de modification et d'annulation sont disponibles</li>
-                            </ol>
-                            <p class="mt-2 text-sm text-red-600">
-                                Une fois le statut passé à "Expédiée" ou "Prête", aucune modification n'est possible. Contactez le service
-                                client.
+                            <p class="mt-2 text-sm">
+                                Statuts possibles : En attente de paiement, Paiement accepté, Expédié, Livrée, Annulée et Retournée
                             </p>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/historique-commande.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">Exemple de visualisation de l'historique de commande</p>
+                            </div>
                         </x-faq-item>
                     </div>
                 </div>
@@ -319,6 +378,14 @@
                                     Accéder à notre politique de confidentialité
                                 </li>
                             </ul>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/gestion-cookies.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">Exemple d'application d'un code promo dans son panier</p>
+                            </div>
                         </x-faq-item>
                     </div>
                 </div>
@@ -356,6 +423,14 @@
                                     </p>
                                 </div>
                             </div>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/suppresion-compte.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">Exemple de création d'un compte client</p>
+                            </div>
                         </x-faq-item>
 
                         <x-faq-item task="19" title="Mot de passe oublié : que faire ?" icon="heroicon-o-lock-closed">
@@ -379,6 +454,14 @@
                                     <strong>accounts.google.com/signin/recovery</strong>
                                     pour récupérer l'accès à votre compte Google.
                                 </p>
+                            </div>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/mdp-oublie.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">Exemple d'utilisation de "Mot de passe oublié"</p>
                             </div>
                         </x-faq-item>
 
@@ -471,6 +554,14 @@
                                 <li>5. Saisissez le code à 6 chiffres généré par l'application pour confirmer</li>
                                 <li>6. Important : Copiez et conservez vos codes de secours en lieu sûr</li>
                             </ol>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/a2f.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">Exemple d'activation de la double authentification</p>
+                            </div>
                         </x-faq-item>
 
                         <x-faq-item task="24" title="Comment désactiver l'A2F ?" icon="heroicon-o-shield-check">
@@ -530,6 +621,14 @@
                                 <li>3. Cliquez sur le bouton rouge "Supprimer mon compte"</li>
                                 <li>4. Saisissez votre mot de passe pour confirmer la suppression définitive</li>
                             </ol>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/suppresion-compte.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">Exemple de suppression d'un compte client</p>
+                            </div>
                         </x-faq-item>
                     </div>
                 </div>
