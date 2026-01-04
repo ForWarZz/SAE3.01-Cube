@@ -97,7 +97,7 @@
                             >
                                 &larr; Retour aux adresses
                             </a>
-                            <x-button :href="route('dashboard.addresses.create')" color="blue" size="sm">+ Nouvelle adresse</x-button>
+                            <x-button type="submit" color="blue" size="sm">+ Nouvelle adresse</x-button>
                         </div>
                     </form>
                 </div>
