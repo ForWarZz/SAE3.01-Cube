@@ -35,7 +35,6 @@ class GoogleAuthController extends Controller
         if ($client) {
             if (! $client->google_id) {
                 $client->google_id = $googleUser->getId();
-                $client->save();
             }
         } else {
             $nameParts = explode(' ', $googleUser->getName(), 2);
@@ -50,11 +49,12 @@ class GoogleAuthController extends Controller
                 'hash_mdp_client' => Hash::make(uniqid()),
                 'naissance_client' => now()->subYears(18)->format('Y-m-d'), // User will update in profile
                 'google_id' => $googleUser->getId(),
-                'date_der_connexion' => now(),
             ]);
 
             $isNewAccount = true;
         }
+
+        $client->date_der_connexion = now();
 
         Auth::login($client);
         request()->session()->regenerate();
