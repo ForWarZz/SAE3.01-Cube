@@ -126,11 +126,11 @@
                                 <x-form-input
                                     type="number"
                                     name="poids_article"
-                                    label="Poids du vélo (kg)"
-                                    :value="old('poids_velo', $accessory->poids_article)"
+                                    label="Poids de l'accessoire (kg)"
+                                    :value="old('poids_accessoire', $accessory->poids_article)"
                                     placeholder="Ex: 12,5"
                                     required
-                                    step="0.1"
+                                    step="0.01"
                                     min="0"
                                 />
                             </div>

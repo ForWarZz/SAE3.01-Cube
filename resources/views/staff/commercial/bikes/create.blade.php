@@ -233,7 +233,7 @@
                                     :value="old('poids_velo')"
                                     placeholder="Ex: 12,5"
                                     required
-                                    step="0.1"
+                                    step="0.01"
                                     min="0"
                                 />
                             </div>
