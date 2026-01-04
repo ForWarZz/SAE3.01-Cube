@@ -98,17 +98,6 @@
                         return;
                     }
 
-                    const acInput = document.querySelector('#address_autocomplete');
-                    acInput.disabled = false;
-                    acInput.classList.remove('bg-gray-100', 'cursor-not-allowed');
-                    acInput.placeholder = 'Commencez à taper votre adresse...';
-
-                    ['code_postal', 'nom_ville'].forEach((id) => {
-                        const el = document.getElementById(id);
-                        el.setAttribute('readonly', 'true');
-                        el.classList.add('cursor-not-allowed', 'border-gray-200', 'bg-gray-100');
-                    });
-
                     tarteaucitron.addScript(
                         'https://maps.googleapis.com/maps/api/js?key={{ config("services.google.places_api_key") }}&libraries=places&callback=initAutocomplete',
                     );
@@ -127,12 +116,6 @@
                     acInput.classList.add('bg-gray-100', 'cursor-not-allowed');
                     acInput.placeholder = 'Service désactivé (cookies refusés)';
                     acInput.value = '';
-
-                    ['code_postal', 'nom_ville'].forEach((id) => {
-                        const el = document.getElementById(id);
-                        el.removeAttribute('readonly');
-                        el.classList.remove('cursor-not-allowed', 'border-gray-200', 'bg-gray-100');
-                    });
                 },
             };
         </script>

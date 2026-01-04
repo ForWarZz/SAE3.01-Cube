@@ -64,6 +64,7 @@
                                 name="address_autocomplete"
                                 id="address_autocomplete"
                                 label="Rechercher une adresse"
+                                help="Complétez automatiquement les champs d'adresse en tapant votre adresse ici."
                                 placeholder="Commencez à taper votre adresse..."
                             />
                         </div>
@@ -78,17 +79,28 @@
                             placeholder="Appartement 5, Bâtiment B"
                         />
 
-                        <x-form-input name="code_postal" id="code_postal" label="Code postal" placeholder="75001" required readonly />
-
                         <x-form-input
-                            name="nom_ville"
-                            id="nom_ville"
-                            label="Ville"
-                            placeholder="Paris"
+                            name="code_postal"
+                            id="code_postal"
+                            label="Code postal"
+                            placeholder="Tapez le code postal..."
                             required
-                            readonly
-                            wrapperClass="mb-6"
+                            maxlength="5"
                         />
+
+                        <div class="mb-4">
+                            <label for="nom_ville" class="block text-sm font-medium text-gray-700">Ville</label>
+                            <div class="relative mt-1">
+                                <select
+                                    name="nom_ville"
+                                    id="nom_ville"
+                                    class="block w-full rounded-md border-gray-300 bg-gray-50 text-gray-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    required
+                                >
+                                    <option value="">-- Veuillez d'abord saisir un code postal --</option>
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="flex items-center justify-between">
                             <a
@@ -106,58 +118,98 @@
     </div>
 
     <script>
-        window.initAutocomplete = function () {
-            const input = document.getElementById('address_autocomplete');
-            if (!input || input.disabled || !window.google) return;
+        document.addEventListener('DOMContentLoaded', function () {
+            const cpInput = document.getElementById('code_postal');
+            const villeSelect = document.getElementById('nom_ville');
 
-            const options = {
-                componentRestrictions: { country: 'fr' },
-                fields: ['address_components', 'formatted_address'],
-                types: ['address'],
+            const loadCities = async (cp, preselectCity = null) => {
+                if (cp.length !== 5) return;
+
+                villeSelect.disabled = true;
+                villeSelect.innerHTML = '<option>Chargement...</option>';
+
+                try {
+                    const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${cp}&type=municipality`);
+                    const data = await response.json();
+
+                    villeSelect.innerHTML = '';
+
+                    if (data.features.length === 0) {
+                        villeSelect.innerHTML = '<option value="">Aucune ville trouvée</option>';
+                    } else {
+                        data.features.forEach((feature) => {
+                            const city = feature.properties.city.toUpperCase();
+                            const option = document.createElement('option');
+                            option.value = city;
+                            option.textContent = city;
+
+                            if (feature.properties.postcode === cp) {
+                                villeSelect.appendChild(option);
+                            }
+                        });
+
+                        if (preselectCity) {
+                            villeSelect.value = preselectCity.toUpperCase();
+                        }
+                    }
+                } catch (error) {
+                    console.error(error);
+                    villeSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+                } finally {
+                    villeSelect.disabled = false;
+                    villeSelect.classList.remove('bg-gray-50', 'text-gray-500');
+                }
             };
 
-            const autocomplete = new google.maps.places.Autocomplete(input, options);
-
-            autocomplete.addListener('place_changed', function () {
-                const place = autocomplete.getPlace();
-                if (!place.address_components) return;
-
-                document.getElementById('num_voie_adresse').value = '';
-                document.getElementById('rue_adresse').value = '';
-                document.getElementById('code_postal').value = '';
-                document.getElementById('nom_ville').value = '';
-
-                for (const component of place.address_components) {
-                    const type = component.types[0];
-                    switch (type) {
-                        case 'street_number':
-                            document.getElementById('num_voie_adresse').value = component.long_name;
-                            break;
-                        case 'route':
-                            document.getElementById('rue_adresse').value = component.long_name;
-                            break;
-                        case 'postal_code':
-                            document.getElementById('code_postal').value = component.long_name;
-                            break;
-                        case 'locality':
-                            document.getElementById('nom_ville').value = component.long_name;
-                            break;
-                    }
+            cpInput.addEventListener('input', function () {
+                if (this.value.length === 5) {
+                    loadCities(this.value);
                 }
             });
-        };
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('address-form');
-            if (form) {
-                form.addEventListener('submit', function () {
-                    const clean = (el) => {
-                        if (el && el.value) el.value = el.value.replace(/[^\d+]/g, '');
-                    };
-                    clean(document.getElementById('telephone_adresse'));
-                    clean(document.getElementById('tel_mobile_adresse'));
+            window.initAutocomplete = function () {
+                const input = document.getElementById('address_autocomplete');
+                if (!input || !window.google) return;
+
+                const autocomplete = new google.maps.places.Autocomplete(input, {
+                    componentRestrictions: { country: 'fr' },
+                    fields: ['address_components'],
+                    types: ['address'],
                 });
-            }
+
+                autocomplete.addListener('place_changed', function () {
+                    const place = autocomplete.getPlace();
+                    let cp = '';
+                    let ville = '';
+
+                    if (place.address_components) {
+                        for (const component of place.address_components) {
+                            const type = component.types[0];
+                            switch (type) {
+                                case 'street_number':
+                                    document.getElementById('num_voie_adresse').value = component.long_name;
+                                    break;
+                                case 'route':
+                                    document.getElementById('rue_adresse').value = component.long_name;
+                                    break;
+                                case 'postal_code':
+                                    document.getElementById('code_postal').value = component.long_name;
+                                    cp = component.long_name;
+                                    break;
+                                case 'locality':
+                                    document.getElementById('nom_ville').value = component.long_name;
+                                    ville = component.long_name;
+                                    break;
+                            }
+                        }
+                    }
+
+                    if (cp && ville) {
+                        document.getElementById('code_postal').value = cp;
+                        loadCities(cp, ville);
+                    }
+                });
+            };
         });
     </script>
 </x-app-layout>
