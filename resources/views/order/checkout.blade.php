@@ -33,15 +33,12 @@
             class="flex gap-10"
         >
             <div class="flex flex-2 flex-col gap-8">
-                <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                    <h2 class="mb-4 text-xl font-bold text-gray-900">1. Mode de livraison</h2>
+                <form method="POST" action="{{ route("checkout.update-order") }}">
+                    @csrf
+                    @method("PUT")
 
-                    <form method="POST" action="{{ route("checkout.update-order") }}" x-ref="shippingForm">
-                        @csrf
-                        @method("PUT")
-
-                        <input type="hidden" name="billing_id" value="{{ $billingId }}" />
-                        <input type="hidden" name="delivery_id" value="{{ $deliveryId }}" />
+                    <section class="mb-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                        <h2 class="mb-4 text-xl font-bold text-gray-900">1. Mode de livraison</h2>
 
                         <div class="grid grid-cols-3 gap-4">
                             @foreach ($deliveryModes as $mode)
@@ -53,7 +50,7 @@
                                         type="radio"
                                         name="shipping_id"
                                         value="{{ $mode->id }}"
-                                        @change="$refs.shippingForm.submit()"
+                                        onchange="this.form.submit()"
                                         x-model="shippingId"
                                         class="sr-only"
                                     />
@@ -69,31 +66,23 @@
                                 </label>
                             @endforeach
                         </div>
-                    </form>
-                </section>
+                    </section>
 
-                <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                    <div class="mb-6 flex items-center justify-between">
-                        <h2 class="text-xl font-bold text-gray-900">2. Adresse de facturation</h2>
-                        <a
-                            href="{{ route("dashboard.addresses.create", ["intended" => route("checkout.index")]) }}"
-                            class="text-sm font-medium text-blue-600 hover:underline"
-                        >
-                            + Nouvelle adresse
-                        </a>
-                    </div>
+                    <section class="mb-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                        <div class="mb-6 flex items-center justify-between">
+                            <h2 class="text-xl font-bold text-gray-900">2. Adresse de facturation</h2>
+                            <a
+                                href="{{ route("dashboard.addresses.create", ["intended" => route("checkout.index")]) }}"
+                                class="text-sm font-medium text-blue-600 hover:underline"
+                            >
+                                + Nouvelle adresse
+                            </a>
+                        </div>
 
-                    @if ($addresses->isEmpty())
-                        <div class="rounded-lg bg-gray-50 p-6 text-center text-gray-500">Aucune adresse.</div>
-                    @else
-                        <form method="POST" action="{{ route("checkout.update-order") }}">
-                            @csrf
-                            @method("PUT")
-
-                            <input type="hidden" name="delivery_id" value="{{ $deliveryId }}" />
-                            <input type="hidden" name="shipping_id" value="{{ $shippingId }}" />
-
-                            <div class="grid grid-cols-2 gap-4">
+                        @if ($addresses->isEmpty())
+                            <div class="rounded-lg bg-gray-50 p-6 text-center text-gray-500">Aucune adresse.</div>
+                        @else
+                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 @foreach ($addresses as $address)
                                     <x-address-card
                                         :address="$address"
@@ -103,21 +92,13 @@
                                     />
                                 @endforeach
                             </div>
-                        </form>
-                    @endif
-                </section>
+                        @endif
+                    </section>
 
-                <section x-show="!isClickAndCollect" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                    <div class="mb-4 flex items-center justify-between">
-                        <h2 class="text-xl font-bold text-gray-900">3. Adresse de livraison</h2>
-                    </div>
-
-                    <form method="POST" action="{{ route("checkout.update-order") }}">
-                        @csrf
-                        @method("PUT")
-
-                        <input type="hidden" name="billing_id" value="{{ $billingId }}" />
-                        <input type="hidden" name="shipping_id" value="{{ $shippingId }}" />
+                    <section x-show="!isClickAndCollect" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                        <div class="mb-4 flex items-center justify-between">
+                            <h2 class="text-xl font-bold text-gray-900">3. Adresse de livraison</h2>
+                        </div>
 
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                             @foreach ($addresses as $address)
@@ -129,8 +110,8 @@
                                 />
                             @endforeach
                         </div>
-                    </form>
-                </section>
+                    </section>
+                </form>
 
                 <section x-show="isClickAndCollect" x-cloak class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                     <h2 class="mb-4 text-xl font-bold text-gray-900">3. Point de retrait</h2>
