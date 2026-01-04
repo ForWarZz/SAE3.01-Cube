@@ -45,14 +45,10 @@
                 </span>
             @endif
 
-            @if ($article->bike?->frameMaterial)
-                <span
-                    class="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-gray-100 px-2 py-1 font-medium text-gray-700"
-                >
-                    <x-bi-layers class="size-4 text-gray-500" />
-                    {{ $article->bike->frameMaterial->label_materiau_cadre }}
-                </span>
-            @endif
+            <span class="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-gray-100 px-2 py-1 font-medium text-gray-700">
+                <x-bi-layers class="size-4 text-gray-500" />
+                {{ $article->bike?->frameMaterial->label_materiau_cadre ?? $article->accessory->material->nom_matiere_accessoire }}
+            </span>
         </div>
 
         <div id="article-price-box" class="flex flex-col">
