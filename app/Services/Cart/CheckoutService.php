@@ -96,7 +96,7 @@ class CheckoutService
             $order = Order::create([
                 'id_client' => $client->id_client,
                 'id_adresse_facturation' => $checkoutData->billing_address_id,
-                'id_adresse_livraison' => $checkoutData->delivery_address_id,
+                'id_adresse_livraison' => $checkoutData->shop ? null : $checkoutData->delivery_address_id,
                 'id_moyen_livraison' => $checkoutData->shipping_mode->id,
                 'id_magasin' => $checkoutData->shop?->id,
                 'num_commande' => $this->generateOrderNumber(),
