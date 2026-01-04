@@ -126,6 +126,7 @@
                             <h2 class="mb-4 text-xl font-bold text-gray-900">3. Point de retrait</h2>
 
                             <div
+                                x-data
                                 @click="$dispatch('open-shop-modal', { showAvailability: false })"
                                 class="flex cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 transition hover:border-gray-300 hover:bg-gray-100"
                                 :class="shopId ? 'border-green-200 bg-green-50' : ''"
