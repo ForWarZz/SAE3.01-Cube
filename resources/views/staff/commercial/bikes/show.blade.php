@@ -90,7 +90,7 @@
 
         <div class="mb-6 rounded-lg bg-white p-6 shadow" x-data="{ showAddCharModal: false }">
             <div class="mb-4 flex items-center justify-between">
-                <h2 class="text-xl font-semibold text-gray-700">Caractéristiques Techniques</h2>
+                <h2 class="text-xl font-semibold text-gray-700">Caractéristiques techniques</h2>
                 <x-button @click="showAddCharModal = true" color="blue" size="sm" icon="heroicon-o-plus">Ajouter / Modifier</x-button>
             </div>
 
@@ -206,11 +206,15 @@
         </div>
 
         <div class="rounded-lg bg-white p-6 shadow">
-            <h2 class="mb-4 text-xl font-semibold text-gray-700">
-                Références
-                <span class="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-sm text-blue-800">
-                    {{ $bike->references->count() }}
-                </span>
+            <h2 class="mb-4 flex items-center justify-between text-xl font-semibold text-gray-700">
+                <div>
+                    Références
+                    <span class="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-sm text-blue-800">
+                        {{ $bike->references->count() }}
+                    </span>
+                </div>
+
+                <x-button @click="showAddRefModal = true" color="blue" variant="link">Ajouter la première référence</x-button>
             </h2>
 
             <div class="space-y-6">
@@ -306,10 +310,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="py-8 text-center text-gray-500">
-                        Aucune référence pour ce vélo.
-                        <x-button @click="showAddRefModal = true" color="blue" variant="link">Ajouter la première référence</x-button>
-                    </div>
+                    <div class="py-8 text-center text-gray-500 italic">Aucune référence pour ce vélo.</div>
                 @endforelse
             </div>
         </div>
