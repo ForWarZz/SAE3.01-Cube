@@ -55,6 +55,7 @@ class GoogleAuthController extends Controller
         }
 
         $client->date_der_connexion = now();
+        $client->save();
 
         Auth::login($client);
         request()->session()->regenerate();
