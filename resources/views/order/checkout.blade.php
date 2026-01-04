@@ -15,25 +15,7 @@
             $isClickAndCollect = $shippingId == $ccId;
         @endphp
 
-        <div
-            x-data="{
-                billingId: {{ $billingId ?? "null" }},
-                deliveryId: {{ $deliveryId ?? "null" }},
-                shippingId: {{ $shippingId ?? "null" }},
-                shopId: {{ $shopId }},
-                ccId: {{ $ccId }},
-
-                get isClickAndCollectJS() {
-                    return this.shippingId == this.ccId
-                },
-
-                get canSubmit() {
-                    if (! this.billingId || ! this.shippingId) return false
-                    return this.isClickAndCollectJS ? this.shopId : this.deliveryId
-                },
-            }"
-            class="flex gap-10"
-        >
+        <div class="flex gap-10">
             <div class="flex flex-2 flex-col gap-8">
                 <form method="POST" action="{{ route("checkout.update-order") }}">
                     @csrf
@@ -114,20 +96,30 @@
 
                     @if (! $isClickAndCollect)
                         <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                            <div class="mb-4 flex items-center justify-between">
+                            <div class="mb-6 flex items-center justify-between">
                                 <h2 class="text-xl font-bold text-gray-900">3. Adresse de livraison</h2>
+                                <a
+                                    href="{{ route("dashboard.addresses.create", ["intended" => route("checkout.index")]) }}"
+                                    class="text-sm font-medium text-blue-600 hover:underline"
+                                >
+                                    + Nouvelle adresse
+                                </a>
                             </div>
 
-                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                @foreach ($addresses as $address)
-                                    <x-address-card
-                                        :address="$address"
-                                        name="delivery_id"
-                                        :value="$address->id_adresse"
-                                        :selected="$deliveryId == $address->id_adresse"
-                                    />
-                                @endforeach
-                            </div>
+                            @if ($addresses->isEmpty())
+                                <div class="rounded-lg bg-gray-50 p-6 text-center text-gray-500">Aucune adresse.</div>
+                            @else
+                                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                    @foreach ($addresses as $address)
+                                        <x-address-card
+                                            :address="$address"
+                                            name="delivery_id"
+                                            :value="$address->id_adresse"
+                                            :selected="$deliveryId == $address->id_adresse"
+                                        />
+                                    @endforeach
+                                </div>
+                            @endif
                         </section>
                     @else
                         <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -176,7 +168,15 @@
 
                 <form action="{{ route("payment.process") }}" method="post">
                     @csrf
-                    <x-button type="submit" size="lg" color="green" class="w-full" x-bind:disabled="!canSubmit">Payer la commande</x-button>
+                    <x-button
+                        type="submit"
+                        size="lg"
+                        color="green"
+                        class="w-full"
+                        :disabled="$shippingId == null || $deliveryId == null || ($isClickAndCollect && $selectedShop == null)"
+                    >
+                        Payer la commande
+                    </x-button>
                 </form>
 
                 <a
