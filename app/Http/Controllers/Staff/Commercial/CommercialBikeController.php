@@ -67,7 +67,7 @@ class CommercialBikeController extends Controller
 
         $allCharacteristics = Characteristic::with('characteristicType')
             ->get()
-            ->groupBy('characteristicType.nom_type_caracteristique');
+            ->groupBy('characteristicType.nom_type_carac');
 
         return view('staff.commercial.bikes.show', array_merge(
             compact('bike', 'referenceImages', 'isVae', 'allCharacteristics'),
