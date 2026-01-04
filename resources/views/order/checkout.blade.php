@@ -2,253 +2,186 @@
     <div class="min-h-screen bg-gray-100 px-24 py-12">
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900">Finaliser ma commande</h1>
-            <p class="mt-2 text-sm text-gray-600">Veuillez sélectionner vos adresses</p>
         </div>
 
         @php
-            $defaultId = $addresses->isEmpty() ? "null" : $addresses->first()->id_adresse;
-            $newAddressRoute = route("dashboard.addresses.create", ["intended" => route("checkout.index")]);
-
-            $savedBillingId = $orderData->billing_address_id ?? $defaultId;
-            $savedDeliveryId = $orderData->delivery_address_id ?? $defaultId;
-            $savedShippingId = $selectedShippingId ?? "null";
-            $sameAddressDefault = $savedBillingId === $savedDeliveryId ? "true" : "false";
-
-            $isClickAndCollect = $savedShippingId == \App\Models\ShippingMode::CLICK_AND_COLLECT;
+            $defaultId = $addresses->first()->id_adresse ?? null;
+            $billingId = $orderData->billing_address_id ?? $defaultId;
+            $deliveryId = $orderData->delivery_address_id ?? $defaultId;
+            $shippingId = $selectedShippingId;
+            $ccId = \App\Models\ShippingMode::CLICK_AND_COLLECT;
+            $shopId = $selectedShop ? $selectedShop->id : "null";
         @endphp
 
         <div
             x-data="{
-                billingId: {{ $savedBillingId }},
-                deliveryId: {{ $savedDeliveryId }},
-                shippingId: {{ $savedShippingId }},
-                sameAddress: {{ $sameAddressDefault }},
+                billingId: {{ $billingId ?? "null" }},
+                deliveryId: {{ $deliveryId ?? "null" }},
+                shippingId: {{ $shippingId ?? "null" }},
+                shopId: {{ $shopId }},
+                ccId: {{ $ccId }},
+
+                get isClickAndCollect() {
+                    return this.shippingId == this.ccId
+                },
+
+                get canSubmit() {
+                    if (! this.billingId || ! this.shippingId) return false
+                    return this.isClickAndCollect ? this.shopId : this.deliveryId
+                },
             }"
-            x-effect="if (sameAddress) deliveryId = billingId"
+            class="flex gap-10"
         >
-            <div class="flex gap-10">
-                <div class="flex flex-2 flex-col gap-8">
-                    <section id="billing-section" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                        <div class="mb-6 flex items-center justify-between">
-                            <h2 class="text-xl font-bold text-gray-900">Adresse de facturation</h2>
-                            <a
-                                href="{{ $newAddressRoute }}"
-                                class="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
-                            >
-                                + Nouvelle adresse
-                            </a>
-                        </div>
+            <div class="flex flex-2 flex-col gap-8">
+                <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                    <h2 class="mb-4 text-xl font-bold text-gray-900">1. Mode de livraison</h2>
 
-                        @if ($addresses->isEmpty())
-                            <div class="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-8 text-center text-gray-500">
-                                Aucune adresse enregistrée.
-                            </div>
-                        @else
-                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                @foreach ($addresses as $address)
-                                    <x-address-card
-                                        :address="$address"
-                                        name="billing_address_id"
-                                        model="billingId"
-                                        :value="$address->id_adresse"
-                                    />
-                                @endforeach
-                            </div>
-                        @endif
-                        <x-input-error :messages="$errors->get('billing_address_id')" class="mt-2" />
-                    </section>
-
-                    <section id="delivery-section" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                        <div class="mb-4 flex items-center justify-between">
-                            <h2 class="text-xl font-bold text-gray-900">Adresse de livraison</h2>
-                            <a
-                                href="{{ $newAddressRoute }}"
-                                class="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
-                            >
-                                + Nouvelle adresse
-                            </a>
-                        </div>
-
-                        @if ($addresses->isNotEmpty())
-                            <label
-                                class="mb-6 flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4 transition hover:bg-gray-100"
-                            >
-                                <input
-                                    type="checkbox"
-                                    x-model="sameAddress"
-                                    class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                />
-                                <span class="font-medium text-gray-900">Utiliser l'adresse de facturation pour la livraison</span>
-                            </label>
-
-                            <div x-show="!sameAddress" class="grid grid-cols-1 gap-4 md:grid-cols-2" style="display: none">
-                                @foreach ($addresses as $address)
-                                    <x-address-card
-                                        :address="$address"
-                                        name="delivery_address_id"
-                                        model="deliveryId"
-                                        :value="$address->id_adresse"
-                                    />
-                                @endforeach
-                            </div>
-                            <input type="hidden" name="delivery_address_id" :value="deliveryId" />
-                        @endif
-
-                        <x-input-error :messages="$errors->get('delivery_address_id')" class="mt-2" />
-                    </section>
-
-                    <section id="shipping-methods" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                        <h2 class="mb-4 text-xl font-bold text-gray-900">Mode de livraison</h2>
-
-                        <form method="POST" action="{{ route("checkout.update-shipping") }}">
-                            @csrf
-                            <input type="hidden" name="billing_id" :value="billingId" />
-                            <input type="hidden" name="delivery_id" :value="deliveryId" />
-
-                            <div class="grid grid-cols-3 gap-4">
-                                @foreach ($deliveryModes as $mode)
-                                    <label
-                                        class="{{ $selectedShippingId == $mode->id ? "border-blue-600 bg-blue-50" : "border-gray-200 bg-white hover:border-gray-300" }} relative flex cursor-pointer flex-col justify-between rounded-lg border p-4 transition"
-                                    >
-                                        <input
-                                            type="radio"
-                                            name="shipping_id"
-                                            value="{{ $mode->id }}"
-                                            {{ $selectedShippingId == $mode->id ? "checked" : "" }}
-                                            @change="shippingId = {{ $mode->id }}; $event.target.form.submit()"
-                                            class="sr-only"
-                                        />
-                                        <div class="flex items-start justify-between">
-                                            <div class="text-sm">
-                                                <h3 class="font-bold text-gray-900">{{ $mode->name }}</h3>
-                                                <p class="mt-2 font-medium text-gray-900">
-                                                    {{ number_format($mode->price, 2, ",", " ") }} €
-                                                </p>
-                                            </div>
-                                            <div class="ml-4">
-                                                @if ($selectedShippingId == $mode->id)
-                                                    <div
-                                                        class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-white"
-                                                    >
-                                                        <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 12 12">
-                                                            <path
-                                                                d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z"
-                                                            />
-                                                        </svg>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </label>
-                                @endforeach
-                            </div>
-                            <x-input-error :messages="$errors->get('shipping_id')" class="mt-2" />
-                        </form>
-                    </section>
-
-                    @if ($isClickAndCollect)
-                        <section id="shop-section" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                            <h2 class="mb-4 text-xl font-bold text-gray-900">Choisir un revendeur pour la livraison</h2>
-
-                            <div
-                                x-data
-                                @click="$dispatch('open-shop-modal', { showAvailability: false })"
-                                class="flex cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 transition hover:border-gray-300 hover:bg-gray-100"
-                            >
-                                <div class="flex items-center gap-4">
-                                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
-                                        <x-bi-geo-alt class="h-5 w-5" />
-                                    </div>
-
-                                    @if ($selectedShop)
-                                        <div>
-                                            <p class="font-bold text-gray-900">
-                                                {{ $selectedShop->name }}
-                                            </p>
-                                            <p class="text-sm text-gray-600">
-                                                {{ $selectedShop->address }}
-                                            </p>
-                                            <p class="text-sm text-gray-600">
-                                                {{ $selectedShop->postalCode }}
-                                                {{ $selectedShop->city }}
-                                            </p>
-                                        </div>
-                                    @else
-                                        <div>
-                                            <p class="font-medium text-gray-500">Aucun magasin sélectionné</p>
-                                            <p class="text-sm text-gray-400">Cliquez pour choisir un point de retrait</p>
-                                        </div>
-                                    @endif
-                                </div>
-
-                                <div class="flex items-center gap-3">
-                                    @if ($selectedShop)
-                                        <span class="text-sm font-medium text-green-600">✓ Sélectionné</span>
-                                    @endif
-
-                                    {{-- <svg --}}
-                                    {{-- class="h-5 w-5 text-gray-400" --}}
-                                    {{-- fill="none" --}}
-                                    {{-- stroke="currentColor" --}}
-                                    {{-- viewBox="0 0 24 24" --}}
-                                    {{-- > --}}
-                                    {{-- <path --}}
-                                    {{-- stroke-linecap="round" --}}
-                                    {{-- stroke-linejoin="round" --}}
-                                    {{-- stroke-width="2" --}}
-                                    {{-- d="M9 5l7 7-7 7" --}}
-                                    {{-- /> --}}
-                                    {{-- </svg> --}}
-                                </div>
-                            </div>
-
-                            {{-- @if ($selectedShop) --}}
-                            {{-- <p class="mt-3 text-sm text-gray-500"> --}}
-                            {{-- <span class="font-medium">Note :</span> --}}
-                            {{-- La livraison sera effectuée à ce magasin. --}}
-
-                            {{-- <button --}}
-                            {{-- type="button" --}}
-                            {{-- onclick="fetch('{{ route('shops.clear') }}', { --}}
-                            {{-- method: 'POST', --}}
-                            {{-- headers: { --}}
-                            {{-- 'X-CSRF-TOKEN': '{{ csrf_token() }}' --}}
-                            {{-- } --}}
-                            {{-- }).then(() => location.reload())" --}}
-                            {{-- class="ml-2 text-red-600 underline hover:text-red-800" --}}
-                            {{-- > --}}
-                            {{-- Supprimer ce choix --}}
-                            {{-- </button> --}}
-                            {{-- </p> --}}
-                            {{-- @endif --}}
-                        </section>
-                    @endif
-                </div>
-
-                <aside class="flex flex-1 flex-col gap-6">
-                    <x-cart-summary :summary-data="$summaryData" :count="$count" :discount-data="$discountData" :is-checkout="true" />
-
-                    <form action="{{ route("payment.process") }}" method="post">
+                    <form method="POST" action="{{ route("checkout.update-order") }}" x-ref="shippingForm">
                         @csrf
-                        <button
-                            id="submit-order-btn"
-                            type="submit"
-                            :disabled="!deliveryId || !billingId || !shippingId"
-                            :class="(!deliveryId || !billingId || !shippingId) ? 'cursor-not-allowed bg-gray-300' : 'cursor-pointer bg-green-600 hover:bg-green-700'"
-                            class="w-full rounded-md px-5 py-4 text-lg font-bold text-white uppercase shadow-md transition hover:shadow-lg"
-                        >
-                            Passer la commande
-                        </button>
-                    </form>
+                        @method("PUT")
 
-                    <a
-                        href="{{ route("cart.index") }}"
-                        class="flex items-center justify-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+                        <input type="hidden" name="billing_id" value="{{ $billingId }}" />
+                        <input type="hidden" name="delivery_id" value="{{ $deliveryId }}" />
+
+                        <div class="grid grid-cols-3 gap-4">
+                            @foreach ($deliveryModes as $mode)
+                                <label
+                                    class="relative flex cursor-pointer flex-col justify-between rounded-lg border p-4 transition"
+                                    :class="shippingId == {{ $mode->id }} ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600' : 'border-gray-200 bg-white hover:border-gray-300'"
+                                >
+                                    <input
+                                        type="radio"
+                                        name="shipping_id"
+                                        value="{{ $mode->id }}"
+                                        @change="$refs.shippingForm.submit()"
+                                        x-model="shippingId"
+                                        class="sr-only"
+                                    />
+                                    <div class="flex items-start justify-between">
+                                        <div>
+                                            <h3 class="font-bold text-gray-900">{{ $mode->name }}</h3>
+                                            <p class="mt-1 font-medium text-gray-900">{{ number_format($mode->price, 2, ",", " ") }} €</p>
+                                        </div>
+                                        <div x-show="shippingId == {{ $mode->id }}" class="text-blue-600">
+                                            <x-bi-check-circle-fill class="h-6 w-6" />
+                                        </div>
+                                    </div>
+                                </label>
+                            @endforeach
+                        </div>
+                    </form>
+                </section>
+
+                <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                    <div class="mb-6 flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-gray-900">2. Adresse de facturation</h2>
+                        <a
+                            href="{{ route("dashboard.addresses.create", ["intended" => route("checkout.index")]) }}"
+                            class="text-sm font-medium text-blue-600 hover:underline"
+                        >
+                            + Nouvelle adresse
+                        </a>
+                    </div>
+
+                    @if ($addresses->isEmpty())
+                        <div class="rounded-lg bg-gray-50 p-6 text-center text-gray-500">Aucune adresse.</div>
+                    @else
+                        <form method="POST" action="{{ route("checkout.update-order") }}">
+                            @csrf
+                            @method("PUT")
+
+                            <input type="hidden" name="delivery_id" value="{{ $deliveryId }}" />
+                            <input type="hidden" name="shipping_id" value="{{ $shippingId }}" />
+
+                            <div class="grid grid-cols-2 gap-4">
+                                @foreach ($addresses as $address)
+                                    <x-address-card
+                                        :address="$address"
+                                        name="billing_id"
+                                        :value="$address->id_adresse"
+                                        :selected="$billingId == $address->id_adresse"
+                                    />
+                                @endforeach
+                            </div>
+                        </form>
+                    @endif
+                </section>
+
+                <section x-show="!isClickAndCollect" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                    <div class="mb-4 flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-gray-900">3. Adresse de livraison</h2>
+                    </div>
+
+                    <form method="POST" action="{{ route("checkout.update-order") }}">
+                        @csrf
+                        @method("PUT")
+
+                        <input type="hidden" name="billing_id" value="{{ $billingId }}" />
+                        <input type="hidden" name="shipping_id" value="{{ $shippingId }}" />
+
+                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            @foreach ($addresses as $address)
+                                <x-address-card
+                                    :address="$address"
+                                    name="delivery_id"
+                                    :value="$address->id_adresse"
+                                    :selected="$deliveryId == $address->id_adresse"
+                                />
+                            @endforeach
+                        </div>
+                    </form>
+                </section>
+
+                <section x-show="isClickAndCollect" x-cloak class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                    <h2 class="mb-4 text-xl font-bold text-gray-900">3. Point de retrait</h2>
+
+                    <div
+                        @click="$dispatch('open-shop-modal', { showAvailability: false })"
+                        class="flex cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 transition hover:border-gray-300 hover:bg-gray-100"
+                        :class="shopId ? 'border-green-200 bg-green-50' : ''"
                     >
-                        &larr; Retour au panier
-                    </a>
-                </aside>
+                        <div class="flex items-center gap-4">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                                <x-bi-geo-alt class="h-5 w-5" />
+                            </div>
+
+                            @if ($selectedShop)
+                                <div>
+                                    <p class="font-bold text-gray-900">{{ $selectedShop->name }}</p>
+                                    <p class="text-sm text-gray-600">
+                                        {{ $selectedShop->address }} - {{ $selectedShop->postalCode }} {{ $selectedShop->city }}
+                                    </p>
+                                </div>
+                            @else
+                                <div>
+                                    <p class="font-medium text-gray-500">Choisir un magasin</p>
+                                    <p class="text-sm text-gray-400">Cliquez pour voir la carte</p>
+                                </div>
+                            @endif
+                        </div>
+
+                        @if ($selectedShop)
+                            <span class="text-sm font-medium text-green-600">✓ Sélectionné</span>
+                        @endif
+                    </div>
+                </section>
             </div>
+
+            <aside class="flex flex-1 flex-col gap-6">
+                <x-cart-summary :summary-data="$summaryData" :count="$count" :discount-data="$discountData" :is-checkout="true" />
+
+                <form action="{{ route("payment.process") }}" method="post">
+                    @csrf
+                    <x-button type="submit" size="lg" color="green" class="w-full" x-bind:disabled="!canSubmit">Payer la commande</x-button>
+                </form>
+
+                <a
+                    href="{{ route("cart.index") }}"
+                    class="flex items-center justify-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+                >
+                    &larr; Retour au panier
+                </a>
+            </aside>
         </div>
     </div>
 </x-app-layout>

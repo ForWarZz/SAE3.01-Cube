@@ -100,7 +100,7 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
 Route::middleware('auth')->group(function () {
     Route::prefix('commande')->name('checkout.')->group(function () {
         Route::get('/validation', [OrderController::class, 'checkout'])->name('index');
-        Route::post('/livraison', [OrderController::class, 'updateOrder'])->name('update-shipping');
+        Route::put('/', [OrderController::class, 'updateOrder'])->name('update-order');
     });
 
     Route::prefix('paiement')->name('payment.')->group(function () {
