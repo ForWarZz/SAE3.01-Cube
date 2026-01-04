@@ -126,7 +126,7 @@ class BikeFormDataService
 
     public function getSizes(): Collection
     {
-        return Size::all();
+        return Size::bike()->get();
     }
 
     public function getBatteries(): Collection
