@@ -176,10 +176,10 @@ Route::prefix('/magasins')->name('shops')->group(function () {
     Route::get('/disponibilite/{reference}', [AvailabilityController::class, 'show'])->name('availability.show');
 });
 
-Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);
+Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle'])->name('botman');
 Route::get('/botman/chat', function () {
     return view('botman-frame');
-});
+})->name('botman.iframe');
 
 Route::get('/guide-utilisateur', function () {
     return view('help');
