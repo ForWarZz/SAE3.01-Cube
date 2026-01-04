@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 
 class GoogleAuthController extends Controller
@@ -26,9 +25,10 @@ class GoogleAuthController extends Controller
     {
         $googleUser = Socialite::driver('google')->user();
 
-        $client = Client::where('email_client', $googleUser->getEmail())
-            ->orWhere('google_id', $googleUser->getId())
-            ->first();
+        $client = Client::where('google_id', $googleUser->getId())->first();
+        if (! $client) {
+            $client = Client::where('email_client', $googleUser->getEmail())->first();
+        }
 
         $isNewAccount = false;
 
@@ -46,7 +46,7 @@ class GoogleAuthController extends Controller
                 'prenom_client' => $prenom,
                 'nom_client' => $nom,
                 'email_client' => $googleUser->getEmail(),
-                'hash_mdp_client' => Hash::make(uniqid()),
+                'hash_mdp_client' => null,
                 'naissance_client' => now()->subYears(18)->format('Y-m-d'), // User will update in profile
                 'google_id' => $googleUser->getId(),
             ]);
