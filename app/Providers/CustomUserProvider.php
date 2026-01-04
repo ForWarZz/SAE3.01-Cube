@@ -14,12 +14,16 @@ class CustomUserProvider extends EloquentUserProvider
     /**
      * Retrieve a user by their unique identifier.
      *
+     * ✅ FIX: Ajouter |null dans le type de retour
+     *
      * @param  mixed  $identifier
-     * @return Builder|Builder[]|Collection|Model
+     * @return Model|Collection|Builder|array|null
      */
-    public function retrieveById($identifier): Model|Collection|Builder|array
+    public function retrieveById($identifier): Model|Collection|Builder|array|null
     {
-        return $this->createModel()->newQuery()->find($identifier);
+        $model = $this->createModel()->newQuery()->find($identifier);
+        
+        return $model;
     }
 
     /**

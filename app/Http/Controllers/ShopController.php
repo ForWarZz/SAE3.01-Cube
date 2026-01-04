@@ -33,20 +33,23 @@ class ShopController extends Controller
             'shop_id' => 'required|exists:magasin,id_magasin',
         ]);
 
-        $shop = Shop::with('city')->find($validated['shop_id']);
+        $shop = Shop::with('city')
+            ->withCoordinates()
+            ->find($validated['shop_id']);
 
         session(['selected_shop' => [
             'id' => $shop->id_magasin,
             'name' => $shop->nom_magasin,
+            'address' => $shop->full_address, 
+            'postalCode' => $shop->city?->cp_ville,
             'city' => $shop->city ? trim($shop->city->nom_ville) : null,
+            'lat' => $shop->latitude ?? null,
+            'lng' => $shop->longitude ?? null,
         ]]);
 
         return response()->json([
             'success' => true,
-            'shop' => [
-                'id' => $shop->id_magasin,
-                'name' => $shop->nom_magasin,
-            ],
+            'shop' => session('selected_shop'),
         ]);
     }
 
@@ -88,5 +91,12 @@ class ShopController extends Controller
         return response()->json([
             'shops' => $shops,
         ]);
+    }
+
+    public function clear()
+    {
+        session()->forget('selected_shop');
+        
+        return response()->json(['success' => true]);
     }
 }

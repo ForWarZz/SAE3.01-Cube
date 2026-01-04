@@ -19,9 +19,9 @@ class CheckoutService
         protected readonly CartSessionManager $session,
     ) {}
 
-    public function updateCheckout(?int $billingAddressId, ?int $deliveryAddressId, ?int $shippingModeId): void
+    public function updateCheckout(?int $billingAddressId, ?int $deliveryAddressId, ?int $shippingModeId, ?int $shopId = null): void
     {
-        $this->session->setCheckoutData($billingAddressId, $deliveryAddressId, $shippingModeId);
+        $this->session->setCheckoutData($billingAddressId, $deliveryAddressId, $shippingModeId, $shopId);
     }
 
     public function clearCheckout(): void
@@ -34,7 +34,6 @@ class CheckoutService
         $checkoutData = $this->getCheckoutData();
         $shippingPrice = $checkoutData->shipping_mode?->price ?? 0;
 
-        // Récupérer les données du panier avec le prix de livraison sélectionné
         $cartData = $this->cartService->getCartData($shippingPrice);
 
         $shippingModes = $this->cartService->getAvailableShippingModes(
@@ -42,11 +41,14 @@ class CheckoutService
             $cartData->hasBikes
         );
 
+        $selectedShop = session('selected_shop');
+
         return [
             'addresses' => $client->addresses()->with('city')->get(),
             'deliveryModes' => $shippingModes,
             'selectedShippingId' => $checkoutData->shipping_mode?->id,
             'orderData' => $checkoutData,
+            'selectedShop' => $selectedShop,
 
             ...$cartData->toViewData(),
         ];
@@ -63,13 +65,14 @@ class CheckoutService
             billing_address_id: $sessionData['billing_address_id'] ?? null,
             delivery_address_id: $sessionData['delivery_address_id'] ?? null,
             shipping_mode: $shippingMode,
+            shop_id: $sessionData['shop_id'] ?? null,
         );
     }
 
     /**
      * @throws Throwable
      */
-    public function createOrder(Client $client): Order
+   public function createOrder(Client $client): Order
     {
         if (! $this->isReadyForPayment()) {
             throw new DomainException('Checkout incomplet : adresses ou mode de livraison manquant.');
@@ -77,12 +80,14 @@ class CheckoutService
 
         $checkoutData = $this->getCheckoutData();
         $cartData = $this->cartService->getCartData($checkoutData->shipping_mode->price);
+        $selectedShop = session('selected_shop');
 
-        return DB::transaction(function () use ($checkoutData, $cartData, $client) {
+        return DB::transaction(function () use ($checkoutData, $cartData, $client, $selectedShop) {
             $order = Order::create([
                 'id_client' => $client->id_client,
                 'id_adresse_facturation' => $checkoutData->billing_address_id,
-                'id_adresse_livraison' => $checkoutData->delivery_address_id,
+                'id_adresse_livraison' => $selectedShop ? null : $checkoutData->delivery_address_id,
+                'id_magasin' => $selectedShop['id'] ?? null,
                 'id_moyen_livraison' => $checkoutData->shipping_mode->id,
                 'num_commande' => $this->generateOrderNumber(),
                 'frais_livraison' => $checkoutData->shipping_mode->price,
@@ -92,7 +97,6 @@ class CheckoutService
                 'id_type_paiement' => PaymentType::UNKNOWN,
             ]);
 
-            // Ajouter les articles du panier à la commande
             foreach ($cartData->items as $item) {
                 $order->items()->create([
                     'id_reference' => $item->reference->id_reference,
@@ -109,10 +113,13 @@ class CheckoutService
     public function isReadyForPayment(): bool
     {
         $checkoutData = $this->getCheckoutData();
+        $selectedShop = session('selected_shop');
+
+        $hasDeliveryDestination = $checkoutData->delivery_address_id !== null || $selectedShop !== null;
 
         return ! $this->cartService->isEmpty()
             && $checkoutData->billing_address_id !== null
-            && $checkoutData->delivery_address_id !== null
+            && $hasDeliveryDestination
             && $checkoutData->shipping_mode !== null;
     }
 

@@ -227,11 +227,11 @@
             init() {
                 this.getUserLocation();
 
-                const storedShop = localStorage.getItem('selectedShop');
-                if (!selectedShop && storedShop) {
-                    console.log('Restauration du magasin sélectionné depuis le localStorage');
-                    const shop = JSON.parse(storedShop);
-                    this.selectShop(shop);
+               
+                if (selectedShop) {
+                    localStorage.setItem('selectedShop', JSON.stringify(selectedShop));
+                } else {
+                    localStorage.removeItem('selectedShop');
                 }
             },
 
@@ -381,6 +381,17 @@
                     ? `<span class="text-xs text-gray-500 ml-2">(${item.distance.toFixed(1)} km)</span>`
                     : '';
 
+                
+                const shopData = encodeURIComponent(JSON.stringify({
+                    id: item.shop.id,
+                    name: item.shop.name,
+                    address: item.shop.address,
+                    postalCode: item.shop.postalCode,
+                    city: item.shop.city,
+                    lat: item.shop.lat,
+                    lng: item.shop.lng
+                }));
+
                 return `
                     <div class="p-3 min-w-[220px] font-sans">
                         <h3 class="font-bold uppercase text-sm mb-2">${item.shop.name}</h3>
@@ -392,10 +403,10 @@
                             this.showAvailability
                                 ? `<p class="text-xs font-bold mb-3" style="color:${color}">${statusText}${distanceText}</p>`
                                 : item.distance
-                                  ? `<p class="text-xs text-gray-500 mb-3">${distanceText}</p>`
-                                  : ''
+                                ? `<p class="text-xs text-gray-500 mb-3">${distanceText}</p>`
+                                : ''
                         }
-                        <button onclick="window.dispatchEvent(new CustomEvent('select-shop-from-map', { detail: { id: ${item.shop.id}, name: '${item.shop.name.replace(/'/g, "\\'")}' } }))"
+                        <button onclick="window.dispatchEvent(new CustomEvent('select-shop-from-map', { detail: { shop: '${shopData}' } }))"
                                 class="w-full bg-gray-900 text-white px-3 py-2 text-xs font-bold uppercase hover:bg-gray-800 transition-colors">
                             ▸ Choisir ce magasin
                         </button>
@@ -427,16 +438,25 @@
             },
 
             updateSelectedShop(shop) {
-                localStorage.setItem('selectedShop', JSON.stringify(shop));
+                localStorage.setItem('selectedShop', JSON.stringify({
+                    id: shop.id,
+                    name: shop.name,
+                    address: shop.address,
+                    postalCode: shop.postalCode,
+                    city: shop.city,
+                    lat: shop.lat,
+                    lng: shop.lng
+                }));
 
                 const btn = document.getElementById('store-button-text');
                 if (btn) btn.textContent = shop.name;
+                window.location.reload();
             },
         };
     }
 
     window.addEventListener('select-shop-from-map', async (e) => {
-        const { id, name } = e.detail;
+        const shop = JSON.parse(decodeURIComponent(e.detail.shop));
 
         try {
             const token = document.querySelector('meta[name="csrf-token"]')?.content;
@@ -446,18 +466,18 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': token,
                 },
-                body: JSON.stringify({ shop_id: id }),
+                body: JSON.stringify({ shop_id: shop.id }),
             });
 
             if (res.ok) {
-                localStorage.setItem('selectedShop', JSON.stringify({ id, name }));
+                localStorage.setItem('selectedShop', JSON.stringify(shop));
                 const btn = document.getElementById('store-button-text');
-                if (btn) btn.textContent = name;
+                if (btn) btn.textContent = shop.name;
                 window.dispatchEvent(new CustomEvent('close-shop-modal'));
                 window.location.reload();
             }
-        } catch (e) {
-            console.error('Erreur sélection depuis carte:', e);
+        } catch (err) {
+            console.error('Erreur sélection depuis carte:', err);
         }
     });
 </script>
