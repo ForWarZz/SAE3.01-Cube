@@ -179,16 +179,18 @@
             <div class="mb-3 flex items-end justify-between">
                 <label class="block text-sm font-medium text-gray-900">Tailles</label>
 
-                <a
-                    id="size-guide-link"
-                    x-data
-                    href="#bike-calculator-container"
-                    @click.prevent="document.getElementById('bike-calculator-container').scrollIntoView({ behavior: 'smooth', block: 'center' })"
-                    class="flex items-center gap-1 text-xs text-gray-500 underline decoration-gray-400 underline-offset-2 transition-colors hover:text-black"
-                >
-                    Quelle est ma taille de cadre ?
-                    <x-heroicon-o-information-circle class="size-4" />
-                </a>
+                @if ($article->bike)
+                    <a
+                        id="size-guide-link"
+                        x-data
+                        href="#bike-calculator-container"
+                        @click.prevent="document.getElementById('bike-calculator-container').scrollIntoView({ behavior: 'smooth', block: 'center' })"
+                        class="flex items-center gap-1 text-xs text-gray-500 underline decoration-gray-400 underline-offset-2 transition-colors hover:text-black"
+                    >
+                        Quelle est ma taille de cadre ?
+                        <x-heroicon-o-information-circle class="size-4" />
+                    </a>
+                @endif
             </div>
 
             <div class="flex max-w-md min-w-md flex-wrap gap-3">
