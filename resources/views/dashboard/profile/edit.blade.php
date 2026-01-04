@@ -68,6 +68,7 @@
                                 label="Email"
                                 :value="$client->email_client"
                                 required
+                                :readonly="$client->google_id != null"
                             />
 
                             <!-- Date de naissance -->
