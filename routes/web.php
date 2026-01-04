@@ -108,7 +108,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/succes', [CheckoutController::class, 'success'])->name('success');
         Route::get('/erreur', [CheckoutController::class, 'cancel'])->name('cancel');
 
-        Route::post('/checkout/', [CheckoutController::class, 'checkout'])->name('checkout');
+        //        Route::post('/checkout/', [CheckoutController::class, 'checkout'])->name('checkout');
     });
 });
 

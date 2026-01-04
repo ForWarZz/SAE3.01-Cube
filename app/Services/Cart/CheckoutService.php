@@ -133,12 +133,12 @@ class CheckoutService
         if ($checkoutData->shipping_mode && $checkoutData->shipping_mode->id === ShippingMode::CLICK_AND_COLLECT) {
             return ! $this->cartService->isEmpty()
                 && $checkoutData->billing_address_id !== null
-                && $checkoutData->delivery_address_id !== null
                 && $checkoutData->shop !== null;
         }
 
         return ! $this->cartService->isEmpty()
             && $checkoutData->billing_address_id !== null
+            && $checkoutData->delivery_address_id !== null
             && $checkoutData->shipping_mode !== null;
     }
 
