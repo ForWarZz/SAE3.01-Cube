@@ -150,10 +150,10 @@
                 readmoreLink: '',
             });
 
-            {{-- tarteaucitron.user.matomoId = {{ config("services.matomo.site_id") }}; --}}
-            {{-- tarteaucitron.user.matomoHost = '{{ config("services.matomo.url") }}'; --}}
+            tarteaucitron.user.matomoId = {{ config("services.matomo.site_id") }};
+            tarteaucitron.user.matomoHost = '{{ config("services.matomo.host") }}';
 
-            // (tarteaucitron.job = tarteaucitron.job || []).push('matomo');
+            (tarteaucitron.job = tarteaucitron.job || []).push('matomo');
             (tarteaucitron.job = tarteaucitron.job || []).push('googleplaces');
         </script>
     </body>
