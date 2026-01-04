@@ -15,13 +15,26 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'civilite' => ['required', 'string', 'in:Monsieur,Madame'],
             'prenom_client' => ['required', 'string', 'max:255'],
             'nom_client' => ['required', 'string', 'max:255'],
-            'email_client' => ['required', 'string', 'email', 'max:255',  Rule::unique(Client::class, 'email_client')->ignore($this->user())],
             'naissance_client' => ['nullable', 'date'],
         ];
+
+        $client = $this->user();
+
+        if (! $client->google_id) {
+            $rules['email_client'] = [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique(Client::class, 'email_client')->ignore($client->id_client, 'id_client'),
+            ];
+        }
+
+        return $rules;
     }
 
     public function messages(): array
