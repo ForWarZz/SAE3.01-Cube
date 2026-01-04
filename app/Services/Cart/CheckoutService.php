@@ -19,10 +19,19 @@ class CheckoutService
         protected readonly CartSessionManager $session,
     ) {}
 
-    public function updateCheckout(?int $billingAddressId, ?int $deliveryAddressId, ?int $shippingModeId, ?int $shopId = null): void
-    {
-        $this->session->setCheckoutData($billingAddressId, $deliveryAddressId, $shippingModeId, $shopId);
+    public function updateCheckout( ?int $billingAddressId, ?int $deliveryAddressId, ?int $shippingModeId,  ?int $shopId = null ): void {
+        if ($shopId !== null) {
+            $deliveryAddressId = null;
+        }
+
+        $this->session->setCheckoutData(
+            $billingAddressId,
+            $deliveryAddressId,
+            $shippingModeId,
+            $shopId
+        );
     }
+
 
     public function clearCheckout(): void
     {
@@ -115,13 +124,15 @@ class CheckoutService
         $checkoutData = $this->getCheckoutData();
         $selectedShop = session('selected_shop');
 
-        $hasDeliveryDestination = $checkoutData->delivery_address_id !== null || $selectedShop !== null;
-
         return ! $this->cartService->isEmpty()
             && $checkoutData->billing_address_id !== null
-            && $hasDeliveryDestination
-            && $checkoutData->shipping_mode !== null;
+            && $checkoutData->shipping_mode !== null
+            && (
+                $checkoutData->delivery_address_id !== null
+                || $selectedShop !== null
+            );
     }
+
 
     private function generateOrderNumber(): string
     {

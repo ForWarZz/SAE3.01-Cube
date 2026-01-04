@@ -15,7 +15,7 @@
             $sameAddressDefault = $savedBillingId === $savedDeliveryId ? "true" : "false";
             
             $selectedShop = session('selected_shop');
-            $hasShop = $selectedShop ? 'true' : 'false';
+            $hasShop = $selectedShop ? true : false;
         @endphp
 
         <div
@@ -26,7 +26,12 @@
                 sameAddress: {{ $sameAddressDefault }},
                 hasShop: {{ $hasShop }},
             }"
-            x-effect="if (sameAddress) deliveryId = billingId"
+            x-effect="
+            if (hasShop) {
+                deliveryId = null;
+            } else if (sameAddress) {
+                deliveryId = billingId;
+            }"
         >
             <div class="flex gap-10">
                 <div class="flex flex-2 flex-col gap-8">
@@ -158,7 +163,9 @@
                         <form method="POST" action="{{ route("checkout.update-shipping") }}">
                             @csrf
                             <input type="hidden" name="billing_id" :value="billingId" />
-                            <input type="hidden" name="delivery_id" :value="deliveryId" />
+                            <input type="hidden" name="delivery_id" x-bind:value="hasShop ? '' : deliveryId">
+
+
 
                             <div class="grid grid-cols-3 gap-4">
                                 @foreach ($deliveryModes as $mode)
@@ -214,7 +221,10 @@
                         <button
                             id="submit-order-btn"
                             type="submit"
-                            :disabled="!billingId || !shippingId || (!deliveryId && !hasShop)"
+                            :disabled="
+                                !billingId ||
+                                !shippingId ||
+                                (!hasShop && !deliveryId)
                             :class="(!billingId || !shippingId || (!deliveryId && !hasShop)) 
                                 ? 'cursor-not-allowed bg-gray-300' 
                                 : 'cursor-pointer bg-green-600 hover:bg-green-700'"
