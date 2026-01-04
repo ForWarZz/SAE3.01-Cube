@@ -142,6 +142,7 @@
                 DenyAllCta: true,
                 AcceptAllCta: true,
                 highPrivacy: true,
+                alwaysNeedConsent: true,
                 handleBrowserDNTRequest: false,
                 removeCredit: false,
                 moreInfoLink: true,
