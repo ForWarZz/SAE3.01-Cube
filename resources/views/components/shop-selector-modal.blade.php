@@ -431,6 +431,8 @@
 
                 const btn = document.getElementById('store-button-text');
                 if (btn) btn.textContent = shop.name;
+
+                window.location.reload();
             },
         };
     }
