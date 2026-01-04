@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="py-12">
-        <div class="mx-auto max-w-2xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+        <div class="mx-auto max-w-2xl px-8">
+            <div class="overflow-hidden rounded-lg bg-white shadow-sm">
                 <div class="p-6">
                     <h1 class="mb-6 text-2xl font-bold text-gray-900">Nouvelle adresse</h1>
 
@@ -129,31 +129,45 @@
                 villeSelect.innerHTML = '<option>Chargement...</option>';
 
                 try {
-                    const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${cp}&type=municipality`);
+                    const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${cp}&limit=50`);
                     const data = await response.json();
 
                     villeSelect.innerHTML = '';
 
-                    if (data.features.length === 0) {
+                    const citiesMap = new Map();
+
+                    data.features.forEach((feature) => {
+                        const city = feature.properties.city;
+                        const postcode = feature.properties.postcode;
+
+                        if (!city || postcode !== cp) return;
+
+                        const key = `${postcode}-${city.toUpperCase()}`;
+
+                        if (!citiesMap.has(key)) {
+                            citiesMap.set(key, city.toUpperCase());
+                        }
+                    });
+
+                    if (citiesMap.size === 0) {
                         villeSelect.innerHTML = '<option value="">Aucune ville trouvée</option>';
-                    } else {
-                        data.features.forEach((feature) => {
-                            const city = feature.properties.city.toUpperCase();
+                        return;
+                    }
+
+                    [...citiesMap.values()]
+                        .sort((a, b) => a.localeCompare(b, 'fr'))
+                        .forEach((city) => {
                             const option = document.createElement('option');
                             option.value = city;
                             option.textContent = city;
-
-                            if (feature.properties.postcode === cp) {
-                                villeSelect.appendChild(option);
-                            }
+                            villeSelect.appendChild(option);
                         });
 
-                        if (preselectCity) {
-                            villeSelect.value = preselectCity.toUpperCase();
-                        }
+                    if (preselectCity) {
+                        villeSelect.value = preselectCity.toUpperCase();
                     }
-                } catch (error) {
-                    console.error(error);
+                } catch (e) {
+                    console.error(e);
                     villeSelect.innerHTML = '<option value="">Erreur de chargement</option>';
                 } finally {
                     villeSelect.disabled = false;
