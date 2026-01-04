@@ -60,12 +60,16 @@ class CheckoutService
     {
         $sessionData = $this->session->getCheckoutData();
 
-        $shippingModeId = $sessionData['shipping_mode_id'] ?? null;
-        $shippingMode = $shippingModeId ? $this->cartService->findShippingMode($shippingModeId) : null;
+        $shippingMode = null;
+        if (! empty($sessionData['shipping_mode_id'])) {
+            $shippingMode = $this->cartService->findShippingMode($sessionData['shipping_mode_id']);
+        }
+
+        $isClickAndCollect = $shippingMode?->id === ShippingMode::CLICK_AND_COLLECT;
 
         $shopDTO = null;
-        if ($shippingMode && $shippingMode->id === ShippingMode::CLICK_AND_COLLECT && isset($sessionData['selected_shop_id'])) {
-            $shop = Shop::find($sessionData['selected_shop_id'])->load('city');
+        if ($isClickAndCollect && ! empty($sessionData['selected_shop_id'])) {
+            $shop = Shop::with('city')->find($sessionData['selected_shop_id']);
 
             if ($shop) {
                 $shopDTO = ShopDTO::fromModel($shop);
@@ -74,7 +78,9 @@ class CheckoutService
 
         return new CheckoutDataDTO(
             billing_address_id: $sessionData['billing_address_id'] ?? null,
-            delivery_address_id: $sessionData['delivery_address_id'] ?? null,
+            delivery_address_id: $isClickAndCollect
+                ? null
+                : ($sessionData['delivery_address_id'] ?? null),
             shipping_mode: $shippingMode,
             shop: $shopDTO,
         );
@@ -96,7 +102,7 @@ class CheckoutService
             $order = Order::create([
                 'id_client' => $client->id_client,
                 'id_adresse_facturation' => $checkoutData->billing_address_id,
-                'id_adresse_livraison' => $checkoutData->shop ? null : $checkoutData->delivery_address_id,
+                'id_adresse_livraison' => $checkoutData->delivery_address_id,
                 'id_moyen_livraison' => $checkoutData->shipping_mode->id,
                 'id_magasin' => $checkoutData->shop?->id,
                 'num_commande' => $this->generateOrderNumber(),

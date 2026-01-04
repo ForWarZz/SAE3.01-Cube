@@ -8,7 +8,7 @@
             $defaultId = $addresses->first()->id_adresse ?? null;
             $billingId = $orderData->billing_address_id ?? $defaultId;
             $deliveryId = $orderData->delivery_address_id ?? $defaultId;
-            $shippingId = $selectedShippingId;
+            $shippingId = $selectedShippingId ?? ($deliveryModes->first()->id ?? null);
             $ccId = \App\Models\ShippingMode::CLICK_AND_COLLECT;
             $shopId = $selectedShop ? $selectedShop->id : "null";
 
