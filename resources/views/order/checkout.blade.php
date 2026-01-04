@@ -11,6 +11,8 @@
             $shippingId = $selectedShippingId;
             $ccId = \App\Models\ShippingMode::CLICK_AND_COLLECT;
             $shopId = $selectedShop ? $selectedShop->id : "null";
+
+            $isClickAndCollect = $shippingId == $ccId;
         @endphp
 
         <div
@@ -21,13 +23,13 @@
                 shopId: {{ $shopId }},
                 ccId: {{ $ccId }},
 
-                get isClickAndCollect() {
+                get isClickAndCollectJS() {
                     return this.shippingId == this.ccId
                 },
 
                 get canSubmit() {
                     if (! this.billingId || ! this.shippingId) return false
-                    return this.isClickAndCollect ? this.shopId : this.deliveryId
+                    return this.isClickAndCollectJS ? this.shopId : this.deliveryId
                 },
             }"
             class="flex gap-10"
@@ -42,25 +44,40 @@
 
                         <div class="grid grid-cols-3 gap-4">
                             @foreach ($deliveryModes as $mode)
-                                <label
-                                    class="relative flex cursor-pointer flex-col justify-between rounded-lg border p-4 transition"
-                                    :class="shippingId == {{ $mode->id }} ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600' : 'border-gray-200 bg-white hover:border-gray-300'"
-                                >
+                                @php
+                                    $isSelected = $shippingId == $mode->id;
+                                @endphp
+
+                                <label class="relative cursor-pointer">
                                     <input
                                         type="radio"
                                         name="shipping_id"
                                         value="{{ $mode->id }}"
-                                        onchange="this.form.submit()"
-                                        x-model="shippingId"
                                         class="sr-only"
+                                        {{ $isSelected ? "checked" : "" }}
+                                        onchange="this.form.submit()"
                                     />
-                                    <div class="flex items-start justify-between">
-                                        <div>
-                                            <h3 class="font-bold text-gray-900">{{ $mode->name }}</h3>
-                                            <p class="mt-1 font-medium text-gray-900">{{ number_format($mode->price, 2, ",", " ") }} €</p>
-                                        </div>
-                                        <div x-show="shippingId == {{ $mode->id }}" class="text-blue-600">
-                                            <x-bi-check-circle-fill class="h-6 w-6" />
+
+                                    <div
+                                        @class([
+                                            "flex h-full flex-col justify-between rounded-lg border p-4 transition hover:border-gray-300",
+                                            "border-blue-600 bg-blue-50 ring-1 ring-blue-600" => $isSelected,
+                                            "border-gray-200 bg-white" => ! $isSelected,
+                                        ])
+                                    >
+                                        <div class="flex items-start justify-between">
+                                            <div>
+                                                <h3 class="font-bold text-gray-900">{{ $mode->name }}</h3>
+                                                <p class="mt-1 font-medium text-gray-900">
+                                                    {{ number_format($mode->price, 2, ",", " ") }} €
+                                                </p>
+                                            </div>
+
+                                            @if ($isSelected)
+                                                <div class="text-blue-600">
+                                                    <x-bi-check-circle-fill class="h-6 w-6" />
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </label>
@@ -95,57 +112,63 @@
                         @endif
                     </section>
 
-                    <section x-show="!isClickAndCollect" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                        <div class="mb-4 flex items-center justify-between">
-                            <h2 class="text-xl font-bold text-gray-900">3. Adresse de livraison</h2>
-                        </div>
+                    @if (! $isClickAndCollect)
+                        <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                            <div class="mb-4 flex items-center justify-between">
+                                <h2 class="text-xl font-bold text-gray-900">3. Adresse de livraison</h2>
+                            </div>
 
-                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                            @foreach ($addresses as $address)
-                                <x-address-card
-                                    :address="$address"
-                                    name="delivery_id"
-                                    :value="$address->id_adresse"
-                                    :selected="$deliveryId == $address->id_adresse"
-                                />
-                            @endforeach
-                        </div>
-                    </section>
-                </form>
+                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                @foreach ($addresses as $address)
+                                    <x-address-card
+                                        :address="$address"
+                                        name="delivery_id"
+                                        :value="$address->id_adresse"
+                                        :selected="$deliveryId == $address->id_adresse"
+                                    />
+                                @endforeach
+                            </div>
+                        </section>
+                    @else
+                        <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                            <h2 class="mb-4 text-xl font-bold text-gray-900">3. Point de retrait</h2>
 
-                <section x-show="isClickAndCollect" x-cloak class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                    <h2 class="mb-4 text-xl font-bold text-gray-900">3. Point de retrait</h2>
+                            <div
+                                @click="$dispatch('open-shop-modal', { showAvailability: false })"
+                                class="flex cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 transition hover:border-gray-300 hover:bg-gray-100"
+                                :class="shopId ? 'border-green-200 bg-green-50' : ''"
+                            >
+                                <div class="flex items-center gap-4">
+                                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                                        <x-bi-geo-alt class="h-5 w-5" />
+                                    </div>
 
-                    <div
-                        @click="$dispatch('open-shop-modal', { showAvailability: false })"
-                        class="flex cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 transition hover:border-gray-300 hover:bg-gray-100"
-                        :class="shopId ? 'border-green-200 bg-green-50' : ''"
-                    >
-                        <div class="flex items-center gap-4">
-                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
-                                <x-bi-geo-alt class="h-5 w-5" />
+                                    @if ($selectedShop)
+                                        <div>
+                                            <p class="font-bold text-gray-900">{{ $selectedShop->name }}</p>
+                                            <p class="text-sm text-gray-600">
+                                                {{ $selectedShop->address }} - {{ $selectedShop->postalCode }} {{ $selectedShop->city }}
+                                            </p>
+                                        </div>
+                                    @else
+                                        <div>
+                                            <p class="font-medium text-gray-500">Choisir un magasin</p>
+                                            <p class="text-sm text-gray-400">Cliquez pour voir la carte</p>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                @if ($selectedShop)
+                                    <span class="text-sm font-medium text-green-600">✓ Sélectionné</span>
+                                @endif
                             </div>
 
                             @if ($selectedShop)
-                                <div>
-                                    <p class="font-bold text-gray-900">{{ $selectedShop->name }}</p>
-                                    <p class="text-sm text-gray-600">
-                                        {{ $selectedShop->address }} - {{ $selectedShop->postalCode }} {{ $selectedShop->city }}
-                                    </p>
-                                </div>
-                            @else
-                                <div>
-                                    <p class="font-medium text-gray-500">Choisir un magasin</p>
-                                    <p class="text-sm text-gray-400">Cliquez pour voir la carte</p>
-                                </div>
+                                <input type="hidden" name="shop_id" value="{{ $selectedShop->id }}" />
                             @endif
-                        </div>
-
-                        @if ($selectedShop)
-                            <span class="text-sm font-medium text-green-600">✓ Sélectionné</span>
-                        @endif
-                    </div>
-                </section>
+                        </section>
+                    @endif
+                </form>
             </div>
 
             <aside class="flex flex-1 flex-col gap-6">
