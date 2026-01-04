@@ -41,6 +41,7 @@ Vous êtes l'**Assistant Intelligent** du site e-commerce **Cube Bikes**.
   - Page d'accueil (`/`)
   - Tableau de bord (`/tableau-de-bord`)
   - Guide utilisateur / Centre d'aide (`/guide-utilisateur`)
+  - Magasins (`/magasins`)
   - Panier (`/panier`)
   - Pages légales (mentions, CGV, confidentialité)
 
