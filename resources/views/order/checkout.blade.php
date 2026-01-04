@@ -13,6 +13,8 @@
             $savedDeliveryId = $orderData->delivery_address_id ?? $defaultId;
             $savedShippingId = $selectedShippingId ?? "null";
             $sameAddressDefault = $savedBillingId === $savedDeliveryId ? "true" : "false";
+
+            $isClickAndCollect = $savedShippingId == \App\Models\ShippingMode::CLICK_AND_COLLECT;
         @endphp
 
         <div
@@ -143,6 +145,84 @@
                             <x-input-error :messages="$errors->get('shipping_id')" class="mt-2" />
                         </form>
                     </section>
+
+                    @if ($isClickAndCollect)
+                        <section id="shop-section" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                            <h2 class="mb-4 text-xl font-bold text-gray-900">Choisir un revendeur pour la livraison</h2>
+
+                            <div
+                                x-data
+                                @click="$dispatch('open-shop-modal', { showAvailability: false })"
+                                class="flex cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 transition hover:border-gray-300 hover:bg-gray-100"
+                            >
+                                <div class="flex items-center gap-4">
+                                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                                        <x-bi-geo-alt class="h-5 w-5" />
+                                    </div>
+
+                                    @if ($selectedShop)
+                                        <div>
+                                            <p class="font-bold text-gray-900">
+                                                {{ $selectedShop->name }}
+                                            </p>
+                                            <p class="text-sm text-gray-600">
+                                                {{ $selectedShop->address }}
+                                            </p>
+                                            <p class="text-sm text-gray-600">
+                                                {{ $selectedShop->postalCode }}
+                                                {{ $selectedShop->city }}
+                                            </p>
+                                        </div>
+                                    @else
+                                        <div>
+                                            <p class="font-medium text-gray-500">Aucun magasin sélectionné</p>
+                                            <p class="text-sm text-gray-400">Cliquez pour choisir un point de retrait</p>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <div class="flex items-center gap-3">
+                                    @if ($selectedShop)
+                                        <span class="text-sm font-medium text-green-600">✓ Sélectionné</span>
+                                    @endif
+
+                                    {{-- <svg --}}
+                                    {{-- class="h-5 w-5 text-gray-400" --}}
+                                    {{-- fill="none" --}}
+                                    {{-- stroke="currentColor" --}}
+                                    {{-- viewBox="0 0 24 24" --}}
+                                    {{-- > --}}
+                                    {{-- <path --}}
+                                    {{-- stroke-linecap="round" --}}
+                                    {{-- stroke-linejoin="round" --}}
+                                    {{-- stroke-width="2" --}}
+                                    {{-- d="M9 5l7 7-7 7" --}}
+                                    {{-- /> --}}
+                                    {{-- </svg> --}}
+                                </div>
+                            </div>
+
+                            {{-- @if ($selectedShop) --}}
+                            {{-- <p class="mt-3 text-sm text-gray-500"> --}}
+                            {{-- <span class="font-medium">Note :</span> --}}
+                            {{-- La livraison sera effectuée à ce magasin. --}}
+
+                            {{-- <button --}}
+                            {{-- type="button" --}}
+                            {{-- onclick="fetch('{{ route('shops.clear') }}', { --}}
+                            {{-- method: 'POST', --}}
+                            {{-- headers: { --}}
+                            {{-- 'X-CSRF-TOKEN': '{{ csrf_token() }}' --}}
+                            {{-- } --}}
+                            {{-- }).then(() => location.reload())" --}}
+                            {{-- class="ml-2 text-red-600 underline hover:text-red-800" --}}
+                            {{-- > --}}
+                            {{-- Supprimer ce choix --}}
+                            {{-- </button> --}}
+                            {{-- </p> --}}
+                            {{-- @endif --}}
+                        </section>
+                    @endif
                 </div>
 
                 <aside class="flex flex-1 flex-col gap-6">

@@ -33,7 +33,8 @@ class ShopController extends Controller
             'shop_id' => 'required|exists:magasin,id_magasin',
         ]);
 
-        $shop = Shop::with('city')->find($validated['shop_id']);
+        $shop = Shop::with('city')
+            ->find($validated['shop_id']);
 
         session(['selected_shop' => [
             'id' => $shop->id_magasin,
@@ -43,10 +44,7 @@ class ShopController extends Controller
 
         return response()->json([
             'success' => true,
-            'shop' => [
-                'id' => $shop->id_magasin,
-                'name' => $shop->nom_magasin,
-            ],
+            'shop' => session('selected_shop'),
         ]);
     }
 

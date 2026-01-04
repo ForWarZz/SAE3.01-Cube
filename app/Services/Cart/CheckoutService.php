@@ -3,9 +3,12 @@
 namespace App\Services\Cart;
 
 use App\DTOs\Cart\CheckoutDataDTO;
+use App\DTOs\ShopDTO;
 use App\Models\Client;
 use App\Models\Order;
 use App\Models\PaymentType;
+use App\Models\ShippingMode;
+use App\Models\Shop;
 use DomainException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -42,14 +45,15 @@ class CheckoutService
             $cartData->hasBikes
         );
 
-        return [
+        $viewData = [
             'addresses' => $client->addresses()->with('city')->get(),
             'deliveryModes' => $shippingModes,
             'selectedShippingId' => $checkoutData->shipping_mode?->id,
             'orderData' => $checkoutData,
-
-            ...$cartData->toViewData(),
+            'selectedShop' => $checkoutData->shop,
         ];
+
+        return array_merge($viewData, $cartData->toViewData());
     }
 
     public function getCheckoutData(): CheckoutDataDTO
@@ -59,10 +63,20 @@ class CheckoutService
         $shippingModeId = $sessionData['shipping_mode_id'] ?? null;
         $shippingMode = $shippingModeId ? $this->cartService->findShippingMode($shippingModeId) : null;
 
+        $shopDTO = null;
+        if ($shippingMode && $shippingMode->id === ShippingMode::CLICK_AND_COLLECT && isset($sessionData['selected_shop_id'])) {
+            $shop = Shop::find($sessionData['selected_shop_id'])->load('city');
+
+            if ($shop) {
+                $shopDTO = ShopDTO::fromModel($shop);
+            }
+        }
+
         return new CheckoutDataDTO(
             billing_address_id: $sessionData['billing_address_id'] ?? null,
             delivery_address_id: $sessionData['delivery_address_id'] ?? null,
             shipping_mode: $shippingMode,
+            shop: $shopDTO,
         );
     }
 
@@ -84,6 +98,7 @@ class CheckoutService
                 'id_adresse_facturation' => $checkoutData->billing_address_id,
                 'id_adresse_livraison' => $checkoutData->delivery_address_id,
                 'id_moyen_livraison' => $checkoutData->shipping_mode->id,
+                'id_magasin' => $checkoutData->shop?->id,
                 'num_commande' => $this->generateOrderNumber(),
                 'frais_livraison' => $checkoutData->shipping_mode->price,
                 'date_commande' => now(),
@@ -92,7 +107,6 @@ class CheckoutService
                 'id_type_paiement' => PaymentType::UNKNOWN,
             ]);
 
-            // Ajouter les articles du panier à la commande
             foreach ($cartData->items as $item) {
                 $order->items()->create([
                     'id_reference' => $item->reference->id_reference,
@@ -110,9 +124,15 @@ class CheckoutService
     {
         $checkoutData = $this->getCheckoutData();
 
+        if ($checkoutData->shipping_mode && $checkoutData->shipping_mode->id === ShippingMode::CLICK_AND_COLLECT) {
+            return ! $this->cartService->isEmpty()
+                && $checkoutData->billing_address_id !== null
+                && $checkoutData->delivery_address_id !== null
+                && $checkoutData->shop !== null;
+        }
+
         return ! $this->cartService->isEmpty()
             && $checkoutData->billing_address_id !== null
-            && $checkoutData->delivery_address_id !== null
             && $checkoutData->shipping_mode !== null;
     }
 

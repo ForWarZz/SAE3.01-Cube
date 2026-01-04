@@ -85,11 +85,21 @@ class CartSessionManager
     }
 
     /**
-     * @return array{billing_address_id?: int|null, delivery_address_id?: int|null, shipping_mode_id?: int|null}
+     * @return array{
+     *     billing_address_id?: int|null,
+     *     delivery_address_id?: int|null,
+     *     shipping_mode_id?: int|null,
+     *     selected_shop_id?: int|null
+     * }
      */
     public function getCheckoutData(): array
     {
-        return Session::get(self::CHECKOUT_KEY, []);
+        $selected_shop = Session::get('selected_shop');
+
+        return [
+            ...Session::get(self::CHECKOUT_KEY, []),
+            'selected_shop_id' => $selected_shop ? $selected_shop['id'] : null,
+        ];
     }
 
     public function setCheckoutData(?int $billingAddressId, ?int $deliveryAddressId, ?int $shippingModeId): void
