@@ -30,7 +30,7 @@ class BikeCreateRequest extends FormRequest
             'id_modele_velo' => ['nullable', 'required_if:model_choice,existing', 'integer'],
 
             'nom_article' => ['required', 'string', 'max:255'],
-            'resumer_article' => ['required', 'string', 'max:255'],
+            'resumer_article' => ['required', 'string'],
             'description_article' => ['required', 'string'],
             'prix_article' => ['required', 'numeric', 'min:0'],
             'pourcentage_remise' => ['nullable', 'integer', 'min:0', 'max:100'],
@@ -66,7 +66,6 @@ class BikeCreateRequest extends FormRequest
 
             'resumer_article.required' => "Le résumé de l'article est obligatoire.",
             'resumer_article.string' => 'Le résumé doit être une chaîne de caractères.',
-            'resumer_article.max' => 'Le résumé ne peut pas dépasser 255 caractères.',
 
             'description_article.required' => 'La description de l’article est obligatoire.',
             'description_article.string' => 'La description doit être une chaîne de caractères.',
