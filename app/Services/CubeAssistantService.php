@@ -170,9 +170,9 @@ class CubeAssistantService
         return $article->characteristics
             ->map(fn (Characteristic $charac) => [
                 'type' => $charac->characteristicType->nom_type_carac,
+                'name' => $charac->nom_caracteristique,
                 'value' => $charac->pivot->valeur_caracteristique,
             ])
-            ->collapse()
             ->toArray();
     }
 
