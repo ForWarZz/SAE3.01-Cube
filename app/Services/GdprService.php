@@ -141,8 +141,8 @@ class GdprService
             ->get();
 
         foreach ($orders as $order) {
-            \DB::delete('DELETE FROM evolue WHERE id_commande = ?', [$order->id_commande]);
-            \DB::delete('DELETE FROM ligne_commande WHERE id_commande = ?', [$order->id_commande]);
+            $order->items()->delete();
+            $order->states()->delete();
             $order->delete();
         }
 
@@ -162,7 +162,7 @@ class GdprService
             return 'Compte anonymisé. Les commandes de plus de 10 ans ont été purgées. Les récentes sont conservées (conservation légale pour comptabilité).';
         }
 
-        $client->delete();
+        $client->forceDelete();
 
         return 'Compte supprimé définitivement (aucune donnée récente à conserver).';
     }
@@ -405,8 +405,10 @@ class GdprService
         $orderCount = $orders->count();
 
         foreach ($orders as $order) {
-            \DB::delete('DELETE FROM evolue WHERE id_commande = ?', [$order->id_commande]);
-            \DB::delete('DELETE FROM ligne_commande WHERE id_commande = ?', [$order->id_commande]);
+            //            \DB::delete('DELETE FROM evolue WHERE id_commande = ?', [$order->id_commande]);
+            //            \DB::delete('DELETE FROM ligne_commande WHERE id_commande = ?', [$order->id_commande]);
+            $order->states()->delete();
+            $order->items()->delete();
             $order->delete();
         }
 
