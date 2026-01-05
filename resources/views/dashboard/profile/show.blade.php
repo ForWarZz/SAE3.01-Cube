@@ -119,129 +119,146 @@
                 </div>
             @endif
 
-            <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    <div class="mb-4 flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900">Authentification à deux facteurs</h3>
-                            <p class="mt-1 text-sm text-gray-600">
-                                Ajoutez une couche de sécurité supplémentaire à votre compte avec l'authentification à deux facteurs.
-                            </p>
-                        </div>
-                        <div>
-                            @if ($client->two_factor_confirmed_at)
-                                <span
-                                    class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800"
-                                >
-                                    <svg class="mr-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            fill-rule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                            clip-rule="evenodd"
-                                        />
-                                    </svg>
-                                    Activé
-                                </span>
-                            @else
-                                <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-800">
-                                    Désactivé
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-
-                    @if (! $client->two_factor_confirmed_at)
-                        <div id="enable-2fa-section">
-                            <p class="mb-4 text-sm text-gray-600">
-                                Pour activer l'authentification à deux facteurs, scannez le code QR ci-dessous avec votre application
-                                d'authentification (Google Authenticator, Authy, Microsoft Authenticator, etc.).
-                            </p>
-                            <x-button onclick="enable2FA()">Activer la double authentification</x-button>
+            @if (! $client->google_id)
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                    <div class="p-6">
+                        <div class="mb-4 flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Authentification à deux facteurs</h3>
+                                <p class="mt-1 text-sm text-gray-600">
+                                    Ajoutez une couche de sécurité supplémentaire à votre compte avec l'authentification à deux facteurs.
+                                </p>
+                            </div>
+                            <div>
+                                @if ($client->two_factor_confirmed_at)
+                                    <span
+                                        class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800"
+                                    >
+                                        <svg class="mr-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                clip-rule="evenodd"
+                                            />
+                                        </svg>
+                                        Activé
+                                    </span>
+                                @else
+                                    <span
+                                        class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-800"
+                                    >
+                                        Désactivé
+                                    </span>
+                                @endif
+                            </div>
                         </div>
 
-                        <div id="qr-code-section" class="hidden">
-                            <div class="mb-4 rounded-lg bg-gray-50 p-4">
-                                <h4 class="mb-3 text-sm font-medium text-gray-900">Étape 1 : Scannez le code QR</h4>
-                                <div id="qr-code" class="mb-4 flex justify-center"></div>
-                                <div class="text-center">
-                                    <p class="mb-2 text-xs text-gray-600">Ou entrez cette clé manuellement :</p>
-                                    <code id="secret-key" class="rounded bg-gray-200 px-3 py-1 text-sm"></code>
+                        @if (! $client->two_factor_confirmed_at)
+                            <div id="enable-2fa-section">
+                                <p class="mb-4 text-sm text-gray-600">
+                                    Pour activer l'authentification à deux facteurs, scannez le code QR ci-dessous avec votre application
+                                    d'authentification (Google Authenticator, Authy, Microsoft Authenticator, etc.).
+                                </p>
+                                <x-button onclick="enable2FA()">Activer la double authentification</x-button>
+                            </div>
+
+                            <div id="qr-code-section" class="hidden">
+                                <div class="mb-4 rounded-lg bg-gray-50 p-4">
+                                    <h4 class="mb-3 text-sm font-medium text-gray-900">Étape 1 : Scannez le code QR</h4>
+                                    <div id="qr-code" class="mb-4 flex justify-center"></div>
+                                    <div class="text-center">
+                                        <p class="mb-2 text-xs text-gray-600">Ou entrez cette clé manuellement :</p>
+                                        <code id="secret-key" class="rounded bg-gray-200 px-3 py-1 text-sm"></code>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 rounded-lg bg-gray-50 p-4">
+                                    <h4 class="mb-3 text-sm font-medium text-gray-900">Étape 2 : Vérifiez le code</h4>
+                                    <form onsubmit="confirm2FA(event)">
+                                        <div class="flex space-x-2">
+                                            <input
+                                                type="text"
+                                                id="verification-code"
+                                                maxlength="6"
+                                                pattern="[0-9]{6}"
+                                                required
+                                                placeholder="000000"
+                                                class="flex-1 rounded-md border-gray-300 text-center text-lg tracking-widest shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                            />
+                                            <x-button type="submit">Vérifier</x-button>
+                                        </div>
+                                        <p id="verification-error" class="mt-2 hidden text-sm text-red-600"></p>
+                                    </form>
                                 </div>
                             </div>
 
-                            <div class="mb-4 rounded-lg bg-gray-50 p-4">
-                                <h4 class="mb-3 text-sm font-medium text-gray-900">Étape 2 : Vérifiez le code</h4>
-                                <form onsubmit="confirm2FA(event)">
-                                    <div class="flex space-x-2">
-                                        <input
-                                            type="text"
-                                            id="verification-code"
-                                            maxlength="6"
-                                            pattern="[0-9]{6}"
-                                            required
-                                            placeholder="000000"
-                                            class="flex-1 rounded-md border-gray-300 text-center text-lg tracking-widest shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                        />
-                                        <x-button type="submit">Vérifier</x-button>
-                                    </div>
-                                    <p id="verification-error" class="mt-2 hidden text-sm text-red-600"></p>
-                                </form>
+                            <div id="recovery-codes-section" class="hidden">
+                                <div class="mb-4 rounded-lg border border-yellow-200 bg-yellow-50 p-4">
+                                    <h4 class="mb-2 text-sm font-medium text-yellow-900">
+                                        <svg class="mr-1 inline h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                fill-rule="evenodd"
+                                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                                clip-rule="evenodd"
+                                            />
+                                        </svg>
+                                        Codes de récupération
+                                    </h4>
+                                    <p class="mb-3 text-sm text-yellow-800">
+                                        Conservez ces codes de récupération dans un endroit sûr. Ils vous permettront d'accéder à votre
+                                        compte si vous perdez votre appareil.
+                                    </p>
+                                    <div id="recovery-codes-list" class="mb-3 grid grid-cols-2 gap-2 rounded bg-white p-3"></div>
+                                    <x-button onclick="document.location.reload()">J'ai sauvegardé mes codes</x-button>
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="space-y-4">
+                                <div class="rounded-lg border border-green-200 bg-green-50 p-4">
+                                    <p class="text-sm text-green-800">
+                                        L'authentification à deux facteurs est activée depuis le
+                                        <x-date-local :date="$client->two_factor_confirmed_at" />
+                                        .
+                                    </p>
+                                </div>
 
-                        <div id="recovery-codes-section" class="hidden">
-                            <div class="mb-4 rounded-lg border border-yellow-200 bg-yellow-50 p-4">
-                                <h4 class="mb-2 text-sm font-medium text-yellow-900">
-                                    <svg class="mr-1 inline h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            fill-rule="evenodd"
-                                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                                            clip-rule="evenodd"
-                                        />
-                                    </svg>
-                                    Codes de récupération
-                                </h4>
-                                <p class="mb-3 text-sm text-yellow-800">
-                                    Conservez ces codes de récupération dans un endroit sûr. Ils vous permettront d'accéder à votre compte
-                                    si vous perdez votre appareil.
-                                </p>
-                                <div id="recovery-codes-list" class="mb-3 grid grid-cols-2 gap-2 rounded bg-white p-3"></div>
-                                <x-button onclick="document.location.reload()">J'ai sauvegardé mes codes</x-button>
+                                <div class="flex justify-end space-x-2">
+                                    {{-- <button --}}
+                                    {{-- type="button" --}}
+                                    {{-- onclick="showRecoveryCodes()" --}}
+                                    {{-- class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-blue-700 focus:bg-blue-700" --}}
+                                    {{-- > --}}
+                                    {{-- Voir les codes de récupération --}}
+                                    {{-- </button> --}}
+                                    {{-- <button --}}
+                                    {{-- type="button" --}}
+                                    {{-- onclick="document.getElementById('disable2FAModal').classList.remove('hidden')" --}}
+                                    {{-- class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-red-500 focus:bg-red-700" --}}
+                                    {{-- > --}}
+                                    {{-- Désactiver --}}
+                                    {{-- </button> --}}
+                                    <x-button onclick="document.getElementById('disable2FAModal').classList.remove('hidden')" color="red">
+                                        Désactiver
+                                    </x-button>
+                                </div>
                             </div>
-                        </div>
-                    @else
-                        <div class="space-y-4">
-                            <div class="rounded-lg border border-green-200 bg-green-50 p-4">
-                                <p class="text-sm text-green-800">
-                                    L'authentification à deux facteurs est activée depuis le
-                                    <x-date-local :date="$client->two_factor_confirmed_at" />
-                                    .
-                                </p>
-                            </div>
-
-                            <div class="flex justify-end space-x-2">
-                                {{-- <button --}}
-                                {{-- type="button" --}}
-                                {{-- onclick="showRecoveryCodes()" --}}
-                                {{-- class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-blue-700 focus:bg-blue-700" --}}
-                                {{-- > --}}
-                                {{-- Voir les codes de récupération --}}
-                                {{-- </button> --}}
-                                {{-- <button --}}
-                                {{-- type="button" --}}
-                                {{-- onclick="document.getElementById('disable2FAModal').classList.remove('hidden')" --}}
-                                {{-- class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition hover:bg-red-500 focus:bg-red-700" --}}
-                                {{-- > --}}
-                                {{-- Désactiver --}}
-                                {{-- </button> --}}
-                                <x-button onclick="document.getElementById('disable2FAModal').classList.remove('hidden')" color="red">
-                                    Désactiver
-                                </x-button>
-                            </div>
-                        </div>
-                    @endif
+                        @endif
+                    </div>
                 </div>
-            </div>
+            @else
+                <div class="overflow-hidden border border-blue-200 bg-blue-50 shadow-sm sm:rounded-lg">
+                    <div class="p-6">
+                        <h3 class="mb-2 text-lg font-semibold text-blue-900">Authentification à deux facteurs</h3>
+                        <p class="text-sm text-blue-700">
+                            Vous êtes connecté avec votre compte Google. Veuillez gérer votre sécurité via votre
+                            <a href="https://myaccount.google.com/security" target="_blank" class="underline hover:text-blue-900">
+                                compte Google
+                            </a>
+                            .
+                        </p>
+                    </div>
+                </div>
+            @endif
 
             <div class="overflow-hidden border-2 border-red-200 bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6">
