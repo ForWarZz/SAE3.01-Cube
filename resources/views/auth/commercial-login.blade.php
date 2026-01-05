@@ -6,7 +6,7 @@
                     <h1 class="text-3xl font-bold text-gray-900 uppercase">Cube France</h1>
                 </a>
                 <h2 class="mt-2 text-2xl font-semibold text-gray-800">Connexion</h2>
-                <p class="text-sm text-gray-600">Accédez à votre espace commercial</p>
+                <p class="text-sm text-gray-600">Accédez à votre espace administrateur interne</p>
             </div>
 
             <form method="POST" action="{{ route("staff.login.submit") }}" class="space-y-6">
