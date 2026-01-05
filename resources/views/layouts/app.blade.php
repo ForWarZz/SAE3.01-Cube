@@ -129,33 +129,33 @@
         </script>
 
         <script type="text/javascript">
-            tarteaucitron.init({
-                privacyUrl: '{{ route("privacy-policy") }}',
-                bodyPosition: 'bottom',
-                hashtag: '#tarteaucitron',
-                cookieName: 'tarteaucitron',
-                orientation: 'middle',
-                groupServices: false,
-                showIcon: true,
-                iconPosition: 'BottomLeft',
-                adblocker: false,
-                DenyAllCta: true,
-                AcceptAllCta: true,
-                highPrivacy: true,
-                alwaysNeedConsent: true,
-                handleBrowserDNTRequest: false,
-                removeCredit: false,
-                moreInfoLink: true,
-                useExternalCss: false,
-                useExternalJs: false,
-                readmoreLink: '',
-            });
+                        tarteaucitron.init({
+                            privacyUrl: '{{ route("privacy-policy") }}',
+                            bodyPosition: 'bottom',
+                            hashtag: '#tarteaucitron',
+                            cookieName: 'tarteaucitron',
+                            orientation: 'middle',
+                            groupServices: false,
+                            showIcon: true,
+                            iconPosition: 'BottomLeft',
+                            adblocker: false,
+                            DenyAllCta: true,
+                            AcceptAllCta: true,
+                            highPrivacy: true,
+                            alwaysNeedConsent: true,
+                            handleBrowserDNTRequest: false,
+                            removeCredit: false,
+                            moreInfoLink: true,
+                            useExternalCss: false,
+                            useExternalJs: false,
+                            readmoreLink: '',
+                        });
 
-            tarteaucitron.user.matomoId = {{ config("services.matomo.site_id") }};
-            tarteaucitron.user.matomoHost = '{{ config("services.matomo.host") }}';
+            {{-- tarteaucitron.user.matomoId = {{ config("services.matomo.site_id") }}; --}}
+            {{-- tarteaucitron.user.matomoHost = '{{ config("services.matomo.host") }}'; --}}
 
-            (tarteaucitron.job = tarteaucitron.job || []).push('matomo');
-            (tarteaucitron.job = tarteaucitron.job || []).push('googleplaces');
+                        // (tarteaucitron.job = tarteaucitron.job || []).push('matomo');
+                        (tarteaucitron.job = tarteaucitron.job || []).push('googleplaces');
         </script>
     </body>
 
