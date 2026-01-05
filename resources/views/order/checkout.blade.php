@@ -5,9 +5,8 @@
         </div>
 
         @php
-            $defaultId = $addresses->first()->id_adresse ?? null;
-            $billingId = $orderData->billing_address_id ?? $defaultId;
-            $deliveryId = $orderData->delivery_address_id ?? $defaultId;
+            $billingId = $orderData->billing_address_id ?? null;
+            $deliveryId = $orderData->delivery_address_id ?? null;
             $shippingId = $selectedShippingId ?? null;
             $ccId = \App\Models\ShippingMode::CLICK_AND_COLLECT;
             $shopId = $selectedShop ? $selectedShop->id : null;
@@ -173,7 +172,7 @@
                         size="lg"
                         color="green"
                         class="w-full"
-                        :disabled="$shippingId == null || $deliveryId == null || ($isClickAndCollect && $selectedShop == null)"
+                        :disabled="$shippingId == null || $billingId == null || ($isClickAndCollect && $selectedShop == null) || (! $isClickAndCollect && $deliveryId == null)"
                     >
                         Payer la commande
                     </x-button>
