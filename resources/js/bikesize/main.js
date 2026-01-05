@@ -37,7 +37,7 @@ if (container) {
                 resultDetails.innerText = `Basé sur votre taille (${height}cm). Pour les enfants, la taille globale prime sur l'entrejambe.`;
             } else {
                 const theoreticalFrameSize = Math.round(inseam * 0.66);
-                resultDetails.innerText = `Basé sur votre taille (${height}cm). Votre entrejambe suggère un cadre théorique de ${theoreticalFrameSize}cm (Route/Gravel).`;
+                resultDetails.innerText = `Basé sur votre taille (${height}cm).`;
             }
         } else {
             resultBox.className = 'mt-2 rounded-md border border-orange-600 bg-white p-4 shadow-sm';
