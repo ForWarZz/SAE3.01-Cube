@@ -57,11 +57,11 @@ class CartService
         $this->session->clearDiscountCode();
     }
 
-    public function findShippingMode(int $id): ?ShippingModeDTO
+    public function findShippingMode(?int $id): ?ShippingModeDTO
     {
         $modes = $this->getAvailableShippingModes();
 
-        return $modes->first(fn (ShippingModeDTO $mode) => $mode->id === $id);
+        return $modes->first(fn (ShippingModeDTO $mode) => $mode->id === $id) ?? $modes->first();
     }
 
     /**

@@ -60,11 +60,7 @@ class CheckoutService
     {
         $sessionData = $this->session->getCheckoutData();
 
-        $shippingMode = null;
-        if (! empty($sessionData['shipping_mode_id'])) {
-            $shippingMode = $this->cartService->findShippingMode($sessionData['shipping_mode_id']);
-        }
-
+        $shippingMode = $this->cartService->findShippingMode($sessionData['shipping_mode_id'] ?? null);
         $isClickAndCollect = $shippingMode?->id === ShippingMode::CLICK_AND_COLLECT;
 
         $shopDTO = null;

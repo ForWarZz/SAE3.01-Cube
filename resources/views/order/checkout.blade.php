@@ -8,9 +8,9 @@
             $defaultId = $addresses->first()->id_adresse ?? null;
             $billingId = $orderData->billing_address_id ?? $defaultId;
             $deliveryId = $orderData->delivery_address_id ?? $defaultId;
-            $shippingId = $selectedShippingId ?? ($deliveryModes->first()->id ?? null);
+            $shippingId = $selectedShippingId ?? null;
             $ccId = \App\Models\ShippingMode::CLICK_AND_COLLECT;
-            $shopId = $selectedShop ? $selectedShop->id : "null";
+            $shopId = $selectedShop ? $selectedShop->id : null;
 
             $isClickAndCollect = $shippingId == $ccId;
         @endphp
@@ -128,8 +128,7 @@
                             <div
                                 x-data
                                 @click="$dispatch('open-shop-modal', { showAvailability: false })"
-                                class="flex cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 transition hover:border-gray-300 hover:bg-gray-100"
-                                :class="shopId ? 'border-green-200 bg-green-50' : ''"
+                                class="{{ $shopId ? "border-green-200 bg-green-50" : "" }} flex cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 transition hover:border-gray-300 hover:bg-gray-100"
                             >
                                 <div class="flex items-center gap-4">
                                     <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
