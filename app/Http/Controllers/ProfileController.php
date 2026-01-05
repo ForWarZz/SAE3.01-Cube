@@ -92,12 +92,6 @@ class ProfileController extends Controller
             'orders.paymentType',
         ]);
 
-        $data = $gdprService->exportClientData($client);
-
-        $filename = 'mes-donnees-personnelles-'.now()->format('Y-m-d').'.json';
-
-        return response()->json($data, 200, [
-            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
-        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        return $gdprService->generatePdfExport($client);
     }
 }

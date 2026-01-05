@@ -7,6 +7,8 @@ use App\Models\Client;
 use App\Models\Order;
 use App\Models\OrderLine;
 use App\Services\Commercial\AddressService;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Response;
 
 class GdprService
 {
@@ -311,7 +313,7 @@ class GdprService
     /**
      * @return array<string, mixed>
      */
-    public function exportClientData(Client $client): array
+    private function exportClientData(Client $client): array
     {
         return [
             'client' => [
@@ -364,6 +366,20 @@ class GdprService
             })->toArray(),
             'export_date' => now()->format('Y-m-d H:i:s'),
         ];
+    }
+
+    public function generatePdfExport(Client $client): Response
+    {
+        $data = $this->exportClientData($client);
+        $pdf = Pdf::loadView('pdf.export_gdpr', compact('data'))
+            ->setPaper('a4')
+            ->setOption([
+                'defaultFont' => 'sans-serif',
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+            ]);
+
+        return $pdf->download('export_rgpd_'.$client->id_client.'.pdf');
     }
 
     public function anonymizeClientsBeforeDate($beforeDate): int
