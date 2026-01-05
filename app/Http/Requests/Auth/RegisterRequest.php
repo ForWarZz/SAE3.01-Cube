@@ -66,6 +66,7 @@ class RegisterRequest extends FormRequest
             'password.required' => 'Le mot de passe est obligatoire.',
             'password.string' => 'Le mot de passe doit être une chaîne de caractères.',
             'password.min' => 'Le mot de passe doit contenir au moins 12 caractères.',
+            'password.confirmed' => 'Les mots de passe ne correspondent pas.',
 
             'privacy_policy.required' => 'Vous devez accepter la politique de confidentialité pour continuer.',
             'privacy_policy.accepted' => 'Vous devez accepter la politique de confidentialité pour créer un compte.',
