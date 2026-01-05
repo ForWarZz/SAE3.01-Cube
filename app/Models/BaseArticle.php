@@ -91,20 +91,32 @@ class BaseArticle extends Model
 
     public function getCoverUrl($referenceId = null): string
     {
+        $pathsToTry = [];
+
         if ($referenceId) {
-            return Storage::url("articles/$this->id_article/$referenceId/1.jpg");
+            $pathsToTry[] = "articles/{$this->id_article}/{$referenceId}";
         }
 
         if ($this->relationLoaded('bike') && $this->bike && $this->bike->references->isNotEmpty()) {
             $refId = $this->bike->references->first()->id_reference;
-
-            return Storage::url("articles/$this->id_article/$refId/1.jpg");
+            $pathsToTry[] = "articles/{$this->id_article}/{$refId}";
         }
 
-        if ($this->accessory) {
-            return Storage::url("articles/$this->id_article/{$this->accessory->id_reference}/1.jpg");
+        if ($this->relationLoaded('accessory') && $this->accessory) {
+            $pathsToTry[] = "articles/{$this->id_article}/{$this->accessory->id_reference}";
         }
 
-        return Storage::url("articles/$this->id_article/default/1.jpg");
+        foreach ($pathsToTry as $basePath) {
+            $files = Storage::files($basePath);
+
+            $cover = collect($files)
+                ->first(fn ($file) => preg_match('/\/1\.(jpg|jpeg|png|webp)$/i', $file));
+
+            if ($cover) {
+                return Storage::url($cover);
+            }
+        }
+
+        return Storage::url("articles/{$this->id_article}/default/1.jpg");
     }
 }
