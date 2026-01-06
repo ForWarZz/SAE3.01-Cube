@@ -52,57 +52,52 @@
 #     create_reference_thumbnails()
 #     print("Done.")
 
+
 import os
 from pathlib import Path
 from PIL import Image
 
 BASE_DIR = Path("storage/app/public/articles")
-THUMB_SIZE = 400  # taille max (largeur ou hauteur)
-THUMB_NAME = "thumbnail.webp"
+WEBP_QUALITY = 75
+IMAGE_EXTS = {".jpg", ".jpeg", ".png"}
 
 
-def create_thumbnails():
-    for article_dir in BASE_DIR.iterdir():
-        if not article_dir.is_dir():
-            continue
+def convert_to_webp():
+    for root, _, files in os.walk(BASE_DIR):
+        for filename in files:
+            src = Path(root) / filename
 
-        first_image = None
-
-        # On cherche la première image dispo dans les sous-dossiers (couleurs)
-        for color_dir in article_dir.iterdir():
-            if not color_dir.is_dir():
+            if src.suffix.lower() not in IMAGE_EXTS:
                 continue
 
-            for img in sorted(color_dir.iterdir()):
-                if img.suffix.lower() == ".webp":
-                    first_image = img
-                    break
+            dst = src.with_suffix(".webp")
 
-            if first_image:
-                break
+            try:
+                with Image.open(src) as img:
+                    # Normalisation des modes
+                    if img.mode in ("RGBA", "P"):
+                        img = img.convert("RGBA")
+                        lossless = True
+                    else:
+                        img = img.convert("RGB")
+                        lossless = False
 
-        if not first_image:
-            continue
+                    img.save(
+                        dst,
+                        format="WEBP",
+                        quality=WEBP_QUALITY,
+                        lossless=lossless,
+                        method=6,
+                        optimize=True,
+                    )
 
-        thumb_path = article_dir / THUMB_NAME
+                src.unlink()  # supprime l’original
+                print(f"✔ Converted: {src} → {dst}")
 
-        try:
-            with Image.open(first_image) as img:
-                img.thumbnail((THUMB_SIZE, THUMB_SIZE), Image.LANCZOS)
-
-                img.save(
-                    thumb_path,
-                    format="WEBP",
-                    quality=75,
-                    method=6,
-                )
-
-            print(f"✔ Thumbnail created: {thumb_path}")
-
-        except Exception as e:
-            print(f"✖ Error creating thumbnail for {article_dir.name}: {e}")
+            except Exception as e:
+                print(f"✖ Error converting {src}: {e}")
 
 
 if __name__ == "__main__":
-    create_thumbnails()
+    convert_to_webp()
     print("Done.")
