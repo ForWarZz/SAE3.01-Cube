@@ -67,7 +67,7 @@
                             "page_url" => urlencode(request()->url()),
                         ])
                     !!}',
-                iframeEndpoint: '{{ route("botman.iframe") }}',
+                frameEndpoint: '{{ route("botman.iframe") }}',
                 title: 'Assistant Cube',
                 mainColor: '#111827',
                 bubbleBackground: '#2563EB',
