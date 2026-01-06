@@ -30,10 +30,6 @@
         <meta name="csrf-token" content="{{ csrf_token() }}" />
         <meta name="current-route" content="{{ Route::currentRouteName() }}" />
 
-        <!-- Leaflet CSS & JS -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-
         <title>{{ config("app.name", "Laravel") }}</title>
 
         <!-- Fonts -->

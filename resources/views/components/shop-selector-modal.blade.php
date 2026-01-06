@@ -208,6 +208,7 @@
 <script>
     function shopSelector() {
         const selectedShop = @json(session("selected_shop"));
+        const L = window.L;
 
         return {
             isOpen: false,
