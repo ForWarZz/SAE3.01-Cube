@@ -83,75 +83,64 @@
             };
         </script>
 
-        <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
-
-        <script src="{{ asset("tarteaucitron/tarteaucitron.min.js") }}"></script>
-
-        <script type="text/javascript">
-            tarteaucitron.services.googleplaces = {
-                key: 'googleplaces',
-                type: 'api',
-                name: 'Google Places (Autocomplétion)',
-                uri: 'https://policies.google.com/privacy',
-                needConsent: true,
-                cookies: [],
-                js: function () {
-                    const googleAlert = document.querySelector('#google-cookie-alert');
-
-                    if (!googleAlert) {
-                        return;
-                    }
-
-                    tarteaucitron.addScript(
-                        'https://maps.googleapis.com/maps/api/js?key={{ config("services.google.places_api_key") }}&libraries=places&callback=initAutocomplete',
-                    );
-                },
-                fallback: function () {
-                    const googleAlert = document.querySelector('#google-cookie-alert');
-
-                    if (!googleAlert) {
-                        return;
-                    }
-
-                    googleAlert.classList.remove('hidden');
-
-                    const acInput = document.getElementById('address_autocomplete');
-                    acInput.disabled = true;
-                    acInput.classList.add('bg-gray-100', 'cursor-not-allowed');
-                    acInput.placeholder = 'Service désactivé (cookies refusés)';
-                    acInput.value = '';
-                },
-            };
-        </script>
+        <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js" defer></script>
+        <script src="{{ asset("tarteaucitron/tarteaucitron.min.js") }}" defer></script>
 
         <script type="text/javascript">
-                        tarteaucitron.init({
-                            privacyUrl: '{{ route("privacy-policy") }}',
-                            bodyPosition: 'bottom',
-                            hashtag: '#tarteaucitron',
-                            cookieName: 'tarteaucitron',
-                            orientation: 'middle',
-                            groupServices: false,
-                            showIcon: true,
-                            iconPosition: 'BottomLeft',
-                            adblocker: false,
-                            DenyAllCta: true,
-                            AcceptAllCta: true,
-                            highPrivacy: true,
-                            alwaysNeedConsent: true,
-                            handleBrowserDNTRequest: false,
-                            removeCredit: false,
-                            moreInfoLink: true,
-                            useExternalCss: false,
-                            useExternalJs: false,
-                            readmoreLink: '',
-                        });
+            document.addEventListener('DOMContentLoaded', function () {
+                tarteaucitron.services.googleplaces = {
+                    key: 'googleplaces',
+                    type: 'api',
+                    name: 'Google Places (Autocomplétion)',
+                    uri: 'https://policies.google.com/privacy',
+                    needConsent: true,
+                    cookies: [],
+                    js: function () {
+                        const googleAlert = document.querySelector('#google-cookie-alert');
+                        if (!googleAlert) return;
 
-            {{-- tarteaucitron.user.matomoId = {{ config("services.matomo.site_id") }}; --}}
-            {{-- tarteaucitron.user.matomoHost = '{{ config("services.matomo.host") }}'; --}}
+                        tarteaucitron.addScript(
+                            'https://maps.googleapis.com/maps/api/js?key={{ config("services.google.places_api_key") }}&libraries=places&callback=initAutocomplete',
+                        );
+                    },
+                    fallback: function () {
+                        const googleAlert = document.querySelector('#google-cookie-alert');
+                        if (!googleAlert) return;
 
-                        // (tarteaucitron.job = tarteaucitron.job || []).push('matomo');
-                        (tarteaucitron.job = tarteaucitron.job || []).push('googleplaces');
+                        googleAlert.classList.remove('hidden');
+                        const acInput = document.getElementById('address_autocomplete');
+                        acInput.disabled = true;
+                        acInput.classList.add('bg-gray-100', 'cursor-not-allowed');
+                        acInput.placeholder = 'Service désactivé (cookies refusés)';
+                        acInput.value = '';
+                    },
+                };
+
+                tarteaucitron.init({
+                    privacyUrl: '{{ route("privacy-policy") }}',
+                    bodyPosition: 'bottom',
+                    hashtag: '#tarteaucitron',
+                    cookieName: 'tarteaucitron',
+                    orientation: 'middle',
+                    groupServices: false,
+                    showIcon: true,
+                    iconPosition: 'BottomLeft',
+                    adblocker: false,
+                    DenyAllCta: true,
+                    AcceptAllCta: true,
+                    highPrivacy: true,
+                    alwaysNeedConsent: true,
+                    handleBrowserDNTRequest: false,
+                    removeCredit: false,
+                    moreInfoLink: true,
+                    useExternalCss: false,
+                    useExternalJs: false,
+                    readmoreLink: '',
+                });
+
+                // (tarteaucitron.job = tarteaucitron.job || []).push('matomo');
+                (tarteaucitron.job = tarteaucitron.job || []).push('googleplaces');
+            });
         </script>
     </body>
 

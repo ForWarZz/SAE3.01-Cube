@@ -24,6 +24,8 @@
                 alt="{{ $article->nom_article }}"
                 class="object-contain transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"
+                width="245"
+                height="145"
             />
         </div>
 
