@@ -94,20 +94,31 @@ class BaseArticle extends Model
         $pathsToTry = [];
 
         if ($referenceId) {
-            $pathsToTry[] = "articles/{$this->id_article}/{$referenceId}";
+            $pathsToTry[] = "articles/{$this->id_article}/{$referenceId}/thumbnail.webp";
         }
 
         if ($this->relationLoaded('bike') && $this->bike && $this->bike->references->isNotEmpty()) {
             $refId = $this->bike->references->first()->id_reference;
-            $pathsToTry[] = "articles/{$this->id_article}/{$refId}";
+            $pathsToTry[] = "articles/{$this->id_article}/{$refId}/thumbnail.webp";
         }
 
         if ($this->relationLoaded('accessory') && $this->accessory) {
-            $pathsToTry[] = "articles/{$this->id_article}/{$this->accessory->id_reference}";
+            $pathsToTry[] = "articles/{$this->id_article}/{$this->accessory->id_reference}/thumbnail.webp";
+        }
+
+        foreach ($pathsToTry as $path) {
+            if (Storage::exists($path)) {
+                return Storage::url($path);
+            }
         }
 
         foreach ($pathsToTry as $basePath) {
-            $files = Storage::files($basePath);
+            $dir = dirname($basePath);
+            if (!Storage::exists($dir)) {
+                continue;
+            }
+
+            $files = Storage::files($dir);
 
             $cover = collect($files)
                 ->first(fn ($file) => preg_match('/\/1\.(jpg|jpeg|png|webp)$/i', $file));
