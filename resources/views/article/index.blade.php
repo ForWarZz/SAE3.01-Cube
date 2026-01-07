@@ -46,13 +46,8 @@
                     </div>
                 @else
                     <div class="py-16 text-center">
-                        <p class="mb-4 text-lg text-gray-600">Aucun article ne correspond à votre recherche</p>
-                        <a
-                            href="{{ route("home") }}"
-                            class="inline-block rounded-lg bg-blue-600 px-6 py-2 text-white transition-colors hover:bg-blue-700"
-                        >
-                            Retour à l'accueil
-                        </a>
+                        <p class="mb-4 text-lg text-gray-600">Aucun article ne correspond à vos critères de recherche</p>
+                        <x-button href="{{ url()->current() }}" icon="heroicon-o-arrow-left">Réinitialiser les filtres</x-button>
                     </div>
                 @endif
             </div>
