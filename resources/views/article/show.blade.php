@@ -29,6 +29,21 @@
     </script>
 @endif
 
+<div
+    x-data="{ show: false }"
+    @scroll.window="show = (window.pageYOffset > 600)"
+    x-show="show"
+    x-transition.slide.up
+    class="fixed bottom-0 left-0 z-50 w-full border-t border-gray-800 bg-gray-50 p-4 lg:hidden"
+>
+    <div class="mx-auto flex max-w-7xl items-center justify-between">
+        <div class="text-xl font-bold">{{ number_format($discountedPrice, 2) }} €</div>
+        <x-button @click="document.querySelector('#article-purchase-box').scrollIntoView({behavior: 'smooth'})" size="lg">
+            Commander
+        </x-button>
+    </div>
+</div>
+
 <x-app-layout :reference="$currentReference">
     <div class="px-36 py-12">
         <x-breadcrumb :breadcrumbs="$breadcrumbs" />

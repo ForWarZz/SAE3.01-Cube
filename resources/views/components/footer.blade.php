@@ -1,5 +1,5 @@
 <footer class="border-t border-gray-200 bg-gray-50 text-gray-700">
-    <div class="flex flex-row justify-center gap-64 px-6 py-8">
+    <div class="flex flex-row items-center justify-center gap-24 py-8">
         <p class="text-sm text-gray-500">© {{ date("Y") }} Cube. Tous droits réservés.</p>
 
         <nav class="flex flex-wrap items-center gap-4 text-sm font-medium text-gray-600">

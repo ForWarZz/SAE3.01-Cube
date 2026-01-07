@@ -4,7 +4,7 @@
     "icon" => null,
 ])
 
-<div class="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+<div class="faq-item overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
     <button
         @click="active = (active === {{ $task }} ? null : {{ $task }})"
         class="flex w-full items-center justify-between p-5 text-left transition hover:bg-gray-50"

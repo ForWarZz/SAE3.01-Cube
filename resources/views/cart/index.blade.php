@@ -33,7 +33,14 @@
                 <x-cart-summary :summary-data="$summaryData" :count="$count" :discountData="$discountData" />
 
                 <section id="discount-code-section" class="flex flex-col gap-6">
-                    <h2 class="text-2xl font-semibold text-gray-900">Code promo</h2>
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-2xl font-semibold text-gray-900">Code promo</h2>
+                        <x-info-tooltip
+                            text="Les codes promo peuvent être obtenus via nos newsletters ou promotions spéciales. Appliquez-en un avant de finaliser votre commande pour bénéficier d'une réduction."
+                            width="w-64"
+                            color="text-gray-400"
+                        />
+                    </div>
 
                     @if ($errors->has("discount_code"))
                         <div class="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">

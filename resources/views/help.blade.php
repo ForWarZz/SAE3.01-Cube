@@ -9,8 +9,22 @@
                 </p>
             </div>
 
+            <div class="mx-auto mt-8 max-w-2xl">
+                <div class="relative">
+                    <x-heroicon-o-magnifying-glass class="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                    <input
+                        type="text"
+                        id="faqSearch"
+                        placeholder="Rechercher dans la FAQ... (ex: code promo, taille, paiement)"
+                        class="w-full rounded-xl border-2 border-gray-200 py-3 pr-4 pl-12 transition outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                        onkeyup="filterFAQ()"
+                    />
+                </div>
+                <p class="mt-2 text-center text-xs text-gray-500">Tapez un mot-clé pour filtrer instantanément les questions</p>
+            </div>
+
             <div class="mt-12 space-y-10" x-data="{ active: null }">
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Navigation</h3>
                     <div class="space-y-2">
                         <x-faq-item task="1" title="Comment chercher un vélo ?" icon="heroicon-o-magnifying-glass">
@@ -115,7 +129,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Produits</h3>
                     <div class="space-y-2">
                         <x-faq-item task="6" title="Comment choisir ma taille de vélo ?" icon="heroicon-o-adjustments-horizontal">
@@ -221,7 +235,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Commande</h3>
                     <div class="space-y-2">
                         <x-faq-item task="11" title="Comment passer une commande ?" icon="heroicon-o-shopping-bag">
@@ -322,7 +336,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Outils</h3>
                     <div class="space-y-2">
                         <x-faq-item task="16" title="Comment accéder à l'assistant IA ?" icon="heroicon-o-chat-bubble-left-right">
@@ -393,7 +407,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Compte</h3>
                     <div class="space-y-2">
                         <x-faq-item task="18" title="Comment créer un compte ?" icon="heroicon-o-user-plus">
@@ -535,7 +549,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Sécurité</h3>
                     <div class="space-y-2">
                         <x-faq-item
@@ -636,7 +650,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Technique</h3>
                     <div class="space-y-2">
                         <x-faq-item task="28" title="Quelle différence entre HPC et HPA ?" icon="heroicon-o-cube">
@@ -725,7 +739,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Support</h3>
                     <div class="space-y-2">
                         <x-faq-item task="34" title="Le site semble lent, que faire ?" icon="heroicon-o-arrow-path">
@@ -774,6 +788,54 @@
                         </x-faq-item>
                     </div>
                 </div>
+
+                <div class="faq-category">
+                    <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Entretien & Vie à bord</h3>
+                    <div class="space-y-2">
+                        <x-faq-item task="50" title="Quand faire la première révision ?" icon="heroicon-o-wrench">
+                            <p class="mb-2">Comme une voiture neuve, un vélo se "rôde".</p>
+                            <p class="text-sm">
+                                Nous conseillons une visite de contrôle
+                                <strong>après 3 mois ou 300 km</strong>
+                                . Les câbles se détendent légèrement et la visserie peut bouger. Vous pouvez effectuer cette révision dans
+                                n'importe quel magasin Cube ou atelier agréé.
+                            </p>
+                        </x-faq-item>
+
+                        <x-faq-item task="51" title="Comment sécuriser mon vélo en ville ?" icon="heroicon-o-lock-closed">
+                            <p class="mb-2">La règle d'or pour le stationnement urbain :</p>
+                            <ol class="ml-4 space-y-1 text-sm">
+                                <li>1. Utilisez toujours un antivol en U (catégorie "SRA" ou "Sold Secure Gold").</li>
+                                <li>
+                                    2. Attachez le
+                                    <strong>cadre</strong>
+                                    (pas juste la roue) à un point fixe.
+                                </li>
+                                <li>3. Retirez la batterie et l'écran de contrôle si vous stationnez longtemps.</li>
+                            </ol>
+                            <div class="mt-2 text-xs font-semibold text-blue-600">
+                                <a href="{{ route("articles.by-category", 12) }}" class="underline">
+                                    Voir notre sélection d'antivols recommandés
+                                </a>
+                            </div>
+                        </x-faq-item>
+
+                        <x-faq-item task="52" title="Quelle pression pour mes pneus ?" icon="heroicon-o-arrow-down-circle">
+                            <p class="mb-2">La pression idéale est écrite sur le flanc de votre pneu (ex: 3.5 - 5.0 Bar).</p>
+                            <ul class="ml-4 space-y-1 text-sm">
+                                <li>
+                                    <strong>En ville (confort) :</strong>
+                                    Visez la valeur basse pour amortir les pavés.
+                                </li>
+                                <li>
+                                    <strong>Sur route (rendement) :</strong>
+                                    Visez la valeur haute pour moins forcer.
+                                </li>
+                            </ul>
+                            <p class="mt-1 text-xs text-gray-500">Vérifiez la pression une fois par mois avec une pompe à manomètre.</p>
+                        </x-faq-item>
+                    </div>
+                </div>
             </div>
 
             <div class="mt-12 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8 text-center shadow-xl">
@@ -792,3 +854,5 @@
         </div>
     </div>
 </x-app-layout>
+
+@vite("resources/js/help/main.js")

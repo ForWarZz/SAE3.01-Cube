@@ -70,7 +70,7 @@
                 headerTextColor: '#ffffff',
                 aboutText: '',
                 introMessage:
-                    "👋 <b>Bonjour !</b><br>Je suis l'assistant Cube.<br>Posez votre question et je ferai de mon mieux pour vous aider et pour vous guider.",
+                    "👋 <b>Bonjour, je suis Mathiö !</b><br>Je suis l'assistant Cube.<br>Posez votre question et je ferai de mon mieux pour vous aider et pour vous guider.",
                 placeholderText: 'Écrivez votre message...',
                 desktopHeight: 600,
                 desktopWidth: 400,
