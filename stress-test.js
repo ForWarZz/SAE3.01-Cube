@@ -2,11 +2,11 @@ import http from 'k6/http';
 import { sleep } from 'k6';
 
 export const options = {
-    vus: 50,
+    vus: 300,
     duration: '30s',
 };
 
 export default function () {
-    http.get('http://127.0.0.1:8000/articles/categories/51');
+    http.get('http://51.83.36.122/~s315-cube/articles/categories/51');
     sleep(1);
 }
