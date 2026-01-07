@@ -774,6 +774,53 @@
                         </x-faq-item>
                     </div>
                 </div>
+                <div>
+                    <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Entretien & Vie à bord</h3>
+                    <div class="space-y-2">
+                        <x-faq-item task="50" title="Quand faire la première révision ?" icon="heroicon-o-wrench">
+                            <p class="mb-2">Comme une voiture neuve, un vélo se "rôde".</p>
+                            <p class="text-sm">
+                                Nous conseillons une visite de contrôle
+                                <strong>après 3 mois ou 300 km</strong>
+                                . Les câbles se détendent légèrement et la visserie peut bouger. Vous pouvez effectuer cette révision dans
+                                n'importe quel magasin Cube ou atelier agréé.
+                            </p>
+                        </x-faq-item>
+
+                        <x-faq-item task="51" title="Comment sécuriser mon vélo en ville ?" icon="heroicon-o-lock-closed">
+                            <p class="mb-2">La règle d'or pour le stationnement urbain :</p>
+                            <ol class="ml-4 space-y-1 text-sm">
+                                <li>1. Utilisez toujours un antivol en U (catégorie "SRA" ou "Sold Secure Gold").</li>
+                                <li>
+                                    2. Attachez le
+                                    <strong>cadre</strong>
+                                    (pas juste la roue) à un point fixe.
+                                </li>
+                                <li>3. Retirez la batterie et l'écran de contrôle si vous stationnez longtemps.</li>
+                            </ol>
+                            <div class="mt-2 text-xs font-semibold text-blue-600">
+                                <a href="{{ route("articles.by-category", 12) }}" class="underline">
+                                    Voir notre sélection d'antivols recommandés
+                                </a>
+                            </div>
+                        </x-faq-item>
+
+                        <x-faq-item task="52" title="Quelle pression pour mes pneus ?" icon="heroicon-o-arrow-down-circle">
+                            <p class="mb-2">La pression idéale est écrite sur le flanc de votre pneu (ex: 3.5 - 5.0 Bar).</p>
+                            <ul class="ml-4 space-y-1 text-sm">
+                                <li>
+                                    <strong>En ville (confort) :</strong>
+                                    Visez la valeur basse pour amortir les pavés.
+                                </li>
+                                <li>
+                                    <strong>Sur route (rendement) :</strong>
+                                    Visez la valeur haute pour moins forcer.
+                                </li>
+                            </ul>
+                            <p class="mt-1 text-xs text-gray-500">Vérifiez la pression une fois par mois avec une pompe à manomètre.</p>
+                        </x-faq-item>
+                    </div>
+                </div>
             </div>
 
             <div class="mt-12 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8 text-center shadow-xl">
