@@ -2,8 +2,11 @@
     <div class="bg-gray-50 py-12">
         <div class="mx-auto max-w-4xl px-6 lg:px-8">
             <div class="text-center">
-                <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Centre d'aide</h2>
-                <p class="mt-4 text-lg leading-8 text-gray-600">Toutes les réponses à vos questions sur l'utilisation du site Cube Bikes</p>
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Besoin d'un coup de pouce ?</h2>
+                <p class="mx-auto mt-4 max-w-2xl text-lg leading-8 text-gray-600">
+                    Que vous cherchiez votre futur vélo pour aller au travail ou que vous ayez besoin d'aide sur une commande, nous sommes
+                    là pour faciliter votre transition vers une mobilité douce.
+                </p>
             </div>
 
             <div class="mt-12 space-y-10" x-data="{ active: null }">
