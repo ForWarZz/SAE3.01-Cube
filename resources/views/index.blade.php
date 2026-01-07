@@ -36,7 +36,7 @@
                         class="text-sm leading-6 font-semibold text-white transition-colors duration-300 hover:text-blue-300"
                     >
                         Nos accessoires
-                        <span aria-hidden="true">→</span>
+                        <span>→</span>
                     </a>
                 </div>
             </div>

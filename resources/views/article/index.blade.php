@@ -11,7 +11,7 @@
                 </p>
             </div>
 
-            @if (($articles->total() ?? $articles->count()) > 0)
+            @if ($articles->count() > 0)
                 <div id="sort-select" class="flex items-center gap-2">
                     <label for="sort" class="flex items-center gap-1 text-sm font-medium text-gray-700">
                         Trier par:
@@ -39,16 +39,6 @@
             <div class="flex-1">
                 @if ($articles->count() > 0)
                     <div class="mb-4 flex items-center justify-between">
-                        <p class="text-sm text-gray-600">
-                            Affichage de
-                            <span class="font-semibold text-gray-900">{{ $articles->firstItem() }}</span>
-                            à
-                            <span class="font-semibold text-gray-900">{{ $articles->lastItem() }}</span>
-                            sur
-                            <span class="font-semibold text-gray-900">{{ $articles->total() }}</span>
-                            résultat{{ $articles->total() > 1 ? "s" : "" }}
-                        </p>
-
                         @if ($articles->hasPages())
                             <div class="flex items-center gap-2 text-sm text-gray-500">
                                 <x-heroicon-o-document-duplicate class="size-4" />
