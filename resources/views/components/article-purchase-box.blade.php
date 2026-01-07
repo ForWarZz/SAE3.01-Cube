@@ -2,7 +2,7 @@
     use App\DTOs\Article\SizeOptionDTO;
 @endphp
 
-<div class="flex flex-col">
+<div id="article-purchase-box" class="flex flex-col">
     <div class="mb-8">
         <div id="article-badge-box" class="mb-4 flex items-center gap-2">
             @if ($article->bike?->isNew())
