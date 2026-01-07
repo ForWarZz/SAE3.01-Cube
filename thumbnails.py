@@ -1,64 +1,123 @@
 import os
-from PIL import Image
-import shutil
+from pathlib import Path
+from PIL import Image, ImageFilter
+
+BASE_DIR = Path("storage/app/public/articles")
+THUMB_SIZE = 600
+THUMB_NAME = "thumbnail.webp"
+IMAGE_EXTS = {".webp", ".jpg", ".jpeg", ".png"}
 
 
-BASE_DIR = "storage/app/public/articles"
-MAX_DIMENSION = 600  # largeur ou hauteur max
+def delete_all_thumbnails():
+    for root, _, files in os.walk(BASE_DIR):
+        for name in files:
+            if name == THUMB_NAME:
+                path = Path(root) / name
+                try:
+                    path.unlink()
+                    print(f"🗑 Deleted: {path}")
+                except Exception as e:
+                    print(f"✖ Failed to delete {path}: {e}")
 
-def generate_thumbnails():
-    for article_id in os.listdir(BASE_DIR):
-        article_path = os.path.join(BASE_DIR, article_id)
-        if not os.path.isdir(article_path):
+
+def create_reference_thumbnails():
+    for article_dir in BASE_DIR.iterdir():
+        if not article_dir.is_dir():
             continue
 
-        for color_id in os.listdir(article_path):
-            color_path = os.path.join(article_path, color_id)
-            if not os.path.isdir(color_path):
+        for ref_dir in article_dir.iterdir():
+            if not ref_dir.is_dir():
                 continue
 
-            thumb_path = os.path.join(color_path, "thumbs")
-            os.makedirs(thumb_path, exist_ok=True)
+            images = sorted(
+                img for img in ref_dir.iterdir()
+                if img.suffix.lower() in IMAGE_EXTS and img.name != THUMB_NAME
+            )
 
-            for filename in os.listdir(color_path):
-                if not filename.lower().endswith((".jpg", ".jpeg", ".png")):
-                    continue
-
-                image_path = os.path.join(color_path, filename)
-                thumb_file = os.path.join(thumb_path, filename)
-
-                with Image.open(image_path) as img:
-                    original_width, original_height = img.size
-
-                    # Calcul du ratio
-                    ratio = min(MAX_DIMENSION / original_width, MAX_DIMENSION / original_height, 1)
-                    new_width = int(original_width * ratio)
-                    new_height = int(original_height * ratio)
-
-                    # Redimensionnement proportionnel
-                    img_resized = img.resize((new_width, new_height), Image.LANCZOS)
-
-                    # Sauvegarde optimisée
-                    img_resized.save(thumb_file, optimize=True, quality=75)
-                    print(f"Thumbnail saved: {thumb_file} ({new_width}x{new_height})")
-
-
-def purge_article_directory_where_thumbnails():
-    for article_id in os.listdir(BASE_DIR):
-        article_path = os.path.join(BASE_DIR, article_id)
-        if not os.path.isdir(article_path):
-            continue
-
-        for color_id in os.listdir(article_path):
-            color_path = os.path.join(article_path, color_id)
-            if not os.path.isdir(color_path):
+            if not images:
                 continue
 
-            thumb_path = os.path.join(color_path, "thumbs")
-            if os.path.exists(thumb_path):
-                shutil.rmtree(color_path, ignore_errors=True)
-                print(f"Thumbnail directory deleted: {thumb_path}")
+            source_image = images[0]
+            thumb_path = ref_dir / THUMB_NAME
+
+            try:
+                with Image.open(source_image) as img:
+                    img.thumbnail((THUMB_SIZE, THUMB_SIZE), Image.LANCZOS)
+
+                    # Sharpen léger pour compenser le resize
+                    img = img.filter(ImageFilter.UnsharpMask(
+                        radius=1.0,
+                        percent=120,
+                        threshold=3
+                    ))
+
+                    lossless = img.mode in ("RGBA", "LA")
+
+                    img.save(
+                        thumb_path,
+                        format="WEBP",
+                        quality=90,
+                        lossless=lossless,
+                        method=6,
+                    )
+
+                print(f"✔ Created: {thumb_path}")
+
+            except Exception as e:
+                print(f"✖ Error for {ref_dir}: {e}")
+
 
 if __name__ == "__main__":
-#     generate_thumbnails()
-    purge_article_directory_where_thumbnails()
+    delete_all_thumbnails()
+    create_reference_thumbnails()
+    print("Done.")
+#
+#
+# import os
+# from pathlib import Path
+# from PIL import Image
+#
+# BASE_DIR = Path("storage/app/public/articles")
+# WEBP_QUALITY = 75
+# IMAGE_EXTS = {".jpg", ".jpeg", ".png"}
+#
+#
+# def convert_to_webp():
+#     for root, _, files in os.walk(BASE_DIR):
+#         for filename in files:
+#             src = Path(root) / filename
+#
+#             if src.suffix.lower() not in IMAGE_EXTS:
+#                 continue
+#
+#             dst = src.with_suffix(".webp")
+#
+#             try:
+#                 with Image.open(src) as img:
+#                     # Normalisation des modes
+#                     if img.mode in ("RGBA", "P"):
+#                         img = img.convert("RGBA")
+#                         lossless = True
+#                     else:
+#                         img = img.convert("RGB")
+#                         lossless = False
+#
+#                     img.save(
+#                         dst,
+#                         format="WEBP",
+#                         quality=WEBP_QUALITY,
+#                         lossless=lossless,
+#                         method=6,
+#                         optimize=True,
+#                     )
+#
+#                 src.unlink()  # supprime l’original
+#                 print(f"✔ Converted: {src} → {dst}")
+#
+#             except Exception as e:
+#                 print(f"✖ Error converting {src}: {e}")
+#
+#
+# if __name__ == "__main__":
+#     convert_to_webp()
+#     print("Done.")

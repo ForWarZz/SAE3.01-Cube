@@ -88,6 +88,12 @@ class BikeReference extends Model
 
     public function getCoverUrl(): string
     {
+        $thumbnailPath = $this->getStorageDirectory().'thumbnail.webp';
+
+        if (Storage::disk('public')->exists($thumbnailPath)) {
+            return Storage::url($thumbnailPath);
+        }
+
         $files = $this->getImageFiles();
 
         if (empty($files)) {

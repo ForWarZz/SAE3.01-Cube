@@ -21,6 +21,7 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
-        "driver.js": "^1.4.0"
+        "driver.js": "^1.4.0",
+        "leaflet": "^1.9.4"
     }
 }
