@@ -6,7 +6,7 @@
     <h2 class="text-2xl font-semibold text-gray-900">Panier ({{ $count }})</h2>
 
     @if ($count <= 0)
-        <div class="py-20 text-center">
+        <div class="py-6 text-center">
             <x-heroicon-o-shopping-cart class="mx-auto mb-4 h-24 w-24 text-gray-300" />
             <h2 class="text-2xl font-bold text-gray-900">Oups, c'est vide ici !</h2>
             <p class="mb-8 text-gray-500">Vous ne pouvez pas commander de vent. Il faut choisir un vélo d'abord.</p>
