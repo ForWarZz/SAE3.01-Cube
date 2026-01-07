@@ -23,6 +23,10 @@ class ArticleController extends Controller
         $data = $this->articleService->searchArticles($request);
         $search = $data['search'];
 
+        if (empty($search)) {
+            return redirect()->route('articles.by-category', Category::BIKE_CATEGORY_ID);
+        }
+
         return view('article.index', [
             'search' => $search,
             'pageTitle' => 'Résultats de recherche : '.$search,
