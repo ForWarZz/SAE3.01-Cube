@@ -7,12 +7,20 @@
 <aside class="w-64">
     <div class="space-y-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
         <div id="filters-bar" class="flex items-center justify-between border-b pb-4">
-            <h2 class="text-lg font-semibold text-gray-900">Filtres</h2>
+            <div class="flex items-center gap-1">
+                <h2 class="text-lg font-semibold text-gray-900">Filtres</h2>
+                <x-info-tooltip
+                    text="Affinez votre recherche en sélectionnant un ou plusieurs critères ci-dessous. Les résultats se mettent à jour automatiquement."
+                    width="w-64"
+                />
+            </div>
             <a
                 href="{{ url()->current() . (request("search") ? "?search=" . urlencode(request("search")) : "") }}"
-                class="text-sm text-blue-600 hover:text-blue-800"
+                class="flex items-center gap-1 text-sm text-blue-600 transition-colors hover:text-blue-800"
+                title="Supprimer tous les filtres actifs"
             >
-                Réinitialiser
+                <x-heroicon-o-arrow-path class="size-3.5" />
+                <span>Réinitialiser</span>
             </a>
         </div>
 

@@ -184,7 +184,11 @@
                         class="flex items-center gap-1 text-xs text-gray-500 underline decoration-gray-400 underline-offset-2 transition-colors hover:text-black"
                     >
                         Quelle est ma taille de cadre ?
-                        <x-heroicon-o-information-circle class="size-4" />
+                        {{-- <x-heroicon-o-information-circle class="size-4" /> --}}
+                        <x-info-tooltip
+                            text="Utilisez notre calculateur de taille de vélo pour trouver la taille de cadre idéale en fonction de votre morphologie et de votre style de conduite."
+                            width="w-48"
+                        />
                     </a>
                 @endif
             </div>

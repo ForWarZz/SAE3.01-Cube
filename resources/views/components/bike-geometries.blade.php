@@ -1,6 +1,13 @@
-<div class="mt-16 overflow-hidden rounded-lg border-t border-gray-200 shadow">
+<div class="mt-16 rounded-lg border-t border-gray-200 shadow">
     <div id="geometry" class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-        <h3 class="text-lg font-semibold text-gray-900">Géométrie : {{ $bike->bikeModel->nom_modele_velo }}</h3>
+        <h3 class="text-lg font-semibold text-gray-900">
+            Géométrie : {{ $bike->bikeModel->nom_modele_velo }}
+            <x-info-tooltip
+                text="Les détails de la géometrie du vélo sont disponible dans ce tableau. Vous trouverez le détail pour chaque taille de celui-ci."
+                width="w-64"
+                size="size-6"
+            />
+        </h3>
     </div>
 
     <div class="overflow-x-auto">

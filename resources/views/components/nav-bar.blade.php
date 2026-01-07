@@ -41,7 +41,11 @@
                     </span>
                 </div>
 
-                <a href="{{ route("user-guide") }}" class="text-gray-500 transition hover:text-blue-600" title="Centre d'aide">
+                <a
+                    title="Accéder au centre d'aide via ce bouton."
+                    href="{{ route("user-guide") }}"
+                    class="text-gray-500 transition hover:text-blue-600"
+                >
                     <x-heroicon-o-question-mark-circle class="size-6" />
                     <span class="sr-only">Aide</span>
                 </a>
@@ -68,7 +72,12 @@
                     @endif
                 </div>
 
-                <a id="view-cart-btn" href="{{ route("cart.index") }}" class="group relative flex items-center p-2" title="Voir le panier">
+                <a
+                    id="view-cart-btn"
+                    href="{{ route("cart.index") }}"
+                    class="group relative flex items-center p-2"
+                    title="{{ $cartItemCount > 0 ? "Panier (" . $cartItemCount . " article" . ($cartItemCount > 1 ? "s" : "") . ")" : "Panier vide" }}"
+                >
                     <x-bi-cart class="size-6 text-gray-700 transition group-hover:text-blue-600" />
 
                     @if ($cartItemCount > 0)
