@@ -9,8 +9,22 @@
                 </p>
             </div>
 
+            <div class="mx-auto mt-8 max-w-2xl">
+                <div class="relative">
+                    <x-heroicon-o-magnifying-glass class="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                    <input
+                        type="text"
+                        id="faqSearch"
+                        placeholder="Rechercher dans la FAQ... (ex: code promo, taille, paiement)"
+                        class="w-full rounded-xl border-2 border-gray-200 py-3 pr-4 pl-12 transition outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+                        onkeyup="filterFAQ()"
+                    />
+                </div>
+                <p class="mt-2 text-center text-xs text-gray-500">Tapez un mot-clé pour filtrer instantanément les questions</p>
+            </div>
+
             <div class="mt-12 space-y-10" x-data="{ active: null }">
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Navigation</h3>
                     <div class="space-y-2">
                         <x-faq-item task="1" title="Comment chercher un vélo ?" icon="heroicon-o-magnifying-glass">
@@ -115,7 +129,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Produits</h3>
                     <div class="space-y-2">
                         <x-faq-item task="6" title="Comment choisir ma taille de vélo ?" icon="heroicon-o-adjustments-horizontal">
@@ -221,7 +235,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Commande</h3>
                     <div class="space-y-2">
                         <x-faq-item task="11" title="Comment passer une commande ?" icon="heroicon-o-shopping-bag">
@@ -322,7 +336,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Outils</h3>
                     <div class="space-y-2">
                         <x-faq-item task="16" title="Comment accéder à l'assistant IA ?" icon="heroicon-o-chat-bubble-left-right">
@@ -393,7 +407,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Compte</h3>
                     <div class="space-y-2">
                         <x-faq-item task="18" title="Comment créer un compte ?" icon="heroicon-o-user-plus">
@@ -535,7 +549,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Sécurité</h3>
                     <div class="space-y-2">
                         <x-faq-item
@@ -636,7 +650,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Technique</h3>
                     <div class="space-y-2">
                         <x-faq-item task="28" title="Quelle différence entre HPC et HPA ?" icon="heroicon-o-cube">
@@ -725,7 +739,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Support</h3>
                     <div class="space-y-2">
                         <x-faq-item task="34" title="Le site semble lent, que faire ?" icon="heroicon-o-arrow-path">
@@ -774,7 +788,8 @@
                         </x-faq-item>
                     </div>
                 </div>
-                <div>
+
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Entretien & Vie à bord</h3>
                     <div class="space-y-2">
                         <x-faq-item task="50" title="Quand faire la première révision ?" icon="heroicon-o-wrench">
@@ -839,3 +854,5 @@
         </div>
     </div>
 </x-app-layout>
+
+@vite("resources/js/help/main.js")
