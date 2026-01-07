@@ -16,7 +16,7 @@
                         type="text"
                         id="faqSearch"
                         placeholder="Rechercher dans la FAQ... (ex: code promo, taille, paiement)"
-                        class="w-full rounded-xl border-2 border-gray-200 py-3 pr-4 pl-12 transition outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+                        class="w-full rounded-xl border-2 border-gray-200 py-3 pr-4 pl-12 transition outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                         onkeyup="filterFAQ()"
                     />
                 </div>
