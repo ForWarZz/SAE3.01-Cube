@@ -26,6 +26,26 @@
             </div>
         @endif
 
+        @if ($count > 0)
+            <div class="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-3" x-data="{ show: true }" x-show="show" x-transition>
+                <div class="flex items-start gap-3">
+                    <x-heroicon-o-information-circle class="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-600" />
+                    <div class="flex-1 text-sm text-blue-900">
+                        <p class="mb-1 font-semibold">Finalisez votre commande</p>
+                        <p class="text-xs text-blue-800">
+                            <strong>Vélos :</strong>
+                            Click & Collect gratuit en magasin (vélo monté sous 24-48h).
+                            <strong>Accessoires :</strong>
+                            Livraison à domicile ou en magasin (gratuite dès 50€).
+                        </p>
+                    </div>
+                    <button @click="show = false" class="flex-shrink-0 text-blue-400 hover:text-blue-600">
+                        <x-heroicon-o-x-mark class="h-4 w-4" />
+                    </button>
+                </div>
+            </div>
+        @endif
+
         <div class="flex gap-10">
             <x-cart-list :count="$count" :cart-data="$cartData" />
 
