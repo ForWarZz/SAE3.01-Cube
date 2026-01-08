@@ -10,6 +10,15 @@ export function startTour(force = false) {
         tourKey = 'tour_seen_home';
         steps = [
             {
+                popover: {
+                    title: 'Bienvenue sur Cube !',
+                    description:
+                        'Découvrez notre site de vente en ligne de vélos et accessoires. Laissez-nous vous guider à travers les principales fonctionnalités pour une expérience optimale.',
+                    side: 'center',
+                    align: 'center',
+                },
+            },
+            {
                 element: '#nav',
                 popover: {
                     title: 'La barre de navigation',
@@ -27,21 +36,29 @@ export function startTour(force = false) {
                     side: 'bottom',
                 },
             },
-            // {
-            //     element: '#selected-shop-btn',
-            //     popover: {
-            //         title: 'Choisir un magasin',
-            //         description:
-            //             'Sélectionnez votre magasin préféré afin de pouvoir ',
-            //         side: 'bottom',
-            //     },
-            // },
+            {
+                element: '#selected-shop-btn',
+                popover: {
+                    title: 'Choisir un magasin',
+                    description: 'Sélectionnez votre magasin préféré pour accélérer le processus de commande.',
+                    side: 'bottom',
+                },
+            },
             {
                 element: '#search-bar',
                 popover: {
                     title: 'La barre de recherche',
                     description:
                         'Recherchez rapidement des articles spécifiques en utilisant des mots-clés, des noms de produits ou des références. Le moteur de recherche vous aidera à trouver ce que vous cherchez en un instant.',
+                    side: 'bottom',
+                },
+            },
+            {
+                element: '#navbar-help-center-btn',
+                popover: {
+                    title: "Centre d'aide",
+                    description:
+                        "Besoin d'aide ? Cliquez ici pour accéder à notre centre d'assistance où vous trouverez des réponses aux questions fréquentes, des guides d'achat et des informations sur la livraison et les retours.",
                     side: 'bottom',
                 },
             },
@@ -59,6 +76,15 @@ export function startTour(force = false) {
                     title: 'Le panier',
                     description:
                         "Accédez à votre panier pour voir les articles que vous avez ajoutés, modifier les quantités ou procéder au paiement lorsque vous êtes prêt. Un petit compteur vous indique le nombre d'articles dans votre panier (s'il y en a).",
+                    side: 'bottom',
+                },
+            },
+            {
+                element: '#reboot-tour-btn',
+                popover: {
+                    title: 'Recommencer le tutoriel',
+                    description:
+                        "Sur n'importe quelle page où un guide est disponible, vous pouvez cliquer ici pour revoir ce tutoriel à tout moment.",
                     side: 'bottom',
                 },
             },
@@ -161,14 +187,6 @@ export function startTour(force = false) {
                 },
             },
             {
-                element: '#size-guide-link',
-                popover: {
-                    title: 'Un doute sur la taille ?',
-                    description: 'Cliquez ici pour accéder à notre calculateur automatique de taille de cadre.',
-                    side: 'bottom',
-                },
-            },
-            {
                 element: '#size-selection-area',
                 popover: {
                     title: 'Choix de la taille',
@@ -176,6 +194,15 @@ export function startTour(force = false) {
                     side: 'top',
                 },
             },
+            {
+                element: '#size-guide-link',
+                popover: {
+                    title: 'Un doute sur la taille ?',
+                    description: 'Cliquez ici pour accéder à notre calculateur automatique de taille de cadre.',
+                    side: 'bottom',
+                },
+            },
+
             {
                 element: '#availability-summary',
                 popover: {
@@ -333,7 +360,7 @@ export function startTour(force = false) {
                 },
             },
         ];
-    } else if (currentRoute === 'cart.checkout') {
+    } else if (currentRoute === 'checkout.index') {
         tourKey = 'tour_seen_checkout';
         steps = [
             {
@@ -345,27 +372,28 @@ export function startTour(force = false) {
                 },
             },
             {
+                element: '#shipping-methods',
+                popover: {
+                    title: '1. Transporteur',
+                    description: 'Choisissez le mode de livraison qui vous convient. Le prix total se mettra à jour automatiquement.',
+                    side: 'top',
+                },
+            },
+            {
                 element: '#billing-section',
                 popover: {
-                    title: '1. Facturation',
-                    description: "Sélectionnez l'adresse qui apparaîtra sur la facture (votre domicile généralement).",
+                    title: '2. Facturation',
+                    description:
+                        "Sélectionnez l'adresse qui apparaîtra sur la facture (votre domicile généralement). Elle sera entourée en bleu.",
                     side: 'top',
                 },
             },
             {
                 element: '#delivery-section',
                 popover: {
-                    title: '2. Livraison',
+                    title: '3. Livraison',
                     description:
-                        'Cochez la case "Utiliser l\'adresse de facturation" pour gagner du temps, ou choisissez une adresse différente, si vous faites une livraison à domicile.',
-                    side: 'top',
-                },
-            },
-            {
-                element: '#shipping-methods',
-                popover: {
-                    title: '3. Transporteur',
-                    description: 'Choisissez le mode de livraison qui vous convient. Le prix total se mettra à jour automatiquement.',
+                        'Choisissez l’adresse de livraison, elle sera entourée en bleu. Si vous choisissez une livraison en magasin, sélectionnez votre boutique préférée dans la liste déroulante qui apparaitra.',
                     side: 'top',
                 },
             },

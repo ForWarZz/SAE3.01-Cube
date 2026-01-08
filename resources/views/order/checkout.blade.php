@@ -20,7 +20,7 @@
                     @csrf
                     @method("PUT")
 
-                    <section class="mb-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                    <section id="shipping-methods" class="mb-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                         <h2 class="mb-4 text-xl font-bold text-gray-900">1. Mode de livraison</h2>
 
                         <div class="grid grid-cols-3 gap-4">
@@ -66,7 +66,7 @@
                         </div>
                     </section>
 
-                    <section class="mb-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                    <section id="billing-section" class="mb-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                         <div class="mb-6 flex items-center justify-between">
                             <h2 class="text-xl font-bold text-gray-900">2. Adresse de facturation</h2>
                             <a
@@ -94,7 +94,7 @@
                     </section>
 
                     @if (! $isClickAndCollect)
-                        <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                        <section id="delivery-section" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                             <div class="mb-6 flex items-center justify-between">
                                 <h2 class="text-xl font-bold text-gray-900">3. Adresse de livraison</h2>
                                 <a
@@ -121,7 +121,7 @@
                             @endif
                         </section>
                     @else
-                        <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                        <section id="delivery-section" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                             <h2 class="mb-4 text-xl font-bold text-gray-900">3. Point de retrait</h2>
 
                             <div
@@ -168,6 +168,7 @@
                 <form action="{{ route("payment.process") }}" method="post">
                     @csrf
                     <x-button
+                        id="submit-order-btn"
                         type="submit"
                         size="lg"
                         color="green"

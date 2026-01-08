@@ -11,6 +11,7 @@
 
             <div class="flex items-center gap-4">
                 <a
+                    id="help-center-btn"
                     href="{{ route("user-guide") }}"
                     class="group flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-bold text-blue-600 shadow-sm ring-1 ring-gray-200 transition hover:bg-blue-50 hover:ring-blue-300"
                 >
@@ -19,6 +20,7 @@
                 </a>
 
                 <button
+                    id="reboot-tour-btn"
                     onclick="window.rebootTour()"
                     class="group flex cursor-pointer items-center gap-1.5 text-sm font-medium text-gray-500 transition hover:text-blue-600"
                     title="Relancer la visite guidée"

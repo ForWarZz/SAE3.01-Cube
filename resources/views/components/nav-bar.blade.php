@@ -42,6 +42,7 @@
                 </div>
 
                 <a
+                    id="navbar-help-center-btn"
                     title="Accéder au centre d'aide via ce bouton."
                     href="{{ route("user-guide") }}"
                     class="text-gray-500 transition hover:text-blue-600"
