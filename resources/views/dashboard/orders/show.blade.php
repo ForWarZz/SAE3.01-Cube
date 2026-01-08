@@ -133,9 +133,15 @@
                         </div>
                     </div>
 
-                    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+                    <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
                         <div class="border-b border-gray-200 px-6 py-4">
-                            <h2 class="text-lg font-semibold text-gray-900">Suivi de commande</h2>
+                            <h2 class="flex items-center text-lg font-semibold text-gray-900">
+                                Suivi de commande
+                                <x-info-tooltip
+                                    width="w-64"
+                                    text="L'historique des états de la commande est affiché ici (avec la date et l'heure). Vous pouvez ainsi suivre l'évolution de votre commande depuis sa création jusqu'à la livraison."
+                                />
+                            </h2>
                         </div>
                         <div class="space-y-4 p-6">
                             @foreach ($order->states as $state)
