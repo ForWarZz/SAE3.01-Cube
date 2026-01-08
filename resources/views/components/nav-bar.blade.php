@@ -32,9 +32,9 @@
                     <input
                         type="text"
                         id="search-input"
-                        placeholder="Rechercher..."
+                        placeholder="Rechercher par mots-clés..."
                         value="{{ request("search") }}"
-                        class="w-48 rounded-full border border-gray-300 bg-gray-50 py-1.5 pr-10 pl-4 text-sm transition-all focus:w-64 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                        class="w-64 rounded-full border border-gray-300 bg-gray-50 py-1.5 pr-10 pl-4 text-sm transition-all focus:w-76 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 focus:outline-none"
                     />
                     <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
                         <x-bi-search class="size-4 text-gray-400" />
