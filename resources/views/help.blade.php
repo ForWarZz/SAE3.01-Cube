@@ -651,6 +651,217 @@
                 </div>
 
                 <div class="faq-category">
+                    <h3 class="mb-4 text-sm font-semibold tracking-wide text-green-600 uppercase">
+                        <x-heroicon-o-sun class="mr-1 inline h-5 w-5" />
+                        Mobilité douce & Écologie
+                    </h3>
+                    <div class="space-y-2">
+                        <x-faq-item
+                            task="60"
+                            title="Pourquoi choisir un vélo électrique pour ses trajets quotidiens ?"
+                            icon="heroicon-o-bolt"
+                        >
+                            <div class="space-y-2 text-sm">
+                                <p class="font-semibold text-green-700">Un choix économique et écologique :</p>
+                                <ul class="ml-4 list-disc space-y-1">
+                                    <li>
+                                        <strong>0 émission de CO₂</strong>
+                                        lors de vos trajets (contre 120g/km en moyenne pour une voiture)
+                                    </li>
+                                    <li>
+                                        <strong>Économies substantielles :</strong>
+                                        ~0,05€ pour 100 km contre ~8€ en voiture
+                                    </li>
+                                    <li>
+                                        <strong>Pas de frais cachés :</strong>
+                                        plus d'essence, d'assurance auto ou de stationnement payant
+                                    </li>
+                                    <li>
+                                        <strong>Gain de temps :</strong>
+                                        évitez les embouteillages et trouvez toujours une place
+                                    </li>
+                                    <li>
+                                        <strong>Activité physique douce :</strong>
+                                        l'assistance vous aide dans les côtes sans transpirer
+                                    </li>
+                                </ul>
+                                <p class="mt-2 text-xs text-gray-600 italic">
+                                    Sur un trajet domicile-travail de 10 km/jour, vous économisez environ 1 500€/an et évitez l'émission de
+                                    600 kg de CO₂ !
+                                </p>
+                            </div>
+                        </x-faq-item>
+
+                        <x-faq-item task="61" title="Quelle autonomie pour mes trajets quotidiens ?" icon="heroicon-o-battery-100">
+                            <p class="mb-2">Choisissez selon votre usage :</p>
+                            <div class="space-y-2 text-sm">
+                                <div class="rounded-lg bg-blue-50 p-3">
+                                    <p class="font-semibold text-blue-900">Trajet domicile-travail (< 15 km/jour)</p>
+                                    <p class="text-blue-700">
+                                        Une batterie de
+                                        <strong>400-500 Wh</strong>
+                                        suffit amplement. Vous pouvez tenir toute la semaine sans recharger !
+                                    </p>
+                                </div>
+                                <div class="rounded-lg bg-green-50 p-3">
+                                    <p class="font-semibold text-green-900">Trajets moyens (15-30 km/jour)</p>
+                                    <p class="text-green-700">
+                                        Optez pour
+                                        <strong>500-625 Wh</strong>
+                                        pour rouler sereinement sans stress d'autonomie.
+                                    </p>
+                                </div>
+                                <div class="rounded-lg bg-purple-50 p-3">
+                                    <p class="font-semibold text-purple-900">Longues distances ou reliefs importants</p>
+                                    <p class="text-purple-700">
+                                        Préférez
+                                        <strong>625-750 Wh</strong>
+                                        pour profiter pleinement de l'assistance, même dans les montées.
+                                    </p>
+                                </div>
+                            </div>
+                            <p class="mt-2 text-xs text-gray-600">
+                                💡 Astuce : Une recharge complète coûte moins de 0,20€ et prend 3-6 heures sur une prise classique.
+                            </p>
+                        </x-faq-item>
+
+                        <x-faq-item task="62" title="Comment entretenir mon vélo électrique ?" icon="heroicon-o-wrench-screwdriver">
+                            <p class="mb-2">L'entretien d'un vélo électrique est simple et économique :</p>
+                            <div class="space-y-2 text-sm">
+                                <p class="font-semibold">Entretien quotidien :</p>
+                                <ul class="ml-4 list-disc space-y-1">
+                                    <li>Vérifiez la pression des pneus une fois par mois</li>
+                                    <li>Nettoyez la chaîne et lubrifiez-la régulièrement (tous les 200-300 km)</li>
+                                    <li>Essuyez le vélo après utilisation sous la pluie</li>
+                                    <li>Rechargez la batterie idéalement entre 20% et 80% pour optimiser sa durée de vie</li>
+                                </ul>
+
+                                <p class="mt-3 font-semibold">Entretien professionnel :</p>
+                                <ul class="ml-4 list-disc space-y-1">
+                                    <li>
+                                        Révision après 3 mois ou 300 km (offerte dans certains magasins Cube lors de l'achat d'un vélo neuf)
+                                    </li>
+                                    <li>Révision annuelle complète (environ 60-80€) : freins, vitesses, roues, batterie</li>
+                                </ul>
+
+                                <div class="mt-3 rounded-lg bg-green-50 p-3">
+                                    <p class="font-semibold text-green-800">
+                                        <x-heroicon-o-sparkles class="mr-1 inline h-4 w-4" />
+                                        Coût annuel moyen : 100-150€
+                                    </p>
+                                    <p class="text-sm text-green-700">À comparer aux ~2000€/an d'entretien d'une voiture !</p>
+                                </div>
+                            </div>
+                        </x-faq-item>
+
+                        <x-faq-item
+                            task="63"
+                            title="Quelles aides financières pour l'achat d'un vélo électrique ?"
+                            icon="heroicon-o-currency-euro"
+                        >
+                            <div class="space-y-3 text-sm">
+                                <p class="font-semibold text-green-700">Bonne nouvelle : de nombreuses aides existent !</p>
+
+                                <div class="rounded-lg border border-blue-200 bg-blue-50 p-3">
+                                    <p class="font-semibold text-blue-900">
+                                        <x-heroicon-o-building-library class="mr-1 inline h-4 w-4" />
+                                        Bonus écologique de l'État
+                                    </p>
+                                    <p class="text-blue-700">
+                                        Jusqu'à
+                                        <strong>400€</strong>
+                                        pour un vélo électrique neuf (sous conditions de revenus)
+                                    </p>
+                                </div>
+
+                                <div class="rounded-lg border border-green-200 bg-green-50 p-3">
+                                    <p class="font-semibold text-green-900">
+                                        <x-heroicon-o-map-pin class="mr-1 inline h-4 w-4" />
+                                        Aides locales
+                                    </p>
+                                    <p class="text-green-700">
+                                        De nombreuses villes, régions et employeurs proposent des aides complémentaires (100-500€).
+                                        Renseignez-vous auprès de votre mairie ou de votre entreprise !
+                                    </p>
+                                </div>
+
+                                <div class="rounded-lg border border-purple-200 bg-purple-50 p-3">
+                                    <p class="font-semibold text-purple-900">
+                                        <x-heroicon-o-briefcase class="mr-1 inline h-4 w-4" />
+                                        Forfait mobilités durables
+                                    </p>
+                                    <p class="text-purple-700">
+                                        Votre employeur peut vous verser jusqu'à
+                                        <strong>800€/an</strong>
+                                        pour vos déplacements à vélo (exonéré d'impôts et de cotisations sociales)
+                                    </p>
+                                </div>
+
+                                <p class="text-xs text-gray-600 italic">
+                                    💡 Ces aides sont cumulables ! Contactez nos conseillers en magasin pour monter votre dossier.
+                                </p>
+                            </div>
+                        </x-faq-item>
+
+                        <x-faq-item task="64" title="Comment sécuriser mon vélo électrique contre le vol ?" icon="heroicon-o-shield-check">
+                            <p class="mb-2">Un vélo électrique est un investissement, protégez-le efficacement :</p>
+                            <div class="space-y-2 text-sm">
+                                <p class="font-semibold">Les indispensables :</p>
+                                <ul class="ml-4 list-disc space-y-1">
+                                    <li>
+                                        Antivol en U de qualité (niveau SRA ou Sold Secure Gold) -
+                                        <a href="{{ route("articles.by-category", 12) }}" class="font-semibold text-blue-600 underline">
+                                            Voir notre sélection
+                                        </a>
+                                    </li>
+                                    <li>Toujours attacher le cadre (pas seulement la roue) à un point fixe solide</li>
+                                    <li>Retirez la batterie et l'écran si vous stationnez longtemps</li>
+                                    <li>Garez votre vélo dans un endroit visible et éclairé</li>
+                                    <li>Marquez votre vélo (gravage Bicycode) pour faciliter sa récupération en cas de vol</li>
+                                </ul>
+
+                                <div class="mt-3 rounded-lg bg-amber-50 p-3">
+                                    <p class="font-semibold text-amber-800">
+                                        <x-heroicon-o-exclamation-triangle class="mr-1 inline h-4 w-4" />
+                                        Pensez à l'assurance !
+                                    </p>
+                                    <p class="text-sm text-amber-700">
+                                        Pour un vélo électrique de plus de 1 500€, une assurance vol spécifique est fortement recommandée
+                                        (environ 10-15€/mois).
+                                    </p>
+                                </div>
+                            </div>
+                        </x-faq-item>
+
+                        <x-faq-item task="65" title="Puis-je utiliser mon vélo électrique sous la pluie ?" icon="heroicon-o-cloud">
+                            <p class="mb-2 font-semibold text-green-700">Absolument ! Les vélos électriques sont conçus pour ça.</p>
+                            <div class="space-y-2 text-sm">
+                                <p>
+                                    Tous les composants électriques (batterie, moteur, écran) sont certifiés
+                                    <strong>IP54 ou IP65</strong>
+                                    : ils résistent aux projections d'eau et à la pluie.
+                                </p>
+
+                                <p class="font-semibold">Conseils pour rouler sous la pluie :</p>
+                                <ul class="ml-4 list-disc space-y-1">
+                                    <li>Portez des vêtements imperméables et des sur-chaussures</li>
+                                    <li>Utilisez des garde-boue pour éviter les éclaboussures</li>
+                                    <li>Freinez plus tôt et progressivement (les freins sont moins efficaces quand ils sont mouillés)</li>
+                                    <li>Après utilisation, essuyez le cadre et séchez les contacts électriques</li>
+                                </ul>
+
+                                <div class="mt-2 rounded-lg bg-blue-50 p-3">
+                                    <p class="text-xs text-blue-700">
+                                        ⚠️ Évitez le nettoyage haute pression (karcher) qui pourrait endommager les joints d'étanchéité.
+                                        Préférez un coup d'éponge !
+                                    </p>
+                                </div>
+                            </div>
+                        </x-faq-item>
+                    </div>
+                </div>
+
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">Technique</h3>
                     <div class="space-y-2">
                         <x-faq-item task="28" title="Quelle différence entre HPC et HPA ?" icon="heroicon-o-cube">
