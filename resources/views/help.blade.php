@@ -519,6 +519,14 @@
                                 <li>4. Modifiez les champs souhaités (prénom, nom, email, civilité...)</li>
                                 <li>5. Cliquez sur "Enregistrer les modifications"</li>
                             </ol>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/modifier-info.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">Exemple de modification des informations personnelles.</p>
+                            </div>
                         </x-faq-item>
 
                         <x-faq-item task="22" title="Comment gérer mes adresses enregistrées ?" icon="heroicon-o-home">
@@ -597,6 +605,16 @@
                                 Pour les comptes Google, cette fonctionnalité n'est pas disponible. La gestion de la sécurité se fait via
                                 <strong>myaccount.google.com/security</strong>
                             </p>
+
+                            <div class="mt-4">
+                                <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
+                                    <source src="{{ asset("resources/help/videos/desactiver-2fa.mp4") }}" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                                <p class="mt-1 text-xs text-gray-500">
+                                    Exemple de modification de désactivation de l'authentification à double facteur.
+                                </p>
+                            </div>
                         </x-faq-item>
 
                         <x-faq-item task="25" title="J'ai perdu mes codes A2F, que faire ?" icon="heroicon-o-exclamation-triangle">
