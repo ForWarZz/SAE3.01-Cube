@@ -110,8 +110,8 @@
 
                         <x-faq-item task="5" title="Comment changer le magasin sélectionné ?" icon="heroicon-o-building-storefront">
                             <p class="mb-2">
-                                Cliquez sur le bouton violet du magasin actuellement sélectionné, visible dans la barre de navigation en
-                                haut de page.
+                                Cliquez sur le bouton bleu du magasin actuellement sélectionné, visible dans la barre de navigation en haut
+                                de page.
                             </p>
                             <p>
                                 Une fenêtre s'ouvre avec la liste complète des magasins. Utilisez la recherche par ville ou code postal,
@@ -531,7 +531,7 @@
                             <ul class="ml-4 space-y-1 text-sm">
                                 <li>
                                     <strong>Créer une adresse :</strong>
-                                    Cliquez sur le bouton violet "Nouvelle adresse" en haut à droite. Le formulaire utilise l'autocomplétion
+                                    Cliquez sur le bouton bleu "Nouvelle adresse" en haut à droite. Le formulaire utilise l'autocomplétion
                                     Google Places.
                                 </li>
                                 <li>
