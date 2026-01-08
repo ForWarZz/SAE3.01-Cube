@@ -28,6 +28,12 @@ class BotManController extends Controller
             $response = $this->assistantService->askGemini($message, $pageType, $pageUrl, $context);
             $htmlResponse = Str::markdown($response);
 
+            $htmlResponse = preg_replace(
+                '/<a\s+(?![^>]*target=)/i',
+                '<a target="_top" rel="noopener noreferrer" ',
+                $htmlResponse
+            );
+
             $bot->reply($htmlResponse);
         });
 
