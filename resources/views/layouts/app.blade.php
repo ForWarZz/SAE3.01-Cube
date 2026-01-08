@@ -5,14 +5,17 @@
 
 @php
     $pageType = "general";
-    $contextId = "";
+    $context = [];
 
     if (request()->routeIs("articles.show-reference") && isset($reference)) {
         $pageType = "article-reference";
-        $contextId = $reference->id_reference;
+        $context = [
+            "id_reference" => $reference->id_reference,
+            "id_article" => $reference->id_article,
+        ];
     } elseif (request()->routeIs("articles.by-category") && isset($currentCategory)) {
         $pageType = "category";
-        $contextId = $currentCategory->id_categorie;
+        //        $contextId = $currentCategory->id_categorie;
     } elseif (request()->routeIs("cart.index")) {
         $pageType = "cart";
     } elseif (request()->routeIs("checkout.index")) {
@@ -59,7 +62,7 @@
                     '{!!
                         route("botman", [
                             "page_type" => $pageType,
-                            "context_id" => $contextId,
+                            "context" => urlencode(json_encode($context)),
                             "page_url" => urlencode(request()->url()),
                         ])
                     !!}',
