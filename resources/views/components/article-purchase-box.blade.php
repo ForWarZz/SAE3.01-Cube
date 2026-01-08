@@ -80,7 +80,7 @@
             </div>
         @endif
 
-        <div class="mt-6 space-y-4">
+        <div class="mt-6 space-y-6">
             <form method="POST" action="{{ route("cart.add") }}" class="w-full">
                 @csrf
 
@@ -97,6 +97,13 @@
                     >
                         AJOUTER AU PANIER
                     </x-button>
+
+                    @if ($article->bike)
+                        <p class="mt-2 text-center text-xs text-gray-500">
+                            <x-heroicon-o-truck class="inline size-3.5 text-gray-400" />
+                            Click & Collect gratuit • Vélo monté sous 24-48h
+                        </p>
+                    @endif
                 @endif
             </form>
 
@@ -116,8 +123,8 @@
                     <span class="mr-2">▸</span>
                     VOIR LES DISPONIBILITÉS
                 </button>
-                <p class="text-center text-xs text-gray-600">
-                    <x-heroicon-o-map-pin class="inline h-3.5 w-3.5 text-gray-400" />
+                <p class="text-center text-xs text-gray-500">
+                    <x-heroicon-o-map-pin class="inline size-3.5 text-gray-400" />
                     Stock en temps réel dans tous nos magasins
                 </p>
             </div>
@@ -190,10 +197,10 @@
                         class="flex items-center gap-1 text-xs text-gray-500 underline decoration-gray-400 underline-offset-2 transition-colors hover:text-black"
                     >
                         Quelle est ma taille de cadre ?
-                        {{-- <x-heroicon-o-information-circle class="size-4" /> --}}
                         <x-info-tooltip
-                            text="Utilisez notre calculateur de taille de vélo pour trouver la taille de cadre idéale en fonction de votre morphologie et de votre style de conduite."
-                            width="w-48"
+                            title="💡 Trouvez votre taille"
+                            text="Cliquez ici pour accéder au calculateur. Entrez votre taille et entrejambe, résultat en 10 secondes !"
+                            width="w-56"
                         />
                     </a>
                 @endif
