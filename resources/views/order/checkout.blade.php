@@ -167,16 +167,40 @@
 
                 <form action="{{ route("payment.process") }}" method="post">
                     @csrf
-                    <x-button
-                        id="submit-order-btn"
-                        type="submit"
-                        size="lg"
-                        color="green"
-                        class="w-full"
-                        :disabled="$shippingId == null || $billingId == null || ($isClickAndCollect && $selectedShop == null) || (! $isClickAndCollect && $deliveryId == null)"
-                    >
-                        Payer la commande
-                    </x-button>
+                    @php
+                        $missingReasons = [];
+
+                        if (! $shippingId) {
+                            $missingReasons[] = "un mode de livraison";
+                        }
+
+                        if (! $billingId) {
+                            $missingReasons[] = "une adresse de facturation";
+                        }
+
+                        if ($isClickAndCollect && ! $selectedShop) {
+                            $missingReasons[] = "un magasin de retrait";
+                        }
+
+                        if (! $isClickAndCollect && ! $deliveryId) {
+                            $missingReasons[] = "une adresse de livraison";
+                        }
+
+                        $isDisabled = count($missingReasons) > 0;
+                    @endphp
+
+                    <div class="flex flex-col gap-2">
+                        <x-button id="submit-order-btn" type="submit" size="lg" color="green" class="w-full" :disabled="$isDisabled">
+                            Payer la commande
+                        </x-button>
+
+                        @if ($isDisabled)
+                            <p class="flex items-center justify-center text-xs text-gray-500">
+                                <x-heroicon-o-information-circle class="mr-2 inline size-4" />
+                                Pour continuer, veuillez sélectionner {{ implode(", ", $missingReasons) }}.
+                            </p>
+                        @endif
+                    </div>
                 </form>
 
                 <a
