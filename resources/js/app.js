@@ -11,8 +11,38 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-document.addEventListener('DOMContentLoaded', () => {
-    startTour();
+function hasUserAcceptedOrRefusedCookies() {
+    const cookies = document.cookie.split(';');
+    return cookies.some((cookie) => cookie.trim().startsWith('tarteaucitron='));
+}
+
+function waitForCookieConsent() {
+    return new Promise((resolve) => {
+        if (hasUserAcceptedOrRefusedCookies()) {
+            resolve();
+            return;
+        }
+
+        const checkInterval = setInterval(() => {
+            if (hasUserAcceptedOrRefusedCookies()) {
+                clearInterval(checkInterval);
+                resolve();
+            }
+        }, 500);
+
+        setTimeout(() => {
+            clearInterval(checkInterval);
+            resolve();
+        }, 60000);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await waitForCookieConsent();
+
+    setTimeout(() => {
+        startTour();
+    }, 500);
 });
 
 window.L = L;
