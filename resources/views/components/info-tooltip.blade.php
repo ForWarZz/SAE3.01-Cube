@@ -6,7 +6,7 @@
     "size" => "size-5",
 ])
 
-<div class="group relative z-50 mx-2 inline-flex items-center justify-center align-middle">
+<div class="group relative mx-2 inline-flex items-center justify-center align-middle">
     <x-heroicon-o-information-circle class="{{ $size }} {{ $color }} cursor-help transition-colors" />
 
     <div
