@@ -29,6 +29,6 @@
             Continuer mes achats
         </a>
 
-        <x-button :disabled="$count === 0" size="lg">Valider mon panier</x-button>
+        <x-button :disabled="$count === 0" size="lg" href="{{ route('checkout.index') }}">Valider mon panier</x-button>
     </div>
 </section>
