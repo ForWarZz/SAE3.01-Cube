@@ -15,7 +15,9 @@
         ];
     } elseif (request()->routeIs("articles.by-category") && isset($currentCategory)) {
         $pageType = "category";
-        //        $contextId = $currentCategory->id_categorie;
+        $context = [
+            "id_category" => $currentCategory->id_category,
+        ];
     } elseif (request()->routeIs("cart.index")) {
         $pageType = "cart";
     } elseif (request()->routeIs("checkout.index")) {
