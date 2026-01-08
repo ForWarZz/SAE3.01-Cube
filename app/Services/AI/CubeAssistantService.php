@@ -60,31 +60,41 @@ class CubeAssistantService
 
             $response = $chat->sendMessage('Analyse et réponds.');
 
-            Log::info('Response received', [
-                'parts' => $response->parts(),
-            ]);
+            $maxIterations = 5;
+            $iteration = 0;
 
-            if ($response->parts()[0]->functionCall !== null) {
-                $functionCall = $response->parts()[0]->functionCall;
-                $thoughtSignature = $response->parts()[0]->thoughtSignature;
+            while ($iteration < $maxIterations) {
+                $iteration++;
+
+                $parts = $response->parts();
+
+                if (empty($parts) || $parts[0]->functionCall === null) {
+                    break;
+                }
+
+                $functionCall = $parts[0]->functionCall;
+                $thoughtSignature = $parts[0]->thoughtSignature;
+
+                Log::info('Gemini function call', [
+                    'name' => $functionCall->name,
+                    'args' => $functionCall->args,
+                ]);
 
                 $functionResult = $this->functionExecutor->execute(
                     $functionCall->name,
                     $functionCall->args
                 );
 
-                $parts = [
-                    new Part(
-                        functionResponse: new FunctionResponse(
-                            name: $functionCall->name,
-                            response: $functionResult
-                        ),
-                        thoughtSignature: $thoughtSignature,
-                    ),
-                ];
-
                 $content = new Content(
-                    parts: $parts,
+                    parts: [
+                        new Part(
+                            functionResponse: new FunctionResponse(
+                                name: $functionCall->name,
+                                response: $functionResult
+                            ),
+                            thoughtSignature: $thoughtSignature
+                        ),
+                    ],
                     role: Role::USER
                 );
 
