@@ -229,42 +229,10 @@ export function startTour(force = false) {
                 },
             },
             {
-                element: '#specs',
-                popover: {
-                    title: 'Fiche Technique',
-                    description: 'Dérailleur, freins, poids... Tous les détails techniques sont ici.',
-                    side: 'top',
-                },
-            },
-            {
-                element: '#geometry',
-                popover: {
-                    title: 'Géométrie',
-                    description: 'Pour les experts : les dimensions exactes du cadre selon la taille.',
-                    side: 'top',
-                },
-            },
-            {
                 element: '#bike-calculator-container',
                 popover: {
                     title: 'Calculateur de taille',
                     description: 'Notre outil intelligent pour trouver votre taille idéale en 3 clics.',
-                    side: 'top',
-                },
-            },
-            {
-                element: '#compatible-accessories',
-                popover: {
-                    title: 'Accessoires compatibles',
-                    description: 'Porte-bidon, béquille... Des accessoires certifiés compatibles avec CE vélo.',
-                    side: 'top',
-                },
-            },
-            {
-                element: '#similar-articles',
-                popover: {
-                    title: 'Article similaires',
-                    description: 'D’autres vélos qui pourraient vous plaire.',
                     side: 'top',
                 },
             },
