@@ -1,25 +1,20 @@
 const searchInput = document.getElementById('search-input');
 
-if (searchInput) {
-    searchInput.addEventListener('keypress', function (event) {
-        if (event.key === 'Enter') {
-            const query = this.value.trim();
-            if (!query) return;
+if (searchInput && window.appRoutes?.articlesSearch) {
+    searchInput.addEventListener('keydown', function (event) {
+        if (event.key !== 'Enter') return;
 
-            const currentUrl = new URL(window.location.href);
+        const query = this.value.trim();
+        const url = new URL(window.appRoutes.articlesSearch);
 
-            const basePath = window.location.pathname.split('/articles')[0] || '';
-            const searchPath = basePath + '/articles/search';
-            const newUrl = new URL(searchPath, window.location.origin);
+        const params = new URLSearchParams(window.location.search);
+        params.forEach((value, key) => {
+            url.searchParams.set(key, value);
+        });
 
-            currentUrl.searchParams.forEach((value, key) => {
-                newUrl.searchParams.set(key, value);
-            });
+        url.searchParams.set('search', query);
+        url.searchParams.delete('page');
 
-            newUrl.searchParams.set('search', query);
-            newUrl.searchParams.delete('page');
-
-            window.location.href = newUrl.toString();
-        }
+        window.location.href = url.toString();
     });
 }

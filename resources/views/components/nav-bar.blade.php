@@ -43,12 +43,12 @@
 
                 <a
                     id="navbar-help-center-btn"
-                    title="Accéder au centre d'aide via ce bouton."
+                    title="Centre d'aide : guides, FAQ et tutoriels vidéo"
                     href="{{ route("user-guide") }}"
-                    class="text-gray-500 transition hover:text-blue-600"
+                    class="group relative flex items-center gap-2 rounded-lg border-2 border-blue-500 bg-blue-50 px-3 py-1.5 text-sm font-semibold text-blue-700 transition hover:border-blue-600 hover:bg-blue-100"
                 >
-                    <x-heroicon-o-question-mark-circle class="size-6" />
-                    <span class="sr-only">Aide</span>
+                    <x-heroicon-o-question-mark-circle class="size-5" />
+                    <span class="hidden xl:inline">Aide</span>
                 </a>
 
                 <div class="h-6 w-px bg-gray-200"></div>
@@ -93,3 +93,9 @@
         </div>
     </div>
 </nav>
+
+<script>
+    window.appRoutes = {
+        articlesSearch: '{{ route("articles.search") }}',
+    };
+</script>
