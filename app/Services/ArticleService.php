@@ -83,8 +83,8 @@ class ArticleService
         $sortBy = $request->input('sortBy');
         $filtersSelected = $this->filterEngineService->retrieveSelectedFilters($request);
 
-        $query = $this->filterEngineService->apply($baseQuery, $filtersSelected);
-        $filterOptions = $this->filterEngineService->getFilterOptions($query);
+        $filterOptions = $this->filterEngineService->getFilterOptions($baseQuery);
+        $query = $this->filterEngineService->apply(clone $baseQuery, $filtersSelected);
 
         $this->applySorting($query, $sortBy);
         $articles = $query

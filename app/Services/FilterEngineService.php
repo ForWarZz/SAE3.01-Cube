@@ -79,13 +79,14 @@ class FilterEngineService
         return $query;
     }
 
-    public function getFilterOptions(Builder $query): array
+    public function getFilterOptions(Builder $baseQuery): array
     {
         $opts = [];
-        $articleIds = $query->pluck('id_article')->toArray();
+
+        $articleIds = $baseQuery->pluck('id_article')->toArray();
 
         foreach ($this->filters as $filter) {
-            $opts[$filter->key()] = $filter->options((clone $query), $articleIds, $this->context);
+            $opts[$filter->key()] = $filter->options($baseQuery, $articleIds, $this->context);
         }
 
         return $opts;

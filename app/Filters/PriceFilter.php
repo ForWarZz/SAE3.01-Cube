@@ -27,12 +27,17 @@ class PriceFilter extends AbstractFilter
 
     public function options(Builder $baseQuery, array $articleIds, array $context = []): Collection
     {
-        $priceRange = Article::selectRaw('MIN(prix_article) as min_price, MAX(prix_article) as max_price')
+        if (empty($articleIds)) {
+            return collect(['min' => 0, 'max' => 0]);
+        }
+
+        $priceRange = Article::whereIn('id_article', $articleIds)
+            ->selectRaw('MIN(prix_article) as min_price, MAX(prix_article) as max_price')
             ->first();
 
         return collect([
-            'min' => $priceRange->min_price,
-            'max' => $priceRange->max_price,
+            'min' => $priceRange->min_price ?? 0,
+            'max' => $priceRange->max_price ?? 0,
         ]);
     }
 }
