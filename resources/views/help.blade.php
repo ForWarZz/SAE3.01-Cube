@@ -521,7 +521,7 @@
                             </ol>
                         </x-faq-item>
 
-                        <x-faq-item task="22" title="Comment gérer mes adresses de livraison ?" icon="heroicon-o-home">
+                        <x-faq-item task="22" title="Comment gérer mes adresses enregistrées ?" icon="heroicon-o-home">
                             <p class="mb-2">
                                 Accédez à vos adresses via l'icône cycliste
                                 <img src="{{ asset("resources/cyclist.svg") }}" alt="Login" class="inline size-7" />
