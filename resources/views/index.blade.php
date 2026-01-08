@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="relative flex-1 overflow-hidden bg-gray-900">
+    <div class="relative flex min-h-[calc(100vh-4rem)] overflow-hidden bg-gray-900">
         <div class="absolute inset-0">
             <img
                 src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?q=80&w=2070&auto=format&fit=crop"
@@ -10,7 +10,7 @@
 
         <div class="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/80 to-transparent"></div>
 
-        <div class="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-8 py-56">
+        <div class="relative mx-auto flex max-w-7xl flex-1 flex-col justify-center px-8">
             <div class="max-w-2xl">
                 <div
                     class="mb-4 inline-flex items-center gap-2 rounded-full border border-green-400/30 bg-green-500/20 px-4 py-2 text-sm font-medium text-green-300 backdrop-blur-sm"
