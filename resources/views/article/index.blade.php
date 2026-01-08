@@ -14,8 +14,8 @@
             @if ($articles->count() > 0)
                 <div id="sort-select" class="flex items-center gap-2">
                     <label for="sort" class="flex items-center gap-1 text-sm font-medium text-gray-700">
-                        Trier par:
                         <x-info-tooltip text="Organisez les produits selon vos préférences : prix, ventes, noms, etc." width="w-48" />
+                        Trier par:
                     </label>
                     <select
                         id="sort"
