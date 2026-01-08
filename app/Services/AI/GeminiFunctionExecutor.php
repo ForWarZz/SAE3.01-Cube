@@ -2,6 +2,7 @@
 
 namespace App\Services\AI;
 
+use App\Models\Category;
 use App\Models\Order;
 use App\Services\Cart\CartService;
 use Illuminate\Support\Facades\Log;
@@ -29,6 +30,7 @@ class GeminiFunctionExecutor
             'get_similar_articles' => $this->getSimilarArticles($arguments),
             'get_compatible_accessories' => $this->getCompatibleAccessories($arguments),
             'get_categories' => $this->getCategories($arguments),
+            'get_current_category' => $this->getCategoryDetails($arguments),
 
             default => ['error' => "Fonction inconnue: {$functionName}"],
         };
@@ -231,6 +233,29 @@ class GeminiFunctionExecutor
     private function getCategories(array $arguments): array
     {
         return $this->articleHelper->getCategories();
+    }
+
+    private function getCategoryDetails(array $arguments): array
+    {
+        $categoryId = $arguments['category_id'] ?? null;
+        if (! $categoryId) {
+            return ['error' => 'ID de la catégorie manquant, veuillez refaire votre demande en incluant l\'ID de la catégorie.'];
+        }
+
+        $category = Category::find($categoryId);
+
+        if (! $category) {
+            return ['error' => 'Catégorie introuvable avec l\'ID fourni.'];
+        }
+
+        return [
+            'success' => true,
+            'category' => [
+                'id_category' => $category->id_categorie,
+                'name' => $category->nom_categorie,
+                'full_path' => $category->getFullPath(),
+            ],
+        ];
     }
 
     private function buildOrderDetails(Order $order, bool $includeDetails = true): array

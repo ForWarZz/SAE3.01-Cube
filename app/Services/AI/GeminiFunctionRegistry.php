@@ -25,6 +25,7 @@ class GeminiFunctionRegistry
                     self::getSimilarArticles(),
                     self::getCompatibleAccessories(),
                     self::getCategories(),
+                    self::getCurrentCategoryDetails(),
                 ]
             ),
         ];
@@ -259,6 +260,24 @@ class GeminiFunctionRegistry
             parameters: new Schema(
                 type: DataType::OBJECT,
                 properties: []
+            )
+        );
+    }
+
+    private static function getCurrentCategoryDetails(): FunctionDeclaration
+    {
+        return new FunctionDeclaration(
+            name: 'get_current_category',
+            description: 'Récupère les détails de la catégorie actuelle consultée par l\'utilisateur, y compris son nom, et son positionnement dans l\'arborescence des catégories. Utilise cette fonction lorsque l\'utilisateur navigue dans une catégorie spécifique ou demande des informations sur la catégorie en cours.',
+            parameters: new Schema(
+                type: DataType::OBJECT,
+                properties: [
+                    'category_id' => new Schema(
+                        type: DataType::INTEGER,
+                        description: 'ID de la catégorie actuelle'
+                    ),
+                ],
+                required: ['category_id']
             )
         );
     }

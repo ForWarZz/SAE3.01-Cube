@@ -2,8 +2,6 @@
 
 namespace App\Services\AI;
 
-use App\Models\Category;
-use App\Services\Cart\CartService;
 use Exception;
 use Gemini\Data\Content;
 use Gemini\Data\FunctionResponse;
@@ -119,7 +117,6 @@ class CubeAssistantService
     {
         $context = [
             'metadata' => $this->buildMetadata($pageType, $pageUrl, $context),
-            //            'data' => $this->buildPayload($pageType, $context),
         ];
 
         return json_encode($context, JSON_UNESCAPED_UNICODE);
@@ -134,46 +131,6 @@ class CubeAssistantService
             'timestamp' => now()->toIso8601String(),
         ];
     }
-
-    //    private function buildPayload(string $pageType, ?array $context): array
-    //    {
-    //        return match ($pageType) {
-    //            'article-reference' => $this->buildArticleReferencePayload($contextId),
-    //            'category' => $this->buildCategoryPayload($contextId),
-    //            'cart', 'checkout' => $this->buildCartPayload(),
-    //            default => [],
-    //        };
-    //    }
-    //
-    //    private function buildArticleReferencePayload(int $referenceId): array
-    //    {
-    //        // L'IA utilisera les outils pour récupérer les informations nécessaires
-    //        return [
-    //            'page_type' => 'article_reference',
-    //            'reference_id' => $referenceId,
-    //        ];
-    //    }
-    //
-    //    private function buildCategoryPayload(int $categoryId): array
-    //    {
-    //        $category = Category::find($categoryId)->load('parentRecursive');
-    //
-    //        if (! $category) {
-    //            return ['error' => 'Category not found'];
-    //        }
-    //
-    //        return [
-    //            'category_name' => $category->nom_categorie,
-    //            'category_path' => $category->getFullPath(),
-    //        ];
-    //    }
-    //
-    //    private function buildCartPayload(): array
-    //    {
-    //        $cartData = $this->cartService->getCartData();
-    //
-    //        return $cartData->toArray();
-    //    }
 
     private function logPrompt(string $systemPrompt, string $situationalContext, string $userMessage): void
     {
