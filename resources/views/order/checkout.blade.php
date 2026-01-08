@@ -21,7 +21,13 @@
                     @method("PUT")
 
                     <section id="shipping-methods" class="mb-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                        <h2 class="mb-4 text-xl font-bold text-gray-900">1. Mode de livraison</h2>
+                        <h2 class="mb-4 flex items-center text-xl font-bold text-gray-900">
+                            1. Mode de livraison
+                            <x-info-tooltip
+                                width="w-64"
+                                text="Seules les modes de livraisons disponible pour votre commande sont affichés. Cliquer dessus pour en sélectionner un."
+                            />
+                        </h2>
 
                         <div class="grid grid-cols-3 gap-4">
                             @foreach ($deliveryModes as $mode)
@@ -68,7 +74,13 @@
 
                     <section id="billing-section" class="mb-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                         <div class="mb-6 flex items-center justify-between">
-                            <h2 class="text-xl font-bold text-gray-900">2. Adresse de facturation</h2>
+                            <h2 class="flex items-center text-xl font-bold text-gray-900">
+                                2. Adresse de facturation
+                                <x-info-tooltip
+                                    width="w-64"
+                                    text="Sélectionnez l'adresse de facturation associée à cette commande. Elle sera utilisée pour l'émission de la facture. Cliquez dessus pour en sélectionner une."
+                                />
+                            </h2>
                             <a
                                 href="{{ route("dashboard.addresses.create", ["intended" => route("checkout.index")]) }}"
                                 class="text-sm font-medium text-blue-600 hover:underline"
@@ -96,7 +108,13 @@
                     @if (! $isClickAndCollect)
                         <section id="delivery-section" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                             <div class="mb-6 flex items-center justify-between">
-                                <h2 class="text-xl font-bold text-gray-900">3. Adresse de livraison</h2>
+                                <h2 class="flex items-center text-xl font-bold text-gray-900">
+                                    3. Adresse de livraison
+                                    <x-info-tooltip
+                                        width="w-64"
+                                        text="Sélectionnez l'adresse de livraison associée à cette commande. Elle sera utilisée pour la livraison de vos articles. Cliquez dessus pour en sélectionner une."
+                                    />
+                                </h2>
                                 <a
                                     href="{{ route("dashboard.addresses.create", ["intended" => route("checkout.index")]) }}"
                                     class="text-sm font-medium text-blue-600 hover:underline"
@@ -122,7 +140,13 @@
                         </section>
                     @else
                         <section id="delivery-section" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                            <h2 class="mb-4 text-xl font-bold text-gray-900">3. Point de retrait</h2>
+                            <h2 class="mb-4 flex items-center text-xl font-bold text-gray-900">
+                                3. Point de retrait
+                                <x-info-tooltip
+                                    width="w-64"
+                                    text="Sélectionnez le magasin où vous souhaitez retirer votre commande. Cliquez dessus pour en sélectionner un."
+                                />
+                            </h2>
 
                             <div
                                 x-data
