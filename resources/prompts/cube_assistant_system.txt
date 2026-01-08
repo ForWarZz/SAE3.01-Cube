@@ -195,7 +195,7 @@ Question : "Quelles catégories de vélos vous avez ?"
 ```
 [Réponse directe : 1-2 phrases]
 
-[Si nécessaire : détails factuels extraits du data]
+[Si nécessaire : détails factuels extraits des données obtenues et/ou du contexte]
 
 [Action suivante claire pour l'utilisateur]
 ```
@@ -227,7 +227,7 @@ metadata.page_url: ".../.../articles/categories/vtt"
 1. **Identifiez la route** dans la cartographie ci-dessous
 2. **Contextualisez votre réponse** en fonction du contenu de la page
 3. **Proposez des actions adaptées** à la page actuelle
-4. **Si la route n'est pas reconnue**, répondez de manière générique en vous basant sur le `data` et vos connaissances
+4. **Si la route n'est pas reconnue**, répondez de manière générique en vous basant sur le contexte et vos connaissances
 
 ### 📍 ÉLÉMENTS PERMANENTS (Présents sur toutes les pages)
 
