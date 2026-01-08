@@ -443,7 +443,7 @@
 
                             <div class="mt-4">
                                 <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
-                                    <source src="{{ asset("resources/help/videos/suppresion-compte.mp4") }}" type="video/mp4" />
+                                    <source src="{{ asset("resources/help/videos/creer-compte.mp4") }}" type="video/mp4" />
                                     Votre navigateur ne supporte pas la vidéo.
                                 </video>
                                 <p class="mt-1 text-xs text-gray-500">Exemple de création d'un compte client</p>
@@ -514,9 +514,9 @@
 
                                     en haut à droite
                                 </li>
-                                <li>2. Sélectionnez "Mon profil" dans le menu déroulant</li>
+                                <li>2. Cliquez sur la tuile "Mon profil"</li>
                                 <li>3. Cliquez sur le bouton "Modifier" situé en haut à droite de la page</li>
-                                <li>4. Modifiez les champs souhaités (prénom, nom, email, numéro de téléphone)</li>
+                                <li>4. Modifiez les champs souhaités (prénom, nom, email, civilité...)</li>
                                 <li>5. Cliquez sur "Enregistrer les modifications"</li>
                             </ol>
                         </x-faq-item>
@@ -584,12 +584,18 @@
                         <x-faq-item task="24" title="Comment désactiver l'A2F ?" icon="heroicon-o-shield-check">
                             <p class="mb-2">Si vous souhaitez retirer cette protection :</p>
                             <ol class="ml-4 space-y-1 text-sm">
-                                <li>1. Retournez dans la section "Authentification à deux facteurs" de votre profil</li>
-                                <li>2. Cliquez sur le bouton "Désactiver"</li>
-                                <li>3. Confirmez l'action en saisissant votre mot de passe actuel</li>
+                                <li>
+                                    1. Cliquez sur l'icône cycliste, en haut à droite
+                                    <img src="{{ asset("resources/cyclist.svg") }}" alt="Login" class="inline size-7" />
+                                </li>
+                                <li>2. Accédez à la tuile "Mon profil"</li>
+                                <li>3. Descendez dans la section "Authentification à deux facteurs" de cette page</li>
+                                <li>4. Cliquez sur le bouton "Désactiver"</li>
+                                <li>5. Confirmez l'action en saisissant votre mot de passe actuel</li>
                             </ol>
                             <p class="mt-2 text-sm text-gray-500">
-                                Pour les comptes Google, la gestion se fait directement sur votre compte Google.
+                                Pour les comptes Google, cette fonctionnalité n'est pas disponible. La gestion de la sécurité se fait via
+                                <strong>myaccount.google.com/security</strong>
                             </p>
                         </x-faq-item>
 
@@ -617,7 +623,8 @@
                                 <li>3. Cliquez sur le bouton "Exporter mes données"</li>
                             </ol>
                             <p class="mt-2 text-sm">
-                                Un fichier au format JSON contenant toutes vos informations personnelles sera téléchargé automatiquement.
+                                Vous obtiendrez un fichier PDF, contenant vos informations personnelles, historique de commandes, adresses
+                                enregistrées, ainsi que toutes les données vous concernant.
                             </p>
                         </x-faq-item>
 
