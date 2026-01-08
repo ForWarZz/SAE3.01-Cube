@@ -4,10 +4,10 @@
     "icon" => null,
 ])
 
-<div class="faq-item overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+<div class="faq-item rounded-lg border border-gray-200 bg-white shadow-sm">
     <button
         @click="active = (active === {{ $task }} ? null : {{ $task }})"
-        class="flex w-full items-center justify-between p-5 text-left transition hover:bg-gray-50"
+        class="flex w-full cursor-pointer items-center justify-between rounded-lg p-5 text-left transition hover:bg-gray-50"
     >
         <span class="flex items-center gap-3 font-semibold text-gray-900">
             @if ($icon)
