@@ -3,7 +3,7 @@
         <h3 class="text-lg font-semibold text-gray-900">
             Géométrie : {{ $bike->bikeModel->nom_modele_velo }}
             <x-info-tooltip
-                text="Les détails de la géometrie du vélo sont disponible dans ce tableau. Vous trouverez le détail pour chaque taille de celui-ci."
+                text="Les dimensions précises du vélo sont disponibles dans ce tableau pour chaque taille disponible. Ces mesures vous aident à choisir le cadre le plus adapté à votre morphologie."
                 width="w-64"
                 size="size-6"
             />

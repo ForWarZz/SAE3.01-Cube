@@ -25,7 +25,7 @@
                             1. Mode de livraison
                             <x-info-tooltip
                                 width="w-64"
-                                text="Seules les modes de livraisons disponible pour votre commande sont affichés. Cliquer dessus pour en sélectionner un."
+                                text="Seuls les modes de livraison disponibles pour votre commande sont affichés. Cliquez dessus pour en sélectionner un."
                             />
                         </h2>
 

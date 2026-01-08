@@ -40,7 +40,7 @@
             </form>
 
             <div class="mt-4 text-center">
-                <p class="text-xs text-gray-500">Vous pouvez aussi utiliser un code de récupération.</p>
+                <p class="text-xs text-gray-500">Vous pouvez également utiliser un code de récupération.</p>
             </div>
 
             <div class="mt-6 text-center">

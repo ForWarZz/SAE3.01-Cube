@@ -87,9 +87,9 @@
                         <div class="rounded-lg bg-white p-6 shadow-sm">
                             <h2 class="mb-4 text-base font-semibold text-gray-900">Configuration</h2>
 
-                            <div class="mb-4">
-                                <label class="mb-1 block text-sm font-medium text-gray-700">
-                                    Catégorie
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-gray-700">
+                                    Tailles disponibles
                                     <span class="text-red-600">*</span>
                                 </label>
                                 <select name="id_categorie" class="block w-full rounded-md border-gray-300 p-2 text-sm">

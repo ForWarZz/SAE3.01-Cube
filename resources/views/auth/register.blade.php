@@ -145,9 +145,8 @@
                                 <a href="{{ route("privacy-policy") }}" class="font-medium text-blue-600 underline hover:text-blue-700">
                                     politique de confidentialité
                                 </a>
-                                . Je comprends que je dispose d'un droit d'accès, de rectification, d'opposition et de suppression de mes
-                                données personnelles en contactant le service client, conformément au Règlement Général sur la Protection
-                                des Données (RGPD).
+                                . Je dispose d'un droit d'accès, de rectification, d'opposition et de suppression de mes données en
+                                contactant le service client, conformément au RGPD.
                                 <span class="text-red-600">*</span>
                             </label>
                         </div>

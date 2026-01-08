@@ -2,7 +2,7 @@
     <h2 id="specs" class="mb-8 text-2xl font-bold text-gray-900">
         Fiche technique
         <x-info-tooltip
-            text="Vous trouverez dans cette section toutes les caractéristiques techniques de l'article. Cela vous permettra de comprendre plus en profondeur son fonctionnement ainsi que sa qualité."
+            text="Cette section présente toutes les caractéristiques techniques de l'article, vous permettant de mieux comprendre ses composants et sa qualité de fabrication."
             size="size-6"
             width="w-64"
         />

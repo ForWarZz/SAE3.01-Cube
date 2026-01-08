@@ -64,7 +64,7 @@
                                 name="address_autocomplete"
                                 id="address_autocomplete"
                                 label="Rechercher une adresse"
-                                help="Complétez automatiquement les champs d'adresse en tapant votre adresse ici."
+                                help="Saisissez votre adresse pour remplir automatiquement les champs ci-dessous."
                                 placeholder="Commencez à taper votre adresse..."
                             />
                         </div>

@@ -5,7 +5,7 @@
         <nav class="flex flex-wrap items-center gap-4 text-sm font-medium text-gray-600">
             <a href="{{ route("legal-notices") }}" class="transition hover:text-gray-900">Mentions légales</a>
             <a href="{{ route("privacy-policy") }}" class="transition hover:text-gray-900">Politique de confidentialité</a>
-            <a href="{{ route("terms-of-sale") }}" class="transition hover:text-gray-900">Condition générales de ventes</a>
+            <a href="{{ route("terms-of-sale") }}" class="transition hover:text-gray-900">Conditions générales de vente</a>
 
             <span class="block h-4 w-px bg-gray-300"></span>
 

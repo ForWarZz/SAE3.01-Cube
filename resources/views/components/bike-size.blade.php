@@ -39,7 +39,7 @@
 
                     <li class="flex items-start gap-3">
                         <x-heroicon-m-light-bulb class="mt-0.5 h-5 w-5 shrink-0 text-gray-400" />
-                        <span class="italic">Astuce : Coincez un livre entre vos jambes pour simuler la selle.</span>
+                        <span class="italic">Astuce : Utilisez un livre placé entre vos jambes pour simuler une selle.</span>
                     </li>
                 </ul>
             </div>

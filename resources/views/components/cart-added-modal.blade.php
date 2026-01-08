@@ -52,11 +52,11 @@
                 x-on:click="closeModal()"
                 class="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-100"
             >
-                Continuer
+                Continuer mes achats
             </button>
 
             <a href="{{ route("cart.index") }}" class="flex-1 rounded-lg bg-black px-4 py-2 text-center text-white hover:bg-gray-900">
-                Voir le panier
+                Voir mon panier
             </a>
         </div>
     </div>

@@ -51,8 +51,8 @@
 
                         <x-faq-item task="2" title="Comment filtrer les résultats ?" icon="heroicon-o-funnel">
                             <p class="mb-2">
-                                Dans la page catalogue (vélos ou accessoires, peu importe), localisez le panneau latéral gauche contenant
-                                tous les filtres disponibles :
+                                Sur une page catalogue (vélos ou accessoires), localisez le panneau latéral gauche contenant tous les
+                                filtres disponibles :
                             </p>
                             <ul class="ml-4 space-y-1 text-sm">
                                 <li>
@@ -279,10 +279,12 @@
                                         <x-heroicon-o-map-pin class="mr-1 inline h-4 w-4" />
                                         Point relais (Accessoires uniquement)
                                     </p>
-                                    <p class="mt-1 text-sm text-purple-700">Délai : 3-5 jours ouvrés. Frais appliqués automatiquement.</p>
+                                    <p class="mt-1 text-sm text-purple-700">
+                                        Délai : 3 à 5 jours ouvrés. Frais appliqués selon le montant.
+                                    </p>
                                 </div>
                             </div>
-                            <p class="mt-3 text-sm font-semibold">Livraison offerte en magasin si commande supérieure à 50 euros</p>
+                            <p class="mt-3 text-sm font-semibold">Livraison offerte en magasin pour toute commande supérieure à 50 €</p>
                         </x-faq-item>
 
                         <x-faq-item task="13" title="Comment utiliser un code promo ?" icon="heroicon-o-receipt-percent">
@@ -666,7 +668,7 @@
 
                             <div class="mt-4">
                                 <video autoplay loop muted playsinline class="w-full max-w-md rounded-lg border shadow-sm">
-                                    <source src="{{ asset("resources/help/videos/suppresion-compte.mp4") }}" type="video/mp4" />
+                                    <source src="{{ asset("resources/help/videos/suppression-compte.mp4") }}" type="video/mp4" />
                                     Votre navigateur ne supporte pas la vidéo.
                                 </video>
                                 <p class="mt-1 text-xs text-gray-500">Exemple de suppression d'un compte client</p>
