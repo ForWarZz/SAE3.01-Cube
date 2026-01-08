@@ -56,7 +56,7 @@
                     </a>
                     <a
                         href="{{ route("articles.by-category", $accessoryCategoryId) }}"
-                        class="text-sm leading-6 font-semibold text-white transition-colors duration-300 hover:text-blue-300"
+                        class="text-sm leading-6 font-semibold text-white transition-colors duration-300 hover:text-blue-400"
                     >
                         Nos accessoires
                         <span>→</span>

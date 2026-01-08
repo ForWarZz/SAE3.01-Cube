@@ -198,7 +198,7 @@
                     >
                         Quelle est ma taille de cadre ?
                         <x-info-tooltip
-                            title="💡 Trouvez votre taille"
+                            title="Trouvez votre taille"
                             text="Cliquez ici pour accéder au calculateur. Entrez votre taille et entrejambe, résultat en 10 secondes !"
                             width="w-56"
                         />
