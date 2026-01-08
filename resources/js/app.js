@@ -11,27 +11,32 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-function hasUserAcceptedOrRefusedCookies() {
-    const cookies = document.cookie.split(';');
-    return cookies.some((cookie) => cookie.trim().startsWith('tarteaucitron='));
+function isCookiePopupVisible() {
+    const banner = document.getElementById('tarteaucitronAlertBig');
+    if (!banner) {
+        return true;
+    }
+
+    return banner.style.display !== 'none';
 }
 
 function waitForCookieConsent() {
     return new Promise((resolve) => {
-        if (hasUserAcceptedOrRefusedCookies()) {
+        if (!isCookiePopupVisible()) {
             resolve();
             return;
         }
 
-        const checkInterval = setInterval(() => {
-            if (hasUserAcceptedOrRefusedCookies()) {
-                clearInterval(checkInterval);
+        const interval = setInterval(() => {
+            if (!isCookiePopupVisible()) {
+                console.log('Cookie popup closed');
+                clearInterval(interval);
                 resolve();
             }
-        }, 500);
+        }, 300);
 
         setTimeout(() => {
-            clearInterval(checkInterval);
+            clearInterval(interval);
             resolve();
         }, 60000);
     });
@@ -40,9 +45,7 @@ function waitForCookieConsent() {
 document.addEventListener('DOMContentLoaded', async () => {
     await waitForCookieConsent();
 
-    setTimeout(() => {
-        startTour();
-    }, 500);
+    startTour();
 });
 
 window.L = L;
