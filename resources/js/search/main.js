@@ -1,13 +1,16 @@
 const searchInput = document.getElementById('search-input');
 
-if (searchInput){
+if (searchInput) {
     searchInput.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
             const query = this.value.trim();
             if (!query) return;
 
             const currentUrl = new URL(window.location.href);
-            const newUrl = new URL('/articles/search', window.location.origin);
+
+            const basePath = window.location.pathname.split('/articles')[0] || '';
+            const searchPath = basePath + '/articles/search';
+            const newUrl = new URL(searchPath, window.location.origin);
 
             currentUrl.searchParams.forEach((value, key) => {
                 newUrl.searchParams.set(key, value);
@@ -20,4 +23,3 @@ if (searchInput){
         }
     });
 }
-
