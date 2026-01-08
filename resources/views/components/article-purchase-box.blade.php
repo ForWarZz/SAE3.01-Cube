@@ -100,21 +100,27 @@
                 @endif
             </form>
 
-            <button
-                id="check-shop-stock-btn"
-                x-data
-                x-on:click="
-                    $dispatch('open-shop-modal', {
-                        showAvailability: true,
-                        referenceId: {{ $currentReference->id_reference }},
-                        sizeId: {{ $currentSize->id }},
-                    })
-                "
-                class="flex w-full items-center justify-center border-2 border-black bg-white px-6 py-3 font-bold text-black transition hover:bg-gray-100"
-            >
-                <span class="mr-2">▸</span>
-                VOIR LES DISPONIBILITÉS
-            </button>
+            <div class="space-y-2">
+                <button
+                    id="check-shop-stock-btn"
+                    x-data
+                    x-on:click="
+                        $dispatch('open-shop-modal', {
+                            showAvailability: true,
+                            referenceId: {{ $currentReference->id_reference }},
+                            sizeId: {{ $currentSize->id }},
+                        })
+                    "
+                    class="flex w-full items-center justify-center border-2 border-black bg-white px-6 py-3 font-bold text-black transition hover:bg-gray-100"
+                >
+                    <span class="mr-2">▸</span>
+                    VOIR LES DISPONIBILITÉS
+                </button>
+                <p class="text-center text-xs text-gray-600">
+                    <x-heroicon-o-map-pin class="inline h-3.5 w-3.5 text-gray-400" />
+                    Stock en temps réel dans tous nos magasins
+                </p>
+            </div>
         </div>
     </div>
 
