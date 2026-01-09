@@ -15,6 +15,7 @@ class OrderLineItemDTO
         public float $unitPrice,
         public float $totalPrice,
         public int $articleId,
+        public int $returnedQuantity,
     ) {}
 
     public function toArray(): array
@@ -30,6 +31,7 @@ class OrderLineItemDTO
             'unitPrice' => $this->unitPrice,
             'totalPrice' => $this->totalPrice,
             'articleId' => $this->articleId,
+            'returnedQuantity' => $this->returnedQuantity,
         ];
     }
 }

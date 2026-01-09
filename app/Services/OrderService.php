@@ -90,6 +90,7 @@ class OrderService
                 unitPrice: $item->prix_unit_ligne,
                 totalPrice: $item->prix_unit_ligne * $item->quantite_ligne,
                 articleId: $ref->id_article,
+                returnedQuantity: $item->returnLines->sum('quantite_retournee'),
             );
         });
     }

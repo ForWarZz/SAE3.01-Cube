@@ -101,6 +101,13 @@
                                                             {{ number_format($item->unitPrice, 2, ",", " ") }} € / unité
                                                         </p>
                                                     @endif
+
+                                                    @if ($item->returnedQuantity > 0)
+                                                        <div class="flex items-center gap-1.5 text-orange-600">
+                                                            <x-heroicon-o-arrow-uturn-left class="size-4" />
+                                                            <span class="font-medium">{{ $item->returnedQuantity }} retourné(s)</span>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                             </div>
 

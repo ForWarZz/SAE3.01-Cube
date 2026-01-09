@@ -85,6 +85,7 @@ class OrderController extends Controller
             'items.reference.accessory',
 
             'items.size',
+            'items.returnLines',
 
             'paymentType',
             'shippingMode',
