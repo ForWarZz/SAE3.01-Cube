@@ -350,8 +350,8 @@ class GdprService
                     'pourcentage_remise' => $order->pourcentage_remise,
                     'moyen_paiement' => $order->paymentType->label_type_paiement,
                     'last4_cb' => $order->cb_last4,
-                    'adresse_facturation' => $order->billingAddress->toArray(),
-                    'adresse_livraison' => $order->deliveryAddress->toArray(),
+                    'adresse_facturation' => $order->billingAddress?->toArray() ?? [],
+                    'adresse_livraison' => $order->deliveryAddress?->toArray() ?? [],
                     'mode_livraison' => $order->shippingMode->label_moyen_livraison,
                     'articles' => $order->items->map(function (OrderLine $item) {
                         $article = $item->reference->article;
