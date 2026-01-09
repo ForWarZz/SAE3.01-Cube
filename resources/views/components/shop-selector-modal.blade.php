@@ -206,14 +206,6 @@
 </div>
 
 <script>
-    window.routes = {
-        shopsIndex: @json(route("shops.index")),
-        shopsAvailability: @json(route("shops.availability.show", ["reference" => "__REF__"])),
-        shopsSelect: @json(route("shops.select")),
-    };
-</script>
-
-<script>
     function shopSelector() {
         const selectedShop = @json(session("selected_shop"));
         const L = window.L;
@@ -306,14 +298,11 @@
             },
 
             buildShopsUrl() {
-                let url = window.routes.shopsIndex;
+                let url = '/~s315-cube//magasins';
 
                 if (this.showAvailability && this.referenceId) {
-                    url = window.routes.shopsAvailability.replace('__REF__', this.referenceId);
-
-                    if (this.sizeId) {
-                        url += `?size=${this.sizeId}`;
-                    }
+                    const params = this.sizeId ? `?size=${this.sizeId}` : '';
+                    url += `/disponibilite/${this.referenceId}${params}`;
                 }
 
                 return url;
@@ -418,7 +407,7 @@
             async selectShop(shop) {
                 try {
                     const token = document.querySelector('meta[name="csrf-token"]')?.content;
-                    const res = await fetch(window.routes.shopsSelect, {
+                    const res = await fetch('/~s315-cube//magasins', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -454,7 +443,7 @@
 
         try {
             const token = document.querySelector('meta[name="csrf-token"]')?.content;
-            const res = await fetch('/magasins', {
+            const res = await fetch('/~s315-cube/magasins', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
