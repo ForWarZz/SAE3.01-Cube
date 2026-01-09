@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\BreadcrumbDTO;
 use App\DTOs\Order\ReturnRequestItemDTO;
 use App\Http\Requests\OrderReturnCreateRequest;
 use App\Models\Order;
@@ -37,12 +38,19 @@ class OrderReturnController extends Controller
         $daysRemaining = now()->diffInDays($returnDeadline, false);
         $canReturn = $daysRemaining > 0;
 
+        $breadcrumbs = [
+            new BreadcrumbDTO('Mes commandes', route('dashboard.orders.index')),
+            new BreadcrumbDTO("Commande #$order->num_commande", route('dashboard.orders.show', ['order' => $order->id_commande])),
+            new BreadcrumbDTO('Faire un retour'),
+        ];
+
         return view('dashboard.orders.make-return', [
             'order' => $order,
             'items' => $this->orderReturnService->getAvailableLinesToReturn($order),
             'canReturn' => $canReturn,
             'daysRemaining' => $daysRemaining,
             'returnDeadline' => $returnDeadline,
+            'breadcrumbs' => $breadcrumbs,
         ]);
     }
 

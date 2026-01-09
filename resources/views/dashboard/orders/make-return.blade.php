@@ -1,38 +1,7 @@
-{{-- @php --}}
-{{-- use Carbon\Carbon; --}}
-
-{{-- $orderDate = Carbon::parse($order->date_commande); --}}
-{{-- $returnDeadline = $orderDate->copy()->addDays(14); --}}
-{{-- $daysRemaining = now()->diffInDays($returnDeadline, false); --}}
-{{-- $canReturn = $daysRemaining > 0; --}}
-{{-- @endphp --}}
-
 <x-app-layout>
     <div class="bg-gray-50 py-8">
         <div class="mx-auto max-w-4xl px-8">
-            {{-- <nav class="mb-6"> --}}
-            {{-- <div class="flex items-center gap-2 text-sm"> --}}
-            {{-- <a --}}
-            {{-- href="{{ route("dashboard.orders.index") }}" --}}
-            {{-- class="font-medium text-gray-500 transition-colors hover:text-gray-900" --}}
-            {{-- > --}}
-            {{-- Mes commandes --}}
-            {{-- </a> --}}
-            {{-- <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"> --}}
-            {{-- <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /> --}}
-            {{-- </svg> --}}
-            {{-- <a --}}
-            {{-- href="{{ route("dashboard.orders.show", $order) }}" --}}
-            {{-- class="font-medium text-gray-500 transition-colors hover:text-gray-900" --}}
-            {{-- > --}}
-            {{-- Commande #{{ $order->num_commande }} --}}
-            {{-- </a> --}}
-            {{-- <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"> --}}
-            {{-- <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /> --}}
-            {{-- </svg> --}}
-            {{-- <span class="font-medium text-gray-900">Demande de retour</span> --}}
-            {{-- </div> --}}
-            {{-- </nav> --}}
+            <x-breadcrumb :breadcrumbs="$breadcrumbs" />
 
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900">Demander un retour</h1>
