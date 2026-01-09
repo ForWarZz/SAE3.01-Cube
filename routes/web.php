@@ -7,6 +7,7 @@ use App\Http\Controllers\BotManController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
@@ -110,6 +111,9 @@ Route::middleware('auth')->group(function () {
 
         //        Route::post('/checkout/', [CheckoutController::class, 'checkout'])->name('checkout');
     });
+
+    // Route pour télécharger la facture PDF
+    Route::get('/facture/{order}', [InvoiceController::class, 'download'])->name('invoice.download');
 });
 
 Route::prefix('staff')->group(function () {

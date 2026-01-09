@@ -270,6 +270,25 @@
                             @endif
                         </div>
                     </div>
+                    <div class="space-y-6 p-5 text-sm">
+                            @if ($shop)
+                            @elseif ($order->deliveryAddress)
+                            @endif
+
+                            <div class="border-t border-gray-100"></div>
+
+                            <div class="pt-2">
+                                <a
+                                    href="{{ route('invoice.download', $order) }}"
+                                    class="inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-800"
+                                >
+                                    <x-heroicon-o-document-arrow-down class="size-5" />
+                                    Télécharger la facture (PDF)
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
