@@ -34,12 +34,15 @@ class DPOController extends Controller
             ->orderBy('date_commande', 'desc')
             ->paginate(25);
 
+        $clients = Client::withTrashed()->paginate(25);
+
         return view('staff.dpo.index', [
             'selectedDate' => $selectedDate,
             'usersCount' => $usersCount,
             'expiredOrdersCount' => $expiredOrdersCount,
             'legalDate' => $legalDate,
             'orders' => $orders,
+            'clients' => $clients,
         ]);
     }
 

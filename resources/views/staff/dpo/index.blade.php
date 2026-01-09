@@ -227,4 +227,81 @@
             @endif
         </div>
     </div>
+
+    <div class="mb-8 rounded-lg border border-gray-200 bg-white shadow-sm">
+        <div class="rounded-lg border-b border-gray-200 bg-gray-50 px-6 py-4">
+            <h3 class="flex items-center text-lg leading-6 font-medium text-gray-900">
+                <x-heroicon-o-document-text class="mr-2 h-5 w-5 text-yellow-500" />
+                4. Consultation des clients
+            </h3>
+            <p class="mt-1 text-sm text-gray-500">Démonstration que les clients anonymisés sont bien marqués comme tels</p>
+        </div>
+        <div class="p-6">
+            @if ($clients->isEmpty())
+                <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
+                    <x-heroicon-o-inbox class="mx-auto h-12 w-12 text-gray-400" />
+                    <p class="mt-2 text-sm text-gray-600">Aucun client</p>
+                </div>
+            @else
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-100 text-xs text-gray-700 uppercase">
+                            <tr>
+                                <th class="px-4 py-3">Nom</th>
+                                <th class="px-4 py-3">Prénom</th>
+                                <th class="px-4 py-3">Civilité</th>
+                                <th class="px-4 py-3">Email</th>
+                                <th class="px-4 py-3">Dernière connexion</th>
+                                <th class="px-4 py-3">Anonymisé</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($clients as $client)
+                                <tr class="border-b bg-white hover:bg-gray-50">
+                                    <td class="px-4 py-3 font-medium text-gray-900">
+                                        {{ $client->nom_client }}
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        {{ $client->prenom_client }}
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        {{ $client->civilite }}
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        {{ $client->email_client }}
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        @if ($client->date_der_connexion)
+                                            <x-date-local :date="$client->date_der_connexion" />
+                                        @else
+                                            <span class="text-gray-400">Jamais connecté</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        @if ($client->trashed())
+                                            <span
+                                                class="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800"
+                                            >
+                                                Oui
+                                            </span>
+                                        @else
+                                            <span
+                                                class="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800"
+                                            >
+                                                Non
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4">
+                    {{ $orders->links() }}
+                </div>
+            @endif
+        </div>
+    </div>
 </x-staff-layout>
