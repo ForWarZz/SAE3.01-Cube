@@ -9,6 +9,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderReturnController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\Staff\Commercial\CommercialAccessoryController;
@@ -95,7 +96,10 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
     Route::prefix('commandes')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::get('/{order}', [OrderController::class, 'show'])->name('show');
-        Route::get('/{order}/retour', [OrderController::class, 'showReturnForm'])->name('return.form');
+
+        Route::prefix('retour')->name('return.')->group(function () {
+            Route::get('/{order}', [OrderReturnController::class, 'create'])->name('create');
+        });
     });
 });
 
@@ -109,11 +113,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [CheckoutController::class, 'checkout'])->name('process');
         Route::get('/succes', [CheckoutController::class, 'success'])->name('success');
         Route::get('/erreur', [CheckoutController::class, 'cancel'])->name('cancel');
-
-        //        Route::post('/checkout/', [CheckoutController::class, 'checkout'])->name('checkout');
     });
 
-    // Route pour télécharger la facture PDF
     Route::get('/facture/{order}', [InvoiceController::class, 'download'])->name('invoice.download');
 });
 
