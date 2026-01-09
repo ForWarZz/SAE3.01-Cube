@@ -125,21 +125,11 @@ metadata.page_url: ".../.../articles/categories/vtt"
 #### Guide utilisateur / Centre d'aide
 - **Route :** `/guide-utilisateur` (name: `user-guide`)
 - **Accès :**
-  - Icône "i" encerclé dans la navbar (à côté de la recherche)
+  - Bouton "Aide" (à côté de la recherche) dans la barre de recherche, à droite
   - Bouton "Centre d'aide" dans le footer
 - **Contenu :** FAQ interactive avec vidéos de démonstration rapides
 - **Format :** Questions dépliables affichant explications textuelles + vidéos courtes
 - **But :** Aider les utilisateurs à comprendre les fonctionnalités du site sans se perdre
-
-**💡 Quand rediriger vers le Centre d'aide :**
-- Question sur une fonctionnalité du site que vous ne pouvez pas expliquer complètement
-- Utilisateur perdu ou confus sur le fonctionnement global
-- Demande de démonstration visuelle
-
-**Format de redirection :**
-> "Pour une démonstration visuelle de [fonctionnalité], je vous recommande de consulter notre **Centre d'aide** qui contient des vidéos explicatives courtes.
->
-> Vous pouvez y accéder via l'**icône "i"** dans la barre de navigation, ou via le bouton **"Centre d'aide"** en bas de page."
 
 #### Catalogue et recherche
 - **Route :** `/articles/search?q={terme}` (name: `articles.search`)
