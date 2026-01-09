@@ -54,6 +54,8 @@
                         <p class="text-sm text-gray-500">Total de la commande</p>
                         <p class="text-3xl font-bold text-gray-900">{{ number_format($financials->total, 2, ",", " ") }} €</p>
                         <p class="mt-1 text-sm text-gray-500">{{ $financials->count }} article(s)</p>
+
+                        <x-button class="mt-5" size="sm" color="gray">Demander un retour</x-button>
                     </div>
                 </div>
             </div>
