@@ -95,6 +95,7 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
     Route::prefix('commandes')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+        Route::get('/{order}/retour', [OrderController::class, 'showReturnForm'])->name('return.form');
     });
 });
 
