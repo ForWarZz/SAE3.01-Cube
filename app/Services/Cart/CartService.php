@@ -78,6 +78,7 @@ class CartService
         $deliveryPrice = $subtotal >= 50 ? 0 : 6;
 
         return ShippingMode::query()
+            ->whereNot('id_moyen_livraison', '=', 2)
             ->when($hasBikes, fn ($q) => $q->where('id_moyen_livraison', '=', 1))
             ->get()
             ->map(function (ShippingMode $mode) use ($deliveryPrice) {
