@@ -32,9 +32,9 @@ class DPOController extends Controller
             'items.reference.article',
         ])
             ->orderBy('date_commande', 'desc')
-            ->paginate(25);
+            ->paginate(25, ['*'], 'orders_page');
 
-        $clients = Client::withTrashed()->paginate(25);
+        $clients = Client::withTrashed()->paginate(25, ['*'], 'clients_page');
 
         return view('staff.dpo.index', [
             'selectedDate' => $selectedDate,
