@@ -29,112 +29,8 @@ class GdprService
         private readonly AddressService $addressService,
     ) {}
 
-    //    public function deleteOrAnonymizeClient(Client $client): string
-    //    {
-    //        // 1. Purge des commandes de plus de 10 ans
-    //        $orderExpirationDate = now()->subYears(self::EXPIRED_ORDER_YEARS);
-    //        $ordersToDelete = $client->orders()->where('date_commande', '<', $orderExpirationDate)->get();
-    //
-    //        foreach ($ordersToDelete as $order) {
-    //            \DB::table('evolue')->where('id_commande', $order->id_commande)->delete();
-    //            \DB::table('ligne_commande')->where('id_commande', $order->id_commande)->delete();
-    //            $order->delete();
-    //        }
-    //
-    //        // 2. On traite les adresses (SoftDelete si liée à une commande, ForceDelete sinon)
-    //        foreach ($client->addresses()->withTrashed()->get() as $address) {
-    //            $this->deleteOrSoftDelete($address);
-    //        }
-    //
-    //        // 3. ON RECHARGE TOUT
-    //        $client->refresh();
-    //
-    //        // 4. On vérifie s'il reste des commandes (même celles de moins de 10 ans)
-    //        if ($client->orders()->exists()) {
-    //            // On anonymise car on doit garder les commandes (compta)
-    //            $anonymizedData = self::ANONYMIZED_CLIENT_DATA;
-    //            $anonymizedData['email_client'] = 'anonyme_'.$client->id_client.'_'.time().'@deleted.local';
-    //
-    //            $client->update($anonymizedData);
-    //            $client->delete(); // Soft Delete du client
-    //
-    //            return 'Compte anonymisé (commandes conservées).';
-    //        }
-    //
-    //        // 5. CAS CRITIQUE : Suppression totale
-    //        // Si on est ici, le client n'a PLUS de commandes du tout.
-    //        // On DOIT supprimer physiquement toutes ses adresses (même soft-deleted)
-    //        // sinon la FK bloquera le forceDelete du client.
-    //        $client->addresses()->withTrashed()->forceDelete();
-    //
-    //        // Maintenant on peut supprimer le client sans erreur de FK
-    //        $client->forceDelete();
-    //
-    //        return 'Compte supprimé définitivement.';
-    //    }
-
-    //    public function deleteOrAnonymizeClient(Client $client): string
-    //    {
-    //        // 1. Supprimer les commandes de +10 ans (Physiquement pour nettoyer la base)
-    //        $orderExpirationDate = now()->subYears(self::EXPIRED_ORDER_YEARS);
-    //        $expiredOrderIds = $client->orders()
-    //            ->where('date_commande', '<', $orderExpirationDate)
-    //            ->pluck('id_commande');
-    //
-    //        if ($expiredOrderIds->isNotEmpty()) {
-    //            \DB::table('evolue')->whereIn('id_commande', $expiredOrderIds)->delete();
-    //            \DB::table('ligne_commande')->whereIn('id_commande', $expiredOrderIds)->delete();
-    //            \DB::table('commande')->whereIn('id_commande', $expiredOrderIds)->delete();
-    //        }
-    //
-    //        // 2. Traiter les adresses : On nettoie d'abord tout ce qui n'est plus lié
-    //        // On utilise withTrashed() pour ne rien oublier
-    //        foreach ($client->addresses()->withTrashed()->get() as $address) {
-    //            // IMPORTANT : On vérifie si l'adresse est liée à une commande ENCORE EXISTANTE
-    //            if ($this->isAddressLinkedToOrder($address)) {
-    //                $address->delete(); // On garde en SoftDelete car la commande existe
-    //            } else {
-    //                // AUCUNE commande ne pointe sur cette adresse : on la tue
-    //                $address->forceDelete();
-    //            }
-    //        }
-    //
-    //        // 3. ON RAFRAICHIT LE CLIENT ET SES RELATIONS
-    //        $client->refresh();
-    //
-    //        // 4. VERDICT : Est-ce qu'il reste des commandes au client ?
-    //        if ($client->orders()->exists()) {
-    //            // Il reste des commandes récentes (-10 ans) -> ANONYMISATION
-    //            $anonymizedData = self::ANONYMIZED_CLIENT_DATA;
-    //            $anonymizedData['email_client'] = 'anonyme_'.$client->id_client.'_'.time().'@deleted.local';
-    //
-    //            $client->update($anonymizedData);
-    //            $client->delete(); // Soft delete
-    //
-    //            return 'Compte anonymisé (commandes récentes conservées).';
-    //        }
-    //
-    //        // 5. SUPPRESSION TOTALE
-    //        // Si on est ici, le client n'a PLUS de commandes.
-    //        // On doit quand même s'assurer qu'aucune adresse soft-deleted ne traîne
-    //        // car elles bloqueraient la FK du client.
-    //        $client->addresses()->withTrashed()->forceDelete();
-    //
-    //        // Là, le client est totalement libre de toute attache, on peut le supprimer
-    //        $client->forceDelete();
-    //
-    //        return 'Compte supprimé définitivement.';
-    //    }
-
-    // jjhtthjthojth
-
     public function deleteOrAnonymizeClient(Client $client): string
     {
-        //        $orderExpirationDate = now()->subYears(GdprService::EXPIRED_ORDER_YEARS);
-        //        $client->orders()
-        //            ->where('date_commande', '<', $orderExpirationDate)
-        //            ->delete();
-
         $orderExpirationDate = now()->subYears(GdprService::EXPIRED_ORDER_YEARS);
         $orders = $client->orders()
             ->where('date_commande', '<', $orderExpirationDate)
@@ -142,7 +38,7 @@ class GdprService
 
         foreach ($orders as $order) {
             $order->items()->delete();
-            $order->states()->delete();
+            $order->states()->detach();
             $order->delete();
         }
 
@@ -166,114 +62,6 @@ class GdprService
 
         return 'Compte supprimé définitivement (aucune donnée récente à conserver).';
     }
-
-    //    public function deleteOrAnonymizeClient(Client $client): string
-    //    {
-    //        // 1. Purge des commandes expirées (> 10 ans)
-    //        $orderExpirationDate = now()->subYears(self::EXPIRED_ORDER_YEARS);
-    //        $expiredOrders = $client->orders()->where('date_commande', '<', $orderExpirationDate)->get();
-    //
-    //        foreach ($expiredOrders as $order) {
-    //            \DB::table('evolue')->where('id_commande', $order->id_commande)->delete();
-    //            \DB::table('ligne_commande')->where('id_commande', $order->id_commande)->delete();
-    //            $order->delete(); // Supprime ou SoftDelete la commande
-    //        }
-    //
-    //        // 2. Traitement des adresses : on boucle proprement
-    //        foreach ($client->addresses()->withTrashed()->get() as $address) {
-    //            // On vérifie une dernière fois si l'adresse est liée à UNE COMMANDE EXISTANTE en base
-    //            if ($this->isAddressLinkedToOrder($address)) {
-    //                $address->delete(); // On fait juste un SoftDelete pour garder la cohérence SQL
-    //            } else {
-    //                $address->forceDelete(); // Personne ne l'utilise, on peut la supprimer
-    //            }
-    //        }
-    //
-    //        $client->refresh();
-    //
-    //        // 3. Vérification des commandes restantes (moins de 10 ans)
-    //        if ($client->orders()->exists()) {
-    //            // ANONYMISATION (Obligation légale de conservation)
-    //            $anonymizedData = self::ANONYMIZED_CLIENT_DATA;
-    //            $anonymizedData['email_client'] = 'anonyme_'.$client->id_client.'_'.time().'@deleted.local';
-    //
-    //            $client->update($anonymizedData);
-    //            $client->delete(); // SoftDelete du client
-    //
-    //            return 'Compte anonymisé (commandes récentes conservées).';
-    //        }
-    //
-    //        // 4. SUPPRESSION TOTALE
-    //        // Avant de forceDelete le client, on doit libérer les adresses restantes
-    //        // Mais attention : on ne forceDelete QUE celles qui ne sont plus liées
-    //        foreach ($client->addresses()->withTrashed()->get() as $address) {
-    //            if (! $this->isAddressLinkedToOrder($address)) {
-    //                $address->forceDelete();
-    //            }
-    //        }
-    //
-    //        // Enfin, on tente de supprimer le client
-    //        try {
-    //            $client->forceDelete();
-    //        } catch (\Exception $e) {
-    //            // Si ça crash encore ici, c'est qu'il y a une AUTRE table (pas adresse)
-    //            // qui bloque (ex: logs, avis, etc.)
-    //            $client->delete();
-    //
-    //            return 'Suppression complète impossible (FK externe), le compte a été archivé.';
-    //        }
-    //
-    //        return 'Compte supprimé définitivement.';
-    //    }
-
-    //    public function deleteOrAnonymizeClient(Client $client): string
-    //    {
-    //        $orderExpirationDate = now()->subYears(self::EXPIRED_ORDER_YEARS);
-    //
-    //        // 1. Supprimer les commandes expirées
-    //        $orders = $client->orders()
-    //            ->where('date_commande', '<', $orderExpirationDate)
-    //            ->get();
-    //
-    //        $orders->each(function (Order $order) {
-    //            $order->states()->delete();
-    //            $order->items()->delete();
-    //            $order->delete();
-    //        });
-    //
-    //        // 2. Recharger l'état réel
-    //        $client->refresh();
-    //
-    //        // 3. Si des commandes existent encore → ANONYMISATION
-    //        if ($client->orders()->exists()) {
-    //
-    //            foreach ($client->addresses as $address) {
-    //                //                if ($this->isAddressLinkedToOrder($address)) {
-    //                //                    $this->anonymizeAddress($address);
-    //                //                } else {
-    //                //                    $address->forceDelete();
-    //                //                }
-    //                $this->deleteOrSoftDelete($address);
-    //            }
-    //
-    //            $anonymizedData = self::ANONYMIZED_CLIENT_DATA;
-    //            $anonymizedData['email_client'] =
-    //                'anonyme_'.$client->id_client.'_'.time().'@deleted.local';
-    //
-    //            $client->update($anonymizedData);
-    //
-    //            // ❗ JAMAIS forceDelete ici
-    //            $client->delete();
-    //
-    //            return 'Compte anonymisé (commandes conservées pour obligation légale).';
-    //        }
-    //
-    //        // 4. Aucun historique → suppression totale
-    //        //        $client->addresses()->forceDelete();
-    //        //        $this->deleteOrAnonymizeClient($client);
-    //
-    //        return 'Compte supprimé définitivement.';
-    //    }
 
     public function deleteOrSoftDelete(Address $address): string
     {
@@ -405,10 +193,8 @@ class GdprService
         $orderCount = $orders->count();
 
         foreach ($orders as $order) {
-            //            \DB::delete('DELETE FROM evolue WHERE id_commande = ?', [$order->id_commande]);
-            //            \DB::delete('DELETE FROM ligne_commande WHERE id_commande = ?', [$order->id_commande]);
-            $order->states()->delete();
             $order->items()->delete();
+            $order->states()->detach();
             $order->delete();
         }
 
