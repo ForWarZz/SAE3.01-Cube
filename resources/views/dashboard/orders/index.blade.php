@@ -68,6 +68,17 @@
                                                 </div>
                                             @endif
 
+                                            @if ($order->shopDelivery)
+                                                <div class="mb-3 border-t border-gray-100 pt-3">
+                                                    <p class="mb-1 text-xs font-medium tracking-wider text-gray-400 uppercase">
+                                                        Magasin de retrait
+                                                    </p>
+                                                    <p class="font-medium text-gray-900">{{ $order->shopDelivery->shopName }}</p>
+                                                    <p class="text-gray-500">{{ $order->shopDelivery->street }}</p>
+                                                    <p class="text-gray-500">{{ $order->shopDelivery->city }}</p>
+                                                </div>
+                                            @endif
+
                                             <div class="mt-3 space-y-1 border-t border-gray-100 pt-3">
                                                 <div class="flex justify-between text-gray-500">
                                                     <span>{{ $order->countArticles }} article(s)</span>

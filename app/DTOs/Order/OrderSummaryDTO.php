@@ -16,6 +16,7 @@ class OrderSummaryDTO
         public int $countArticles,
         public OrderFinancialsDTO $financials,
         public ?AddressDTO $address,
+        public ?ShopDeliveryDTO $shopDelivery,
     ) {}
 
     public function toArray(): array
@@ -30,6 +31,7 @@ class OrderSummaryDTO
             'countArticles' => $this->countArticles,
             'financials' => $this->financials->toArray(),
             'address' => $this->address?->toArray(),
+            'shopDelivery' => $this->shopDelivery?->toArray(),
         ];
     }
 }

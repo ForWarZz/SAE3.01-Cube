@@ -6,6 +6,7 @@ use App\DTOs\Order\AddressDTO;
 use App\DTOs\Order\OrderFinancialsDTO;
 use App\DTOs\Order\OrderLineItemDTO;
 use App\DTOs\Order\OrderSummaryDTO;
+use App\DTOs\Order\ShopDeliveryDTO;
 use App\DTOs\Order\StatusStyleDTO;
 use App\Models\Order;
 use App\Models\OrderLine;
@@ -30,6 +31,7 @@ class OrderService
             countArticles: $order->items->sum('quantite_ligne'),
             financials: $financials,
             address: $order->deliveryAddress ? AddressDTO::fromModel($order->deliveryAddress) : null,
+            shopDelivery: $order->shop ? ShopDeliveryDTO::fromModel($order->shop) : null,
         );
     }
 

@@ -17,7 +17,7 @@ class AddressDTO
         return new self(
             name: $address->prenom_adresse.' '.$address->nom_adresse,
             street: $address->num_voie_adresse.' '.$address->rue_adresse,
-            city: ($address->city->cp_ville ?? '').' '.($address->city->nom_ville ?? ''),
+            city: ($address->city->cp_ville).' '.($address->city->nom_ville),
         );
     }
 
