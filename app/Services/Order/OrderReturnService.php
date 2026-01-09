@@ -7,15 +7,10 @@ use App\DTOs\Order\ReturnRequestItemDTO;
 use App\Models\Order;
 use App\Models\OrderLine;
 use App\Models\OrderReturnRequest;
-use App\Services\OrderService;
 use Illuminate\Support\Collection;
 
 class OrderReturnService
 {
-    public function __construct(
-        private readonly OrderService $orderService,
-    ) {}
-
     /**
      * @return Collection<int, AvailableReturnLineDTO>
      */

@@ -6,6 +6,7 @@ use App\DTOs\Order\ReturnRequestItemDTO;
 use App\Http\Requests\OrderReturnCreateRequest;
 use App\Models\Order;
 use App\Services\Order\OrderReturnService;
+use Carbon\Carbon;
 
 class OrderReturnController extends Controller
 {
@@ -31,9 +32,17 @@ class OrderReturnController extends Controller
             'items.returnLines',
         ]);
 
+        $orderDate = Carbon::parse($order->date_commande);
+        $returnDeadline = $orderDate->copy()->addDays(14);
+        $daysRemaining = now()->diffInDays($returnDeadline, false);
+        $canReturn = $daysRemaining > 0;
+
         return view('dashboard.orders.make-return', [
             'order' => $order,
             'items' => $this->orderReturnService->getAvailableLinesToReturn($order),
+            'canReturn' => $canReturn,
+            'daysRemaining' => $daysRemaining,
+            'returnDeadline' => $returnDeadline,
         ]);
     }
 

@@ -1,11 +1,11 @@
-@php
-    use Carbon\Carbon;
+{{-- @php --}}
+{{-- use Carbon\Carbon; --}}
 
-    $orderDate = Carbon::parse($order->date_commande);
-    $returnDeadline = $orderDate->copy()->addDays(14);
-    $daysRemaining = now()->diffInDays($returnDeadline, false);
-    $canReturn = $daysRemaining > 0;
-@endphp
+{{-- $orderDate = Carbon::parse($order->date_commande); --}}
+{{-- $returnDeadline = $orderDate->copy()->addDays(14); --}}
+{{-- $daysRemaining = now()->diffInDays($returnDeadline, false); --}}
+{{-- $canReturn = $daysRemaining > 0; --}}
+{{-- @endphp --}}
 
 <x-app-layout>
     <div class="bg-gray-50 py-8">
