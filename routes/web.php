@@ -169,7 +169,7 @@ Route::prefix('staff')->group(function () {
     });
 });
 
-Route::prefix('/magasins')->name('shops')->group(function () {
+Route::prefix('/magasins')->name('shops.')->group(function () {
     Route::get('/', [ShopController::class, 'index'])->name('index');
     Route::post('/', [ShopController::class, 'select'])->name('select');
 

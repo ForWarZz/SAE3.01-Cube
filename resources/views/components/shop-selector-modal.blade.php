@@ -206,6 +206,14 @@
 </div>
 
 <script>
+    window.routes = {
+        shopsIndex: @json(route("shops.index")),
+        shopsAvailability: @json(route("shops.availability.show", ["reference" => "__REF__"])),
+        shopsSelect: @json(route("shops.select")),
+    };
+</script>
+
+<script>
     function shopSelector() {
         const selectedShop = @json(session("selected_shop"));
         const L = window.L;
@@ -298,15 +306,17 @@
             },
 
             buildShopsUrl() {
+                let url = window.routes.shopsIndex;
+
                 if (this.showAvailability && this.referenceId) {
-                    const baseUrl = '{{ route("shopsavailability.show", ["reference" => "__REFERENCE__"]) }}'.replace(
-                        '__REFERENCE__',
-                        this.referenceId,
-                    );
-                    return this.sizeId ? `${baseUrl}?size=${this.sizeId}` : baseUrl;
+                    url = window.routes.shopsAvailability.replace('__REF__', this.referenceId);
+
+                    if (this.sizeId) {
+                        url += `?size=${this.sizeId}`;
+                    }
                 }
 
-                return '{{ route("shopsindex") }}';
+                return url;
             },
 
             matchesSearchQuery(item, query) {
@@ -408,7 +418,7 @@
             async selectShop(shop) {
                 try {
                     const token = document.querySelector('meta[name="csrf-token"]')?.content;
-                    const res = await fetch('{{ route("shopsselect") }}', {
+                    const res = await fetch(window.routes.shopsSelect, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -444,7 +454,7 @@
 
         try {
             const token = document.querySelector('meta[name="csrf-token"]')?.content;
-            const res = await fetch('{{ route("shopsselect") }}', {
+            const res = await fetch('/magasins', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
