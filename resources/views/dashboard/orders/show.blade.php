@@ -41,15 +41,13 @@
                             </p>
                         @endif
 
-                        <div class="mt-5">
-                            <a
-                                href="{{ route("invoice.download", $order) }}"
-                                class="inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-800"
-                            >
-                                <x-heroicon-o-document-arrow-down class="size-5" />
-                                Télécharger la facture (PDF)
-                            </a>
-                        </div>
+                        <a
+                            href="{{ route("invoice.download", $order) }}"
+                            class="mt-5 inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-800"
+                        >
+                            <x-heroicon-o-document-arrow-down class="size-5" />
+                            Télécharger la facture (PDF)
+                        </a>
                     </div>
 
                     <div class="text-right">
