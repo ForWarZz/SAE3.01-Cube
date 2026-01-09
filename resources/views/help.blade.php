@@ -25,6 +25,69 @@
 
             <div class="mt-12 space-y-10" x-data="{ active: null }">
                 <div class="faq-category">
+                    <h3 class="mb-4 text-sm font-semibold tracking-wide text-blue-600 uppercase">
+                        <x-heroicon-o-question-mark-circle class="mr-1 inline h-5 w-5" />
+                        Utiliser le site
+                    </h3>
+                    <div class="space-y-2">
+                        <x-faq-item task="0" title="Comment accéder au centre d'aide ?" icon="heroicon-o-question-mark-circle">
+                            <p class="mb-2">
+                                Le centre d'aide est toujours accessible via le
+                                <strong>bouton bleu "Aide"</strong>
+                                dans la barre de navigation en haut à droite.
+                            </p>
+                            <div class="mt-2 rounded-lg border border-blue-200 bg-blue-50 p-3">
+                                <p class="text-sm text-blue-900">
+                                    <x-heroicon-o-information-circle class="mr-1 inline h-4 w-4 text-blue-600" />
+                                    <strong>Vous avez une question ?</strong>
+                                    Notre chatbot intelligent est également disponible en cliquant sur la bulle bleue en bas à droite de
+                                    chaque page. Il connaît tout le site et peut vous guider 24/7 !
+                                </p>
+                            </div>
+                        </x-faq-item>
+
+                        <x-faq-item task="1" title="Vélo musculaire ou vélo électrique : comment choisir ?" icon="heroicon-o-bolt">
+                            <p class="mb-2">Le choix dépend de votre usage et de vos besoins :</p>
+                            <div class="space-y-2 text-sm">
+                                <div class="rounded-lg border border-blue-200 bg-blue-50 p-3">
+                                    <p class="font-semibold text-blue-900">
+                                        <x-heroicon-o-fire class="mr-1 inline h-4 w-4" />
+                                        Vélo musculaire (sans assistance)
+                                    </p>
+                                    <ul class="mt-1 ml-4 list-disc text-blue-700">
+                                        <li>
+                                            Idéal pour le
+                                            <strong>sport et l'exercice physique</strong>
+                                        </li>
+                                        <li>Léger et facile à transporter</li>
+                                        <li>Pas de batterie à recharger</li>
+                                        <li>Prix plus accessible</li>
+                                        <li>Parfait pour trajets courts (< 5 km) ou loisirs sportifs</li>
+                                    </ul>
+                                </div>
+                                <div class="rounded-lg border border-blue-200 bg-blue-50 p-3">
+                                    <p class="font-semibold text-blue-900">
+                                        <x-heroicon-o-bolt class="mr-1 inline h-4 w-4" />
+                                        Vélo électrique (VAE)
+                                    </p>
+                                    <ul class="mt-1 ml-4 list-disc text-blue-700">
+                                        <li>
+                                            Parfait pour les
+                                            <strong>trajets quotidiens</strong>
+                                            domicile-travail
+                                        </li>
+                                        <li>Assistance dans les côtes et par vent contraire</li>
+                                        <li>Arrivez sans transpirer (idéal pour aller au travail)</li>
+                                        <li>Batterie 500-625 Wh pour 10-20 km/jour</li>
+                                        <li>Éligible aux aides de l'État (jusqu'à 400€)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </x-faq-item>
+                    </div>
+                </div>
+
+                <div class="faq-category">
                     <h3 class="mb-4 text-sm font-semibold tracking-wide text-green-600 uppercase">
                         <x-heroicon-o-sun class="mr-1 inline h-5 w-5" />
                         Mobilité douce & Écologie

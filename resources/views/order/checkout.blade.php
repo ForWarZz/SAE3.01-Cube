@@ -2,6 +2,28 @@
     <div class="min-h-screen bg-gray-100 px-24 py-12">
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900">Finaliser ma commande</h1>
+            <p class="mt-2 text-sm text-gray-600">
+                3 étapes simples : choisir le mode de livraison, les adresses de facturation et livraison, puis payer.
+            </p>
+        </div>
+
+        <!-- Info aide -->
+        <div class="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm" x-data="{ show: true }" x-show="show" x-transition>
+            <div class="flex items-start gap-3">
+                <x-heroicon-o-information-circle class="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-600" />
+                <div class="flex-1 text-blue-900">
+                    <p class="mb-1 font-semibold">💳 Finalisation de commande</p>
+                    <p class="text-xs text-blue-800">
+                        <strong>Vélos :</strong>
+                        Click & Collect en magasin (gratuit).
+                        <strong>Accessoires :</strong>
+                        Livraison à domicile ou point relais. Une fois validé, vous serez redirigé vers le paiement sécurisé Stripe.
+                    </p>
+                </div>
+                <button @click="show = false" class="flex-shrink-0 text-blue-400 hover:text-blue-600">
+                    <x-heroicon-o-x-mark class="h-4 w-4" />
+                </button>
+            </div>
         </div>
 
         @php
@@ -78,7 +100,8 @@
                                 2. Adresse de facturation
                                 <x-info-tooltip
                                     width="w-64"
-                                    text="Sélectionnez l'adresse de facturation associée à cette commande. Elle sera utilisée pour l'émission de la facture. Cliquez dessus pour en sélectionner une."
+                                    title="Votre facture"
+                                    text="L'adresse qui apparaîtra sur votre facture (généralement votre domicile). Cliquez sur une adresse pour la sélectionner."
                                 />
                             </h2>
                             <a
