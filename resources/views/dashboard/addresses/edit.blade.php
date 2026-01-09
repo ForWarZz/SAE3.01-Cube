@@ -7,6 +7,7 @@
 
                     <form method="POST" action="{{ route("dashboard.addresses.update", $address) }}" id="address-form">
                         @csrf
+                        @method("PUT")
 
                         @if (isset($intended))
                             <input type="hidden" name="intended" value="{{ $intended }}" />
@@ -53,7 +54,7 @@
                             type="tel"
                             name="telephone_adresse"
                             label="Téléphone"
-                            placeholder="04 50 10 25 21"
+                            placeholder="0450102521"
                             :value="old('telephone_adresse', $address->telephone_adresse)"
                             required
                         />
@@ -62,7 +63,7 @@
                             type="tel"
                             name="tel_mobile_adresse"
                             label="Téléphone mobile"
-                            placeholder="06 12 34 56 78"
+                            placeholder="0612345678"
                             :value="old('tel_mobile_adresse', $address->tel_mobile_adresse)"
                         />
 
@@ -163,7 +164,7 @@
                             >
                                 &larr; Retour aux adresses
                             </a>
-                            <x-button type="submit" color="blue" size="sm">+ Nouvelle adresse</x-button>
+                            <x-button type="submit" color="blue" size="sm">Modifier l'adresse</x-button>
                         </div>
                     </form>
                 </div>
