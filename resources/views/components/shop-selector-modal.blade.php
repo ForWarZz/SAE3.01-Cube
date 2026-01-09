@@ -298,7 +298,7 @@
             },
 
             buildShopsUrl() {
-                let url = '/~s315-cube//magasins';
+                let url = '/~s315-cube/magasins';
 
                 if (this.showAvailability && this.referenceId) {
                     const params = this.sizeId ? `?size=${this.sizeId}` : '';
@@ -407,7 +407,7 @@
             async selectShop(shop) {
                 try {
                     const token = document.querySelector('meta[name="csrf-token"]')?.content;
-                    const res = await fetch('/~s315-cube//magasins', {
+                    const res = await fetch('/~s315-cube/magasins', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
