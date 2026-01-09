@@ -118,7 +118,7 @@
         <div class="rounded-lg border-b border-gray-200 bg-gray-50 px-6 py-4">
             <h3 class="flex items-center text-lg leading-6 font-medium text-gray-900">
                 <x-heroicon-o-document-text class="mr-2 h-5 w-5 text-purple-500" />
-                3. Consultation des commandes et factures
+                3. Consultation des commandes et factures - {{ $orders->total() }} commandes
             </h3>
             <p class="mt-1 text-sm text-gray-500">
                 Démonstration que les adresses de facturation/livraison sont conservées après anonymisation
@@ -232,7 +232,7 @@
         <div class="rounded-lg border-b border-gray-200 bg-gray-50 px-6 py-4">
             <h3 class="flex items-center text-lg leading-6 font-medium text-gray-900">
                 <x-heroicon-o-document-text class="mr-2 h-5 w-5 text-yellow-500" />
-                4. Consultation des clients
+                4. Consultation des clients - {{ $clients->total() }} clients
             </h3>
             <p class="mt-1 text-sm text-gray-500">Démonstration que les clients anonymisés sont bien marqués comme tels</p>
         </div>
