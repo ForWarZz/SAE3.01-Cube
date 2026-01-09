@@ -113,4 +113,118 @@
             </div>
         </div>
     </div>
+
+    <div class="mb-8 rounded-lg border border-gray-200 bg-white shadow-sm">
+        <div class="rounded-lg border-b border-gray-200 bg-gray-50 px-6 py-4">
+            <h3 class="flex items-center text-lg leading-6 font-medium text-gray-900">
+                <x-heroicon-o-document-text class="mr-2 h-5 w-5 text-purple-500" />
+                3. Consultation des commandes et factures
+            </h3>
+            <p class="mt-1 text-sm text-gray-500">
+                Démonstration que les adresses de facturation/livraison sont conservées après anonymisation
+            </p>
+        </div>
+
+        <div class="p-6">
+            @if ($orders->isEmpty())
+                <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
+                    <x-heroicon-o-inbox class="mx-auto h-12 w-12 text-gray-400" />
+                    <p class="mt-2 text-sm text-gray-600">Aucune commande</p>
+                </div>
+            @else
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-100 text-xs text-gray-700 uppercase">
+                            <tr>
+                                <th class="px-4 py-3">N° Commande</th>
+                                <th class="px-4 py-3">Date</th>
+                                <th class="px-4 py-3">Client</th>
+                                <th class="px-4 py-3">Articles</th>
+                                <th class="px-4 py-3">Montant</th>
+                                <th class="px-4 py-3">Adresse facturation</th>
+                                <th class="px-4 py-3">Adresse livraison</th>
+                                <th class="px-4 py-3 text-center">Facture</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($orders as $order)
+                                <tr class="border-b bg-white hover:bg-gray-50">
+                                    <td class="px-4 py-3 font-medium text-gray-900">#{{ $order->num_commande }}</td>
+                                    <td class="px-4 py-3">{{ $order->date_commande->format("d/m/Y") }}</td>
+                                    <td class="px-4 py-3">
+                                        <div class="text-xs">
+                                            <div class="font-medium">Client #{{ $order->id_client }}</div>
+                                            <div class="text-gray-600">
+                                                {{ $order->client->prenom_client ?? "N/A" }}
+                                                {{ $order->client->nom_client ?? "N/A" }}
+                                            </div>
+                                            @if ($order->client && $order->client->trashed())
+                                                <span
+                                                    class="inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800"
+                                                >
+                                                    Anonymisé {{ $order->client->id_client }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3">{{ $order->items->count() }} article(s)</td>
+                                    <td class="px-4 py-3 font-medium">
+                                        {{ number_format($order->items->sum(fn ($item) => $item->prix_unit_ligne * $item->quantite_ligne) + $order->frais_livraison, 2, ",", " ") }}
+                                        €
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        @if ($order->billingAddress)
+                                            <div class="text-xs">
+                                                <div class="font-medium">
+                                                    {{ $order->billingAddress->prenom_adresse }}
+                                                    {{ $order->billingAddress->nom_adresse }}
+                                                </div>
+                                                <div class="text-gray-600">{{ $order->billingAddress->rue_adresse }}</div>
+                                                <div class="text-gray-600">
+                                                    {{ $order->billingAddress->city->cp_ville }}
+                                                    {{ $order->billingAddress->city->nom_ville }}
+                                                </div>
+                                            </div>
+                                        @else
+                                            <span class="text-gray-400">N/A</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        @if ($order->deliveryAddress)
+                                            <div class="text-xs">
+                                                <div class="font-medium">
+                                                    {{ $order->deliveryAddress->prenom_adresse }}
+                                                    {{ $order->deliveryAddress->nom_adresse }}
+                                                </div>
+                                                <div class="text-gray-600">{{ $order->deliveryAddress->rue_adresse }}</div>
+                                                <div class="text-gray-600">
+                                                    {{ $order->deliveryAddress->city->cp_ville }}
+                                                    {{ $order->deliveryAddress->city->nom_ville }}
+                                                </div>
+                                            </div>
+                                        @else
+                                            <span class="text-gray-400">N/A</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-3 text-center">
+                                        <a
+                                            href="{{ route("dpo.invoice.download", $order) }}"
+                                            class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800"
+                                            title="Télécharger la facture"
+                                        >
+                                            <x-heroicon-o-arrow-down-tray class="h-5 w-5" />
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4">
+                    {{ $orders->links() }}
+                </div>
+            @endif
+        </div>
+    </div>
 </x-staff-layout>

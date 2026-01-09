@@ -172,6 +172,7 @@ Route::prefix('staff')->group(function () {
             Route::get('/', [DPOController::class, 'index'])->name('index');
             Route::post('anonymiser-client', [DPOController::class, 'anonymizeClient'])->name('anonymize-client');
             Route::post('supprimer-commandes-expirees', [DPOController::class, 'deleteExpiredOrders'])->name('delete-expired-orders');
+            Route::get('facture/{order}', [InvoiceController::class, 'downloadForDpo'])->name('invoice.download');
         });
     });
 });

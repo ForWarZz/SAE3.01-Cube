@@ -24,11 +24,22 @@ class DPOController extends Controller
         $expiredOrdersCount = Order::where('date_commande', '<', $legalDate)
             ->count();
 
+        $orders = Order::with([
+            'client',
+            'billingAddress.city',
+            'deliveryAddress.city',
+            'paymentType',
+            'items.reference.article',
+        ])
+            ->orderBy('date_commande', 'desc')
+            ->paginate(25);
+
         return view('staff.dpo.index', [
             'selectedDate' => $selectedDate,
             'usersCount' => $usersCount,
             'expiredOrdersCount' => $expiredOrdersCount,
             'legalDate' => $legalDate,
+            'orders' => $orders,
         ]);
     }
 
