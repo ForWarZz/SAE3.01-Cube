@@ -298,14 +298,15 @@
             },
 
             buildShopsUrl() {
-                let url = '/magasins';
-
                 if (this.showAvailability && this.referenceId) {
-                    const params = this.sizeId ? `?size=${this.sizeId}` : '';
-                    url += `/disponibilite/${this.referenceId}${params}`;
+                    const baseUrl = '{{ route("shopsavailability.show", ["reference" => "__REFERENCE__"]) }}'.replace(
+                        '__REFERENCE__',
+                        this.referenceId,
+                    );
+                    return this.sizeId ? `${baseUrl}?size=${this.sizeId}` : baseUrl;
                 }
 
-                return url;
+                return '{{ route("shopsindex") }}';
             },
 
             matchesSearchQuery(item, query) {
@@ -407,7 +408,7 @@
             async selectShop(shop) {
                 try {
                     const token = document.querySelector('meta[name="csrf-token"]')?.content;
-                    const res = await fetch('/magasins', {
+                    const res = await fetch('{{ route("shopsselect") }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -443,7 +444,7 @@
 
         try {
             const token = document.querySelector('meta[name="csrf-token"]')?.content;
-            const res = await fetch('/magasins', {
+            const res = await fetch('{{ route("shopsselect") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
