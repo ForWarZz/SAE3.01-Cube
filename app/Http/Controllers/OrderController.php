@@ -94,6 +94,9 @@ class OrderController extends Controller
 
             'deliveryAddress.city',
             'billingAddress.city',
+
+            'returnRequests.state',
+            'returnRequests.lines.orderLine',
         ]);
 
         $currentState = $order->currentState();

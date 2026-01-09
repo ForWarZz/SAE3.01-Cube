@@ -180,6 +180,79 @@
                             @endforeach
                         </div>
                     </div>
+
+                    @if ($order->returnRequests->isNotEmpty())
+                        <div class="rounded-xl border border-orange-200 bg-orange-50 shadow-sm">
+                            <div class="border-b border-orange-200 px-6 py-4">
+                                <h2 class="flex items-center gap-2 text-lg font-semibold text-orange-900">
+                                    <x-heroicon-o-arrow-uturn-left class="size-5" />
+                                    Demandes de retour
+                                </h2>
+                            </div>
+                            <div class="divide-y divide-orange-100">
+                                @foreach ($order->returnRequests as $returnRequest)
+                                    <div class="p-6">
+                                        <div class="mb-3 flex items-start justify-between">
+                                            <div>
+                                                <div class="flex items-center gap-2">
+                                                    <p class="font-semibold text-orange-900">
+                                                        Demande #{{ $returnRequest->id_demande_retour }}
+                                                    </p>
+                                                    <span
+                                                        class="inline-flex items-center rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-medium text-orange-800"
+                                                    >
+                                                        {{ $returnRequest->state->label_etat_retour }}
+                                                    </span>
+                                                </div>
+                                                <p class="mt-1 text-sm text-orange-700">
+                                                    Demandé le
+                                                    <x-date-local :date="$returnRequest->date_demande" />
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        @if ($returnRequest->description_demande)
+                                            <div class="mb-3 rounded-lg bg-white p-3">
+                                                <p class="mb-1 text-xs font-medium text-gray-500 uppercase">Message</p>
+                                                <p class="text-sm text-gray-700">{{ $returnRequest->description_demande }}</p>
+                                            </div>
+                                        @endif
+
+                                        <div class="space-y-2">
+                                            <p class="text-xs font-medium text-orange-800 uppercase">Articles concernés</p>
+                                            @foreach ($returnRequest->lines as $line)
+                                                @php
+                                                    $orderLine = $line->orderLine;
+                                                    $article = $orderLine->reference->article;
+                                                @endphp
+
+                                                <div class="flex items-center justify-between rounded-lg bg-white px-4 py-2 text-sm">
+                                                    <div class="flex items-center gap-2">
+                                                        <div class="size-10 flex-shrink-0 overflow-hidden rounded border border-gray-200">
+                                                            <img
+                                                                src="{{ $orderLine->reference->variant()->getCoverUrl() }}"
+                                                                alt="{{ $article->nom_article }}"
+                                                                class="h-full w-full object-contain p-0.5"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <p class="font-medium text-gray-900">{{ $article->nom_article }}</p>
+                                                            @if ($orderLine->size)
+                                                                <p class="text-xs text-gray-500">Taille : {{ $orderLine->size->label }}</p>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <p class="font-semibold text-orange-900">× {{ $line->quantite_retournee }}</p>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="space-y-6">
