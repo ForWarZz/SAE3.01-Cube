@@ -56,10 +56,6 @@
                         <p class="text-sm text-gray-500">Total de la commande</p>
                         <p class="text-3xl font-bold text-gray-900">{{ number_format($financials->total, 2, ",", " ") }} €</p>
                         <p class="mt-1 text-sm text-gray-500">{{ $financials->count }} article(s)</p>
-
-                        <a href="{{ route("dashboard.orders.return.create", $order) }}">
-                            <x-button class="mt-5" size="sm" color="gray">Demander un retour</x-button>
-                        </a>
                     </div>
                 </div>
             </div>
@@ -69,6 +65,13 @@
                     <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
                         <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
                             <h2 class="text-lg font-semibold text-gray-900">Articles commandés</h2>
+                            <a
+                                href="{{ route("dashboard.orders.return.create", $order) }}"
+                                class="inline-flex gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-800"
+                            >
+                                <x-heroicon-o-arrow-uturn-left class="size-5" />
+                                Demander un retour
+                            </a>
                         </div>
 
                         <div class="divide-y divide-gray-100">
