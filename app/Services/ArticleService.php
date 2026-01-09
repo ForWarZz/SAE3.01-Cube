@@ -285,7 +285,7 @@ class ArticleService
                     'size' => $size->id_taille,
                 ]),
                 label: $size->label,
-                availableOnline: $availableOnline,
+                availableOnline: $availableOnline ?? false,
                 shopStatus: $shopStatus,
                 active: $sizeId == $size->id_taille,
             );
