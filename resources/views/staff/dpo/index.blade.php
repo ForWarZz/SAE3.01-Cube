@@ -299,7 +299,7 @@
                 </div>
 
                 <div class="mt-4">
-                    {{ $orders->links() }}
+                    {{ $clients->links() }}
                 </div>
             @endif
         </div>
