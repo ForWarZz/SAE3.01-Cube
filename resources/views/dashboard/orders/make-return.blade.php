@@ -84,18 +84,15 @@
                     <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                         <h2 class="mb-4 text-lg font-semibold text-gray-900">Articles à retourner</h2>
                         <p class="mb-6 text-sm text-gray-600">
-                            Indiquez la quantité que vous souhaitez retourner pour chaque article. Laissez à 0 si vous ne souhaitez pas le retourner.
+                            Indiquez la quantité que vous souhaitez retourner pour chaque article. Laissez à 0 si vous ne souhaitez pas le
+                            retourner.
                         </p>
-
-                        @error('items')
-                            <div class="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
-                                {{ $message }}
-                            </div>
-                        @enderror
 
                         <div class="space-y-4">
                             @foreach ($items as $index => $item)
-                                <div class="flex items-start gap-4 rounded-lg border border-gray-200 p-4 transition-all hover:border-blue-300 hover:bg-blue-50/30">
+                                <div
+                                    class="flex items-start gap-4 rounded-lg border border-gray-200 p-4 transition-all hover:border-blue-300 hover:bg-blue-50/30"
+                                >
                                     <div class="size-20 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200">
                                         <img
                                             src="{{ $item->image }}"
@@ -131,7 +128,7 @@
                                     </div>
 
                                     <div class="flex-shrink-0 text-center">
-                                        <label for="quantity-{{ $index }}" class="block text-xs font-medium text-gray-700 mb-1">
+                                        <label for="quantity-{{ $index }}" class="mb-1 block text-xs font-medium text-gray-700">
                                             Quantité à retourner
                                         </label>
                                         <input
@@ -141,7 +138,7 @@
                                             min="0"
                                             max="{{ $item->availableQuantity }}"
                                             value="{{ old("items.{$index}.quantity", 0) }}"
-                                            class="w-24 rounded-lg border-gray-300 text-center focus:border-blue-500 focus:ring-blue-500 @error("items.{$index}.quantity") border-red-500 @enderror"
+                                            class="@error("items.{$index}.quantity") @enderror w-24 rounded-lg border-gray-300 border-red-500 text-center focus:border-blue-500 focus:ring-blue-500"
                                         />
                                         <p class="mt-1 text-center text-xs text-gray-500">max: {{ $item->availableQuantity }}</p>
                                         @error("items.{$index}.quantity")
