@@ -33,6 +33,6 @@ class OrderReturnLine extends Model
 
     public function orderLine(): BelongsTo
     {
-        return $this->belongsTo(OrderLine::class, 'id_ligne_commande', 'id_ligne_commande');
+        return $this->belongsTo(OrderLine::class, 'id_ligne_commande', 'id_ligne');
     }
 }

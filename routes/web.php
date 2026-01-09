@@ -99,6 +99,7 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
 
         Route::prefix('retour')->name('return.')->group(function () {
             Route::get('/{order}', [OrderReturnController::class, 'create'])->name('create');
+            Route::post('/{order}', [OrderReturnController::class, 'store'])->name('store');
         });
     });
 });

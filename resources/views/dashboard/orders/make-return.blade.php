@@ -78,33 +78,24 @@
             </div>
 
             @if ($canReturn)
-                <form class="space-y-6">
+                <form class="space-y-6" action="{{ route("dashboard.orders.return.store", $order->id_commande) }}" method="POST">
                     @csrf
 
                     <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                         <h2 class="mb-4 text-lg font-semibold text-gray-900">Articles à retourner</h2>
                         <p class="mb-6 text-sm text-gray-600">
-                            Sélectionnez les articles que vous souhaitez retourner et indiquez la quantité.
+                            Indiquez la quantité que vous souhaitez retourner pour chaque article. Laissez à 0 si vous ne souhaitez pas le retourner.
                         </p>
+
+                        @error('items')
+                            <div class="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+                                {{ $message }}
+                            </div>
+                        @enderror
 
                         <div class="space-y-4">
                             @foreach ($items as $index => $item)
-                                <div
-                                    class="flex items-start gap-4 rounded-lg border border-gray-200 p-4 transition-all hover:border-blue-300 hover:bg-blue-50/30"
-                                >
-                                    <div class="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id="item-{{ $index }}"
-                                            name="items[{{ $index }}][selected]"
-                                            value="1"
-                                            class="size-5 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
-                                            x-data="{ checked: false }"
-                                            x-model="checked"
-                                            @change="if (!checked) document.getElementById('quantity-{{ $index }}').value = 0"
-                                        />
-                                    </div>
-
+                                <div class="flex items-start gap-4 rounded-lg border border-gray-200 p-4 transition-all hover:border-blue-300 hover:bg-blue-50/30">
                                     <div class="size-20 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200">
                                         <img
                                             src="{{ $item->image }}"
@@ -115,12 +106,10 @@
                                     </div>
 
                                     <div class="min-w-0 flex-1">
-                                        <label for="item-{{ $index }}" class="cursor-pointer">
-                                            <h3 class="font-semibold text-gray-900">{{ $item->name }}</h3>
-                                            @if ($item->subtitle)
-                                                <p class="text-sm text-gray-500">{{ $item->subtitle }}</p>
-                                            @endif
-                                        </label>
+                                        <h3 class="font-semibold text-gray-900">{{ $item->name }}</h3>
+                                        @if ($item->subtitle)
+                                            <p class="text-sm text-gray-500">{{ $item->subtitle }}</p>
+                                        @endif
 
                                         <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-gray-600">
                                             @if ($item->colorName)
@@ -137,25 +126,30 @@
                                                 <span>Taille : {{ $item->size }}</span>
                                             @endif
 
-                                            <span class="font-medium">{{ number_format($item->totalPrice, 2, ",", " ") }} €</span>
+                                            <span class="font-medium">{{ number_format($item->unitPrice, 2, ",", " ") }} € / unité</span>
                                         </div>
                                     </div>
 
-                                    <div class="text-center">
-                                        <label for="quantity-{{ $index }}" class="block text-xs font-medium text-gray-700">Quantité</label>
+                                    <div class="flex-shrink-0 text-center">
+                                        <label for="quantity-{{ $index }}" class="block text-xs font-medium text-gray-700 mb-1">
+                                            Quantité à retourner
+                                        </label>
                                         <input
                                             type="number"
                                             id="quantity-{{ $index }}"
                                             name="items[{{ $index }}][quantity]"
                                             min="0"
-                                            max="{{ $item->quantity }}"
-                                            value="0"
-                                            class="mt-1 w-20 rounded-lg border-gray-300 text-center focus:border-blue-500 focus:ring-blue-500"
+                                            max="{{ $item->availableQuantity }}"
+                                            value="{{ old("items.{$index}.quantity", 0) }}"
+                                            class="w-24 rounded-lg border-gray-300 text-center focus:border-blue-500 focus:ring-blue-500 @error("items.{$index}.quantity") border-red-500 @enderror"
                                         />
-                                        <p class="mt-1 text-center text-xs text-gray-500">sur {{ $item->quantity }}</p>
+                                        <p class="mt-1 text-center text-xs text-gray-500">max: {{ $item->availableQuantity }}</p>
+                                        @error("items.{$index}.quantity")
+                                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                        @enderror
                                     </div>
 
-                                    <input type="hidden" name="items[{{ $index }}][item_id]" value="{{ $item->id ?? $index }}" />
+                                    <input type="hidden" name="items[{{ $index }}][line_id]" value="{{ $item->lineId }}" />
                                 </div>
                             @endforeach
                         </div>

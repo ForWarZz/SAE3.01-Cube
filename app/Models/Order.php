@@ -118,4 +118,9 @@ class Order extends Model
     {
         return $this->belongsTo(Shop::class, 'id_magasin', 'id_magasin');
     }
+
+    public function returnRequests(): HasMany
+    {
+        return $this->hasMany(OrderReturnRequest::class, 'id_commande', 'id_commande');
+    }
 }

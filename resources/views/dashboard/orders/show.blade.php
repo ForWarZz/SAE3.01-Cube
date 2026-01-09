@@ -17,6 +17,8 @@
                 </a>
             </nav>
 
+            <x-flash-message type="success" key="success" />
+
             <div class="mb-6 rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
                 <div class="flex items-start justify-between">
                     <div>

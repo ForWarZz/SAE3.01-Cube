@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id_ligne
@@ -43,5 +44,10 @@ class OrderLine extends Model
     public function size(): BelongsTo
     {
         return $this->belongsTo(Size::class, 'id_taille', 'id_taille');
+    }
+
+    public function returnLines(): HasMany
+    {
+        return $this->hasMany(OrderReturnLine::class, 'id_ligne_commande', 'id_ligne');
     }
 }

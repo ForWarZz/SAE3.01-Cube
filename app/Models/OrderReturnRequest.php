@@ -34,7 +34,7 @@ class OrderReturnRequest extends Model
         'date_demande' => 'datetime',
     ];
 
-    public function returnLines(): HasMany
+    public function lines(): HasMany
     {
         return $this->hasMany(OrderReturnLine::class, 'id_demande_retour', 'id_demande_retour');
     }
