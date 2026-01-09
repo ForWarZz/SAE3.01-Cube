@@ -6,6 +6,7 @@ use App\Http\Requests\OrderUpdateRequest;
 use App\Models\Order;
 use App\Services\Cart\CartService;
 use App\Services\Cart\CheckoutService;
+use App\Services\Order\OrderReturnService;
 use App\Services\OrderService;
 
 class OrderController extends Controller
@@ -14,6 +15,7 @@ class OrderController extends Controller
         private readonly CartService $cartService,
         private readonly CheckoutService $checkoutService,
         private readonly OrderService $orderService,
+        private readonly OrderReturnService $orderReturnService
     ) {}
 
     public function updateOrder(OrderUpdateRequest $request)
@@ -100,6 +102,7 @@ class OrderController extends Controller
         ]);
 
         $currentState = $order->currentState();
+        $returnEligibility = $this->orderReturnService->getReturnEligibility($order);
 
         return view('dashboard.orders.show', [
             'order' => $order,
@@ -109,6 +112,7 @@ class OrderController extends Controller
             'items' => $this->orderService->formatLineItems($order->items),
             'paymentType' => $order->paymentType?->label_type_paiement,
             'shop' => $order->shop,
+            ...$returnEligibility,
         ]);
     }
 }

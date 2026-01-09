@@ -65,13 +65,24 @@
                     <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
                         <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
                             <h2 class="text-lg font-semibold text-gray-900">Articles commandés</h2>
-                            <a
-                                href="{{ route("dashboard.orders.return.create", $order) }}"
-                                class="inline-flex gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-800"
-                            >
-                                <x-heroicon-o-arrow-uturn-left class="size-5" />
-                                Demander un retour
-                            </a>
+
+                            @if ($canReturn)
+                                <a
+                                    href="{{ route("dashboard.orders.return.create", $order) }}"
+                                    class="inline-flex gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-800"
+                                >
+                                    <x-heroicon-o-arrow-uturn-left class="size-5" />
+                                    Demander un retour
+                                </a>
+                            @else
+                                @if (! $isDelivered)
+                                    <span class="text-sm text-gray-500">La commande doit être livrée pour effectuer un retour</span>
+                                @elseif (! $hasReturnableItems)
+                                    <span class="text-sm text-gray-500">Tous les articles ont déjà fait l'objet d'un retour</span>
+                                @elseif (! $isWithinReturnPeriod)
+                                    <span class="text-sm text-gray-500">Le délai de rétractation de 14 jours est expiré</span>
+                                @endif
+                            @endif
                         </div>
 
                         <div class="divide-y divide-gray-100">

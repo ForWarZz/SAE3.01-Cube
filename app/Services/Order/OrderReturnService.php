@@ -7,10 +7,69 @@ use App\DTOs\Order\ReturnRequestItemDTO;
 use App\Models\Order;
 use App\Models\OrderLine;
 use App\Models\OrderReturnRequest;
+use App\Models\OrderState;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class OrderReturnService
 {
+    private const RETURN_PERIOD_DAYS = 14;
+
+    public function canReturn(Order $order): bool
+    {
+        return $this->isDelivered($order)
+            && $this->isWithinReturnPeriod($order)
+            && $this->hasReturnableItems($order);
+    }
+
+    public function isDelivered(Order $order): bool
+    {
+        return $order->currentState()->id_etat == OrderState::DELIVERED;
+    }
+
+    public function isWithinReturnPeriod(Order $order): bool
+    {
+        $returnDeadline = $this->getReturnDeadline($order);
+
+        return now()->lessThan($returnDeadline);
+    }
+
+    public function hasReturnableItems(Order $order): bool
+    {
+        foreach ($order->items as $item) {
+            $totalReturned = $item->returnLines->sum('quantite_retournee');
+            if ($totalReturned < $item->quantite_ligne) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getReturnDeadline(Order $order): Carbon
+    {
+        return Carbon::parse($order->date_commande)->addDays(self::RETURN_PERIOD_DAYS);
+    }
+
+    public function getDaysRemaining(Order $order): int
+    {
+        $returnDeadline = $this->getReturnDeadline($order);
+
+        return max(0, now()->diffInDays($returnDeadline, false));
+    }
+
+    public function getReturnEligibility(Order $order): array
+    {
+        return [
+            'canReturn' => $this->canReturn($order),
+            'isDelivered' => $this->isDelivered($order),
+            'isWithinReturnPeriod' => $this->isWithinReturnPeriod($order),
+            'hasReturnableItems' => $this->hasReturnableItems($order),
+            'returnDeadline' => $this->getReturnDeadline($order),
+            'daysRemaining' => $this->getDaysRemaining($order),
+        ];
+    }
+
     /**
      * @return Collection<int, AvailableReturnLineDTO>
      */
