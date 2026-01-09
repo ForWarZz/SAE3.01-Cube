@@ -74,12 +74,12 @@
                                                     <span>{{ number_format($order->financials->subtotal, 2, ",", " ") }} €</span>
                                                 </div>
 
-                                                @if ($order->financials->shipping > 0)
-                                                    <div class="flex justify-between text-gray-500">
-                                                        <span>Livraison</span>
-                                                        <span>{{ number_format($order->financials->shipping, 2, ",", " ") }} €</span>
-                                                    </div>
-                                                @endif
+                                                <div class="flex justify-between text-gray-500">
+                                                    <span>Livraison</span>
+                                                    <span>
+                                                        {{ $order->financials->shipping > 0 ? number_format($order->financials->shipping, 2, ",", " ") . "€" : "Gratuite" }}
+                                                    </span>
+                                                </div>
 
                                                 @if ($order->financials->discount > 0)
                                                     <div class="flex justify-between text-green-600">
