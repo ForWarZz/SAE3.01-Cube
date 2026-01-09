@@ -216,14 +216,14 @@
                                 id="size_{{ $opt->id }}"
                                 value="{{ $opt->id }}"
                                 class="peer sr-only"
-                                @disabled($opt->disabled)
+                                {{-- @disabled($opt->disabled) --}}
                                 @checked($opt->active)
                                 onchange="this.form.submit()"
                             />
 
                             <label
                                 for="size_{{ $opt->id }}"
-                                class="{{ $opt->disabled ? "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400 opacity-50" : "cursor-pointer border-gray-300 text-gray-700 hover:border-gray-400" }} flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium transition-colors peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
+                                class="{{ $opt->disabled ? "border-gray-200 bg-gray-100 text-gray-400 opacity-50" : "border-gray-300 text-gray-700 hover:border-gray-400" }} flex cursor-pointer items-center justify-center rounded-md border px-4 py-2 text-sm font-medium transition-colors peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
                             >
                                 {{ $opt->label }}
                             </label>
