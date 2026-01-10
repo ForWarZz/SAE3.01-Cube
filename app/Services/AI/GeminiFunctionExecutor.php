@@ -263,7 +263,11 @@ class GeminiFunctionExecutor
         return [
             'order_number' => $order->num_commande,
             'date' => $order->date_commande->format('Y-m-d H:i:s'),
-            'status' => $order->currentState()->label_etat,
+            'current_status' => $order->currentState()->label_etat,
+            'status_history' => $includeDetails ? $order->states->map(fn ($state) => [
+                'status' => $state->label_etat,
+                'changed_at' => $state->pivot->date_changement->format('Y-m-d H:i:s'),
+            ])->toArray() : null,
             'total' => $order->items->sum(fn ($item) => $item->quantite_ligne * $item->prix_unit_ligne),
             'shipping_cost' => $order->frais_livraison,
             'click_and_collect_shop' => $includeDetails ? [
