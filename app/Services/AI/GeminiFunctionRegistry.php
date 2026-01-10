@@ -73,16 +73,19 @@ class GeminiFunctionRegistry
     {
         return new FunctionDeclaration(
             name: 'get_user_order_detail',
-            description: 'Récupère les détails complets d\'une commande spécifique de l\'utilisateur connecté (articles, prix, adresses, statut, suivi, mode de paiement, récapitulatif). À utiliser quand l\'utilisateur demande des détails sur une commande précise. RGPD: Accessible uniquement pour les commandes de l\'utilisateur connecté.',
+            description: 'Récupère les détails complets d\'une commande spécifique de l\'utilisateur connecté (articles, prix, adresses, statut, suivi, mode de paiement, récapitulatif). À utiliser quand l\'utilisateur demande des détails sur une commande précise ou consulte une page de détail de commande. RGPD: Accessible uniquement pour les commandes de l\'utilisateur connecté.',
             parameters: new Schema(
                 type: DataType::OBJECT,
                 properties: [
+                    'order_id' => new Schema(
+                        type: DataType::INTEGER,
+                        description: 'ID de la commande (clé primaire). Utiliser de préférence si disponible dans l\'URL ou le contexte.'
+                    ),
                     'order_number' => new Schema(
                         type: DataType::STRING,
-                        description: 'Numéro de commande, mélange de lettre et chiffre, en majuscule, de 9 caractères (ex: ZU1PMH0EN)'
+                        description: 'Numéro de commande, mélange de lettre et chiffre, en majuscule, de 9 caractères (ex: ZU1PMH0EN). Utiliser si order_id non disponible.'
                     ),
-                ],
-                required: ['order_number']
+                ]
             )
         );
     }

@@ -125,14 +125,32 @@ class GeminiFunctionExecutor
             return $this->authenticatedUserError();
         }
 
+        $orderId = $arguments['order_id'] ?? null;
         $orderNumber = $arguments['order_number'] ?? null;
-        if (! $orderNumber) {
-            return ['error' => 'Numéro de commande manquant, veuillez refaire votre demande en incluant le numéro de commande.'];
+
+        if (! $orderId && ! $orderNumber) {
+            return ['error' => 'ID de commande ou numéro de commande manquant, veuillez refaire votre demande en incluant l\'un des deux.'];
         }
 
-        $user = auth()->user()->load('orders');
-        $order = $user->orders
-            ->where('num_commande', $orderNumber)
+        $user = auth()->user();
+        $order = Order::with([
+            'items.reference.article',
+            'billingAddress.city',
+            'deliveryAddress.city',
+            'paymentType',
+            'discountCode',
+            'shop',
+            'shippingMode',
+            'states',
+        ])
+            ->where('id_client', $user->id_client)
+            ->where(function ($query) use ($orderId, $orderNumber) {
+                if ($orderId) {
+                    $query->where('id_commande', $orderId);
+                } elseif ($orderNumber) {
+                    $query->where('num_commande', $orderNumber);
+                }
+            })
             ->first();
 
         if (! $order) {
@@ -266,13 +284,18 @@ class GeminiFunctionExecutor
             'current_status' => $order->currentState()->label_etat,
             'status_history' => $includeDetails ? $order->states->map(fn ($state) => [
                 'status' => $state->label_etat,
-                'changed_at' => $state->pivot->date_changement->format('Y-m-d H:i:s'),
+                'changed_at' => $state->pivot->date_changement,
             ])->toArray() : null,
             'total' => $order->items->sum(fn ($item) => $item->quantite_ligne * $item->prix_unit_ligne),
             'shipping_cost' => $order->frais_livraison,
             'click_and_collect_shop' => $includeDetails ? [
                 'id' => $order->shop->id_magasin ?? null,
                 'name' => $order->shop->nom_magasin ?? null,
+                'address' => $order->shop ? [
+                    'street' => $order->shop->full_address,
+                    'city' => $order->shop->city->nom_ville,
+                    'postal_code' => $order->shop->city->cp_ville,
+                ] : null,
             ] : null,
             'shipping_mode' => $order->shippingMode->label_moyen_livraison,
             'tracking_number' => $order->num_suivi_commande,
