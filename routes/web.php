@@ -16,6 +16,7 @@ use App\Http\Controllers\Staff\Commercial\CommercialBikeController;
 use App\Http\Controllers\Staff\Commercial\CommercialCategoryController;
 use App\Http\Controllers\Staff\Commercial\CommercialModelController;
 use App\Http\Controllers\Staff\DPO\DPOController;
+use App\Http\Controllers\Staff\Technical\TechnicalGeometryController;
 use App\Http\Controllers\TwoFactorController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
@@ -171,14 +172,15 @@ Route::prefix('staff')->group(function () {
             Route::get('/', function () {
                 return redirect()->route('technical.geometry.index');
             })->name('dashboard');
+
             Route::prefix('/geometrie')->name('geometry.')->group(function () {
-                Route::get('/', [\App\Http\Controllers\Staff\Technical\TechnicalGeometryController::class, 'index'])
+                Route::get('/', [TechnicalGeometryController::class, 'index'])
                     ->name('index');
-                Route::get('/{model}/editer', [\App\Http\Controllers\Staff\Technical\TechnicalGeometryController::class, 'edit'])
+                Route::get('/{model}/editer', [TechnicalGeometryController::class, 'edit'])
                     ->name('edit');
-                Route::post('/{model}/sauvegarder', [\App\Http\Controllers\Staff\Technical\TechnicalGeometryController::class, 'update'])
+                Route::post('/{model}/sauvegarder', [TechnicalGeometryController::class, 'update'])
                     ->name('update');
-                Route::post('/{model}/ajouter-caracteristique', [\App\Http\Controllers\Staff\Technical\TechnicalGeometryController::class, 'addCharacteristic'])
+                Route::post('/{model}/ajouter-caracteristique', [TechnicalGeometryController::class, 'addCharacteristic'])
                     ->name('add');
             });
         });
