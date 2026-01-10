@@ -29,6 +29,16 @@
         <x-flash-message key="success" type="success" />
         <x-flash-message key="error" type="error" />
 
+        @if ($sizes->isEmpty())
+            <div class="mb-6 flex items-start gap-3 rounded-lg bg-yellow-50 p-4">
+                <x-heroicon-o-exclamation-triangle class="size-5 shrink-0 text-yellow-500" />
+                <p class="text-sm text-yellow-800">
+                    Ce modèle n'a pas encore de tailles configurées. Contactez le service commercial pour créer des vélos/références avec
+                    des tailles pour ce modèle.
+                </p>
+            </div>
+        @endif
+
         <div class="flex-1 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
             <form
                 id="geometry-form"
