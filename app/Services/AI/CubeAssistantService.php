@@ -8,6 +8,7 @@ use Gemini\Data\FunctionResponse;
 use Gemini\Data\Part;
 use Gemini\Enums\Role;
 use Gemini\Laravel\Facades\Gemini;
+use Gemini\Responses\GenerativeModel\GenerateContentResponse;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
@@ -79,16 +80,25 @@ class CubeAssistantService
             while ($iteration < $maxIterations) {
                 $iteration++;
 
-                $parts = $response->parts();
+                $functionCallPart = null;
 
-                if (empty($parts) || $parts[0]->functionCall === null) {
+                foreach ($response->candidates as $candidate) {
+                    foreach ($candidate->content->parts ?? [] as $part) {
+                        if ($part->functionCall !== null) {
+                            $functionCallPart = $part;
+                            break 2;
+                        }
+                    }
+                }
+
+                if (! $functionCallPart) {
                     break;
                 }
 
-                $functionCall = $parts[0]->functionCall;
-                $thoughtSignature = $parts[0]->thoughtSignature;
+                $functionCall = $functionCallPart->functionCall;
+                $thoughtSignature = $functionCallPart->thoughtSignature ?? null;
 
-                Log::info('Gemini function call', [
+                Log::info('Gemini function call detected', [
                     'name' => $functionCall->name,
                     'args' => $functionCall->args,
                 ]);
@@ -114,7 +124,7 @@ class CubeAssistantService
                 $response = $chat->sendMessage($content);
             }
 
-            $responseText = $response->text();
+            $responseText = $this->geminiResponseToText($response);
 
             $this->historyService->addUserMessage($message);
             $this->historyService->addModelResponse($responseText);
@@ -125,6 +135,30 @@ class CubeAssistantService
 
             return 'Désolé, une erreur est survenue lors du traitement de votre demande. Les services de Gemini ne sont pas disponibles pour le moment.';
         }
+    }
+
+    public function geminiResponseToText(GenerateContentResponse $response): string
+    {
+        $text = '';
+
+        foreach ($response->candidates as $candidate) {
+            if (! isset($candidate->content->parts)) {
+                continue;
+            }
+
+            foreach ($candidate->content->parts as $part) {
+                Log::debug('Gemini response part', [
+                    'part' => $part,
+                ]);
+                if ($part instanceof Part && isset($part->text)) {
+                    $text .= $part->text;
+                }
+            }
+
+            $text .= "\n";
+        }
+
+        return trim($text);
     }
 
     /**
