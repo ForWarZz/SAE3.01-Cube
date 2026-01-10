@@ -20,12 +20,6 @@ class TechnicalGeometryController extends Controller
 
     public function index(): View
     {
-        $user = auth('staff')->user();
-
-        if (! $user->isTechnical()) {
-            abort(403, 'Vous n\'avez pas les droits nécessaires pour accéder à cette section.');
-        }
-
         $models = BikeModel::orderBy('nom_modele_velo')->paginate(15);
 
         return view('staff.technical.geometry.index', [
@@ -35,12 +29,6 @@ class TechnicalGeometryController extends Controller
 
     public function edit(BikeModel $model): View
     {
-        $user = auth('staff')->user();
-
-        if (! $user->isTechnical()) {
-            abort(403, 'Vous n\'avez pas les droits nécessaires pour accéder à cette section.');
-        }
-
         $data = $this->geometryService->getModelEditData($model);
 
         return view('staff.technical.geometry.edit', $data);
@@ -48,12 +36,6 @@ class TechnicalGeometryController extends Controller
 
     public function update(UpdateGeometryRequest $request, BikeModel $model): RedirectResponse
     {
-        $user = auth('staff')->user();
-
-        if (! $user->isTechnical()) {
-            abort(403, 'Vous n\'avez pas les droits nécessaires pour accéder à cette section.');
-        }
-
         $this->geometryService->updateGeometries($model, $request->input('geo', []));
 
         return redirect()
@@ -63,12 +45,6 @@ class TechnicalGeometryController extends Controller
 
     public function addCharacteristic(AddGeometryCharacteristicRequest $request, BikeModel $model): RedirectResponse
     {
-        $user = auth('staff')->user();
-
-        if (! $user->isTechnical()) {
-            abort(403, 'Vous n\'avez pas les droits nécessaires pour accéder à cette section.');
-        }
-
         try {
             $this->geometryService->addCharacteristic(
                 $model,
