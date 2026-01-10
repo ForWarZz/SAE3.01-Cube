@@ -61,11 +61,19 @@
                                 href="{{ route("commercial.stats") }}"
                                 class="flex items-center rounded-md px-4 py-2 text-gray-300 hover:bg-slate-700 hover:text-white"
                             >
-                                <x-heroicon-o-chart-bar class="mr-3 size-6" />
+                                <x-heroicon-o-swatch class="mr-3 size-6" />
                                 Statistiques
                             </a>
                         @endif
-                    @else
+                        @elseif ($isTechnical)
+                            <a
+                                href="{{ route('technical.geometry.index') }}"
+                                class="flex items-center rounded-md px-4 py-2 text-gray-300 hover:bg-slate-700 hover:text-white"
+                            >
+                                <x-heroicon-o-swatch class="mr-3 h-6 w-6" />
+                                Géométrie des cadres
+                            </a>
+                        @else
                         <a
                             href="{{ route("dpo.index") }}"
                             class="flex items-center rounded-md px-4 py-2 text-gray-300 hover:bg-slate-700 hover:text-white"

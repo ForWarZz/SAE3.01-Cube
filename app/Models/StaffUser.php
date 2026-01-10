@@ -23,6 +23,8 @@ class StaffUser extends Authenticatable
 
     public const DPO_ROLE = 'DPO';
 
+    public const TECHNICAL_ROLE = 'TECHNICAL';
+
     public $timestamps = false;
 
     protected $table = 'staff';
@@ -80,4 +82,9 @@ class StaffUser extends Authenticatable
     {
         return $this->role === self::DPO_ROLE;
     }
+
+    public function isTechnical(): bool
+    {
+        return $this->role === self::TECHNICAL_ROLE;
+    } 
 }

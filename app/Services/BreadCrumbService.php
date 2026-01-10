@@ -30,11 +30,15 @@ class BreadCrumbService
     /**
      * @return BreadcrumbDTO[]
      */
-    public function prepareBreadcrumbs(Category $category): array
+    public function prepareBreadcrumbs(?Category $category): array
     {
         $breadcrumbs = [
             new BreadcrumbDTO(label: 'Accueil', url: route('home')),
         ];
+
+        if (! $category) {
+            return $breadcrumbs;
+        }
 
         $ancestors = $category->getAncestors();
 

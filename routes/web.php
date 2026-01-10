@@ -18,6 +18,7 @@ use App\Http\Controllers\Staff\Commercial\CommercialBikeController;
 use App\Http\Controllers\Staff\Commercial\CommercialCategoryController;
 use App\Http\Controllers\Staff\Commercial\CommercialModelController;
 use App\Http\Controllers\Staff\DPO\DPOController;
+use App\Http\Controllers\Staff\Technical\TechnicalGeometryController;
 use App\Http\Controllers\TwoFactorController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
@@ -173,6 +174,23 @@ Route::prefix('staff')->group(function () {
             Route::post('anonymiser-client', [DPOController::class, 'anonymizeClient'])->name('anonymize-client');
             Route::post('supprimer-commandes-expirees', [DPOController::class, 'deleteExpiredOrders'])->name('delete-expired-orders');
             Route::get('facture/{order}', [InvoiceController::class, 'downloadForDpo'])->name('invoice.download');
+        });
+
+        Route::prefix('technical')->name('technical.')->group(function () {
+            Route::get('/', function () {
+                return redirect()->route('technical.geometry.index');
+            })->name('dashboard');
+
+            Route::prefix('/geometrie')->name('geometry.')->group(function () {
+                Route::get('/', [TechnicalGeometryController::class, 'index'])
+                    ->name('index');
+                Route::get('/{model}/editer', [TechnicalGeometryController::class, 'edit'])
+                    ->name('edit');
+                Route::post('/{model}/sauvegarder', [TechnicalGeometryController::class, 'update'])
+                    ->name('update');
+                Route::post('/{model}/ajouter-caracteristique', [TechnicalGeometryController::class, 'addCharacteristic'])
+                    ->name('add');
+            });
         });
     });
 });
