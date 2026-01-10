@@ -152,7 +152,6 @@ class CheckoutService
         $client = $order->client;
         $lineItems = [];
 
-        // Eager load les relations pour éviter les requêtes N+1
         $order->load([
             'items.reference.article',
             'items.reference.accessory',
