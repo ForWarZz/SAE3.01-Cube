@@ -6,35 +6,35 @@
         </div>
     </div>
 
-    <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-        <div class="border-b border-gray-200 bg-white px-6 py-4">
+    <div class="overflow-hidden rounded-lg bg-white shadow-sm">
+        <div class="border-b border-gray-200 bg-white p-6">
             <table class="min-w-full text-left text-sm font-light">
-                <thead class="border-b bg-gray-50 font-medium text-gray-600">
+                <thead class="border-b bg-gray-50 font-medium">
                     <tr>
-                        <th class="px-6 py-4">Modèle</th>
-                        <th class="px-6 py-4 text-right">Action</th>
+                        <th class="px-4 py-3">Modèle</th>
+                        <th class="px-4 py-3 text-right">Action</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody>
                     @foreach ($models as $model)
-                        <tr class="transition hover:bg-gray-50">
-                            <td class="px-6 py-4">
-                                <span class="font-bold text-gray-800">{{ $model->nom_modele_velo }}</span>
+                        <tr class="border-b transition hover:bg-gray-50">
+                            <td class="px-4 py-3 font-bold text-gray-700">
+                                {{ $model->nom_modele_velo }}
                             </td>
-                            <td class="px-6 py-4 text-right">
-                                <a 
-                                    href="{{ route('technical.geometry.edit', $model->id_modele_velo) }}"
-                                    class="inline-flex items-center rounded-full bg-gray-100 p-2 text-gray-600 hover:bg-blue-600 hover:text-white transition"
+                            <td class="px-4 py-3 text-right">
+                                <a
+                                    href="{{ route("technical.geometry.edit", $model->id_modele_velo) }}"
+                                    class="text-blue-600 hover:text-blue-800"
                                     title="Modifier la matrice"
                                 >
-                                    <x-heroicon-o-pencil class="h-5 w-5" />
+                                    <x-heroicon-o-pencil class="inline-block h-5 w-5" />
                                 </a>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
-            
+
             <div class="mt-4">
                 {{ $models->links() }}
             </div>
