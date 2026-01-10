@@ -16,11 +16,13 @@
             </div>
 
             <div class="flex items-center gap-3">
-                <x-button @click="showAddModal = true" variant="secondary" icon="heroicon-o-plus">Ajouter une caractéristique</x-button>
+                @if ($sizes->isEmpty())
+                    <x-button disabled icon="heroicon-o-plus" title="Aucune taille disponible">Ajouter une caractéristique</x-button>
+                @else
+                    <x-button @click="showAddModal = true" icon="heroicon-o-plus">Ajouter une caractéristique</x-button>
+                @endif
 
-                <x-button form="geometry-form" type="submit" variant="primary" icon="heroicon-o-check">
-                    Enregistrer les modifications
-                </x-button>
+                <x-button form="geometry-form" type="submit" color="green" icon="heroicon-o-check">Enregistrer les modifications</x-button>
             </div>
         </div>
 
