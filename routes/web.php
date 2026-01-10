@@ -182,14 +182,10 @@ Route::prefix('staff')->group(function () {
             })->name('dashboard');
 
             Route::prefix('/geometrie')->name('geometry.')->group(function () {
-                Route::get('/', [TechnicalGeometryController::class, 'index'])
-                    ->name('index');
-                Route::get('/{model}/editer', [TechnicalGeometryController::class, 'edit'])
-                    ->name('edit');
-                Route::post('/{model}/sauvegarder', [TechnicalGeometryController::class, 'update'])
-                    ->name('update');
-                Route::post('/{model}/ajouter-caracteristique', [TechnicalGeometryController::class, 'addCharacteristic'])
-                    ->name('add');
+                Route::get('/', [TechnicalGeometryController::class, 'index'])->name('index');
+                Route::get('/{model}/editer', [TechnicalGeometryController::class, 'edit'])->name('edit');
+                Route::post('/{model}/sauvegarder', [TechnicalGeometryController::class, 'update'])->name('update');
+                Route::post('/{model}/ajouter-caracteristique', [TechnicalGeometryController::class, 'addCharacteristic'])->name('add');
             });
         });
     });
