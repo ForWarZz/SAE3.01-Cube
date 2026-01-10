@@ -6,7 +6,7 @@
                     href="{{ route("technical.geometry.index") }}"
                     class="mb-1 flex items-center gap-1 text-sm text-gray-500 transition hover:text-blue-600"
                 >
-                    <x-heroicon-o-arrow-left class="h-4 w-4" />
+                    <x-heroicon-o-arrow-left class="size-4" />
                     Retour
                 </a>
                 <h1 class="text-2xl font-bold text-gray-800">
@@ -25,6 +25,7 @@
         </div>
 
         <x-flash-message key="success" type="success" />
+        <x-flash-message key="error" type="error" />
 
         <div class="flex-1 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
             <form
@@ -39,11 +40,11 @@
                     <table class="w-full border-collapse text-sm">
                         <thead class="sticky top-0 z-20 bg-gray-50 text-xs font-semibold tracking-wider text-gray-600 uppercase shadow-sm">
                             <tr>
-                                <th class="sticky left-0 z-30 min-w-[250px] border-r border-b border-gray-200 bg-gray-50 p-4 text-left">
+                                <th class="sticky left-0 z-30 border-r border-b border-gray-200 bg-gray-50 p-4 text-left">
                                     Mesure / Taille
                                 </th>
                                 @foreach ($sizes as $size)
-                                    <th class="min-w-[120px] border-b border-gray-200 p-4 text-center">
+                                    <th class="w-52 border-b border-gray-200 p-4 text-center">
                                         <div class="text-gray-900">{{ $size->nom_taille }}</div>
                                         <div class="text-xs font-normal text-gray-400">
                                             {{ $size->taille_min }}-{{ $size->taille_max }}
@@ -62,29 +63,27 @@
                             @endif
 
                             @foreach ($matrixCharacteristics as $geo)
-                                <tr x-data class="group transition-colors hover:bg-blue-50" x-ref="row_{{ $geo->id_carac_geo }}">
+                                <tr x-data class="group transition-colors hover:bg-blue-50">
                                     <td
-                                        class="sticky left-0 flex items-center justify-between border-r border-gray-200 bg-white p-3 font-medium text-gray-700 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)] group-hover:bg-blue-50"
+                                        class="sticky left-0 z-10 flex items-center justify-between border-r border-gray-200 bg-white p-3 font-medium text-gray-700 shadow-[4px_0_8px_-4px_rgba(0,0,0,0.05)] group-hover:bg-blue-50"
                                     >
                                         <span>{{ $geo->label_carac_geo }}</span>
                                         <button
                                             type="button"
-                                            @click="$refs.row_{{ $geo->id_carac_geo }}.remove()"
+                                            @click="$el.closest('tr').remove()"
                                             class="text-gray-300 opacity-0 transition-all group-hover:opacity-100 hover:text-red-500"
-                                            title="Masquer cette ligne"
+                                            title="Supprimer cette ligne"
                                         >
-                                            <x-heroicon-o-trash class="h-4 w-4" />
+                                            <x-heroicon-o-trash class="size-5" />
                                         </button>
                                     </td>
 
                                     @foreach ($sizes as $size)
                                         <td class="border-r border-gray-100 p-0 last:border-r-0">
                                             <input
-                                                type="number"
-                                                step="0.1"
                                                 name="geo[{{ $geo->id_carac_geo }}][{{ $size->id_taille }}]"
                                                 value="{{ $matrix[$geo->id_carac_geo][$size->id_taille] ?? "" }}"
-                                                class="h-12 w-full border-none bg-transparent text-center text-gray-700 placeholder-gray-200 transition-all focus:bg-white focus:ring-2 focus:ring-blue-500 focus:ring-inset"
+                                                class="h-12 w-full border-none bg-transparent text-center text-gray-700 placeholder-gray-200 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 focus:ring-inset"
                                                 placeholder="-"
                                             />
                                         </td>
@@ -115,25 +114,6 @@
                     @csrf
                     <input type="hidden" name="action_type" :value="activeTab" />
 
-                    {{-- <div class="mb-6 flex rounded-lg bg-gray-100 p-1"> --}}
-                    {{-- <button --}}
-                    {{-- type="button" --}}
-                    {{-- @click="activeTab = 'existing'" --}}
-                    {{-- :class="activeTab === 'existing' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'" --}}
-                    {{-- class="flex-1 rounded-md py-1.5 text-sm font-medium transition-all" --}}
-                    {{-- > --}}
-                    {{-- Existante --}}
-                    {{-- </button> --}}
-                    {{-- <button --}}
-                    {{-- type="button" --}}
-                    {{-- @click="activeTab = 'new'" --}}
-                    {{-- :class="activeTab === 'new' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'" --}}
-                    {{-- class="flex-1 rounded-md py-1.5 text-sm font-medium transition-all" --}}
-                    {{-- > --}}
-                    {{-- Créer nouvelle --}}
-                    {{-- </button> --}}
-                    {{-- </div> --}}
-
                     <div class="mb-4 flex border-b border-gray-200">
                         <button
                             type="button"
@@ -153,7 +133,7 @@
                         </button>
                     </div>
 
-                    <div class="min-h-[100px]">
+                    <div>
                         <div x-show="activeTab === 'existing'" class="space-y-3">
                             <label class="block text-sm font-medium text-gray-700">Sélectionner une mesure</label>
                             <select
