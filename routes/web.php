@@ -166,6 +166,22 @@ Route::prefix('staff')->group(function () {
             Route::post('anonymiser-client', [DPOController::class, 'anonymizeClient'])->name('anonymize-client');
             Route::post('supprimer-commandes-expirees', [DPOController::class, 'deleteExpiredOrders'])->name('delete-expired-orders');
         });
+
+        Route::prefix('technical')->name('technical.')->group(function () {
+            Route::get('/', function () {
+                return redirect()->route('technical.geometry.index');
+            })->name('dashboard');
+            Route::prefix('/geometrie')->name('geometry.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Staff\Technical\TechnicalGeometryController::class, 'index'])
+                    ->name('index');
+                Route::get('/{model}/editer', [\App\Http\Controllers\Staff\Technical\TechnicalGeometryController::class, 'edit'])
+                    ->name('edit');
+                Route::post('/{model}/sauvegarder', [\App\Http\Controllers\Staff\Technical\TechnicalGeometryController::class, 'update'])
+                    ->name('update');
+                Route::post('/{model}/ajouter-caracteristique', [\App\Http\Controllers\Staff\Technical\TechnicalGeometryController::class, 'addCharacteristic'])
+                    ->name('add');
+            });
+        });
     });
 });
 
