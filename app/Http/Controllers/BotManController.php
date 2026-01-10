@@ -11,7 +11,7 @@ use Str;
 class BotManController extends Controller
 {
     public function __construct(
-        private readonly CubeAssistantService $assistantService
+        private readonly CubeAssistantService $assistantService,
     ) {}
 
     public function handle(Request $request, BotMan $botman)

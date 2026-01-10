@@ -20,7 +20,8 @@ class CubeAssistantService
 
     public function __construct(
         private readonly GeminiFunctionExecutor $functionExecutor,
-        private readonly ReferenceDataService $referenceDataService
+        private readonly ReferenceDataService $referenceDataService,
+        private readonly ConversationHistoryService $historyService
     ) {}
 
     public function askGemini(string $message, string $pageType, string $pageUrl, ?array $context): string
@@ -37,7 +38,7 @@ class CubeAssistantService
             $chat = Gemini::generativeModel(model: self::GEMINI_MODEL);
             $chat->tools = $tools;
 
-            $chat = $chat->startChat([
+            $initialHistory = [
                 new Content(
                     parts: [
                         new Part(text: $systemPrompt),
@@ -47,16 +48,28 @@ class CubeAssistantService
                     ],
                     role: Role::MODEL
                 ),
-                new Content(
-                    parts: [
-                        new Part(text: json_encode([
-                            'context' => json_decode($situationalContext, true),
-                            'question' => $message,
-                        ], JSON_UNESCAPED_UNICODE)),
-                    ],
-                    role: Role::USER
-                ),
-            ]);
+            ];
+
+            if ($this->historyService->hasHistory()) {
+                $previousMessages = $this->historyService->toGeminiContents();
+                $initialHistory = array_merge($initialHistory, $previousMessages);
+
+                Log::info('Conversation history loaded', [
+                    'message_count' => count($previousMessages),
+                ]);
+            }
+
+            $initialHistory[] = new Content(
+                parts: [
+                    new Part(text: json_encode([
+                        'context' => json_decode($situationalContext, true),
+                        'question' => $message,
+                    ], JSON_UNESCAPED_UNICODE)),
+                ],
+                role: Role::USER
+            );
+
+            $chat = $chat->startChat($initialHistory);
 
             $response = $chat->sendMessage('Analyse et réponds.');
 
@@ -101,7 +114,12 @@ class CubeAssistantService
                 $response = $chat->sendMessage($content);
             }
 
-            return $response->text();
+            $responseText = $response->text();
+
+            $this->historyService->addUserMessage($message);
+            $this->historyService->addModelResponse($responseText);
+
+            return $responseText;
         } catch (Exception $exception) {
             Log::warning($exception->getMessage());
 
