@@ -9,6 +9,8 @@ use App\Models\BikeModel;
 use App\Services\Technical\GeometryService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use RuntimeException;
+use Throwable;
 
 class TechnicalGeometryController extends Controller
 {
@@ -43,15 +45,21 @@ class TechnicalGeometryController extends Controller
 
     public function addCharacteristic(AddGeometryCharacteristicRequest $request, BikeModel $model): RedirectResponse
     {
-        $this->geometryService->addCharacteristic(
-            $model,
-            $request->input('action_type'),
-            $request->input('existing_id'),
-            $request->input('new_name')
-        );
+        try {
+            $this->geometryService->addCharacteristic(
+                $model,
+                $request->input('action_type'),
+                $request->input('existing_id'),
+                $request->input('new_name')
+            );
 
-        return redirect()
-            ->route('technical.geometry.edit', $model)
-            ->with('success', 'Caractéristique ajoutée à la matrice.');
+            return redirect()
+                ->route('technical.geometry.edit', $model)
+                ->with('success', 'Caractéristique ajoutée à la matrice.');
+        } catch (RuntimeException|Throwable $e) {
+            return redirect()
+                ->route('technical.geometry.edit', $model)
+                ->with(['error' => $e->getMessage()]);
+        }
     }
 }

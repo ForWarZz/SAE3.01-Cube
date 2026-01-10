@@ -9,6 +9,7 @@ use App\Models\Size;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
+use Throwable;
 
 class GeometryService
 {
@@ -55,6 +56,9 @@ class GeometryService
         });
     }
 
+    /**
+     * @throws Throwable
+     */
     public function addCharacteristic(BikeModel $model, string $actionType, ?int $existingId, ?string $newName): void
     {
         $caracId = $this->resolveCharacteristicId($actionType, $existingId, $newName);
@@ -71,18 +75,11 @@ class GeometryService
             'valeur_carac' => null,
         ])->toArray();
 
-        DB::transaction(function () use ($insertData) {
-            foreach ($insertData as $data) {
-                Geometry::firstOrCreate(
-                    [
-                        'id_modele_velo' => $data['id_modele_velo'],
-                        'id_carac_geo' => $data['id_carac_geo'],
-                        'id_taille' => $data['id_taille'],
-                    ],
-                    ['valeur_carac' => $data['valeur_carac']]
-                );
-            }
-        });
+        Geometry::upsert(
+            $insertData,
+            ['id_modele_velo', 'id_carac_geo', 'id_taille'],
+            []
+        );
     }
 
     private function getSizesForModel(BikeModel $model): Collection
