@@ -20,6 +20,8 @@ use App\Http\Controllers\Staff\Commercial\CommercialModelController;
 use App\Http\Controllers\Staff\DPO\DPOController;
 use App\Http\Controllers\Staff\Technical\TechnicalGeometryController;
 use App\Http\Controllers\TwoFactorController;
+use App\Http\Middleware\StaffCommercialMiddleware;
+use App\Http\Middleware\StaffDpoMiddleware;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
@@ -167,14 +169,14 @@ Route::prefix('staff')->group(function () {
             });
 
             Route::get('/stats', [CommercialAuthController::class, 'viewStats'])->name('stats');
-        });
+        })->middleware(StaffCommercialMiddleware::class);
 
         Route::prefix('dpo')->name('dpo.')->group(function () {
             Route::get('/', [DPOController::class, 'index'])->name('index');
             Route::post('anonymiser-client', [DPOController::class, 'anonymizeClient'])->name('anonymize-client');
             Route::post('supprimer-commandes-expirees', [DPOController::class, 'deleteExpiredOrders'])->name('delete-expired-orders');
             Route::get('facture/{order}', [InvoiceController::class, 'downloadForDpo'])->name('invoice.download');
-        });
+        })->middleware(StaffDpoMiddleware::class);
 
         Route::prefix('technical')->name('technical.')->group(function () {
             Route::get('/', function () {
@@ -187,7 +189,7 @@ Route::prefix('staff')->group(function () {
                 Route::post('/{model}/sauvegarder', [TechnicalGeometryController::class, 'update'])->name('update');
                 Route::post('/{model}/ajouter-caracteristique', [TechnicalGeometryController::class, 'addCharacteristic'])->name('add');
             });
-        });
+        })->middleware(StaffCommercialMiddleware::class);
     });
 });
 
