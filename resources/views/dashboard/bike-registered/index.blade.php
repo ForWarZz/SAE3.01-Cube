@@ -81,7 +81,7 @@
                                                         <x-heroicon-o-pencil-square class="h-5 w-5" />
                                                     </a>
                                                     <form
-                                                        {{-- action="{{ route("dashboard.velo-enregistre.destroy", $bike) }}" --}}
+                                                        action="{{ route("dashboard.bike-registered.destroy", $bike) }}"
                                                         method="POST"
                                                         class="inline-flex"
                                                         onsubmit="return confirm('Supprimer ce vélo ?');"

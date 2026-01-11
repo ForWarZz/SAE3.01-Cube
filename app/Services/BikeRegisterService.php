@@ -51,6 +51,12 @@ class BikeRegisterService
         return $bikeRegistered;
     }
 
+    public function deleteRegisteredBike(BikeRegistered $bikeRegistered): void
+    {
+        Storage::disk('private')->delete($bikeRegistered->chemin_facture_velo_enr);
+        $bikeRegistered->delete();
+    }
+
     public function downloadRegisteredInvoice(BikeRegistered $bikeRegistered): StreamedResponse
     {
         return Storage::disk('private')->download($bikeRegistered->chemin_facture_velo_enr);

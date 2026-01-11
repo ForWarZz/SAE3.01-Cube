@@ -115,6 +115,7 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
 
         Route::post('/', [BikeRegisterController::class, 'store'])->name('store');
         Route::put('/{bikeRegistered}', [BikeRegisterController::class, 'update'])->name('update');
+        Route::delete('/{bikeRegistered}', [BikeRegisterController::class, 'destroy'])->name('destroy');
 
         Route::get('/{bikeRegistered}/facture', [BikeRegisterController::class, 'downloadInvoice'])->name('download-invoice');
     });

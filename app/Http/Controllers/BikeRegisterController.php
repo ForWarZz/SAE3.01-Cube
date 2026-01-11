@@ -51,7 +51,19 @@ class BikeRegisterController extends Controller
             ->with('success', 'Vélo enregistré avec succès.');
     }
 
-    public function destroy() {}
+    public function destroy(BikeRegistered $bikeRegistered)
+    {
+        $client = auth()->user();
+
+        if ($bikeRegistered->id_client !== $client->id_client) {
+            abort(403, 'Vous n\'êtes pas autorisé à accéder à cette ressource.');
+        }
+
+        $this->bikeRegisterService->deleteRegisteredBike($bikeRegistered);
+
+        return redirect()->route('dashboard.bike-registered.index')
+            ->with('success', 'Vélo supprimé avec succès.');
+    }
 
     public function downloadInvoice(BikeRegistered $bikeRegistered)
     {
