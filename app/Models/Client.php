@@ -122,4 +122,9 @@ class Client extends Authenticatable
     {
         return $this->hasMany(Order::class, 'id_client', 'id_client');
     }
+
+    public function registeredBikes(): HasMany
+    {
+        return $this->hasMany(BikeRegistered::class, 'id_client', 'id_client');
+    }
 }

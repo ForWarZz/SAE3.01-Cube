@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\BikeRegisterController;
 use App\Http\Controllers\BotManController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
@@ -104,6 +105,11 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
             Route::get('/{order}', [OrderReturnController::class, 'create'])->name('create');
             Route::post('/{order}', [OrderReturnController::class, 'store'])->name('store');
         });
+    });
+
+    Route::prefix('velo-enregistre')->name('bike-registered.')->group(function () {
+        Route::get('/', [BikeRegisterController::class, 'index'])->name('index');
+        Route::get('/creer', [BikeRegisterController::class, 'create'])->name('create');
     });
 });
 

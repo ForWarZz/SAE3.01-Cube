@@ -50,7 +50,10 @@
                             </div>
                         </a>
 
-                        <div class="block cursor-not-allowed rounded-lg border border-gray-200 bg-gray-50 p-6 opacity-50">
+                        <a
+                            href="{{ route("dashboard.bike-registered.index") }}"
+                            class="block rounded-lg border border-gray-200 bg-gray-50 p-6 transition-colors hover:bg-gray-100"
+                        >
                             <div class="flex items-center">
                                 <x-heroicon-o-archive-box class="h-6 w-6 text-blue-600" />
                                 <div class="ml-4">
@@ -58,7 +61,7 @@
                                     <p class="text-sm text-gray-500">Gérer mes vélos enregistrés</p>
                                 </div>
                             </div>
-                        </div>
+                        </a>
 
                         <div class="block cursor-not-allowed rounded-lg border border-gray-200 bg-gray-50 p-6 opacity-50">
                             <div class="flex items-center">

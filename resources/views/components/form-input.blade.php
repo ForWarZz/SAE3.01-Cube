@@ -9,7 +9,7 @@
     "readonly" => false,
     "help" => null,
     "wrapperClass" => "mb-4",
-    "inputClass" => "mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm",
+    "inputClass" => "mt-1 block w-full rounded-md border-gray-300 p-2 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500",
 ])
 
 @php
@@ -19,11 +19,8 @@
 
 <div class="{{ $wrapperClass }}">
     @if ($label)
-        <x-input-label for="{{ $id }}">
+        <x-input-label for="{{ $id }}" required="{{ $required }}">
             {!! $label !!}
-            @if ($required)
-                <span class="text-red-600">*</span>
-            @endif
         </x-input-label>
     @endif
 
