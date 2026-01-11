@@ -74,6 +74,15 @@
         @if ($isBike)
             <x-bike-geometries :sizes="$geometrySizes" :geometries="$geometries" :bike="$article->bike" />
             <x-bike-size :sizes="$availableSizes" />
+
+            @if ($currentReference->ebike)
+                <x-battery-autonomy-calculator
+                    :battery-capacity="$currentReference->ebike->battery->capacite_batterie"
+                    :battery-options="$batteryOptions"
+                    :article="$article"
+                />
+            @endif
+
             <x-bike-compatible-accessories :compatible-accessories="$compatibleAccessories" />
         @endif
 
