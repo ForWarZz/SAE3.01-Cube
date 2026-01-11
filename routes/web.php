@@ -109,9 +109,12 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
 
     Route::prefix('velo-enregistre')->name('bike-registered.')->group(function () {
         Route::get('/', [BikeRegisterController::class, 'index'])->name('index');
+
         Route::get('/creer', [BikeRegisterController::class, 'create'])->name('create');
+        Route::get('/{bikeRegistered}/modifier', [BikeRegisterController::class, 'edit'])->name('edit');
 
         Route::post('/', [BikeRegisterController::class, 'store'])->name('store');
+        Route::put('/{bikeRegistered}', [BikeRegisterController::class, 'update'])->name('update');
 
         Route::get('/{bikeRegistered}/facture', [BikeRegisterController::class, 'downloadInvoice'])->name('download-invoice');
     });

@@ -68,39 +68,35 @@
                                                     class="text-blue-600 hover:text-blue-900"
                                                     title="Télécharger la facture"
                                                 >
-                                                    {{-- <x-heroicon-o-arrow-down class="mr-1 inline size-5" /> --}}
                                                     Télécharger la facture
                                                 </a>
                                             </td>
                                             <td class="px-6 py-4 text-right text-sm font-medium whitespace-nowrap">
-                                                {{-- <div class="flex items-center justify-end space-x-3"> --}}
-                                                {{-- <a --}}
-                                                {{-- href="{{ route("dashboard.velo-enregistre.show", $bike) }}" --}}
-                                                {{-- class="text-blue-600 hover:text-blue-900" --}}
-                                                {{-- title="Voir" --}}
-                                                {{-- > --}}
-                                                {{-- <x-heroicon-o-eye class="h-5 w-5" /> --}}
-                                                {{-- </a> --}}
-                                                {{-- <a --}}
-                                                {{-- href="{{ route("dashboard.velo-enregistre.edit", $bike) }}" --}}
-                                                {{-- class="text-yellow-600 hover:text-yellow-900" --}}
-                                                {{-- title="Modifier" --}}
-                                                {{-- > --}}
-                                                {{-- <x-heroicon-o-pencil-square class="h-5 w-5" /> --}}
-                                                {{-- </a> --}}
-                                                {{-- <form --}}
-                                                {{-- action="{{ route("dashboard.velo-enregistre.destroy", $bike) }}" --}}
-                                                {{-- method="POST" --}}
-                                                {{-- class="inline" --}}
-                                                {{-- onsubmit="return confirm('Supprimer ce vélo ?');" --}}
-                                                {{-- > --}}
-                                                {{-- @csrf --}}
-                                                {{-- @method("DELETE") --}}
-                                                {{-- <button type="submit" class="text-red-600 hover:text-red-900" title="Supprimer"> --}}
-                                                {{-- <x-heroicon-o-trash class="h-5 w-5" /> --}}
-                                                {{-- </button> --}}
-                                                {{-- </form> --}}
-                                                {{-- </div> --}}
+                                                <div class="flex items-center justify-end space-x-3">
+                                                    <a
+                                                        href="{{ route("dashboard.bike-registered.edit", $bike) }}"
+                                                        class="cursor-pointer text-yellow-600 hover:text-yellow-900"
+                                                        title="Modifier"
+                                                    >
+                                                        <x-heroicon-o-pencil-square class="h-5 w-5" />
+                                                    </a>
+                                                    <form
+                                                        {{-- action="{{ route("dashboard.velo-enregistre.destroy", $bike) }}" --}}
+                                                        method="POST"
+                                                        class="inline-flex"
+                                                        onsubmit="return confirm('Supprimer ce vélo ?');"
+                                                    >
+                                                        @csrf
+                                                        @method("DELETE")
+                                                        <button
+                                                            type="submit"
+                                                            class="cursor-pointer text-red-600 hover:text-red-900"
+                                                            title="Supprimer"
+                                                        >
+                                                            <x-heroicon-o-trash class="size-5" />
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach

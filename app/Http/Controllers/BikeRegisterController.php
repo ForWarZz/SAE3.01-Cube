@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BikeRegisteredRequest;
+use App\Http\Requests\BikeRegisteredUpdateRequest;
 use App\Models\BikeRegistered;
 use App\Models\Shop;
 use App\Services\BikeRegisterService;
@@ -61,5 +62,43 @@ class BikeRegisterController extends Controller
         }
 
         return $this->bikeRegisterService->downloadRegisteredInvoice($bikeRegistered);
+    }
+
+    public function edit(BikeRegistered $bikeRegistered)
+    {
+        $client = auth()->user();
+
+        if ($bikeRegistered->id_client !== $client->id_client) {
+            abort(403, 'Vous n\'êtes pas autorisé à accéder à cette ressource.');
+        }
+
+        $shops = Shop::with('city')->get();
+
+        return view('dashboard.bike-registered.create', [
+            'bike' => $bikeRegistered,
+            'shops' => $shops,
+            'isEdit' => true,
+        ]);
+    }
+
+    public function update(BikeRegisteredUpdateRequest $request, BikeRegistered $bikeRegistered)
+    {
+        $client = auth()->user();
+
+        if ($bikeRegistered->id_client !== $client->id_client) {
+            abort(403, 'Vous n\'êtes pas autorisé à accéder à cette ressource.');
+        }
+
+        $this->bikeRegisterService->updateRegisteredBike(
+            bikeRegistered: $bikeRegistered,
+            shopId: $request->input('id_magasin'),
+            serialNumber: $request->input('num_serie_velo_enr'),
+            purchaseDate: $request->input('date_achat_velo_enr'),
+            bikeYear: $request->input('millesime_velo_enr'),
+            invoice: $request->file('facture')
+        );
+
+        return redirect()->route('dashboard.bike-registered.index')
+            ->with('success', 'Vélo mis à jour avec succès.');
     }
 }

@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="m-auto max-w-2xl px-8">
-        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+        <div class="overflow-hidden rounded-lg bg-white shadow-sm">
             <div class="p-6">
                 <div class="mb-6">
                     <a
@@ -10,53 +10,30 @@
                         <x-heroicon-o-arrow-left class="mr-1 h-4 w-4" />
                         Retour à mes vélos
                     </a>
-                    <h1 class="text-2xl font-bold text-gray-900">Enregistrer mon vélo</h1>
+
+                    <h1 class="text-2xl font-bold text-gray-900">
+                        {{ $isEdit ? "Modifier mon vélo" : "Enregistrer mon vélo" }}
+                    </h1>
                     <p class="mt-2 text-gray-600">
-                        Prenez quelques minutes pour compléter le formulaire et enregistrer votre vélo à l'Assistance CUBE en ligne.
+                        {{ $isEdit ? "Modifiez les informations de votre vélo et mettez à jour sa facture si nécessaire." : 'Prenez quelques minutes pour compléter le formulaire et enregistrer votre vélo à l\'Assistance CUBE en ligne.' }}
                     </p>
                 </div>
 
-                {{-- <div class="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4"> --}}
-                {{-- <div class="flex items-start"> --}}
-                {{-- <x-heroicon-o-information-circle class="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-500" /> --}}
-                {{-- <div class="ml-3"> --}}
-                {{-- <h3 class="font-semibold text-blue-800">Pourquoi enregistrer mon vélo ?</h3> --}}
-                {{-- <p class="mt-1 text-sm text-blue-700"> --}}
-                {{-- Cette procédure simple et rapide vous permettra de bénéficier d'un contact facilité avec nos services en --}}
-                {{-- cas de problème avec votre vélo. --}}
-                {{-- </p> --}}
-                {{-- </div> --}}
-                {{-- </div> --}}
-                {{-- </div> --}}
+                <x-flash-message key="success" type="success" />
 
-                {{--  --}}
-                {{-- Information sur l'éligibilité --}}
-                {{-- <div class="mb-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4"> --}}
-                {{-- <div class="flex items-start"> --}}
-                {{-- <x-heroicon-o-exclamation-triangle class="mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-500" /> --}}
-                {{-- <div class="ml-3"> --}}
-                {{-- <h3 class="font-semibold text-yellow-800">Conditions d'éligibilité</h3> --}}
-                {{-- <ul class="mt-1 list-inside list-disc text-sm text-yellow-700"> --}}
-                {{-- <li>Seuls les vélos achetés auprès d'un revendeur agréé CUBE France sont éligibles</li> --}}
-                {{-- <li>Les vélos dont le millésime est de moins de 5 ans bénéficient du contrat d'assistance</li> --}}
-                {{-- <li> --}}
-                {{-- Sont exclus les vélos achetés auprès d'un revendeur étranger ou d'un site Internet appartenant à une --}}
-                {{-- société étrangère --}}
-                {{-- </li> --}}
-                {{-- </ul> --}}
-                {{-- <a --}}
-                {{-- href="{{ route("shops.index") }}" --}}
-                {{-- class="mt-2 inline-flex items-center text-sm font-medium text-yellow-800 hover:text-yellow-900" --}}
-                {{-- > --}}
-                {{-- <x-heroicon-o-map-pin class="mr-1 h-4 w-4" /> --}}
-                {{-- Voir la liste des magasins agréés --}}
-                {{-- </a> --}}
-                {{-- </div> --}}
-                {{-- </div> --}}
-                {{-- </div> --}}
-
-                <form method="POST" enctype="multipart/form-data" action="{{ route("dashboard.bike-registered.store") }}">
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                    action="{{
+                        $isEdit
+                            ? route("dashboard.bike-registered.update", $bike)
+                            : route("dashboard.bike-registered.store")
+                    }}"
+                >
                     @csrf
+                    @if ($isEdit)
+                        @method("PUT")
+                    @endif
 
                     <div class="mb-6 border-b border-gray-200 pb-2">
                         <h2 class="text-lg font-semibold text-gray-900">Mon vélo</h2>
@@ -75,7 +52,7 @@
                                 @foreach ($shops as $shop)
                                     <option
                                         value="{{ $shop->id_magasin }}"
-                                        {{ old("id_magasin") == $shop->id_magasin ? "selected" : "" }}
+                                        {{ old("id_magasin", $bike->id_magasin ?? null) == $shop->id_magasin ? "selected" : "" }}
                                     >
                                         {{ $shop->nom_magasin }} - {{ $shop->city->nom_ville }}
                                     </option>
@@ -89,7 +66,7 @@
                                 name="num_serie_velo_enr"
                                 label="Numéro de série du cadre"
                                 placeholder="Ex: WOW12345678"
-                                :value="old('num_serie_velo_enr')"
+                                :value="old('num_serie_velo_enr', $bike->num_serie_velo_enr ?? '')"
                             />
                         </div>
 
@@ -99,7 +76,7 @@
                                 type="date"
                                 name="date_achat_velo_enr"
                                 id="date_achat_velo_enr"
-                                value="{{ old("date_achat_velo_enr") }}"
+                                value="{{ old("date_achat_velo_enr", isset($bike) ? $bike->date_achat_velo_enr?->format("Y-m-d") : "") }}"
                                 max="{{ date("Y-m-d") }}"
                                 class="w-full rounded-lg border border-gray-300 p-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                             />
@@ -111,7 +88,7 @@
                                 name="millesime_velo_enr"
                                 label="Millésime"
                                 placeholder="Ex: 2022"
-                                :value="old('millesime_velo_enr')"
+                                :value="old('millesime_velo_enr', $bike->millesime_velo_enr ?? '')"
                             />
                         </div>
                     </div>
@@ -146,19 +123,26 @@
                                 name="facture"
                                 type="file"
                                 accept=".pdf"
-                                required
+                                {{ $isEdit ? "" : "required" }}
                                 class="sr-only"
                                 @change="fileName = $event.target.files[0]?.name"
                             />
                         </label>
 
-                        <p class="mt-1 text-xs text-gray-500">PDF uniquement · 5 Mo max</p>
+                        <p class="mt-1 text-xs text-gray-500">
+                            PDF uniquement · 5 Mo max
+                            @if ($isEdit)
+                                · Laisser vide pour conserver la facture actuelle
+                            @endif
+                        </p>
 
                         <x-input-error :messages="$errors->get('facture')" class="mt-1" />
                     </div>
 
                     <div class="mt-8">
-                        <x-button type="submit" size="lg" class="w-full" icon="heroicon-o-check">Enregistrer mon vélo</x-button>
+                        <x-button type="submit" size="lg" class="w-full" icon="heroicon-o-check">
+                            {{ $isEdit ? "Mettre à jour le vélo" : "Enregistrer mon vélo" }}
+                        </x-button>
                         <p class="mt-2 text-center text-xs text-gray-500">* Champs obligatoires</p>
                     </div>
                 </form>
