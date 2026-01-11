@@ -116,7 +116,7 @@
                         </div>
                     </div>
 
-                    <div class="mt-6">
+                    <div class="mt-6" x-data="{ fileName: null }">
                         <label for="facture" class="block text-sm font-medium text-gray-700">
                             Votre facture
                             <span class="text-red-500">*</span>
@@ -125,10 +125,31 @@
                         <label
                             for="facture"
                             class="mt-2 flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-4 text-sm text-gray-600 transition hover:border-blue-400 hover:bg-blue-50"
+                            :class="fileName && 'border-green-400 bg-green-50 text-green-700'"
                         >
-                            <x-heroicon-o-document-arrow-up class="mr-2 size-5 text-gray-400" />
-                            <span>Choisir un fichier PDF</span>
-                            <input id="facture" name="facture" type="file" accept=".pdf" required class="sr-only" />
+                            <template x-if="!fileName">
+                                <div class="flex items-center">
+                                    <x-heroicon-o-document-arrow-up class="mr-2 size-5 text-gray-400" />
+                                    <span>Choisir un fichier PDF</span>
+                                </div>
+                            </template>
+
+                            <template x-if="fileName">
+                                <div class="flex items-center">
+                                    <x-heroicon-s-check-circle class="mr-2 size-5 text-green-500" />
+                                    <span x-text="fileName"></span>
+                                </div>
+                            </template>
+
+                            <input
+                                id="facture"
+                                name="facture"
+                                type="file"
+                                accept=".pdf"
+                                required
+                                class="sr-only"
+                                @change="fileName = $event.target.files[0]?.name"
+                            />
                         </label>
 
                         <p class="mt-1 text-xs text-gray-500">PDF uniquement · 5 Mo max</p>
