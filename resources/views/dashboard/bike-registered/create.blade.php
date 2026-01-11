@@ -55,14 +55,14 @@
                 {{-- </div> --}}
                 {{-- </div> --}}
 
-                <form method="POST" enctype="multipart/form-data">
+                <form method="POST" enctype="multipart/form-data" action="{{ route("dashboard.bike-registered.store") }}">
                     @csrf
 
                     <div class="mb-6 border-b border-gray-200 pb-2">
                         <h2 class="text-lg font-semibold text-gray-900">Mon vélo</h2>
                     </div>
 
-                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div class="grid grid-cols-2 gap-6">
                         <div>
                             <x-input-label for="id_magasin" value="Votre magasin" required class="mb-1" />
                             <select
@@ -94,7 +94,7 @@
                         </div>
 
                         <div>
-                            <x-input-label for="date_achat_velo_enr" value="Date d'achat" required class="mb-1" />
+                            <x-input-label for="date_achat_velo_enr" value="Date d'achat" class="mb-1" />
                             <input
                                 type="date"
                                 name="date_achat_velo_enr"
@@ -112,7 +112,6 @@
                                 label="Millésime"
                                 placeholder="Ex: 2022"
                                 :value="old('millesime_velo_enr')"
-                                required
                             />
                         </div>
                     </div>
