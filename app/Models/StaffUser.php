@@ -25,6 +25,8 @@ class StaffUser extends Authenticatable
 
     public const TECHNICAL_ROLE = 'TECHNICAL';
 
+    public const SAV_ROLE = 'SAV';
+
     public $timestamps = false;
 
     protected $table = 'staff';
@@ -86,5 +88,10 @@ class StaffUser extends Authenticatable
     public function isTechnical(): bool
     {
         return $this->role === self::TECHNICAL_ROLE;
-    } 
+    }
+
+    public function isSAV(): bool
+    {
+        return $this->role === self::SAV_ROLE;
+    }
 }

@@ -20,6 +20,7 @@ class StaffLayout extends Component
             'isDirector' => $staffUser->isCommercialDirector(),
             'isDpo' => $staffUser->isDpo(),
             'isTechnical' => $staffUser->isTechnical(),
+            'isSAV' => $staffUser->isSAV(),
         ]);
     }
 }

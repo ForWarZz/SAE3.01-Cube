@@ -19,10 +19,12 @@ use App\Http\Controllers\Staff\Commercial\CommercialBikeController;
 use App\Http\Controllers\Staff\Commercial\CommercialCategoryController;
 use App\Http\Controllers\Staff\Commercial\CommercialModelController;
 use App\Http\Controllers\Staff\DPO\DPOController;
+use App\Http\Controllers\Staff\SAV\SAVController;
 use App\Http\Controllers\Staff\Technical\TechnicalGeometryController;
 use App\Http\Controllers\TwoFactorController;
 use App\Http\Middleware\StaffCommercialMiddleware;
 use App\Http\Middleware\StaffDpoMiddleware;
+use App\Http\Middleware\StaffSavMiddleware;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
@@ -207,6 +209,12 @@ Route::prefix('staff')->group(function () {
                 Route::post('/{model}/ajouter-caracteristique', [TechnicalGeometryController::class, 'addCharacteristic'])->name('add');
             });
         })->middleware(StaffCommercialMiddleware::class);
+
+        Route::prefix('sav')->name('sav.')->group(function () {
+            Route::get('/', [SAVController::class, 'index'])->name('index');
+            Route::get('/demandes/{returnRequest}', [SAVController::class, 'show'])->name('show');
+            Route::post('/demandes/{returnRequest}/etat', [SAVController::class, 'updateState'])->name('update-state');
+        })->middleware(StaffSavMiddleware::class);
     });
 });
 
