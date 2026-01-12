@@ -18,6 +18,7 @@ class InvoiceController extends Controller
         $order->load([
             'items.reference.article',
             'items.reference.bikeReference.color',
+            'items.reference.ebikeReference.battery',
             'items.reference.accessory',
             'items.size',
             'billingAddress.city',
@@ -37,8 +38,6 @@ class InvoiceController extends Controller
         if (! auth('staff')->check()) {
             abort(403, 'Accès non autorisé à cette facture.');
         }
-
-        $client = $order->client()->withTrashed()->first();
 
         $order->load([
             'items.reference.article',

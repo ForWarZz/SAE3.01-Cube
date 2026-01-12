@@ -29,6 +29,11 @@ class ArticleReference extends Model
         return $this->belongsTo(BikeReference::class, 'id_reference', 'id_reference');
     }
 
+    public function ebikeReference(): BelongsTo
+    {
+        return $this->belongsTo(EBikeReference::class, 'id_reference', 'id_reference');
+    }
+
     public function accessory(): BelongsTo
     {
         return $this->belongsTo(Accessory::class, 'id_reference', 'id_reference');
