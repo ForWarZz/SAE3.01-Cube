@@ -32,6 +32,7 @@ class BikeRegisterController extends Controller
 
         return view('dashboard.bike-registered.create', [
             'shops' => $shops,
+            'isEdit' => false,
         ]);
     }
 
