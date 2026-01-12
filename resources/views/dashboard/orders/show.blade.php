@@ -140,6 +140,10 @@
                                                     <div>Taille : {{ $item->size }}</div>
                                                 @endif
 
+                                                @if ($item->battery)
+                                                    <div>Batterie : {{ $item->battery }}</div>
+                                                @endif
+
                                                 <div>Qté : {{ $item->quantity }}</div>
                                             </div>
 

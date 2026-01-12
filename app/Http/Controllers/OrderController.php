@@ -84,6 +84,7 @@ class OrderController extends Controller
             'items.reference.article.bike.bikeModel',
 
             'items.reference.bikeReference.color',
+            'items.reference.ebikeReference.battery',
             'items.reference.accessory',
 
             'items.size',

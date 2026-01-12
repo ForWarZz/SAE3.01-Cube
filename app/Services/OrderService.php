@@ -88,6 +88,7 @@ class OrderService
                 colorHex: $isBike ? $ref->color?->hex : null,
                 colorName: $isBike ? $ref->color?->label_couleur : null,
                 size: $item->size?->label,
+                battery: $isBike ? $baseReference->ebikeReference?->battery->label_batterie : null,
                 quantity: $item->quantite_ligne,
                 unitPrice: $item->prix_unit_ligne,
                 totalPrice: $item->prix_unit_ligne * $item->quantite_ligne,
