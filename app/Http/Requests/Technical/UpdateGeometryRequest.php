@@ -14,7 +14,7 @@ class UpdateGeometryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'geo' => ['required', 'array'],
+            'geo' => ['nullable', 'array'],
             'geo.*' => ['required', 'array'],
             'geo.*.*' => ['nullable', 'string'],
         ];
@@ -23,7 +23,6 @@ class UpdateGeometryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'geo.required' => 'Les données de géométrie sont obligatoires.',
             'geo.array' => 'Les données de géométrie doivent être un tableau.',
             'geo.*.array' => 'Chaque caractéristique doit contenir un tableau de valeurs.',
         ];
