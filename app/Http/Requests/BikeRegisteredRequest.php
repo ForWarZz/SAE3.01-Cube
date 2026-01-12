@@ -25,7 +25,7 @@ class BikeRegisteredRequest extends FormRequest
             'id_magasin' => ['required', 'integer', 'exists:magasin,id_magasin'],
             'num_serie_velo_enr' => ['nullable', 'string', 'max:100', 'unique:velo_enregistre,num_serie_velo_enr'],
             'date_achat_velo_enr' => ['nullable', 'date', 'before_or_equal:today'],
-            'millesime_velo_enr' => ['nullable', 'string', 'max:4'],
+            'millesime_velo_enr' => ['nullable', 'integer', 'max_digits:4', 'min:1900', 'max:'.date('Y')],
             'facture' => ['required', 'file', 'mimes:pdf', 'max:2048'],
         ];
     }
@@ -48,6 +48,11 @@ class BikeRegisteredRequest extends FormRequest
             'facture.file' => 'La facture doit être un fichier valide.',
             'facture.mimes' => 'La facture doit être au format PDF.',
             'facture.max' => 'La taille de la facture ne doit pas dépasser 2 Mo.',
+
+            'millesime_velo_enr.integer' => 'Le millésime doit être un entier.',
+            'millesime_velo_enr.max_digits' => 'Le millésime ne doit pas dépasser 4 chiffres.',
+            'millesime_velo_enr.min' => 'Le millésime doit être supérieur ou égal à 1900.',
+            'millesime_velo_enr.max' => 'Le millésime ne peut pas être supérieur à l\'année en cours.',
         ];
     }
 }
