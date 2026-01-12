@@ -190,6 +190,7 @@ class CubeAssistantService
             'page_type' => $pageType,
             'context' => $context,
             'page_url' => $pageUrl,
+            'app_url' => config('app.url'),
             'timestamp' => now()->toIso8601String(),
         ];
     }
