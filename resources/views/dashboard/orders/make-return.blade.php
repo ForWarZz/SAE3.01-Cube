@@ -25,8 +25,15 @@
                                 Vous avez encore
                                 <strong>{{ $daysRemaining }} jour(s)</strong>
                                 pour exercer votre droit de rétractation. Date limite :
-                                <strong>{{ $returnDeadline->format("d/m/Y") }}</strong>
+                                <strong><x-date-local :date="$returnDeadline" type="date" /></strong>
                             </p>
+                            @if ($deliveryDate)
+                                <p class="mt-1 text-xs text-blue-700">
+                                    Le délai de 14 jours a débuté à la livraison le
+                                    <strong><x-date-local :date="$deliveryDate" type="date" /></strong>
+                                </p>
+                            @endif
+
                             <p class="mt-2 text-xs text-blue-700">
                                 Les articles doivent être retournés dans leur emballage d'origine, non utilisés et accompagnés de tous leurs
                                 accessoires.
@@ -34,9 +41,16 @@
                         @else
                             <p class="mt-1 text-sm text-red-800">
                                 Le délai de rétractation de 14 jours est expiré depuis le
-                                <strong>{{ $returnDeadline->format("d/m/Y") }}</strong>
+                                <strong><x-date-local :date="$returnDeadline" type="date" /></strong>
                                 .
                             </p>
+                            @if ($deliveryDate)
+                                <p class="mt-1 text-xs text-red-700">
+                                    La commande a été livrée le
+                                    <strong><x-date-local :date="$deliveryDate" type="date" /></strong>
+                                </p>
+                            @endif
+
                             <p class="mt-2 text-xs text-red-700">
                                 Vous ne pouvez plus exercer votre droit de rétractation pour cette commande. Contactez notre service client
                                 pour toute question.

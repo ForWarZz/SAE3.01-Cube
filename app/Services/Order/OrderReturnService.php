@@ -48,7 +48,10 @@ class OrderReturnService
 
     public function getReturnDeadline(Order $order): Carbon
     {
-        return Carbon::parse($order->date_commande)->addDays(self::RETURN_PERIOD_DAYS);
+        $deliveryDate = $order->getDeliveryDate();
+        $startDate = $deliveryDate ?? $order->date_commande;
+
+        return Carbon::parse($startDate)->addDays(self::RETURN_PERIOD_DAYS);
     }
 
     public function getDaysRemaining(Order $order): int

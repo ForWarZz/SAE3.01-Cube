@@ -68,6 +68,7 @@ class Order extends Model
             'id_commande',
             'id_etat'
         )->withPivot('date_changement')
+            ->withCasts(['date_changement' => 'datetime'])
             ->orderByPivot('date_changement', 'desc');
     }
 
@@ -122,5 +123,14 @@ class Order extends Model
     public function returnRequests(): HasMany
     {
         return $this->hasMany(OrderReturnRequest::class, 'id_commande', 'id_commande');
+    }
+
+    public function getDeliveryDate(): ?Carbon
+    {
+        $deliveredState = $this->states()
+            ->where('etat_commande.id_etat', OrderState::DELIVERED)
+            ->first();
+
+        return Carbon::parse($deliveredState?->pivot?->date_changement);
     }
 }

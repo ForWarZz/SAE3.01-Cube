@@ -24,6 +24,7 @@ class OrderReturnController extends Controller
         }
 
         $order->load([
+            'states',
             'items.reference.article.category',
             'items.reference.article.bike.bikeModel',
             'items.reference.bikeReference.color',
@@ -44,6 +45,7 @@ class OrderReturnController extends Controller
             'order' => $order,
             'items' => $this->orderReturnService->getAvailableLinesToReturn($order),
             'breadcrumbs' => $breadcrumbs,
+            'deliveryDate' => $order->getDeliveryDate(),
             ...$returnEligibility,
         ]);
     }
