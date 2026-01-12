@@ -8,6 +8,7 @@ use App\Http\Controllers\BotManController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderReturnController;
@@ -25,7 +26,6 @@ use App\Http\Controllers\TwoFactorController;
 use App\Http\Middleware\StaffCommercialMiddleware;
 use App\Http\Middleware\StaffDpoMiddleware;
 use App\Http\Middleware\StaffSavMiddleware;
-use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,12 +39,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('index', [
-        'bikeCategoryId' => Category::BIKE_CATEGORY_ID,
-        'accessoryCategoryId' => Category::ACCESSORY_CATEGORY_ID,
-    ]);
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::prefix('articles')->name('articles.')->group(function () {
     Route::get('/search', [ArticleController::class, 'search'])->name('search');
