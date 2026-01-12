@@ -85,11 +85,14 @@ class ProfileController extends Controller
         $client = $request->user();
         $client->load([
             'addresses.city',
+            'registeredBikes.shop',
             'orders.items.reference.article',
             'orders.billingAddress.city',
             'orders.deliveryAddress.city',
             'orders.shippingMode',
             'orders.paymentType',
+            'orders.returnRequests.state',
+            'orders.returnRequests.lines.orderLine.reference.article',
         ]);
 
         return $gdprService->generatePdfExport($client);

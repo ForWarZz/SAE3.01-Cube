@@ -130,6 +130,16 @@ class GdprService
                     'code_postal' => $adresse->city->cp_ville,
                 ];
             })->toArray(),
+            'velos_enregistres' => $client->registeredBikes->map(function ($bike) {
+                return [
+                    'id' => $bike->id_velo_enr,
+                    'numero_serie' => $bike->num_serie_velo_enr,
+                    'date_achat' => $bike->date_achat_velo_enr?->format('Y-m-d'),
+                    'millesime' => $bike->millesime_velo_enr,
+                    'magasin' => $bike->shop->nom_magasin ?? null,
+                    'chemin_facture' => $bike->chemin_facture_velo_enr,
+                ];
+            })->toArray(),
             'commandes' => $client->orders->map(function (Order $order) {
                 return [
                     'numero' => $order->num_commande,
@@ -148,6 +158,23 @@ class GdprService
                             'produit' => $article->nom_article,
                             'quantite' => $item->quantite_ligne,
                             'prix_unitaire' => $item->prix_unit_ligne,
+                        ];
+                    })->toArray(),
+                    'demandes_retour' => $order->returnRequests->map(function ($returnRequest) {
+                        return [
+                            'id' => $returnRequest->id_demande_retour,
+                            'date_demande' => $returnRequest->date_demande->format('Y-m-d H:i:s'),
+                            'description' => $returnRequest->description_demande,
+                            'etat' => $returnRequest->state->label_etat_retour ?? null,
+                            'articles_retournes' => $returnRequest->lines->map(function ($line) {
+                                $orderLine = $line->orderLine;
+                                $article = $orderLine->reference->article;
+
+                                return [
+                                    'produit' => $article->nom_article,
+                                    'quantite_retournee' => $line->quantite_retournee,
+                                ];
+                            })->toArray(),
                         ];
                     })->toArray(),
                 ];

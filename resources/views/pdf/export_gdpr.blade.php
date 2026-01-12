@@ -63,6 +63,30 @@
         </div>
 
         <div class="section">
+            <h2>Vélos enregistrés</h2>
+            @if (count($data["velos_enregistres"]) > 0)
+                <table>
+                    <tr>
+                        <th>Numéro de série</th>
+                        <th>Date d'achat</th>
+                        <th>Millésime</th>
+                        <th>Magasin</th>
+                    </tr>
+                    @foreach ($data["velos_enregistres"] as $bike)
+                        <tr>
+                            <td>{{ $bike["numero_serie"] ?? "N/A" }}</td>
+                            <td>{{ $bike["date_achat"] ?? "N/A" }}</td>
+                            <td>{{ $bike["millesime"] ?? "N/A" }}</td>
+                            <td>{{ $bike["magasin"] ?? "N/A" }}</td>
+                        </tr>
+                    @endforeach
+                </table>
+            @else
+                <p>Aucun vélo enregistré.</p>
+            @endif
+        </div>
+
+        <div class="section">
             <h2>Historique des commandes</h2>
             @foreach ($data["commandes"] as $order)
                 <div style="background: #fdfdfd; padding: 10px; margin-bottom: 10px">
@@ -84,6 +108,43 @@
                             </tr>
                         @endforeach
                     </table>
+
+                    @if (count($order["demandes_retour"]) > 0)
+                        <div style="margin-top: 10px; padding: 10px; background: #fff3cd; border-left: 3px solid #ffc107">
+                            <strong>Demandes de retour :</strong>
+                            @foreach ($order["demandes_retour"] as $returnRequest)
+                                <div style="margin-top: 5px">
+                                    <p>
+                                        <strong>Date :</strong>
+                                        {{ $returnRequest["date_demande"] }} |
+                                        <strong>État :</strong>
+                                        {{ $returnRequest["etat"] ?? "N/A" }}
+                                    </p>
+                                    @if ($returnRequest["description"])
+                                        <p>
+                                            <strong>Description :</strong>
+                                            {{ $returnRequest["description"] }}
+                                        </p>
+                                    @endif
+
+                                    @if (count($returnRequest["articles_retournes"]) > 0)
+                                        <table style="margin-top: 5px">
+                                            <tr>
+                                                <th>Produit retourné</th>
+                                                <th>Quantité</th>
+                                            </tr>
+                                            @foreach ($returnRequest["articles_retournes"] as $returnedItem)
+                                                <tr>
+                                                    <td>{{ $returnedItem["produit"] }}</td>
+                                                    <td>{{ $returnedItem["quantite_retournee"] }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </table>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             @endforeach
         </div>
