@@ -25,7 +25,6 @@ use App\Http\Controllers\TwoFactorController;
 use App\Http\Middleware\StaffCommercialMiddleware;
 use App\Http\Middleware\StaffDpoMiddleware;
 use App\Http\Middleware\StaffSavMiddleware;
-use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -108,6 +107,7 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
             Route::prefix('/retour')->name('return.')->group(function () {
                 Route::get('/', [OrderReturnController::class, 'create'])->name('create');
                 Route::post('/', [OrderReturnController::class, 'store'])->name('store');
+                Route::get('/{returnRequest}/piece-jointe/{attachment}', [OrderReturnController::class, 'downloadAttachment'])->name('download-attachment');
             });
         });
     });
@@ -214,6 +214,7 @@ Route::prefix('staff')->group(function () {
             Route::get('/', [SAVController::class, 'index'])->name('index');
             Route::get('/demandes/{returnRequest}', [SAVController::class, 'show'])->name('show');
             Route::post('/demandes/{returnRequest}/etat', [SAVController::class, 'updateState'])->name('update-state');
+            Route::get('/demandes/{returnRequest}/piece-jointe/{attachment}', [SAVController::class, 'downloadAttachment'])->name('download-attachment');
         })->middleware(StaffSavMiddleware::class);
     });
 });

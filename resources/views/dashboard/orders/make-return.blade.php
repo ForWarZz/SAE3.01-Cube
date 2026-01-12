@@ -61,7 +61,12 @@
             </div>
 
             @if ($canReturn)
-                <form class="space-y-6" action="{{ route("dashboard.orders.return.store", $order->id_commande) }}" method="POST">
+                <form
+                    class="space-y-6"
+                    action="{{ route("dashboard.orders.return.store", $order->id_commande) }}"
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
                     @csrf
 
                     <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -133,6 +138,8 @@
                                 </div>
                             @endforeach
                         </div>
+
+                        <x-input-error class="mt-2" :messages="$errors->get('items')" />
                     </div>
 
                     <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -146,6 +153,22 @@
                             class="w-full"
                         />
                         <p class="mt-2 text-sm text-gray-500">Ce message sera envoyé à notre service client pour traiter votre demande.</p>
+                    </div>
+
+                    <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                        <label for="attachments" class="mb-4 block text-lg font-semibold text-gray-900">Pièces jointes (optionnel)</label>
+                        <input
+                            type="file"
+                            id="attachments"
+                            name="attachments[]"
+                            multiple
+                            accept=".pdf,.jpg,.jpeg,.png,.webp"
+                            class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        />
+                        <p class="mt-2 text-sm text-gray-500">
+                            Vous pouvez joindre jusqu'à 5 fichiers (PDF, JPG, PNG, WEBP). Maximum 10 Mo par fichier.
+                        </p>
+                        <x-input-error class="mt-2" :messages="$errors->get('attachments')" />
                     </div>
 
                     <div class="flex items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">

@@ -48,4 +48,9 @@ class OrderReturnRequest extends Model
     {
         return $this->belongsTo(OrderReturnState::class, 'id_etat_retour', 'id_etat_retour');
     }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(OrderReturnAttachment::class, 'id_demande_retour', 'id_demande_retour');
+    }
 }

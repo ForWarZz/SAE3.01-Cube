@@ -26,6 +26,8 @@ class OrderReturnCreateRequest extends FormRequest
             'items' => ['required', 'array', 'min:1'],
             'items.*.line_id' => ['required', 'integer', 'exists:ligne_commande,id_ligne'],
             'items.*.quantity' => ['required', 'integer', 'min:0'],
+            'attachments' => ['nullable', 'array', 'max:5'],
+            'attachments.*' => ['file', 'max:10240', 'mimes:pdf,jpg,jpeg,png,webp'],
         ];
     }
 
@@ -34,6 +36,7 @@ class OrderReturnCreateRequest extends FormRequest
         return [
             'message.string' => 'Le message doit être une chaîne de caractères.',
             'message.max' => 'Le message ne peut pas dépasser 1000 caractères.',
+
             'items.required' => 'Les articles sont requis.',
             'items.array' => 'Le format des articles est invalide.',
             'items.min' => 'Au moins un article doit être fourni.',
@@ -43,6 +46,11 @@ class OrderReturnCreateRequest extends FormRequest
             'items.*.quantity.required' => 'La quantité est requise.',
             'items.*.quantity.integer' => 'La quantité doit être un entier.',
             'items.*.quantity.min' => 'La quantité ne peut pas être négative.',
+
+            'attachments.max' => 'Vous ne pouvez joindre que 5 fichiers maximum.',
+            'attachments.*.file' => 'Le fichier doit être valide.',
+            'attachments.*.max' => 'Chaque fichier ne peut pas dépasser 10 Mo.',
+            'attachments.*.mimes' => 'Seuls les fichiers PDF, JPG, PNG et WEBP sont acceptés.',
         ];
     }
 

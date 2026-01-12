@@ -6,10 +6,14 @@ use App\DTOs\Order\AvailableReturnLineDTO;
 use App\DTOs\Order\ReturnRequestItemDTO;
 use App\Models\Order;
 use App\Models\OrderLine;
+use App\Models\OrderReturnAttachment;
 use App\Models\OrderReturnRequest;
 use App\Models\OrderState;
 use Carbon\Carbon;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class OrderReturnService
 {
@@ -149,5 +153,45 @@ class OrderReturnService
         }
 
         return $returnRequest;
+    }
+
+    public function uploadAttachments(OrderReturnRequest $returnRequest, array $files): int
+    {
+        $uploaded = 0;
+
+        foreach ($files as $file) {
+            if ($this->uploadAttachment($returnRequest, $file)) {
+                $uploaded++;
+            }
+        }
+
+        return $uploaded;
+    }
+
+    public function uploadAttachment(OrderReturnRequest $returnRequest, UploadedFile $file): bool
+    {
+        $path = $file->store(
+            'return_attachments/'.$returnRequest->id_demande_retour,
+            'private'
+        );
+
+        if (! $path) {
+            return false;
+        }
+
+        OrderReturnAttachment::create([
+            'id_demande_retour' => $returnRequest->id_demande_retour,
+            'chemin_fichier' => $path,
+        ]);
+
+        return true;
+    }
+
+    public function downloadAttachment(OrderReturnAttachment $attachment): StreamedResponse
+    {
+        return Storage::disk('private')->download(
+            $attachment->chemin_fichier,
+            $attachment->getFileName()
+        );
     }
 }

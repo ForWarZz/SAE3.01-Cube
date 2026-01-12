@@ -188,4 +188,30 @@
             </tbody>
         </table>
     </div>
+
+    <div class="mt-6 rounded-lg bg-white p-6 shadow-md">
+        <h2 class="mb-4 text-xl font-semibold text-gray-800">Pièces jointes</h2>
+
+        @if ($returnRequest->attachments->count() > 0)
+            <div class="space-y-2">
+                @foreach ($returnRequest->attachments as $attachment)
+                    <div class="flex items-center justify-between rounded border border-gray-200 p-3">
+                        <div class="flex items-center space-x-3">
+                            <x-heroicon-o-paper-clip class="h-5 w-5 text-gray-400" />
+                            <span class="text-sm font-medium text-gray-900">{{ $attachment->getFileName() }}</span>
+                        </div>
+                        <a
+                            href="{{ route("sav.download-attachment", [$returnRequest, $attachment]) }}"
+                            class="text-blue-600 hover:text-blue-800"
+                            title="Télécharger"
+                        >
+                            <x-heroicon-o-arrow-down-tray class="h-5 w-5" />
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <p class="text-sm text-gray-500">Aucune pièce jointe</p>
+        @endif
+    </div>
 </x-staff-layout>

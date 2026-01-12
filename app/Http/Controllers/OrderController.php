@@ -100,6 +100,7 @@ class OrderController extends Controller
 
             'returnRequests.state',
             'returnRequests.lines.orderLine',
+            'returnRequests.attachments',
         ]);
 
         $currentState = $order->currentState();

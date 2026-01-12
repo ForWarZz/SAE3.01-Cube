@@ -4,11 +4,17 @@ namespace App\Http\Controllers\Staff\SAV;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderReturnUpdateStateRequest;
+use App\Models\OrderReturnAttachment;
 use App\Models\OrderReturnRequest;
 use App\Models\OrderReturnState;
+use App\Services\Order\OrderReturnService;
 
 class SAVController extends Controller
 {
+    public function __construct(
+        private readonly OrderReturnService $orderReturnService
+    ) {}
+
     public function index()
     {
         $returns = OrderReturnRequest::with(['order.client', 'state', 'lines.orderLine'])
@@ -32,6 +38,7 @@ class SAVController extends Controller
             'lines.orderLine.reference.bikeReference.color',
             'lines.orderLine.reference.bikeReference.ebike.battery',
             'lines.orderLine.size',
+            'attachments',
         ]);
 
         $availableStates = OrderReturnState::all();
@@ -50,5 +57,14 @@ class SAVController extends Controller
 
         return redirect()->route('sav.show', $returnRequest)
             ->with('success', 'État de la demande de retour mis à jour');
+    }
+
+    public function downloadAttachment(OrderReturnRequest $returnRequest, OrderReturnAttachment $attachment)
+    {
+        if ($attachment->id_demande_retour !== $returnRequest->id_demande_retour) {
+            abort(404, 'Pièce jointe non trouvée pour cette demande de retour.');
+        }
+
+        return $this->orderReturnService->downloadAttachment($attachment);
     }
 }

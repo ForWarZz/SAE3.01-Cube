@@ -6,6 +6,8 @@ use App\DTOs\BreadcrumbDTO;
 use App\DTOs\Order\ReturnRequestItemDTO;
 use App\Http\Requests\OrderReturnCreateRequest;
 use App\Models\Order;
+use App\Models\OrderReturnAttachment;
+use App\Models\OrderReturnRequest;
 use App\Services\Order\OrderReturnService;
 
 class OrderReturnController extends Controller
@@ -70,9 +72,32 @@ class OrderReturnController extends Controller
             ->values()
             ->toArray();
 
-        $this->orderReturnService->createReturnRequest($order, $items, $validated['message'] ?? null);
+        $returnRequest = $this->orderReturnService->createReturnRequest(
+            $order,
+            $items,
+            $validated['message'] ?? null
+        );
+
+        if ($request->hasFile('attachments')) {
+            $this->orderReturnService->uploadAttachments($returnRequest, $request->file('attachments'));
+        }
 
         return redirect()->route('dashboard.orders.show', ['order' => $order->id_commande])
             ->with('success', 'Votre demande de retour a été soumise avec succès. Elle sera traitée par le service client dans les plus brefs délais.');
+    }
+
+    public function downloadAttachment(Order $order, OrderReturnRequest $returnRequest, OrderReturnAttachment $attachment)
+    {
+        $client = auth()->user();
+
+        if ($order->id_client !== $client->id_client) {
+            abort(403, 'Accès non autorisé à cette commande.');
+        }
+
+        if ($returnRequest->id_commande !== $order->id_commande || $attachment->id_demande_retour !== $returnRequest->id_demande_retour) {
+            abort(404, 'Fichier non trouvé.');
+        }
+
+        return $this->orderReturnService->downloadAttachment($attachment);
     }
 }

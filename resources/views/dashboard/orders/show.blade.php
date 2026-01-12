@@ -266,6 +266,24 @@
                                                 </div>
                                             @endforeach
                                         </div>
+
+                                        @if ($returnRequest->attachments->isNotEmpty())
+                                            <div class="mt-4 space-y-2">
+                                                <p class="text-xs font-medium text-orange-800 uppercase">Pièces jointes</p>
+                                                <div class="space-y-1">
+                                                    @foreach ($returnRequest->attachments as $attachment)
+                                                        <a
+                                                            href="{{ route("dashboard.orders.return.download-attachment", [$order, $returnRequest, $attachment]) }}"
+                                                            class="flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm text-orange-700 hover:bg-orange-100"
+                                                        >
+                                                            <x-heroicon-o-paper-clip class="h-4 w-4" />
+                                                            <span>{{ $attachment->getFileName() }}</span>
+                                                            <x-heroicon-o-arrow-down-tray class="ml-auto h-4 w-4" />
+                                                        </a>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 @endforeach
                             </div>
