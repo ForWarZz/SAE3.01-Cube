@@ -110,6 +110,8 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
                 Route::post('/', [OrderReturnController::class, 'store'])->name('store');
                 Route::get('/{returnRequest}/piece-jointe/{attachment}', [OrderReturnController::class, 'downloadAttachment'])->name('download-attachment');
             });
+
+            Route::get('/facture', [InvoiceController::class, 'download'])->name('invoice.download');
         });
     });
 
@@ -138,8 +140,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/succes', [CheckoutController::class, 'success'])->name('success');
         Route::get('/erreur', [CheckoutController::class, 'cancel'])->name('cancel');
     });
-
-    Route::get('/facture/{order}', [InvoiceController::class, 'download'])->name('invoice.download');
 });
 
 Route::prefix('staff')->group(function () {

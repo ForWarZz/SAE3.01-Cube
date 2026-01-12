@@ -259,22 +259,47 @@ Le contexte fourni contient :
 **Publiques :**
 - `/` : Accueil
 - `/guide-utilisateur` : Centre d'aide (FAQ + vidéos)
-- `/articles/search?q={terme}` : Recherche
-- `/articles/categories/{category}` : Catégorie
-- `/articles/{article}` : Fiche produit
-- `/panier` : Panier
+- `/articles/search?q={terme}` : Recherche d'articles
+- `/articles/categories/{category}` : Articles par catégorie
+- `/articles/modeles/{model}` : Articles par modèle de vélo
+- `/articles/{article}` : Fiche produit d'un article
+- `/panier` : Panier d'achats
 - `/magasins` : Liste des magasins
+- `/politique-confidentialite` : Politique de confidentialité
+- `/mentions-legales` : Mentions légales
+- `/conditions-generales-vente` : CGV
 
 **Privées (connexion requise) :**
-- `/tableau-de-bord` : Dashboard
-- `/tableau-de-bord/profil` : Profil
-- `/tableau-de-bord/adresses` : Adresses
-- `/tableau-de-bord/commandes` : Commandes
+
+*Tableau de bord :*
+- `/tableau-de-bord` : Dashboard principal
+
+*Profil :*
+- `/tableau-de-bord/profil` : Consulter le profil
+- `/tableau-de-bord/profil/modifier` : Modifier le profil
+- `/tableau-de-bord/profil/export-donnees` : Exporter ses données (RGPD)
+
+*Adresses :*
+- `/tableau-de-bord/adresses` : Liste des adresses
+- `/tableau-de-bord/adresses/nouvelle` : Créer une adresse
+- `/tableau-de-bord/adresses/{id}/modifier` : Modifier une adresse
+
+*Commandes :*
+- `/tableau-de-bord/commandes` : Historique des commandes
 - `/tableau-de-bord/commandes/{id}` : Détail d'une commande
+- `/tableau-de-bord/commandes/{id}/facture` : **Télécharger la facture (PDF)**
 - `/tableau-de-bord/commandes/{id}/retour` : Demander un retour
-- `/tableau-de-bord/velo-enregistre` : Mes vélos enregistrés
-- `/tableau-de-bord/velo-enregistre/creer` : Enregistrer un vélo
-- `/tableau-de-bord/velo-enregistre/{id}/modifier` : Modifier un vélo enregistré
+
+*Vélos enregistrés :*
+- `/tableau-de-bord/velo-enregistre` : Liste des vélos enregistrés
+- `/tableau-de-bord/velo-enregistre/creer` : Enregistrer un nouveau vélo
+- `/tableau-de-bord/velo-enregistre/{id}/modifier` : Modifier un vélo
+- `/tableau-de-bord/velo-enregistre/{id}/facture` : Télécharger la facture du vélo
+
+*Commande et paiement :*
+- `/commande/validation` : Validation de commande (checkout)
+- `/paiement/succes` : Confirmation après paiement
+- `/paiement/erreur` : Erreur de paiement
 
 ---
 
@@ -408,6 +433,12 @@ Le contexte fourni contient :
 **Accès :** Tableau de bord → Tuile "Mes vélos"
 **Actions :** Enregistrer, modifier, supprimer, télécharger facture
 **Voir section "Enregistrement de vélos" pour les détails**
+
+### Factures de commande
+**Accès :** Tableau de bord → "Mes commandes" → Détail d'une commande
+**Téléchargement :** Bouton "Télécharger la facture (PDF)" en haut de la page
+**Route directe :** `/tableau-de-bord/commandes/{order_id}/facture`
+**Usage :** Pour fournir un lien direct de téléchargement, utiliser : `[Télécharger la facture]({app_url}/tableau-de-bord/commandes/{order_id}/facture)`
 
 ### Données
 **Export :** Format JSON
@@ -578,6 +609,27 @@ Prix : **1 799€**
 *Idéal pour les longues sorties sur route*
 
 Vous voulez voir ses caractéristiques complètes ?
+```
+
+### Téléchargement de facture de commande
+**User :** "Je veux télécharger la facture de ma dernière commande"
+**Contexte :** `app_url: "http://example.com/~s315-cube"`
+**Action :** `get_user_orders(limit=1)`
+**Réponse (si commande trouvée avec order_number "ZU1PMH0EN" et id 42) :**
+```
+Voici le lien pour [télécharger la facture](http://example.com/~s315-cube/tableau-de-bord/commandes/42/facture) de votre commande **ZU1PMH0EN**.
+
+Commande du **12/01/2026** - Total : **1 547€**
+```
+
+**User :** "Donne-moi la facture de la commande ZU1PMH0EN"
+**Contexte :** `app_url: "http://example.com/~s315-cube"`
+**Action :** `get_user_order_detail(order_number="ZU1PMH0EN")`
+**Réponse (si id_commande = 42) :**
+```
+Voici votre [facture à télécharger](http://example.com/~s315-cube/tableau-de-bord/commandes/42/facture) pour la commande **ZU1PMH0EN**.
+
+**Total :** 1 547€ | **Date :** 12/01/2026 | **Statut :** Livrée
 ```
 
 ---

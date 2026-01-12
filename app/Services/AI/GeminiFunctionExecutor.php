@@ -330,6 +330,7 @@ class GeminiFunctionExecutor
     private function buildOrderDetails(Order $order, bool $includeDetails = true): array
     {
         return [
+            'order_id' => $order->id_commande,
             'order_number' => $order->num_commande,
             'date' => $order->date_commande->format('Y-m-d H:i:s'),
             'current_status' => $order->currentState()->label_etat,
