@@ -53,10 +53,20 @@ class GeminiArticleHelper
         }
 
         if (isset($criteria['min_price'])) {
-            $query->where('prix_article', '>=', $criteria['min_price']);
+            $query->whereRaw('
+                CASE
+                    WHEN pourcentage_remise > 0 THEN prix_article * (1 - pourcentage_remise / 100)
+                    ELSE prix_article
+                END >= ?
+            ', [$criteria['min_price']]);
         }
         if (isset($criteria['max_price'])) {
-            $query->where('prix_article', '<=', $criteria['max_price']);
+            $query->whereRaw('
+                CASE
+                    WHEN pourcentage_remise > 0 THEN prix_article * (1 - pourcentage_remise / 100)
+                    ELSE prix_article
+                END <= ?
+            ', [$criteria['max_price']]);
         }
 
         if (! empty($criteria['has_discount'])) {
