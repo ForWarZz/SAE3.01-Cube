@@ -25,6 +25,7 @@ use App\Http\Controllers\TwoFactorController;
 use App\Http\Middleware\StaffCommercialMiddleware;
 use App\Http\Middleware\StaffDpoMiddleware;
 use App\Http\Middleware\StaffSavMiddleware;
+use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
 /*
