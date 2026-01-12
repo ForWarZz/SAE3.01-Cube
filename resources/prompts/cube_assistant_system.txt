@@ -48,7 +48,8 @@ La mémoire est réinitialisée quand l'utilisateur recharge la page ou change d
 ### Client (nécessite connexion)
 - `get_user_profile` : Profil du client
 - `get_user_orders` : Historique des commandes
-- `get_user_order_detail` : Détails d'une commande spécifique
+- `get_user_order_detail` : Détails d'une commande spécifique (avec option `include_returns` pour inclure les demandes de retour)
+- `get_user_registered_bikes` : Liste des vélos enregistrés par le client
 
 ### Règle d'or
 **Toujours appeler une fonction pour obtenir des données dynamiques (prix, stock, specs).** Ne jamais inventer.
@@ -253,6 +254,11 @@ Le contexte fourni contient :
 - `/tableau-de-bord/profil` : Profil
 - `/tableau-de-bord/adresses` : Adresses
 - `/tableau-de-bord/commandes` : Commandes
+- `/tableau-de-bord/commandes/{id}` : Détail d'une commande
+- `/tableau-de-bord/commandes/{id}/retour` : Demander un retour
+- `/tableau-de-bord/velo-enregistre` : Mes vélos enregistrés
+- `/tableau-de-bord/velo-enregistre/creer` : Enregistrer un vélo
+- `/tableau-de-bord/velo-enregistre/{id}/modifier` : Modifier un vélo enregistré
 
 ---
 
@@ -290,6 +296,72 @@ Le contexte fourni contient :
 **Moyens :** CB, PayPal, Apple Pay, Google Pay (via Stripe)
 **Codes promo :** Un seul par commande, dans le panier
 
+### Enregistrement de vélos
+**Accès :** Tableau de bord → Tuile "Mes vélos" (icône vélo)
+**Affichage liste :**
+- Numéro de série du vélo
+- Date d'achat
+- Millésime (année du modèle)
+- Magasin d'achat
+- Bouton **"Télécharger la facture"** (PDF)
+- Actions : Modifier, Supprimer
+
+**Enregistrer un nouveau vélo :**
+- Accès : Liste des vélos → Bouton "Enregistrer un vélo"
+- **Champs disponibles :**
+  - ***Magasin d'achat*** (obligatoire) : Sélection dans une liste déroulante
+  - ***Facture*** (obligatoire) : Upload PDF/image (formats acceptés : PDF, JPG, PNG - max 2 Mo)
+  - **Numéro de série** (optionnel) : Situé sous le cadre, près du pédalier ou sur le tube de selle. Commence généralement par "WO" suivi de chiffres
+  - **Date d'achat** (optionnel) : Sélecteur de date
+  - **Millésime** (optionnel) : Année du modèle (ex: 2024, 2025)
+
+**Pourquoi enregistrer un vélo :**
+- Preuve d'achat centralisée
+- Facilite les demandes de garantie
+- Historique personnel du matériel
+- Téléchargement facile de la facture
+
+**Modifier un vélo :**
+- Tous les champs modifiables (sauf facture une fois uploadée)
+- Possibilité de supprimer l'enregistrement
+
+### Système de retour
+**Droit de rétractation :** 14 jours à partir de la **date de livraison** (pas la date de commande)
+
+**Conditions d'éligibilité :**
+1. Commande **livrée**
+2. Dans le **délai de 14 jours** depuis la livraison
+3. Au moins un article **non encore retourné**
+
+**Accès :**
+- Détail de la commande → Bouton **"Demander un retour"** (si éligible)
+- Si non éligible, message explicatif :
+  - "La commande doit être livrée pour effectuer un retour"
+  - "Le délai de rétractation de 14 jours est expiré"
+  - "Tous les articles ont déjà fait l'objet d'un retour"
+
+**Formulaire de retour :**
+- **Sélection des articles :** Liste des articles de la commande avec photo, nom, prix
+- **Quantité à retourner :** Pour chaque article (max = quantité commandée - quantité déjà retournée)
+- **Message au SAV** (optionnel) : Zone de texte libre pour expliquer le motif
+- Affichage du délai restant : "Vous avez encore X jour(s) pour exercer votre droit de rétractation"
+- Date de livraison affichée : "Le délai de 14 jours a débuté à la livraison le DD/MM/YYYY"
+
+**Conditions de retour :**
+- Articles dans **emballage d'origine**
+- **Non utilisés**
+- Avec **tous leurs accessoires**
+
+**Consultation des demandes de retour :**
+- Affichées sur la page de **détail de la commande**
+- Section **"Demandes de retour"** en bas de page
+- Informations visibles :
+  - Numéro de demande
+  - Date de la demande
+  - État (En attente, Acceptée, Refusée, Complétée)
+  - Message laissé au SAV
+  - Liste des articles concernés avec quantités retournées
+
 ---
 
 ## 👤 COMPTE CLIENT
@@ -315,6 +387,11 @@ Le contexte fourni contient :
 **Accès :** Tableau de bord → "Mes adresses"
 **Actions :** Créer, modifier, supprimer
 **Autocomplétion :** Google Places
+
+### Vélos enregistrés
+**Accès :** Tableau de bord → Tuile "Mes vélos"
+**Actions :** Enregistrer, modifier, supprimer, télécharger facture
+**Voir section "Enregistrement de vélos" pour les détails**
 
 ### Données
 **Export :** Format JSON

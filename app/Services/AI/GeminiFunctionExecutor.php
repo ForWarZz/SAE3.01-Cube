@@ -22,6 +22,7 @@ class GeminiFunctionExecutor
             'get_user_profile' => $this->getUserProfile($arguments),
             'get_user_orders' => $this->getUserOrders($arguments),
             'get_user_order_detail' => $this->getUserOrderDetails($arguments),
+            'get_user_registered_bikes' => $this->getUserRegisteredBikes($arguments),
             'get_cart_content' => $this->getCartContent($arguments),
             'search_articles' => $this->searchArticles($arguments),
             'get_reference_details' => $this->getReferenceDetails($arguments),
@@ -127,13 +128,14 @@ class GeminiFunctionExecutor
 
         $orderId = $arguments['order_id'] ?? null;
         $orderNumber = $arguments['order_number'] ?? null;
+        $includeReturns = $arguments['include_returns'] ?? false;
 
         if (! $orderId && ! $orderNumber) {
             return ['error' => 'ID de commande ou numéro de commande manquant, veuillez refaire votre demande en incluant l\'un des deux.'];
         }
 
         $user = auth()->user();
-        $order = Order::with([
+        $query = Order::with([
             'items.reference.article',
             'billingAddress.city',
             'deliveryAddress.city',
@@ -142,7 +144,16 @@ class GeminiFunctionExecutor
             'shop',
             'shippingMode',
             'states',
-        ])
+        ]);
+
+        if ($includeReturns) {
+            $query->with([
+                'returnRequests.state',
+                'returnRequests.lines.orderLine.reference.article',
+            ]);
+        }
+
+        $order = $query
             ->where('id_client', $user->id_client)
             ->where(function ($query) use ($orderId, $orderNumber) {
                 if ($orderId) {
@@ -157,9 +168,49 @@ class GeminiFunctionExecutor
             return ['error' => 'Commande introuvable ou non autorisée.'];
         }
 
+        $orderDetails = $this->buildOrderDetails($order);
+
+        if ($includeReturns && $order->returnRequests->isNotEmpty()) {
+            $orderDetails['return_requests'] = $order->returnRequests->map(fn ($returnRequest) => [
+                'id' => $returnRequest->id_demande_retour,
+                'date' => $returnRequest->date_demande->format('Y-m-d H:i:s'),
+                'status' => $returnRequest->state->label_etat_retour ?? null,
+                'description' => $returnRequest->description_demande,
+                'items' => $returnRequest->lines->map(fn ($line) => [
+                    'article_name' => $line->orderLine->reference->article->nom_article,
+                    'quantity_returned' => $line->quantite_retournee,
+                ])->toArray(),
+            ])->toArray();
+        }
+
         return [
             'success' => true,
-            'order_details' => $this->buildOrderDetails($order),
+            'order_details' => $orderDetails,
+        ];
+    }
+
+    private function getUserRegisteredBikes(array $arguments): array
+    {
+        if (! auth()->check()) {
+            return $this->authenticatedUserError();
+        }
+
+        $user = auth()->user()->load('registeredBikes.shop');
+        $bikes = $user->registeredBikes;
+
+        return [
+            'success' => true,
+            'registered_bikes' => $bikes->map(fn ($bike) => [
+                'id' => $bike->id_velo_enr,
+                'serial_number' => $bike->num_serie_velo_enr,
+                'purchase_date' => $bike->date_achat_velo_enr?->format('Y-m-d'),
+                'vintage' => $bike->millesime_velo_enr,
+                'shop' => $bike->shop ? [
+                    'id' => $bike->shop->id_magasin,
+                    'name' => $bike->shop->nom_magasin,
+                ] : null,
+                'has_invoice' => ! empty($bike->chemin_facture_velo_enr),
+            ])->toArray(),
         ];
     }
 

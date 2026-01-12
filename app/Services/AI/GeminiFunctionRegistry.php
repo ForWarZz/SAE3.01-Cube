@@ -17,6 +17,7 @@ class GeminiFunctionRegistry
                     self::getUserData(),
                     self::getUserOrders(),
                     self::getUserOrderDetail(),
+                    self::getUserRegisteredBikes(),
                     self::getCartContent(),
                     self::searchArticles(),
                     self::getReferenceDetails(),
@@ -73,7 +74,7 @@ class GeminiFunctionRegistry
     {
         return new FunctionDeclaration(
             name: 'get_user_order_detail',
-            description: 'Récupère les détails complets d\'une commande spécifique de l\'utilisateur connecté (articles, prix, adresses, statut, suivi, mode de paiement, récapitulatif). À utiliser quand l\'utilisateur demande des détails sur une commande précise ou consulte une page de détail de commande. RGPD: Accessible uniquement pour les commandes de l\'utilisateur connecté.',
+            description: 'Récupère les détails complets d\'une commande spécifique de l\'utilisateur connecté (articles, prix, adresses, statut, suivi, mode de paiement, récapitulatif, et optionnellement les demandes de retour). À utiliser quand l\'utilisateur demande des détails sur une commande précise ou consulte une page de détail de commande. RGPD: Accessible uniquement pour les commandes de l\'utilisateur connecté.',
             parameters: new Schema(
                 type: DataType::OBJECT,
                 properties: [
@@ -85,6 +86,10 @@ class GeminiFunctionRegistry
                         type: DataType::STRING,
                         description: 'Numéro de commande, mélange de lettre et chiffre, en majuscule, de 9 caractères (ex: ZU1PMH0EN). Utiliser si order_id non disponible.'
                     ),
+                    'include_returns' => new Schema(
+                        type: DataType::BOOLEAN,
+                        description: 'Inclure les demandes de retour associées à cette commande (défaut: false). Utiliser quand l\'utilisateur demande des informations sur les retours.'
+                    ),
                 ]
             )
         );
@@ -95,6 +100,18 @@ class GeminiFunctionRegistry
         return new FunctionDeclaration(
             name: 'get_cart_content',
             description: 'Récupère le contenu du panier de l\'utilisateur ou visiteur actuel (articles, quantités, prix total, réductions). À utiliser quand l\'utilisateur pose des questions sur son panier, le contenu où qu\'il est nécessaire de connaître les articles dans le panier pour répondre à la demande.',
+            parameters: new Schema(
+                type: DataType::OBJECT,
+                properties: []
+            )
+        );
+    }
+
+    private static function getUserRegisteredBikes(): FunctionDeclaration
+    {
+        return new FunctionDeclaration(
+            name: 'get_user_registered_bikes',
+            description: 'Récupère la liste des vélos enregistrés par l\'utilisateur connecté (numéro de série, date d\'achat, millésime, magasin). À utiliser quand l\'utilisateur demande ses vélos enregistrés, veut consulter un numéro de série, ou pose des questions sur l\'enregistrement de vélos. RGPD: Accessible uniquement si l\'utilisateur est connecté.',
             parameters: new Schema(
                 type: DataType::OBJECT,
                 properties: []
