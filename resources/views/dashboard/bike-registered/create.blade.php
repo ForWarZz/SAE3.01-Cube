@@ -63,11 +63,19 @@
 
                         <div>
                             <x-form-input
+                                wrapper-class="mb-1"
                                 name="num_serie_velo_enr"
                                 label="Numéro de série du cadre"
                                 placeholder="Ex: WOW12345678"
                                 :value="old('num_serie_velo_enr', $bike->num_serie_velo_enr ?? '')"
                             />
+                            <a
+                                href="#"
+                                id="open-serial-modal"
+                                class="inline-block text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                            >
+                                Où trouver mon numéro ?
+                            </a>
                         </div>
 
                         <div>
@@ -149,4 +157,80 @@
             </div>
         </div>
     </div>
+
+    <div id="serial-modal" class="fixed inset-0 z-50 hidden bg-gray-500/75">
+        <div class="flex min-h-screen items-center justify-center px-4">
+            <div class="w-full max-w-lg overflow-hidden rounded-lg bg-white shadow-xl">
+                <div class="p-6">
+                    <div class="flex items-start gap-4">
+                        <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-blue-100">
+                            <x-heroicon-o-question-mark-circle class="size-6 text-blue-600" />
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Où trouver le numéro de série ?</h3>
+
+                            <p class="mt-3 text-sm text-gray-600">
+                                Le numéro de série de votre vélo CUBE se trouve
+                                <strong>sous le cadre</strong>
+                                , au niveau du
+                                <strong>boîtier de pédalier</strong>
+                                .
+                            </p>
+
+                            <div class="mt-4 flex justify-center rounded-lg bg-gray-100 p-4">
+                                <svg class="h-32 w-48" viewBox="0 0 200 100" fill="none">
+                                    <path d="M40 70 L80 30 L140 30 L160 70" stroke="#9CA3AF" stroke-width="3" />
+                                    <path d="M80 30 L80 70" stroke="#9CA3AF" stroke-width="3" />
+                                    <path d="M80 70 L140 30" stroke="#9CA3AF" stroke-width="3" />
+                                    <circle cx="40" cy="70" r="20" stroke="#9CA3AF" stroke-width="2" />
+                                    <circle cx="160" cy="70" r="20" stroke="#9CA3AF" stroke-width="2" />
+                                    <circle cx="80" cy="70" r="8" fill="#EF4444" opacity="0.3" />
+                                    <circle cx="80" cy="70" r="5" fill="#EF4444" />
+                                    <text x="60" y="95" fill="#EF4444" font-size="10" font-weight="bold">N° série ici</text>
+                                </svg>
+                            </div>
+
+                            <div class="mt-4 rounded-lg border bg-gray-50 p-3 text-sm text-gray-600">
+                                <p>
+                                    <strong>Format :</strong>
+                                    commence généralement par
+                                    <code class="rounded bg-gray-200 px-1 font-mono text-xs">WOW</code>
+                                </p>
+                                <p class="mt-1">
+                                    <strong>Exemple :</strong>
+                                    <code class="rounded bg-gray-200 px-1 font-mono text-xs">WOW12345678901</code>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 px-6 py-3 text-right">
+                    <x-button id="close-serial-modal">Fermer</x-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('serial-modal');
+        const openBtn = document.getElementById('open-serial-modal');
+        const closeBtn = document.getElementById('close-serial-modal');
+
+        openBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.classList.remove('hidden');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+    </script>
 </x-app-layout>
