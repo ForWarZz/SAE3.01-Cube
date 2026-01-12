@@ -198,7 +198,7 @@
                     <div class="flex items-center justify-between rounded border border-gray-200 p-3">
                         <div class="flex items-center space-x-3">
                             <x-heroicon-o-paper-clip class="h-5 w-5 text-gray-400" />
-                            <span class="text-sm font-medium text-gray-900">{{ $attachment->getFileName() }}</span>
+                            <span class="text-sm font-medium text-gray-900">{{ $attachment->nom_original }}</span>
                         </div>
                         <a
                             href="{{ route("sav.download-attachment", [$returnRequest, $attachment]) }}"

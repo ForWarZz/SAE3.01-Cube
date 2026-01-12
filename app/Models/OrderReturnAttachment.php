@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id_piece_jointe
  * @property int $id_demande_retour
  * @property string $chemin_fichier
+ * @property string $nom_original
  */
 class OrderReturnAttachment extends Model
 {
@@ -21,15 +22,11 @@ class OrderReturnAttachment extends Model
     protected $fillable = [
         'id_demande_retour',
         'chemin_fichier',
+        'nom_original',
     ];
 
     public function returnRequest(): BelongsTo
     {
         return $this->belongsTo(OrderReturnRequest::class, 'id_demande_retour', 'id_demande_retour');
-    }
-
-    public function getFileName(): string
-    {
-        return basename($this->chemin_fichier);
     }
 }

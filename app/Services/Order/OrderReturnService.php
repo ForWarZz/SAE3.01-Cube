@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class OrderReturnService
@@ -170,8 +171,15 @@ class OrderReturnService
 
     public function uploadAttachment(OrderReturnRequest $returnRequest, UploadedFile $file): bool
     {
-        $path = $file->store(
+        $originalName = $file->getClientOriginalName();
+        $originalNameWithoutExt = pathinfo($originalName, PATHINFO_FILENAME);
+        $extension = $file->getClientOriginalExtension();
+        $uuid = Str::uuid();
+        $filename = $originalNameWithoutExt.'-'.$uuid.'.'.$extension;
+
+        $path = $file->storeAs(
             'return_attachments/'.$returnRequest->id_demande_retour,
+            $filename,
             'private'
         );
 
@@ -182,6 +190,7 @@ class OrderReturnService
         OrderReturnAttachment::create([
             'id_demande_retour' => $returnRequest->id_demande_retour,
             'chemin_fichier' => $path,
+            'nom_original' => $originalName,
         ]);
 
         return true;
@@ -191,7 +200,7 @@ class OrderReturnService
     {
         return Storage::disk('private')->download(
             $attachment->chemin_fichier,
-            $attachment->getFileName()
+            $attachment->nom_original
         );
     }
 }

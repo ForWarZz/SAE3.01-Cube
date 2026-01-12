@@ -277,7 +277,7 @@
                                                             class="flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm text-orange-700 hover:bg-orange-100"
                                                         >
                                                             <x-heroicon-o-paper-clip class="h-4 w-4" />
-                                                            <span>{{ $attachment->getFileName() }}</span>
+                                                            <span>{{ $attachment->nom_original }}</span>
                                                             <x-heroicon-o-arrow-down-tray class="ml-auto h-4 w-4" />
                                                         </a>
                                                     @endforeach
