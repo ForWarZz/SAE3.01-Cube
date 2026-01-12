@@ -123,7 +123,7 @@ class OrderReturnService
     /**
      * @param  ReturnRequestItemDTO[]  $items
      */
-    public function createReturnRequest(Order $order, array $items, string $message): OrderReturnRequest
+    public function createReturnRequest(Order $order, array $items, ?string $message): OrderReturnRequest
     {
         $returnRequest = $order->returnRequests()->create([
             'description_demande' => $message,

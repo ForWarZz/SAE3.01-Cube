@@ -68,7 +68,7 @@ class OrderReturnController extends Controller
             ->values()
             ->toArray();
 
-        $returnRequest = $this->orderReturnService->createReturnRequest($order, $items, $validated['message'] ?? null);
+        $this->orderReturnService->createReturnRequest($order, $items, $validated['message'] ?? null);
 
         return redirect()->route('dashboard.orders.show', ['order' => $order->id_commande])
             ->with('success', 'Votre demande de retour a été soumise avec succès. Elle sera traitée par le service client dans les plus brefs délais.');
