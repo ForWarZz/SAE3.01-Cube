@@ -99,11 +99,14 @@ Route::middleware('auth')->prefix('tableau-de-bord')->name('dashboard.')->group(
 
     Route::prefix('commandes')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
 
-        Route::prefix('retour')->name('return.')->group(function () {
-            Route::get('/{order}', [OrderReturnController::class, 'create'])->name('create');
-            Route::post('/{order}', [OrderReturnController::class, 'store'])->name('store');
+        Route::prefix('/{order}')->group(function () {
+            Route::get('/', [OrderController::class, 'show'])->name('show');
+
+            Route::prefix('/retour')->name('return.')->group(function () {
+                Route::get('/', [OrderReturnController::class, 'create'])->name('create');
+                Route::post('/', [OrderReturnController::class, 'store'])->name('store');
+            });
         });
     });
 
