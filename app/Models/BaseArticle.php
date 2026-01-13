@@ -114,7 +114,7 @@ class BaseArticle extends Model
 
         foreach ($pathsToTry as $basePath) {
             $dir = dirname($basePath);
-            if (!Storage::exists($dir)) {
+            if (! Storage::exists($dir)) {
                 continue;
             }
 

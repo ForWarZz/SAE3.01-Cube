@@ -122,6 +122,7 @@ class BikeReference extends Model
     public function getImagesUrls(bool $is360 = false): array
     {
         $files = $this->getImageFiles($is360);
+        $files = array_filter($files, fn ($f) => ! str_ends_with($f, 'thumbnail.webp'));
 
         return array_map(fn ($f) => Storage::url($f), $files);
     }
