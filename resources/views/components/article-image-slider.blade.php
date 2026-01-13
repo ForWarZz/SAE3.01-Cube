@@ -7,6 +7,7 @@
         zoomX: 0,
         zoomY: 0,
         images: @js($currentReference->getImagesUrls()),
+        thumbnails: @js($currentReference->getThumbnailsUrls()),
         prev() {
             if (! this.images.length) return
 
@@ -72,9 +73,10 @@
             </div>
         @endif
 
-        <template x-for="(img, index) in images" :key="index">
+        <template x-for="(img, index) in thumbnails" :key="index">
             <img
                 :src="img"
+                :alt="`{{ $article->nom_article }} - Image ${index + 1}`"
                 @click="currentImageIndex = index"
                 :class="{'ring-2 ring-blue-600': currentImageIndex === index, 'opacity-70': currentImageIndex !== index}"
                 class="h-20 w-20 cursor-pointer rounded-lg object-cover shadow transition"
