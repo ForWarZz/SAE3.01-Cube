@@ -39,6 +39,7 @@ class GdprService
         foreach ($orders as $order) {
             $order->items()->delete();
             $order->states()->detach();
+            $order->returnRequests()->delete();
             $order->delete();
         }
 
@@ -222,6 +223,7 @@ class GdprService
         foreach ($orders as $order) {
             $order->items()->delete();
             $order->states()->detach();
+            $order->returnRequests()->delete();
             $order->delete();
         }
 
