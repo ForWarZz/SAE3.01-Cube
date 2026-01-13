@@ -1,3 +1,7 @@
+@php
+    use App\Models\ShippingMode;
+@endphp
+
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -9,6 +13,7 @@
                 padding: 0;
                 box-sizing: border-box;
             }
+
             body {
                 font-family:
                     DejaVu Sans,
@@ -17,21 +22,25 @@
                 color: #333;
                 padding: 40px;
             }
+
             .logo {
                 font-size: 24px;
                 font-weight: bold;
                 color: #1f2937;
             }
+
             .invoice-number {
                 font-size: 18px;
                 font-weight: bold;
                 color: #1f2937;
             }
+
             .address-block {
                 background: #f9fafb;
                 padding: 15px;
                 margin-bottom: 10px;
             }
+
             .address-title {
                 font-weight: bold;
                 color: #6b7280;
@@ -39,11 +48,13 @@
                 text-transform: uppercase;
                 margin-bottom: 8px;
             }
+
             .items-table {
                 width: 100%;
                 border-collapse: collapse;
                 margin: 30px 0;
             }
+
             .items-table th {
                 background: #f3f4f6;
                 padding: 12px;
@@ -51,32 +62,39 @@
                 font-weight: bold;
                 border-bottom: 2px solid #e5e7eb;
             }
+
             .items-table td {
                 padding: 12px;
                 border-bottom: 1px solid #e5e7eb;
             }
+
             .text-right {
                 text-align: right;
             }
+
             .totals {
                 width: 300px;
                 margin-left: auto;
                 margin-top: 20px;
             }
+
             .totals td {
                 padding: 8px 0;
             }
+
             .total-row {
                 font-size: 16px;
                 font-weight: bold;
                 border-top: 2px solid #1f2937;
             }
+
             .footer {
                 margin-top: 50px;
                 text-align: center;
                 color: #6b7280;
                 font-size: 10px;
             }
+
             .discount {
                 color: #059669;
             }
@@ -106,7 +124,9 @@
                     <div class="address-block">
                         <div class="address-title">Adresse de facturation</div>
                         @if ($order->billingAddress)
-                            <p><strong>{{ $order->billingAddress->prenom_adresse }} {{ $order->billingAddress->nom_adresse }}</strong></p>
+                            <p>
+                                <strong>{{ $order->billingAddress->prenom_adresse }} {{ $order->billingAddress->nom_adresse }}</strong>
+                            </p>
                             <p>{{ $order->billingAddress->num_voie_adresse }} {{ $order->billingAddress->rue_adresse }}</p>
                             @if ($order->billingAddress->complement_adresse)
                                 <p>{{ $order->billingAddress->complement_adresse }}</p>
@@ -201,7 +221,7 @@
             $tva = $subtotalHT * 0.2;
             $subtotalTTC = $subtotalHT + $tva;
             $discount = $order->pourcentage_remise ? ($subtotalTTC * $order->pourcentage_remise) / 100 : 0;
-            $shipping = $order->shippingMode->prix_moyen_livraison ?? 0;
+            $shipping = $order->frais_livraison;
             $total = $subtotalTTC - $discount + $shipping;
         @endphp
 
