@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 class CubeAssistantService
 {
-    private const GEMINI_MODEL = 'gemini-2.5-flash';
+    private const GEMINI_MODEL = 'gemini-3-flash-preview';
 
     private const SYSTEM_PROMPT_PATH = 'prompts/cube_assistant_system.txt';
 
