@@ -20,16 +20,21 @@ class ArticleController extends Controller
 
     public function search(Request $request)
     {
-        $data = $this->articleService->searchArticles($request);
-        $search = $data['search'];
+        $search = $request->input('search', '');
 
         if (empty($search)) {
             return redirect()->route('articles.by-category', Category::BIKE_CATEGORY_ID);
         }
 
+        $result = $this->articleService->searchArticles(
+            search: $search,
+            sortBy: $request->input('sortBy'),
+            filters: $request->except(['search', 'sortBy', 'page']),
+            page: (int) $request->input('page', 1),
+        );
+
         return view('article.index', [
-            'search' => $search,
-            'pageTitle' => 'Résultats de recherche : '.$search,
+            'pageTitle' => 'Résultats de recherche : '.$result->search,
             'breadcrumbs' => [
                 new BreadcrumbDTO(
                     label: 'Accueil',
@@ -40,32 +45,42 @@ class ArticleController extends Controller
                     url: null,
                 ),
             ],
-            ...$data,
+            ...$result->toArray(),
         ]);
     }
 
     public function viewByModel(BikeModel $model, Request $request)
     {
-        $data = $this->articleService->listByModel($model, $request);
+        $result = $this->articleService->listByModel(
+            model: $model,
+            sortBy: $request->input('sortBy'),
+            filters: $request->except(['sortBy', 'page']),
+            page: (int) $request->input('page', 1),
+        );
         $breadcrumbs = $this->breadCrumbService->prepareBreadcrumbsByModel($model);
 
         return view('article.index', [
             'pageTitle' => $model->nom_modele_velo,
             'breadcrumbs' => $breadcrumbs,
-            ...$data,
+            ...$result->toArray(),
         ]);
     }
 
     public function viewByCategory(Category $category, Request $request)
     {
-        $data = $this->articleService->listByCategory($category, $request);
+        $result = $this->articleService->listByCategory(
+            category: $category,
+            sortBy: $request->input('sortBy'),
+            filters: $request->except(['sortBy', 'page']),
+            page: (int) $request->input('page', 1),
+        );
         $breadcrumbs = $this->breadCrumbService->prepareBreadcrumbs($category);
 
         return view('article.index', [
             'pageTitle' => $category->nom_categorie,
             'breadcrumbs' => $breadcrumbs,
             'currentCategory' => $category,
-            ...$data,
+            ...$result->toArray(),
         ]);
     }
 
@@ -103,8 +118,8 @@ class ArticleController extends Controller
         ])->findOrFail($referenceId);
 
         $sizeId = request()->query('size_id');
-        $data = $this->articleService->prepareViewData($reference, $sizeId);
+        $result = $this->articleService->prepareViewData($reference, $sizeId);
 
-        return view('article.show', $data);
+        return view('article.show', $result->toArray());
     }
 }

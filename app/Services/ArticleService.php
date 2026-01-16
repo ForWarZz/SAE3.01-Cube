@@ -2,14 +2,15 @@
 
 namespace App\Services;
 
+use App\DTOs\Article\ArticleListResultDTO;
+use App\DTOs\Article\ArticleSearchResultDTO;
+use App\DTOs\Article\ArticleViewDataDTO;
 use App\DTOs\Article\SizeOptionDTO;
 use App\Models\Article;
 use App\Models\ArticleReference;
 use App\Models\BikeModel;
 use App\Models\Category;
 use App\Models\ShopAvailability;
-use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class ArticleService
@@ -21,21 +22,8 @@ class ArticleService
         protected BreadCrumbService $breadCrumbService,
     ) {}
 
-    /**
-     * @return array{
-     *     results: Collection<Article>,
-     *     search: string,
-     *     sortBy: string,
-     *     filterOptions: array,
-     *     activeFilters: array,
-     *     sortBy: string,
-     *     sortOptions: array
-     * }
-     */
-    public function searchArticles(Request $request): array
+    public function searchArticles(string $search, ?string $sortBy = null, array $filters = [], int $page = 1): ArticleSearchResultDTO
     {
-        $search = $request->input('search', '');
-
         $query = Article::query()
 //            ->whereHas('bike')
             ->with(['bike.bikeModel', 'bike.references', 'category', 'accessory']);
@@ -59,45 +47,34 @@ class ArticleService
             });
         }
 
-        $data = $this->finalizeQuery($query, $request);
+        $listResult = $this->finalizeQuery($query, $sortBy, $filters, $page);
 
-        return [
-            'search' => $search,
-            ...$data,
-        ];
+        return new ArticleSearchResultDTO(
+            search: $search,
+            listResult: $listResult,
+        );
     }
 
-    /**
-     * @return array{
-     *     articles: LengthAwarePaginator,
-     *     activeFilters: array,
-     *     filterOptions: array,
-     *     sortBy: string,
-     *     sortOptions: array
-     * }
-     */
-    private function finalizeQuery($baseQuery, Request $request): array
+    private function finalizeQuery($baseQuery, ?string $sortBy, array $filters, int $page): ArticleListResultDTO
     {
         $perPage = config('article.per_page');
 
-        $sortBy = $request->input('sortBy');
-        $filtersSelected = $this->filterEngineService->retrieveSelectedFilters($request);
+        $filtersSelected = $this->filterEngineService->retrieveSelectedFilters($filters);
 
         $filterOptions = $this->filterEngineService->getFilterOptions($baseQuery);
         $query = $this->filterEngineService->apply(clone $baseQuery, $filtersSelected);
 
         $this->applySorting($query, $sortBy);
-        $articles = $query
-            ->paginate($perPage)
-            ->appends($request->except('page'));
 
-        return [
-            'articles' => $articles,
-            'activeFilters' => $filtersSelected,
-            'filterOptions' => $filterOptions,
-            'sortBy' => $sortBy,
-            'sortOptions' => $this->getSortOptions(),
-        ];
+        $articles = $query->paginate($perPage, ['*'], 'page', $page);
+
+        return new ArticleListResultDTO(
+            articles: $articles,
+            activeFilters: $filtersSelected,
+            filterOptions: $filterOptions,
+            sortBy: $sortBy ?? 'name_asc',
+            sortOptions: $this->getSortOptions(),
+        );
     }
 
     private function applySorting($query, $sortBy): void
@@ -141,44 +118,26 @@ class ArticleService
         ];
     }
 
-    /**
-     * @return array{
-     *     articles: LengthAwarePaginator,
-     *     activeFilters: array,
-     *     filterOptions: array,
-     *     sortBy: string,
-     *     sortOptions: array
-     * }
-     */
-    public function listByModel(BikeModel $model, Request $request): array
+    public function listByModel(BikeModel $model, ?string $sortBy = null, array $filters = [], int $page = 1): ArticleListResultDTO
     {
         $baseQuery = Article::whereHas('bike', function ($q) use ($model) {
             $q->where('id_modele_velo', $model->id_modele_velo);
         })->with(['bike.bikeModel', 'bike.references', 'category']);
 
-        return $this->finalizeQuery($baseQuery, $request);
+        return $this->finalizeQuery($baseQuery, $sortBy, $filters, $page);
     }
 
-    /**
-     * @return array{
-     *     articles: LengthAwarePaginator,
-     *     activeFilters: array,
-     *     filterOptions: array,
-     *     sortBy: string,
-     *     sortOptions: array
-     * }
-     */
-    public function listByCategory(Category $category, Request $request): array
+    public function listByCategory(Category $category, ?string $sortBy = null, array $filters = [], int $page = 1): ArticleListResultDTO
     {
         $baseQuery = Article::query()
             ->whereIn('id_categorie', $category->getAllChildrenIds())
             ->with(['bike.bikeModel', 'bike.references', 'category', 'accessory']);
         $this->filterEngineService->setContext(['category' => $category]);
 
-        return $this->finalizeQuery($baseQuery, $request);
+        return $this->finalizeQuery($baseQuery, $sortBy, $filters, $page);
     }
 
-    public function prepareViewData(ArticleReference $reference, ?int $sizeId): array
+    public function prepareViewData(ArticleReference $reference, ?int $sizeId): ArticleViewDataDTO
     {
         $article = $reference->article;
         $sizes = $reference->availableSizes;
@@ -214,52 +173,37 @@ class ArticleService
             ]);
         }
 
-        $base = [
-            'article' => $article,
-            'sizeOptions' => $sizeOptions,
-            'currentSize' => $sizeOptions->where('id', $sizeId)->first(),
-
-            'availableSizes' => $reference->availableSizes,
-
-            'realPrice' => $article->prix_article,
-            'discountedPrice' => $article->getDiscountedPrice(),
-            'hasDiscount' => $article->hasDiscount(),
-            'discountPercent' => $article->pourcentage_remise,
-
-            'characteristics' => $article->characteristics
-                ->groupBy('characteristicType.nom_type_carac'),
-
-            'description' => $article->description_article,
-            'resume' => $article->resumer_article,
-
-            'similarArticles' => $article->similar,
-
-            'isBike' => false,
-            'breadcrumbs' => $this->breadCrumbService->prepareBreadcrumbs($article->category),
-
-            'weight' => $article->poids_article,
-        ];
+        $additionalData = [];
 
         if ($article->bike) {
             $bike = $article->bike;
             $bikeReference = $reference->bikeReference;
-
-            $bikeData = $this->bikeService->prepareBikeData($bike, $bikeReference);
-
-            return array_merge($base, $bikeData);
+            $additionalData = $this->bikeService->prepareBikeData($bike, $bikeReference);
+        } else {
+            $additionalData = $this->accessoryService->prepareAccessoryData($article->accessory);
         }
 
-        $accessoryData = $this->accessoryService->prepareAccessoryData($article->accessory);
-
-        return array_merge($base, $accessoryData);
+        return new ArticleViewDataDTO(
+            article: $article,
+            sizeOptions: $sizeOptions,
+            currentSize: $sizeOptions->where('id', $sizeId)->first(),
+            availableSizes: $reference->availableSizes,
+            realPrice: $article->prix_article,
+            discountedPrice: $article->getDiscountedPrice(),
+            hasDiscount: $article->hasDiscount(),
+            discountPercent: $article->pourcentage_remise,
+            characteristics: $article->characteristics->groupBy('characteristicType.nom_type_carac'),
+            description: $article->description_article,
+            resume: $article->resumer_article,
+            similarArticles: $article->similar,
+            isBike: $article->bike !== null,
+            breadcrumbs: $this->breadCrumbService->prepareBreadcrumbs($article->category),
+            weight: $article->poids_article,
+            additionalData: $additionalData,
+        );
     }
 
-    /**
-     * Build size options for current reference
-     *
-     * @return Collection<int, SizeOptionDTO>
-     */
-    public function buildSizeOptions(ArticleReference $reference, ?int $sizeId): Collection
+    private function buildSizeOptions(ArticleReference $reference, ?int $sizeId): Collection
     {
         $sizeList = $reference->availableSizes;
         $allShopAvailabilities = $reference->shopAvailabilities

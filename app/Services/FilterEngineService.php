@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Filters\AccessoryMaterialFilter;
-use App\Filters\ArticleFilter;
 use App\Filters\AvailabilityFilter;
 use App\Filters\BikeModelFilter;
 use App\Filters\CategoryFilter;
@@ -16,15 +15,9 @@ use App\Filters\SizeFilter;
 use App\Filters\UsageFilter;
 use App\Filters\VintageFilter;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
 class FilterEngineService
 {
-    /**
-     * @var array{
-     *     class-string<ArticleFilter>
-     * }
-     */
     private array $filterClasses = [
         VintageFilter::class,
         FrameFilter::class,
@@ -40,9 +33,6 @@ class FilterEngineService
         SizeFilter::class,
     ];
 
-    /**
-     * @var array<ArticleFilter>
-     */
     private array $filters;
 
     private array $context = [];
@@ -59,12 +49,13 @@ class FilterEngineService
         return $this;
     }
 
-    public function retrieveSelectedFilters(Request $request): array
+    public function retrieveSelectedFilters(array $data): array
     {
         $selected = [];
 
         foreach ($this->filters as $filter) {
-            $selected[$filter->key()] = $filter->values($request);
+            $key = $filter->key();
+            $selected[$key] = isset($data[$key]) ? (array) $data[$key] : [];
         }
 
         return $selected;
