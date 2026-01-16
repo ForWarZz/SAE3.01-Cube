@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class EBike extends Model
+class EBike extends BaseArticle
 {
     public $timestamps = false;
 

@@ -22,8 +22,6 @@ use Illuminate\Support\Facades\Storage;
  */
 class Accessory extends BaseArticle
 {
-    public const WEIGHT_CHARACTERISTIC_ID = 31;
-
     protected $table = 'accessoire';
 
     protected $fillable = [
@@ -40,13 +38,6 @@ class Accessory extends BaseArticle
         'nombre_vente_article',
         'poids_article',
     ];
-
-    protected static function booted(): void
-    {
-        static::addGlobalScope('active_article', function ($builder) {
-            $builder->whereHas('article');
-        });
-    }
 
     public function article(): BelongsTo
     {

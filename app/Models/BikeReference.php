@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\Storage;
  */
 class BikeReference extends Model
 {
+    use SoftDeletes;
+
     public $timestamps = false;
 
     protected $table = 'reference_velo';
@@ -28,13 +31,6 @@ class BikeReference extends Model
         'id_couleur',
         'id_article',
     ];
-
-    protected static function booted(): void
-    {
-        static::addGlobalScope('active_reference', function ($builder) {
-            $builder->whereHas('baseReference');
-        });
-    }
 
     public function article(): BelongsTo
     {
