@@ -2,55 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Shop;
+use App\Http\Requests\Shop\SelectShopRequest;
+use App\Services\ShopService;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
+    public function __construct(
+        private readonly ShopService $shopService
+    ) {}
+
     public function index()
     {
-        $shops = Shop::with('city')
-            ->withCoordinates()
-            ->get()
-            ->map(function ($shop) {
-                return [
-                    'shop' => $shop->toApiFormat(),
-                    'status' => null,
-                ];
-            });
+        $shops = $this->shopService->getAllShops();
 
         return response()->json([
             'shops' => $shops,
         ]);
     }
 
-    /**
-     * Sélectionne un magasin et le stocke en session
-     */
-    public function select(Request $request)
+    public function select(SelectShopRequest $request)
     {
-        $validated = $request->validate([
-            'shop_id' => 'required|exists:magasin,id_magasin',
-        ]);
-
-        $shop = Shop::with('city')
-            ->find($validated['shop_id']);
-
-        session(['selected_shop' => [
-            'id' => $shop->id_magasin,
-            'name' => $shop->nom_magasin,
-            'city' => $shop->city ? trim($shop->city->nom_ville) : null,
-        ]]);
+        $selectedShop = $this->shopService->selectShop($request->input('shop_id'));
 
         return response()->json([
             'success' => true,
-            'shop' => session('selected_shop'),
+            'shop' => $selectedShop->toArray(),
         ]);
     }
 
     public function selected()
     {
-        $selectedShop = session('selected_shop');
+        $selectedShop = $this->shopService->getSelectedShop();
 
         if (! $selectedShop) {
             return response()->json([
@@ -61,27 +44,14 @@ class ShopController extends Controller
 
         return response()->json([
             'selected' => true,
-            'shop' => $selectedShop,
+            'shop' => $selectedShop->toArray(),
         ]);
     }
 
     public function search(Request $request)
     {
         $query = $request->input('q', '');
-
-        $shops = Shop::with('city')
-            ->withCoordinates()
-            ->where(function ($q) use ($query) {
-                $q->where('nom_magasin', 'ILIKE', "%{$query}%")
-                    ->orWhere('rue_magasin', 'ILIKE', "%{$query}%")
-                    ->orWhereHas('city', function ($subQuery) use ($query) {
-                        $subQuery->where('nom_ville', 'ILIKE', "%{$query}%")
-                            ->orWhere('cp_ville', 'LIKE', "%{$query}%");
-                    });
-            })
-            ->limit(20)
-            ->get()
-            ->map(fn ($shop) => ['shop' => $shop->toApiFormat(), 'status' => null]);
+        $shops = $this->shopService->searchShops($query);
 
         return response()->json([
             'shops' => $shops,
