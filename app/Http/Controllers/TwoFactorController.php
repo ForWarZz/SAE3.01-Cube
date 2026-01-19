@@ -63,6 +63,7 @@ class TwoFactorController extends Controller
     public function disable(PasswordRequiredRequest $request)
     {
         $user = Auth::user();
+
         try {
             $this->twoFactorService->disable($user, $request->password);
 
