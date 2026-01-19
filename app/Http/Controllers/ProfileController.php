@@ -67,7 +67,7 @@ class ProfileController extends Controller
     {
         $client = $request->user();
 
-        if (! $client->google_id && ! $request->validateCurrentPassword($client)) {
+        if (! $client->google_id && ! Hash::check($request->password, $client->hash_mdp_client)) {
             return back()->withErrors(['password' => 'Le mot de passe est incorrect.']);
         }
 
