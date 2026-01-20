@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasReference;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class ArticleReference extends Model
 {
+    use HasReference;
     use SoftDeletes;
 
     public $timestamps = false;
@@ -57,25 +58,5 @@ class ArticleReference extends Model
     public function article(): BelongsTo
     {
         return $this->belongsTo(Article::class, 'id_article', 'id_article');
-    }
-
-    public function availableSizes(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            Size::class,
-            'taille_dispo',
-            'id_reference',
-            'id_taille'
-        )->withPivot('dispo_en_ligne');
-    }
-
-    public function shopAvailabilities(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            Shop::class,
-            'dispo_magasin',
-            'id_reference',
-            'id_magasin'
-        )->withPivot(['id_taille', 'statut']);
     }
 }

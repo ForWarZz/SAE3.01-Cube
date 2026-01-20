@@ -2,7 +2,7 @@
 
 namespace App\DTOs\Cart;
 
-use App\Models\BaseArticle;
+use App\Models\Article;
 use App\Models\Size;
 
 class CartItemDTO
@@ -12,7 +12,7 @@ class CartItemDTO
         public string $img_url,
         public Size $size,
         public int $quantity,
-        public BaseArticle $article,
+        public Article $article,
         public float $price_per_unit,
         public float $real_price,
         public bool $has_discount,

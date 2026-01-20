@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class EBike extends BaseArticle
+class EBike extends Article
 {
     public $timestamps = false;
 
