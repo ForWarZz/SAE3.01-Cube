@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Account\Address\AddressCreateRequest;
 use App\Http\Requests\Account\Address\AddressUpdateRequest;
 use App\Models\Address;
-use App\Services\Commercial\AddressService;
+use App\Services\AddressService;
 use App\Services\GdprService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
