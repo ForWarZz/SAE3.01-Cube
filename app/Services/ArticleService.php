@@ -173,8 +173,6 @@ class ArticleService
             ]);
         }
 
-        $additionalData = [];
-
         if ($article->bike) {
             $bike = $article->bike;
             $bikeReference = $reference->bikeReference;
