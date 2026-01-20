@@ -9,6 +9,7 @@ use App\Http\Requests\Cart\CartUpdateQuantityRequest;
 use App\Models\ArticleReference;
 use App\Models\Size;
 use App\Services\Cart\CartService;
+use App\Services\Cart\CartSessionManager;
 use App\Services\Cart\CheckoutService;
 
 class CartController extends Controller
@@ -16,6 +17,7 @@ class CartController extends Controller
     public function __construct(
         private readonly CartService $cartService,
         private readonly CheckoutService $checkoutService,
+        private readonly CartSessionManager $sessionManager,
     ) {}
 
     public function addToCart(CartAddRequest $request)
@@ -46,7 +48,7 @@ class CartController extends Controller
 
     public function index()
     {
-        $this->checkoutService->clearCheckout();
+        $this->sessionManager->clearCheckout();
 
         return view('cart.index', $this->cartService->getCartData()->toViewData());
     }

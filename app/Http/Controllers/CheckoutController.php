@@ -21,9 +21,9 @@ class CheckoutController extends Controller
         try {
             $client = auth()->user();
             $order = $this->checkoutService->createOrder($client);
-            $checkoutData = $this->checkoutService->initStripeCheckoutSession($order);
+            $checkoutSession = $this->checkoutService->initStripeCheckoutSession($order);
 
-            return redirect()->to($checkoutData->url);
+            return redirect()->to($checkoutSession->url);
 
         } catch (DomainException $e) {
             return redirect()

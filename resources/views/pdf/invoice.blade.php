@@ -176,10 +176,6 @@
                 </tr>
             </thead>
             <tbody>
-                @php
-                    $subtotalHT = 0;
-                @endphp
-
                 @foreach ($order->items as $item)
                     @php
                         $article = $item->reference->article ?? ($item->reference->accessory ?? null);
@@ -188,7 +184,6 @@
                         $name = $article->nom_article ?? "Article";
                         $priceHT = $item->prix_unit_ligne / 1.2;
                         $totalHT = $priceHT * $item->quantite_ligne;
-                        $subtotalHT += $totalHT;
                     @endphp
 
                     <tr>
@@ -218,11 +213,8 @@
         </table>
 
         @php
+            $subtotalHT = $financials->subtotal / 1.2;
             $tva = $subtotalHT * 0.2;
-            $subtotalTTC = $subtotalHT + $tva;
-            $discount = $order->pourcentage_remise ? ($subtotalTTC * $order->pourcentage_remise) / 100 : 0;
-            $shipping = $order->frais_livraison;
-            $total = $subtotalTTC - $discount + $shipping;
         @endphp
 
         <table class="totals">
@@ -234,18 +226,18 @@
                 <td>TVA (20%)</td>
                 <td class="text-right">{{ number_format($tva, 2, ",", " ") }} €</td>
             </tr>
-            @if ($discount > 0)
+            @if ($financials->discount > 0)
                 <tr class="discount">
-                    <td>Remise (-{{ $order->pourcentage_remise }}%)</td>
-                    <td class="text-right">-{{ number_format($discount, 2, ",", " ") }} €</td>
+                    <td>Remise (-{{ $financials->discountPercent }}%)</td>
+                    <td class="text-right">-{{ number_format($financials->discount, 2, ",", " ") }} €</td>
                 </tr>
             @endif
 
             <tr>
                 <td>Livraison</td>
                 <td class="text-right">
-                    @if ($shipping > 0)
-                        {{ number_format($shipping, 2, ",", " ") }} €
+                    @if ($financials->shipping > 0)
+                        {{ number_format($financials->shipping, 2, ",", " ") }} €
                     @else
                         Offerts
                     @endif
@@ -253,7 +245,7 @@
             </tr>
             <tr class="total-row">
                 <td style="padding-top: 12px">Total TTC</td>
-                <td class="text-right" style="padding-top: 12px">{{ number_format($total, 2, ",", " ") }} €</td>
+                <td class="text-right" style="padding-top: 12px">{{ number_format($financials->total, 2, ",", " ") }} €</td>
             </tr>
         </table>
 

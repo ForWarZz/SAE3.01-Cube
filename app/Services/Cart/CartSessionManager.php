@@ -2,6 +2,7 @@
 
 namespace App\Services\Cart;
 
+use App\Models\Shop;
 use Illuminate\Support\Facades\Session;
 
 class CartSessionManager
@@ -11,6 +12,8 @@ class CartSessionManager
     private const DISCOUNT_KEY = 'discount_code';
 
     private const CHECKOUT_KEY = 'checkout';
+
+    private const SELECTED_SHOP_KEY = 'selected_shop';
 
     public function addItem(int $referenceId, int $sizeId, int $quantity = 1): void
     {
@@ -84,22 +87,35 @@ class CartSessionManager
         Session::put(self::DISCOUNT_KEY, $discountCodeId);
     }
 
+    public function clearDiscountCode(): void
+    {
+        Session::forget(self::DISCOUNT_KEY);
+    }
+
+    public function getSelectedShopId(): ?int
+    {
+        return Session::get(self::SELECTED_SHOP_KEY)['id_magasin'] ?? null;
+    }
+
+    public function setSelectedShop(?Shop $shop): void
+    {
+        if ($shop === null) {
+            Session::forget(self::SELECTED_SHOP_KEY);
+        } else {
+            Session::put(self::SELECTED_SHOP_KEY, $shop->toArray());
+        }
+    }
+
     /**
-     * @return array{
-     *     billing_address_id?: int|null,
-     *     delivery_address_id?: int|null,
-     *     shipping_mode_id?: int|null,
-     *     selected_shop_id?: int|null
-     * }
+     * @return array{billing_address_id: ?int, delivery_address_id: ?int, shipping_mode_id: ?int}
      */
     public function getCheckoutData(): array
     {
-        $selected_shop = Session::get('selected_shop');
-
-        return [
-            ...Session::get(self::CHECKOUT_KEY, []),
-            'selected_shop_id' => $selected_shop ? $selected_shop['id'] : null,
-        ];
+        return Session::get(self::CHECKOUT_KEY, [
+            'billing_address_id' => null,
+            'delivery_address_id' => null,
+            'shipping_mode_id' => null,
+        ]);
     }
 
     public function setCheckoutData(?int $billingAddressId, ?int $deliveryAddressId, ?int $shippingModeId): void
@@ -111,25 +127,21 @@ class CartSessionManager
         ]);
     }
 
+    public function clearCheckout(): void
+    {
+        Session::forget(self::CHECKOUT_KEY);
+    }
+
     public function clearAll(): void
     {
         $this->clearCart();
         $this->clearDiscountCode();
         $this->clearCheckout();
+        $this->setSelectedShop(null);
     }
 
     public function clearCart(): void
     {
         Session::forget(self::CART_KEY);
-    }
-
-    public function clearDiscountCode(): void
-    {
-        Session::forget(self::DISCOUNT_KEY);
-    }
-
-    public function clearCheckout(): void
-    {
-        Session::forget(self::CHECKOUT_KEY);
     }
 }

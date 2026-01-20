@@ -23,17 +23,16 @@ class OrderController extends Controller
         $validated = $request->validated();
         $client = auth()->user();
 
-        // Validation des adresses
         $billingAddressId = $this->checkoutService->validateAddressForClient(
             $client,
             $validated['billing_id'] ?? null
         );
+
         $deliveryAddressId = $this->checkoutService->validateAddressForClient(
             $client,
             $validated['delivery_id'] ?? null
         );
 
-        // Validation du mode de livraison
         $shippingModeId = $this->checkoutService->validateShippingMode(
             $validated['shipping_id'] ?? null
         );

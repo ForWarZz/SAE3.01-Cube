@@ -21,7 +21,7 @@
                 >
                     <span id="store-button-text">
                         @if (session("selected_shop"))
-                            {{ session("selected_shop")["name"] }}
+                            {{ session("selected_shop")["nom_magasin"] }}
                         @else
                             Choisir un magasin
                         @endif

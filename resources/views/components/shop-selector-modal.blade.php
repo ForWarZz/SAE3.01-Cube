@@ -216,6 +216,8 @@
         const selectedShop = @json(session("selected_shop"));
         const L = window.L;
 
+        console.log(selectedShop);
+
         return {
             isOpen: false,
             loading: false,
@@ -436,6 +438,8 @@
 
                 const btn = document.getElementById('store-button-text');
                 if (btn) btn.textContent = shop.name;
+
+                console.log('Magasin sélectionné:', shop);
 
                 window.location.reload();
             },

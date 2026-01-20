@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Services\OrderService;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class InvoiceController extends Controller
 {
+    public function __construct(
+        protected readonly OrderService $orderService,
+    ) {}
+
     public function download(Order $order)
     {
         $client = auth()->user();
@@ -61,6 +66,7 @@ class InvoiceController extends Controller
         return Pdf::loadView('pdf.invoice', [
             'order' => $order,
             'client' => $order->client,
+            'financials' => $this->orderService->calculateFinancials($order),
         ]);
     }
 }

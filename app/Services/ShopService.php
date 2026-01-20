@@ -4,10 +4,18 @@ namespace App\Services;
 
 use App\DTOs\Shop\SelectedShopDTO;
 use App\Models\Shop;
+use App\Services\Cart\CartSessionManager;
 use Illuminate\Support\Collection;
 
 class ShopService
 {
+    public function __construct(
+        protected readonly CartSessionManager $sessionManager,
+    ) {}
+
+    /**
+     * @return Collection<int, array{shop: array, status: null}>
+     */
     public function getAllShops(): Collection
     {
         return Shop::with('city')
@@ -19,6 +27,9 @@ class ShopService
             ]);
     }
 
+    /**
+     * @return Collection<int, array{shop: array, status: null}>
+     */
     public function searchShops(string $query): Collection
     {
         return Shop::with('city')
@@ -42,26 +53,25 @@ class ShopService
     public function selectShop(int $shopId): SelectedShopDTO
     {
         $shop = Shop::with('city')->findOrFail($shopId);
+        $this->sessionManager->setSelectedShop($shop);
 
-        $selectedShop = SelectedShopDTO::fromShop($shop);
-
-        session(['selected_shop' => $selectedShop->toArray()]);
-
-        return $selectedShop;
+        return SelectedShopDTO::fromShop($shop);
     }
 
     public function getSelectedShop(): ?SelectedShopDTO
     {
-        $sessionData = session('selected_shop');
+        $shopId = $this->sessionManager->getSelectedShopId();
 
-        if (! $sessionData) {
+        if (! $shopId) {
             return null;
         }
 
-        return new SelectedShopDTO(
-            id: $sessionData['id'],
-            name: $sessionData['name'],
-            city: $sessionData['city']
-        );
+        $shop = Shop::with('city')->find($shopId);
+
+        if (! $shop) {
+            return null;
+        }
+
+        return SelectedShopDTO::fromShop($shop);
     }
 }
