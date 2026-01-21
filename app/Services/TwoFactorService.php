@@ -23,7 +23,7 @@ class TwoFactorService
     /**
      * @throws TwoFactorException
      */
-    public function enable($user): TwoFactorResultDTO
+    public function enable(Client $user): TwoFactorResultDTO
     {
         try {
             $secret = $this->google2fa->generateSecretKey();
@@ -45,7 +45,7 @@ class TwoFactorService
      * @throws InvalidCodeException
      * @throws TwoFactorException
      */
-    public function confirm($user, string $code): array
+    public function confirm(Client $user, string $code): array
     {
         try {
             $secret = decrypt($user->two_factor_secret);
@@ -68,7 +68,7 @@ class TwoFactorService
     /**
      * @throws PasswordException
      */
-    public function disable($user, ?string $password = null): void
+    public function disable(Client $user, ?string $password = null): void
     {
         if (! $user->google_id) {
             if (! $password || ! password_verify($password, $user->hash_mdp_client)) {
@@ -87,7 +87,7 @@ class TwoFactorService
      *
      * @throws TwoFactorException
      */
-    public function showRecoveryCodes($user): array
+    public function showRecoveryCodes(Client $user): array
     {
         if (! $user->two_factor_confirmed_at) {
             throw new TwoFactorException('L\'authentification à deux facteurs n\'est pas activée.');
@@ -102,7 +102,7 @@ class TwoFactorService
      * @throws TwoFactorException
      * @throws PasswordException
      */
-    public function regenerateRecoveryCodes($user, ?string $password = null): array
+    public function regenerateRecoveryCodes(Client $user, ?string $password = null): array
     {
         if (! $user->two_factor_confirmed_at) {
             throw new TwoFactorException('L\'authentification à deux facteurs n\'est pas activée.');
@@ -121,7 +121,7 @@ class TwoFactorService
         return $recoveryCodes;
     }
 
-    public function getQrCodeUrl($user, string $secret): string
+    public function getQrCodeUrl(Client $user, string $secret): string
     {
         $appName = Config::get('app.name');
         $email = $user->email_client;
